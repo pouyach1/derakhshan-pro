@@ -4,23 +4,20 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Rubik", "sans-serif"],
+        sans: ["Poppins", "sans-serif"],
       },
       colors: {
-        beige: "#fffefc",
-        brand: "#4725b8",
-        ink: "#230f66",
-        label: "#333333",
-        yellow: "#ffea00",
+        background: "#ffffff",
+        surface: "#f0f0f0",
+        ink: "#000000",
+        muted: "#666666",
+        accent: "#ff6900",
+        success: "#4d9e30",
+        warning: "#f6eb13",
+        danger: "#fa9f47",
       },
       borderRadius: {
-        main: "1rem",
-      },
-      spacing: {
-        gutter: "4rem",
-      },
-      transitionTimingFunction: {
-        rio: "cubic-bezier(.625, .05, 0, 1)",
+        main: "3px",
       },
     },
   },

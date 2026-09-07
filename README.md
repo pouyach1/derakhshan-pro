@@ -1,6 +1,20 @@
-# Derakhshan Pro
+# Derakhshan Pro — Luxury Places
 
-پروژهٔ React + Vite + Tailwind برای بخش **Done Deals**.
+اپ React + Vite که **فقط** از پوشهٔ `website-forensics/findrealestate/luxury-places-design` ساخته شده.
+
+داده و دیزاین قبلی (RIO Property / Done Deals / Rubik / بنفش) حذف شد.
+
+## منبع
+
+```
+website-forensics/findrealestate/luxury-places-design/
+├── SKILL.md
+├── DESIGN.md
+├── fonts/Poppins-*.ttf
+└── screenshots/homepage.png
+```
+
+توکن‌ها: پس‌زمینه `#ffffff`، سطح `#f0f0f0`، متن `#000000` / `#666666`، اکسنت `#ff6900`، فونت Poppins محلی، گرید ۴px، بدون سایه.
 
 ## اجرا
 
@@ -9,17 +23,10 @@ npm install
 npm run dev
 ```
 
-سپس `http://localhost:5173/` را باز کن. صفحهٔ کامل گرید: `/done-deals`.
-
-## ساختار
-
-```
-src/
-├── assets/
-├── components/
-│   ├── layout/
-│   └── ui/
-├── pages/
-├── App.jsx
-└── main.jsx
-```
+- `/` صفحهٔ اصلی
+- `/nos-proprietes` فهرست املاک
+- `/property/:slug` جزئیات ملک
+- `/notre-univers` جهان برند + FAQ
+- `/expertise` تخصص + ارقام + FAQ
+- `/actualites` ژورنال
+- `/contact` فرم تماس
