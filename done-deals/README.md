@@ -1,48 +1,45 @@
 # Done Deals
 
-گرید کارت‌های نمونه‌کار، با همان کلاس‌ها و توکن‌های [rioproperty.co.za/done-deals](https://www.rioproperty.co.za/done-deals).
+گرید کارت‌های نمونه‌کار مطابق [rioproperty.co.za/done-deals](https://www.rioproperty.co.za/done-deals).
 
-## اجرا
+## فایل‌ها
 
-فایل `done-deals/index.html` را در مرورگر باز کن، یا از ریشهٔ این پوشه:
+| فایل | نقش |
+| --- | --- |
+| `index.html` | دمو با HTML استاتیک + CSS دقیق Webflow |
+| `css/done-deals.css` | توکن‌ها، گرید ۱۲/۸/۲، overlay، هاور |
+| `components/DoneDeals.jsx` | همان مارکاپ برای React |
+| `components/DoneDeals.tailwind.jsx` | همان ظاهر با Tailwind utilities |
 
 ```bash
 python3 -m http.server 4173
 ```
 
-بعد برو به `http://localhost:4173/done-deals/`.
+`http://localhost:4173/done-deals/`
 
-## ساختار کلاس‌ها
+## کلاس‌های اصلی
 
 ```
 .work_main_container.u-container
   .work_main_collection_list.u-grid-custom.u-gap-4
-    .work_main_collection_item            /* span 4 از ۱۲ ستون */
-      .done-deals_component
-        .done-deals_component_inner       /* عکس + overlay */
-          .done-deals_component_image_wrap
-          .done-deals_component_overlay
-            .done-deals_component_overlay_bg
-            .done-deals_component_overlay_text_wrap
-        .done-deals_component_bottom      /* RETAIL · LEASED */
+    .work_main_collection_item
+      .done-deals_component_inner.u-flex-grow.u-position-relative.u-overflow-clip
+        .done-deals_component_overlay_bg
+      .done-deals_component_bottom   /* flex; space-between; RETAIL · LEASED */
 ```
 
 ## گرید
 
-| عرض | ستون گرید | کارت در هر ردیف |
-| --- | --- | --- |
-| Desktop | `--_column-count---value: 12` | ۳ (`span 4`) |
-| Tablet `< 991px` | `8` | ۲ |
-| Mobile `< 767px` | `2` | ۱ (`span 2`) |
+- Desktop: `--_column-count---value: 12` → هر کارت `span 4` → ۳ ستون
+- Tablet `< 991px`: `8` → ۲ ستون
+- Mobile `< 767px`: `2` → ۱ ستون
+- Gap: `var(--_spacing---space--4-4rem)` = `4rem`
+- Radius: `var(--radius--main)` = `1rem`
 
-فاصله: `var(--_spacing---space--4-4rem)` = `4rem`.  
-گوشهٔ کارت: `var(--radius--main)` = `1rem`.
+Media queries و Container Queries (`@container work`) هر دو ستون‌ها را عوض می‌کنند.
 
 ## Hover
 
-- تصویر `scale(1.05)` با `cubic-bezier(.625, .05, 0, 1)` در ۱ ثانیه
-- overlay از `opacity: 0` به `1` با گرادیان `linear-gradient(#0000 50%, #000000bf)`
-- متن روی عکس از پایین می‌آید
-- برچسب‌های پایین با Flexbox `space-between`؛ روی هاور متن زرد می‌شود
-
-استایل در `css/done-deals.css`. نسخهٔ React: `components/DoneDeals.jsx` (همان کلاس‌ها را import کن، Tailwind لازم نیست).
+- تصویر `scale(1.05)` در ۱ ثانیه با `cubic-bezier(.625, .05, 0, 1)`
+- overlay از `opacity: 0` به `1` با `linear-gradient(#0000 50%, #000000bf)` و `inset: 0%`
+- برچسب‌های پایین Flexbox، رنگ `#333`، `uppercase`
