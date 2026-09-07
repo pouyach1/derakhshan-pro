@@ -1,24 +1,15 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
+@import "./styles/luxury-places.css";
 
 :root {
-  --site--gutter: 1rem;
-  --site--margin: clamp(1rem, 2.5vw, 3.75rem);
-  --max-width--main: 120rem;
-  --radius--main: 1rem;
-  --_column-count---value: 12;
-  --_spacing---space--1-1rem: 1rem;
-  --_spacing---space--1-5-1-5rem-copy: 1.5rem;
-  --_spacing---space--4-4rem: 4rem;
-  --_ease-out-expo: cubic-bezier(0.625, 0.05, 0, 1);
-  --swatch--beige-500: #fffefc;
-  --swatch--brand-500: #4725b8;
-  --swatch--yellow-500: #ffea00;
-  --swatch--light-200: #ccc;
-  --swatch--text: #333;
-  --_typography---font-size--text-main: 1rem;
-  --_typography---font-size--h3: 2.25rem;
-  --font-family: Rubik, sans-serif;
+  --background: #ffffff;
+  --surface: #f0f0f0;
+  --text-primary: #000000;
+  --text-muted: #666666;
+  --accent: #ff6900;
+  --border-radius: 0.13rem;
+  --color-background-grey: #f0f0f0;
 }
 
 html,
@@ -27,16 +18,35 @@ body,
   min-height: 100%;
 }
 
-body {
-  margin: 0;
-  background: var(--swatch--beige-500);
-  color: var(--swatch--text);
-  font-family: var(--font-family);
-  font-size: var(--_typography---font-size--text-main);
-  line-height: 1.5;
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
 }
 
-img {
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: Poppins, sans-serif;
+}
+
+img,
+video {
   max-width: 100%;
   display: block;
+}
+
+.input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
 }
