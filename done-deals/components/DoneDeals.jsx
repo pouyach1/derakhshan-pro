@@ -76,6 +76,7 @@ function DealCard({ deal }) {
         <div
           className="done-deals_component_inner u-flex-grow u-position-relative u-overflow-clip"
           data-project-tracking-id={deal.id}
+          tabIndex={0}
         >
           <div className="done-deals_component_image_wrap">
             <img

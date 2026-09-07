@@ -190,6 +190,11 @@ p {
   min-height: 0;
 }
 
+.done-deals_component_inner:focus-visible {
+  outline: 2px solid var(--swatch--brand-500);
+  outline-offset: 4px;
+}
+
 .done-deals_component_image_wrap {
   position: absolute;
   inset: 0%;
@@ -288,30 +293,34 @@ p {
   transition: transform 1s var(--_ease-out-expo);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .done-deals_component_inner:hover .done-deals_component_image_wrap {
-    transform: scale(1.05);
-  }
+.done-deals_component_inner:hover .done-deals_component_image_wrap,
+.done-deals_component_inner:focus-visible .done-deals_component_image_wrap {
+  transform: scale(1.05);
+}
 
-  .done-deals_component_inner:hover .done-deals_component_image {
-    filter: grayscale(1);
-  }
+.done-deals_component_inner:hover .done-deals_component_image,
+.done-deals_component_inner:focus-visible .done-deals_component_image {
+  filter: grayscale(1);
+}
 
-  .done-deals_component_inner:hover .done-deals_component_overlay_bg {
-    opacity: 1;
-  }
+.done-deals_component_inner:hover .done-deals_component_overlay_bg,
+.done-deals_component_inner:focus-visible .done-deals_component_overlay_bg {
+  opacity: 1;
+}
 
-  .done-deals_component_inner:hover p {
-    transform: translateY(0%);
-  }
+.done-deals_component_inner:hover p,
+.done-deals_component_inner:focus-visible p {
+  transform: translateY(0%);
+}
 
-  .done-deals_component:hover .done-deals_component_bottom p {
-    transform: translateY(-100%);
-  }
+.done-deals_component:hover .done-deals_component_bottom p,
+.done-deals_component:focus-within .done-deals_component_bottom p {
+  transform: translateY(-100%);
+}
 
-  .done-deals_component:hover .done-deals_component_bottom_bg {
-    transform: scaleY(1.1);
-  }
+.done-deals_component:hover .done-deals_component_bottom_bg,
+.done-deals_component:focus-within .done-deals_component_bottom_bg {
+  transform: scaleY(1.1);
 }
 
 @media screen and (max-width: 991px) {

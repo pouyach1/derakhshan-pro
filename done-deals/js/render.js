@@ -23,7 +23,7 @@ function renderDealCard(deal) {
   return `
     <div role="listitem" class="work_main_collection_item">
       <article class="done-deals_component u-flex-vertical-nowrap u-gap-custom is-done-deals u-ratio-1-1">
-        <div class="done-deals_component_inner u-flex-grow u-position-relative u-overflow-clip" data-project-tracking-id="${escapeHtml(deal.id)}">
+        <div class="done-deals_component_inner u-flex-grow u-position-relative u-overflow-clip" data-project-tracking-id="${escapeHtml(deal.id)}" tabindex="0">
           <div class="done-deals_component_image_wrap">
             <img
               class="done-deals_component_image is-done-deals"
