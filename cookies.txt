@@ -1,5 +1,0 @@
-# HTTrack Website Copier Cookie File
-# This file format is compatible with Netscape cookies
-tref.digitaldesignnyc.co	TRUE	/	FALSE	1999999999	__cf_bm	K8gPgGbWVWWep1TQuAHoslxJYlU57wA2hd5lyzVr2E4-1788761345.016906-1.0.1.1-Dj7g3WY4LEmNK.jx_YfEXPlUzNH1wLJYo1mX86XFkiI9z2G0uV_04ejm.ieQFZX6uQOL0mfQt7uiWIl2pyTEdAR7i25yJzBgi7.NpHP3eMmmR6WCW5JUbmIeKfoDJ6PB
-tref.digitaldesignnyc.co	TRUE	/	FALSE	1999999999	SameSite	None
-
