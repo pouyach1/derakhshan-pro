@@ -1,0 +1,35 @@
+{
+  "externalFontLinks": [],
+  "loadedFontFaces": [
+    {
+      "family": "webflow-icons",
+      "style": "normal",
+      "weight": "normal",
+      "status": "loaded"
+    },
+    {
+      "family": "Rubik",
+      "style": "italic",
+      "weight": "400",
+      "status": "unloaded"
+    },
+    {
+      "family": "Rubik",
+      "style": "normal",
+      "weight": "400",
+      "status": "loaded"
+    },
+    {
+      "family": "Blauer Nue",
+      "style": "normal",
+      "weight": "600",
+      "status": "loaded"
+    },
+    {
+      "family": "Blauer Nue",
+      "style": "italic",
+      "weight": "600",
+      "status": "unloaded"
+    }
+  ]
+}

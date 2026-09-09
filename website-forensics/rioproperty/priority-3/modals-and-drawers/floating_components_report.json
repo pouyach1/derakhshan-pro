@@ -1,0 +1,692 @@
+[
+  {
+    "id": "floating-1",
+    "className": "u-overlay",
+    "display": "block",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "color(srgb 0 0 0 / 0.264)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-2",
+    "className": "u-overlay u-show-mobile-landscape",
+    "display": "none",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "color(srgb 0 0 0 / 0.4)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-3",
+    "className": "u-overlay w-variant-9653c0cc-21fc-fb82-1373-c98b1644e5a8",
+    "display": "block",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "color(srgb 0 0 0 / 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-4",
+    "className": "u-overlay w-variant-9653c0cc-21fc-fb82-1373-c98b1644e5a8",
+    "display": "block",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "color(srgb 0 0 0 / 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-5",
+    "className": "u-overlay w-variant-9653c0cc-21fc-fb82-1373-c98b1644e5a8",
+    "display": "block",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "color(srgb 0 0 0 / 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-6",
+    "className": "u-overlay w-variant-9653c0cc-21fc-fb82-1373-c98b1644e5a8",
+    "display": "block",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "color(srgb 0 0 0 / 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-7",
+    "className": "done-deals_component_overlay u-cover-absolute u-flex-vertical-nowrap u-justify-content-end",
+    "display": "flex",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-8",
+    "className": "done-deals_component_overlay_bg",
+    "display": "block",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-9",
+    "className": "done-deals_component_overlay_text_wrap u-position-relative u-flex-vertical-nowrap u-gap-1 u-overflow-clip",
+    "display": "flex",
+    "visibility": "visible",
+    "position": "relative",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-10",
+    "className": "done-deals_component_overlay_text_details_wrap u-grid-custom u-overflow-clip",
+    "display": "grid",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-11",
+    "className": "done-deals_component_overlay_text_detail_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-12",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-13",
+    "className": "done-deals_component_overlay_text_detail_wrap u-flex-horizontal-wrap u-gap-custom u-align-items-start",
+    "display": "flex",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-14",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-15",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-16",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-17",
+    "className": "done-deals_component_overlay u-cover-absolute u-flex-vertical-nowrap u-justify-content-end",
+    "display": "flex",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-18",
+    "className": "done-deals_component_overlay_bg",
+    "display": "block",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-19",
+    "className": "done-deals_component_overlay_text_wrap u-position-relative u-flex-vertical-nowrap u-gap-1 u-overflow-clip",
+    "display": "flex",
+    "visibility": "visible",
+    "position": "relative",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-20",
+    "className": "done-deals_component_overlay_text_details_wrap u-grid-custom u-overflow-clip",
+    "display": "grid",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-21",
+    "className": "done-deals_component_overlay_text_detail_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-22",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-23",
+    "className": "done-deals_component_overlay_text_detail_wrap u-flex-horizontal-wrap u-gap-custom u-align-items-start",
+    "display": "flex",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-24",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-25",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-26",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-27",
+    "className": "done-deals_component_overlay u-cover-absolute u-flex-vertical-nowrap u-justify-content-end",
+    "display": "flex",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-28",
+    "className": "done-deals_component_overlay_bg",
+    "display": "block",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-29",
+    "className": "done-deals_component_overlay_text_wrap u-position-relative u-flex-vertical-nowrap u-gap-1 u-overflow-clip",
+    "display": "flex",
+    "visibility": "visible",
+    "position": "relative",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-30",
+    "className": "done-deals_component_overlay_text_details_wrap u-grid-custom u-overflow-clip",
+    "display": "grid",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-31",
+    "className": "done-deals_component_overlay_text_detail_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-32",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-33",
+    "className": "done-deals_component_overlay_text_detail_wrap u-flex-horizontal-wrap u-gap-custom u-align-items-start",
+    "display": "flex",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-34",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-35",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-36",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-37",
+    "className": "done-deals_component_overlay u-cover-absolute u-flex-vertical-nowrap u-justify-content-end",
+    "display": "flex",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-38",
+    "className": "done-deals_component_overlay_bg",
+    "display": "block",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-39",
+    "className": "done-deals_component_overlay_text_wrap u-position-relative u-flex-vertical-nowrap u-gap-1 u-overflow-clip",
+    "display": "flex",
+    "visibility": "visible",
+    "position": "relative",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-40",
+    "className": "done-deals_component_overlay_text_details_wrap u-grid-custom u-overflow-clip",
+    "display": "grid",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-41",
+    "className": "done-deals_component_overlay_text_detail_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-42",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-43",
+    "className": "done-deals_component_overlay_text_detail_wrap u-flex-horizontal-wrap u-gap-custom u-align-items-start",
+    "display": "flex",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-44",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-45",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-46",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-47",
+    "className": "done-deals_component_overlay u-cover-absolute u-flex-vertical-nowrap u-justify-content-end",
+    "display": "flex",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-48",
+    "className": "done-deals_component_overlay_bg",
+    "display": "block",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-49",
+    "className": "done-deals_component_overlay_text_wrap u-position-relative u-flex-vertical-nowrap u-gap-1 u-overflow-clip",
+    "display": "flex",
+    "visibility": "visible",
+    "position": "relative",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-50",
+    "className": "done-deals_component_overlay_text_details_wrap u-grid-custom u-overflow-clip",
+    "display": "grid",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-51",
+    "className": "done-deals_component_overlay_text_detail_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-52",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-53",
+    "className": "done-deals_component_overlay u-cover-absolute u-flex-vertical-nowrap u-justify-content-end",
+    "display": "flex",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-54",
+    "className": "done-deals_component_overlay_bg",
+    "display": "block",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-55",
+    "className": "done-deals_component_overlay_text_wrap u-position-relative u-flex-vertical-nowrap u-gap-1 u-overflow-clip",
+    "display": "flex",
+    "visibility": "visible",
+    "position": "relative",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-56",
+    "className": "done-deals_component_overlay_text_details_wrap u-grid-custom u-overflow-clip",
+    "display": "grid",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-57",
+    "className": "done-deals_component_overlay_text_detail_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-58",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-59",
+    "className": "done-deals_component_overlay_text_detail_wrap u-flex-horizontal-wrap u-gap-custom u-align-items-start",
+    "display": "flex",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-60",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-61",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-62",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-63",
+    "className": "done-deals_component_overlay u-cover-absolute u-flex-vertical-nowrap u-justify-content-end",
+    "display": "flex",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-64",
+    "className": "done-deals_component_overlay_bg",
+    "display": "block",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-65",
+    "className": "done-deals_component_overlay_text_wrap u-position-relative u-flex-vertical-nowrap u-gap-1 u-overflow-clip",
+    "display": "flex",
+    "visibility": "visible",
+    "position": "relative",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-66",
+    "className": "done-deals_component_overlay_text_details_wrap u-grid-custom u-overflow-clip",
+    "display": "grid",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-67",
+    "className": "done-deals_component_overlay_text_detail_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-68",
+    "className": "done-deals_component_overlay_text_detail_text_wrap",
+    "display": "block",
+    "visibility": "visible",
+    "position": "static",
+    "zIndex": "auto",
+    "backgroundColor": "rgba(0, 0, 0, 0)",
+    "boxShadow": "none"
+  },
+  {
+    "id": "floating-69",
+    "className": "u-overlay u-pointer-off",
+    "display": "block",
+    "visibility": "visible",
+    "position": "absolute",
+    "zIndex": "auto",
+    "backgroundColor": "color(srgb 0 0 0 / 0.2)",
+    "boxShadow": "none"
+  }
+]

@@ -1,0 +1,15 @@
+@media (hover: hover) and (pointer: fine) and (min-width: 1240px) {
+  .personas_home_component:hover img { scale: 1.1; transform: translateY(-10%); }
+  .personas_home_component:hover .personas_home_component_bg { clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); }
+  .personas_home_component:hover .personas_home_component_paragraph_wrap { grid-template-rows: 1fr; }
+  .personas_home_component:hover .personas_home_component_heading { transform: translateY(-100%); }
+  .personas_home_component:hover .personas_home_component_heading_icon { transform: translateY(0%); }
+}
+@media (max-width: 991px) {
+  .personas_home_component .personas_home_component_paragraph_wrap { grid-template-rows: 1fr; }
+  .personas_home_component .personas_home_component_heading_icon { transform: translateY(0%); }
+}
+@media (max-width: 1239px) {
+  .personas_home_component_heading { font-size: calc(var(--_typography---font-size--h3) * 0.75); }
+  .personas_home_component_heading_icon { width: 2.25rem; }
+}

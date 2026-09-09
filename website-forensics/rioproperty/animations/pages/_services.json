@@ -1,0 +1,4223 @@
+{
+  "url": "https://www.rioproperty.co.za/services",
+  "viewports": {
+    "desktop": {
+      "viewport": "desktop",
+      "animationReport": {
+        "frameworks": [
+          "GSAP"
+        ],
+        "animatedElementsCount": 163,
+        "elements": [
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "g_nav_bar",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 1440,
+              "height": 108
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "color 1s cubic-bezier(0.19, 1, 0.22, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "g_nav_bg u-cover-absolute",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 1440,
+              "height": 108
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "background-color 1s cubic-bezier(0.19, 1, 0.22, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 60,
+              "y": 46.734375,
+              "width": 14.5,
+              "height": 14.5
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 75.40625,
+              "y": 46.734375,
+              "width": 14.5,
+              "height": 14.5
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 90.8125,
+              "y": 46.375,
+              "width": 15.21875,
+              "height": 15.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 123.9375,
+              "y": 46.859375,
+              "width": 14.25,
+              "height": 14.25
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 144.578125,
+              "y": 46.875,
+              "width": 14.234375,
+              "height": 14.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 165.203125,
+              "y": 46.15625,
+              "width": 15.671875,
+              "height": 15.671875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 187.265625,
+              "y": 46.875,
+              "width": 14.234375,
+              "height": 14.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 207.890625,
+              "y": 46.875,
+              "width": 14.234375,
+              "height": 14.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 228.515625,
+              "y": 46.875,
+              "width": 14.234375,
+              "height": 14.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 249.140625,
+              "y": 46.875,
+              "width": 14.234375,
+              "height": 14.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 269.765625,
+              "y": 46.875,
+              "width": 14.234375,
+              "height": 14.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 178.68106079101562,
+              "y": 465.4254150390625,
+              "width": 128.86410522460938,
+              "height": 128.8641357421875
+            },
+            "styles": {
+              "transform": "matrix(0.707107, 0.707107, -0.707107, 0.707107, -91.4688, 0)",
+              "transition": "transform 0.75s cubic-bezier(0.16, 1, 0.3, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 79.58834838867188,
+              "y": 548.5740966796875,
+              "width": 128.86412048339844,
+              "height": 128.86407470703125
+            },
+            "styles": {
+              "transform": "matrix(0.707107, 0.707107, -0.707107, 0.707107, -91.4688, 0)",
+              "transition": "transform 0.75s cubic-bezier(0.16, 1, 0.3, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 578.8401489257812,
+              "y": 574.365478515625,
+              "width": 128.86407470703125,
+              "height": 128.8641357421875
+            },
+            "styles": {
+              "transform": "matrix(0.707107, 0.707107, -0.707107, 0.707107, -91.4688, 0)",
+              "transition": "transform 0.75s cubic-bezier(0.16, 1, 0.3, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 479.7474365234375,
+              "y": 657.51416015625,
+              "width": 128.86407470703125,
+              "height": 128.86407470703125
+            },
+            "styles": {
+              "transform": "matrix(0.707107, 0.707107, -0.707107, 0.707107, -91.4688, 0)",
+              "transition": "transform 0.75s cubic-bezier(0.16, 1, 0.3, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 447.2316589355469,
+              "y": 660.0880737304688,
+              "width": 128.86404418945312,
+              "height": 128.8641357421875
+            },
+            "styles": {
+              "transform": "matrix(0.707107, 0.707107, -0.707107, 0.707107, -91.4688, 0)",
+              "transition": "transform 0.75s cubic-bezier(0.16, 1, 0.3, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 348.1389465332031,
+              "y": 743.2366943359375,
+              "width": 128.86407470703125,
+              "height": 128.8641357421875
+            },
+            "styles": {
+              "transform": "matrix(0.707107, 0.707107, -0.707107, 0.707107, -91.4688, 0)",
+              "transition": "transform 0.75s cubic-bezier(0.16, 1, 0.3, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 331.4211730957031,
+              "y": 746.5004272460938,
+              "width": 128.86407470703125,
+              "height": 128.8641357421875
+            },
+            "styles": {
+              "transform": "matrix(0.707107, 0.707107, -0.707107, 0.707107, -91.4688, 0)",
+              "transition": "transform 0.75s cubic-bezier(0.16, 1, 0.3, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 232.32843017578125,
+              "y": 829.6491088867188,
+              "width": 128.86410522460938,
+              "height": 128.86407470703125
+            },
+            "styles": {
+              "transform": "matrix(0.707107, 0.707107, -0.707107, 0.707107, -91.4688, 0)",
+              "transition": "transform 0.75s cubic-bezier(0.16, 1, 0.3, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 500.25555419921875,
+              "y": 845.3406372070312,
+              "width": 128.86407470703125,
+              "height": 128.8641357421875
+            },
+            "styles": {
+              "transform": "matrix(0.707107, 0.707107, -0.707107, 0.707107, -91.4688, 0)",
+              "transition": "transform 0.75s cubic-bezier(0.16, 1, 0.3, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 401.162841796875,
+              "y": 928.4893188476562,
+              "width": 128.8641357421875,
+              "height": 128.86407470703125
+            },
+            "styles": {
+              "transform": "matrix(0.707107, 0.707107, -0.707107, 0.707107, -91.4688, 0)",
+              "transition": "transform 0.75s cubic-bezier(0.16, 1, 0.3, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "hero_main_bg_wrap",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 1440,
+              "height": 900
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 60,
+              "y": 361.296875,
+              "width": 318,
+              "height": 24
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 60,
+              "y": 385.296875,
+              "width": 318,
+              "height": 24
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 60,
+              "y": 409.296875,
+              "width": 318,
+              "height": 24
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 839.328125,
+              "y": 361.296875,
+              "width": 406.390625,
+              "height": 24
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 839.328125,
+              "y": 385.296875,
+              "width": 406.390625,
+              "height": 24
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "char",
+            "rect": {
+              "x": 60,
+              "y": 489.296875,
+              "width": 131.953125,
+              "height": 118.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "char",
+            "rect": {
+              "x": 191.953125,
+              "y": 489.296875,
+              "width": 84.828125,
+              "height": 118.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "char",
+            "rect": {
+              "x": 276.78125,
+              "y": 489.296875,
+              "width": 103.3125,
+              "height": 118.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "char",
+            "rect": {
+              "x": 380.09375,
+              "y": 489.296875,
+              "width": 87.890625,
+              "height": 118.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "char",
+            "rect": {
+              "x": 505.453125,
+              "y": 489.296875,
+              "width": 131.953125,
+              "height": 118.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "char",
+            "rect": {
+              "x": 637.40625,
+              "y": 489.296875,
+              "width": 73.328125,
+              "height": 118.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "char",
+            "rect": {
+              "x": 60,
+              "y": 607.53125,
+              "width": 97.6875,
+              "height": 118.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "char",
+            "rect": {
+              "x": 157.6875,
+              "y": 607.53125,
+              "width": 103.3125,
+              "height": 118.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "char",
+            "rect": {
+              "x": 261,
+              "y": 607.53125,
+              "width": 84.59375,
+              "height": 118.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "char",
+            "rect": {
+              "x": 1190.875,
+              "y": 607.53125,
+              "width": 89.734375,
+              "height": 118.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "char",
+            "rect": {
+              "x": 1280.609375,
+              "y": 607.53125,
+              "width": 99.390625,
+              "height": 118.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "char",
+            "rect": {
+              "x": 803.8125,
+              "y": 725.765625,
+              "width": 72.21875,
+              "height": 118.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "char",
+            "rect": {
+              "x": 876.03125,
+              "y": 725.765625,
+              "width": 99.390625,
+              "height": 118.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "char",
+            "rect": {
+              "x": 975.421875,
+              "y": 725.765625,
+              "width": 85.9375,
+              "height": 118.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "char",
+            "rect": {
+              "x": 1098.828125,
+              "y": 725.765625,
+              "width": 97.4375,
+              "height": 118.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "char",
+            "rect": {
+              "x": 1196.265625,
+              "y": 725.765625,
+              "width": 99.390625,
+              "height": 118.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "char",
+            "rect": {
+              "x": 1295.65625,
+              "y": 725.765625,
+              "width": 84.34375,
+              "height": 118.234375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 60,
+              "y": 1045.7515869140625,
+              "width": 48.0625,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 123.984375,
+              "y": 1045.7515869140625,
+              "width": 243.734375,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 383.640625,
+              "y": 1045.7515869140625,
+              "width": 134.328125,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 533.890625,
+              "y": 1045.7515869140625,
+              "width": 113.9375,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 60,
+              "y": 1103.9703369140625,
+              "width": 110.5625,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 186.484375,
+              "y": 1103.9703369140625,
+              "width": 46.65625,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 249.0625,
+              "y": 1103.9703369140625,
+              "width": 104.53125,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 369.515625,
+              "y": 1103.9703369140625,
+              "width": 143.375,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 60,
+              "y": 1170.1875,
+              "width": 594.359375,
+              "height": 27
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 33.75)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 60,
+              "y": 1197.1875,
+              "width": 594.359375,
+              "height": 27
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 33.75)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 180.8125,
+              "y": 1226.4375,
+              "width": 24,
+              "height": 24
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 156.8125,
+              "y": 1250.4375,
+              "width": 24,
+              "height": 24
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "services_halves_text_wrap u-flex-vertical-nowrap u-gap-5 u-flex-grow u-justify-content-end",
+            "rect": {
+              "x": 60,
+              "y": 1394.9375,
+              "width": 644,
+              "height": 605
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 60.5)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 60,
+              "y": 1669.2672119140625,
+              "width": 212.21875,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 60,
+              "y": 1711.484375,
+              "width": 644,
+              "height": 27
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 33.75)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 60,
+              "y": 1746.484375,
+              "width": 644,
+              "height": 27
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 33.75)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "IMG",
+            "id": null,
+            "className": "services_halves_image",
+            "rect": {
+              "x": 736,
+              "y": 1189.237548828125,
+              "width": 644,
+              "height": 726
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, -145.2)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "services_halves_text_wrap u-flex-vertical-nowrap u-gap-5 u-flex-grow u-justify-content-end",
+            "rect": {
+              "x": 736,
+              "y": 2159.9375,
+              "width": 644,
+              "height": 605
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 60.5)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 736,
+              "y": 2469.26708984375,
+              "width": 230.734375,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 736,
+              "y": 2511.484375,
+              "width": 644,
+              "height": 27
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 33.75)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "IMG",
+            "id": null,
+            "className": "services_halves_image",
+            "rect": {
+              "x": 60,
+              "y": 1954.237548828125,
+              "width": 644,
+              "height": 726
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, -145.2)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "services_halves_text_wrap u-flex-vertical-nowrap u-gap-5 u-flex-grow u-justify-content-end",
+            "rect": {
+              "x": 60,
+              "y": 2924.9375,
+              "width": 644,
+              "height": 605
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 60.5)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 60,
+              "y": 3199.26708984375,
+              "width": 255.015625,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 60,
+              "y": 3241.484375,
+              "width": 644,
+              "height": 27
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 33.75)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 60,
+              "y": 3276.484375,
+              "width": 644,
+              "height": 27
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 33.75)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "IMG",
+            "id": null,
+            "className": "services_halves_image",
+            "rect": {
+              "x": 736,
+              "y": 2719.237548828125,
+              "width": 644,
+              "height": 726
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, -145.2)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "services_halves_text_wrap u-flex-vertical-nowrap u-gap-5 u-flex-grow u-justify-content-end",
+            "rect": {
+              "x": 736,
+              "y": 3689.9375,
+              "width": 644,
+              "height": 605
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 60.5)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 736,
+              "y": 3999.26708984375,
+              "width": 329.484375,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 736,
+              "y": 4041.484375,
+              "width": 644,
+              "height": 27
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 33.75)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "IMG",
+            "id": null,
+            "className": "services_halves_image",
+            "rect": {
+              "x": 60,
+              "y": 3484.237548828125,
+              "width": 644,
+              "height": 725.999755859375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, -145.2)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 60,
+              "y": 4460.18896484375,
+              "width": 180.390625,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 256.3125,
+              "y": 4460.18896484375,
+              "width": 190.59375,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 60,
+              "y": 4518.40771484375,
+              "width": 87.21875,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 163.140625,
+              "y": 4518.40771484375,
+              "width": 158.65625,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 337.71875,
+              "y": 4518.40771484375,
+              "width": 46.65625,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 60,
+              "y": 4584.625,
+              "width": 502.90625,
+              "height": 27
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 33.75)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 60,
+              "y": 4611.625,
+              "width": 502.90625,
+              "height": 27
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 33.75)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 60,
+              "y": 4638.625,
+              "width": 502.90625,
+              "height": 27
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 33.75)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 60,
+              "y": 4665.625,
+              "width": 502.90625,
+              "height": 27
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 33.75)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 180.8125,
+              "y": 4694.875,
+              "width": 24,
+              "height": 24
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 156.8125,
+              "y": 4718.875,
+              "width": 24,
+              "height": 24
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "accordion_services_divider",
+            "rect": {
+              "x": 60,
+              "y": 4834.875,
+              "width": 0,
+              "height": 1
+            },
+            "styles": {
+              "transform": "matrix(0, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 60,
+              "y": 4867.875,
+              "width": 36,
+              "height": 36
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 505.328125,
+              "y": 4918.92822265625,
+              "width": 175.6875,
+              "height": 37.4375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 43.0531)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 690.8125,
+              "y": 4918.92822265625,
+              "width": 106.984375,
+              "height": 37.4375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 43.0531)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 505.328125,
+              "y": 4964.36572265625,
+              "width": 21.0625,
+              "height": 37.4375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 43.0531)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 536.1875,
+              "y": 4964.36572265625,
+              "width": 229.984375,
+              "height": 37.4375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 43.0531)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "accordion_services_divider",
+            "rect": {
+              "x": 60,
+              "y": 4998.75,
+              "width": 0,
+              "height": 1
+            },
+            "styles": {
+              "transform": "matrix(0, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 60,
+              "y": 5031.75,
+              "width": 36,
+              "height": 36
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 505.328125,
+              "y": 5082.80322265625,
+              "width": 222.0625,
+              "height": 37.4375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 43.0531)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 505.328125,
+              "y": 5128.24072265625,
+              "width": 139.8125,
+              "height": 37.4375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 43.0531)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "accordion_services_divider",
+            "rect": {
+              "x": 60,
+              "y": 5162.625,
+              "width": 0,
+              "height": 1
+            },
+            "styles": {
+              "transform": "matrix(0, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 60,
+              "y": 5195.625,
+              "width": 36,
+              "height": 36
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 505.328125,
+              "y": 5246.67822265625,
+              "width": 248.90625,
+              "height": 37.4375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 43.0531)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 505.328125,
+              "y": 5292.11572265625,
+              "width": 203.109375,
+              "height": 37.4375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 43.0531)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "accordion_services_divider",
+            "rect": {
+              "x": 60,
+              "y": 5326.5,
+              "width": 0,
+              "height": 1
+            },
+            "styles": {
+              "transform": "matrix(0, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 60,
+              "y": 5359.5,
+              "width": 36,
+              "height": 36
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 505.328125,
+              "y": 5410.55322265625,
+              "width": 186.5625,
+              "height": 37.4375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 43.0531)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 505.328125,
+              "y": 5455.99072265625,
+              "width": 171.375,
+              "height": 37.4375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 43.0531)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "accordion_services_divider",
+            "rect": {
+              "x": 60,
+              "y": 5490.375,
+              "width": 0,
+              "height": 1
+            },
+            "styles": {
+              "transform": "matrix(0, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 60,
+              "y": 5853.12646484375,
+              "width": 87.21875,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 163.140625,
+              "y": 5853.12646484375,
+              "width": 163.28125,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 342.34375,
+              "y": 5853.12646484375,
+              "width": 113.265625,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 471.53125,
+              "y": 5853.12646484375,
+              "width": 114.5625,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 60,
+              "y": 5911.34521484375,
+              "width": 356.046875,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 431.96875,
+              "y": 5911.34521484375,
+              "width": 92.25,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 60,
+              "y": 5969.56396484375,
+              "width": 321.53125,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 397.453125,
+              "y": 5969.56396484375,
+              "width": 78.15625,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 491.53125,
+              "y": 5969.56396484375,
+              "width": 258.921875,
+              "height": 50.21875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 57.7516)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 60,
+              "y": 6047.03125,
+              "width": 518.15625,
+              "height": 36
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 45)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 60,
+              "y": 6083.03125,
+              "width": 518.15625,
+              "height": 36
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 45)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 950.65625,
+              "y": 6035.78125,
+              "width": 429.34375,
+              "height": 27
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 33.75)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 950.65625,
+              "y": 6062.78125,
+              "width": 429.34375,
+              "height": 27
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 33.75)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 950.65625,
+              "y": 6089.78125,
+              "width": 429.34375,
+              "height": 27
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 33.75)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "line",
+            "rect": {
+              "x": 950.65625,
+              "y": 6116.78125,
+              "width": 429.34375,
+              "height": 27
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 33.75)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 1071.46875,
+              "y": 6146.03125,
+              "width": 24,
+              "height": 24
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 1047.46875,
+              "y": 6170.03125,
+              "width": 24,
+              "height": 24
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "contact-form_main_layout",
+            "rect": {
+              "x": -105,
+              "y": 6316.03125,
+              "width": 1650,
+              "height": 900
+            },
+            "styles": {
+              "transform": "matrix(1.25, 0, 0, 1.25, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "contact-form_main_content u-flex-horizontal-wrap",
+            "rect": {
+              "x": 92,
+              "y": 6416.03125,
+              "width": 1256,
+              "height": 560
+            },
+            "styles": {
+              "transform": "matrix(0.8, 0, 0, 0.8, 0, -56)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 92,
+              "y": 6708.48583984375,
+              "width": 203.73440551757812,
+              "height": 71.46875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 82.1891)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 318.3906555175781,
+              "y": 6708.48583984375,
+              "width": 200.62496948242188,
+              "height": 71.46875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 82.1891)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 92,
+              "y": 6763.16552734375,
+              "width": 55.46875,
+              "height": 36
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 41.4)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 153.359375,
+              "y": 6763.16552734375,
+              "width": 31.765625,
+              "height": 36
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 41.4)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 191.015625,
+              "y": 6763.16552734375,
+              "width": 64.56253051757812,
+              "height": 36
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 41.4)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 261.46875,
+              "y": 6763.16552734375,
+              "width": 83.625,
+              "height": 36
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 41.4)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 350.984375,
+              "y": 6763.16552734375,
+              "width": 99.78125,
+              "height": 36
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 41.4)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "word",
+            "rect": {
+              "x": 456.65625,
+              "y": 6763.16552734375,
+              "width": 45.875,
+              "height": 36
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 41.4)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "LABEL",
+            "id": null,
+            "className": "form_label_wrap",
+            "rect": {
+              "x": 720,
+              "y": 6423.2314453125,
+              "width": 628,
+              "height": 48
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 7.2)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "LABEL",
+            "id": null,
+            "className": "form_label_wrap",
+            "rect": {
+              "x": 720,
+              "y": 6503.2314453125,
+              "width": 628,
+              "height": 48
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 7.2)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "LABEL",
+            "id": null,
+            "className": "form_label_wrap",
+            "rect": {
+              "x": 720,
+              "y": 6583.2314453125,
+              "width": 628,
+              "height": 48
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 7.2)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "LABEL",
+            "id": null,
+            "className": "form_label_wrap u-zindex-1 u-column-span-2",
+            "rect": {
+              "x": 720,
+              "y": 6663.2314453125,
+              "width": 628,
+              "height": 48
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 7.2)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "FIELDSET",
+            "id": null,
+            "className": "form_fieldset_wrap",
+            "rect": {
+              "x": 720,
+              "y": 6745.63134765625,
+              "width": 628,
+              "height": 64
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 9.6)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "form_ui_item",
+            "rect": {
+              "x": 720,
+              "y": 6789.2314453125,
+              "width": 60.15625,
+              "height": 24
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 3.6)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "form_ui_item",
+            "rect": {
+              "x": 812.15625,
+              "y": 6789.2314453125,
+              "width": 88.29693603515625,
+              "height": 24
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 3.6)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "form_ui_item",
+            "rect": {
+              "x": 932.453125,
+              "y": 6789.2314453125,
+              "width": 60.328125,
+              "height": 24
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 3.6)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "form_ui_item",
+            "rect": {
+              "x": 1024.7813720703125,
+              "y": 6789.2314453125,
+              "width": 97.3905029296875,
+              "height": 24
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 3.6)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "LABEL",
+            "id": null,
+            "className": "form_label_wrap is-textarea u-column-2",
+            "rect": {
+              "x": 720,
+              "y": 6844.03125,
+              "width": 628,
+              "height": 80
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 12)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "u-button-wrapper u-margin-top-0 u-color-yellow u-flex-horizontal-nowrap u-justify-content-end",
+            "rect": {
+              "x": 720,
+              "y": 6948.8310546875,
+              "width": 628,
+              "height": 32
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 4.8)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 1324.0001220703125,
+              "y": 6952.8310546875,
+              "width": 23.9998779296875,
+              "height": 24
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 1300,
+              "y": 6976.8310546875,
+              "width": 24.0001220703125,
+              "height": 24
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "footer_layout u-flex-vertical-nowrap u-gap-4",
+            "rect": {
+              "x": 60,
+              "y": 7000.50390625,
+              "width": 1320,
+              "height": 630.109375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, -157.527)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 1320.984375,
+              "y": 7136.50390625,
+              "width": 64,
+              "height": 64
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 1256.984375,
+              "y": 7200.50390625,
+              "width": 64,
+              "height": 64
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 1359.984375,
+              "y": 7237.50390625,
+              "width": 20,
+              "height": 20
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 60,
+              "y": 7511.37890625,
+              "width": 22.328125,
+              "height": 22.328125
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 83.734375,
+              "y": 7511.37890625,
+              "width": 22.328125,
+              "height": 22.328125
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 107.46875,
+              "y": 7510.83203125,
+              "width": 23.4375,
+              "height": 23.4375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 158.5,
+              "y": 7511.59765625,
+              "width": 21.921875,
+              "height": 21.921875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 190.28125,
+              "y": 7511.59765625,
+              "width": 21.90625,
+              "height": 21.90625
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 222.046875,
+              "y": 7510.50390625,
+              "width": 24.109375,
+              "height": 24.109375
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 256.015625,
+              "y": 7511.59765625,
+              "width": 21.90625,
+              "height": 21.90625
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 287.78125,
+              "y": 7511.59765625,
+              "width": 21.921875,
+              "height": 21.921875
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 319.5625,
+              "y": 7511.59765625,
+              "width": 21.90625,
+              "height": 21.90625
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 351.328125,
+              "y": 7511.59765625,
+              "width": 21.90625,
+              "height": 21.90625
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 383.09375,
+              "y": 7511.59765625,
+              "width": 21.90625,
+              "height": 21.90625
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          }
+        ]
+      },
+      "screenshot": "screenshots\\_services_desktop.png"
+    },
+    "mobile": {
+      "viewport": "mobile",
+      "animationReport": {
+        "frameworks": [
+          "GSAP"
+        ],
+        "animatedElementsCount": 70,
+        "elements": [
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "g_nav_bar",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 390,
+              "height": 108
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "color 1s cubic-bezier(0.19, 1, 0.22, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 18.75,
+              "y": 34.859375,
+              "width": 14.609375,
+              "height": 14.609375
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 34.28125,
+              "y": 34.859375,
+              "width": 14.609375,
+              "height": 14.609375
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 49.8125,
+              "y": 34.5,
+              "width": 15.328125,
+              "height": 15.328125
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 18.75,
+              "y": 58.53125,
+              "width": 14.234375,
+              "height": 14.234375
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 39.375,
+              "y": 58.546875,
+              "width": 14.21875,
+              "height": 14.21875
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 59.984375,
+              "y": 57.828125,
+              "width": 15.65625,
+              "height": 15.65625
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 82.03125,
+              "y": 58.546875,
+              "width": 14.21875,
+              "height": 14.21875
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 102.640625,
+              "y": 58.53125,
+              "width": 14.234375,
+              "height": 14.234375
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 123.265625,
+              "y": 58.53125,
+              "width": 14.234375,
+              "height": 14.234375
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 143.890625,
+              "y": 58.53125,
+              "width": 14.234375,
+              "height": 14.234375
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 164.515625,
+              "y": 58.53125,
+              "width": 14.234375,
+              "height": 14.234375
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 333.6857604980469,
+              "y": 594.6251220703125,
+              "width": 34.667205810546875,
+              "height": 34.667236328125
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 299.0185241699219,
+              "y": 623.7144165039062,
+              "width": 34.667236328125,
+              "height": 34.66717529296875
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 333.6857604980469,
+              "y": 648.5469970703125,
+              "width": 34.667205810546875,
+              "height": 34.667236328125
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 299.0185241699219,
+              "y": 677.6362915039062,
+              "width": 34.667236328125,
+              "height": 34.66717529296875
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 333.6857604980469,
+              "y": 702.4688720703125,
+              "width": 34.667205810546875,
+              "height": 34.667236328125
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 299.0185241699219,
+              "y": 731.5581665039062,
+              "width": 34.667236328125,
+              "height": 34.66717529296875
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 333.6857604980469,
+              "y": 756.3907470703125,
+              "width": 34.667205810546875,
+              "height": 34.667236328125
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 299.0185241699219,
+              "y": 785.4800415039062,
+              "width": 34.667236328125,
+              "height": 34.66717529296875
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 333.6857604980469,
+              "y": 810.3126220703125,
+              "width": 34.667205810546875,
+              "height": 34.667236328125
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 299.0185241699219,
+              "y": 839.4019165039062,
+              "width": 34.667236328125,
+              "height": 34.66717529296875
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "hero_main_bg_wrap",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 390,
+              "height": 844
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 139.5625,
+              "y": 1196.140625,
+              "width": 24,
+              "height": 24
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 115.5625,
+              "y": 1220.140625,
+              "width": 24,
+              "height": 24
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 139.5625,
+              "y": 5826.890625,
+              "width": 24,
+              "height": 24
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 115.5625,
+              "y": 5850.890625,
+              "width": 24,
+              "height": 24
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "accordion_services_divider",
+            "rect": {
+              "x": 18.75,
+              "y": 5982.890625,
+              "width": 0,
+              "height": 1
+            },
+            "styles": {
+              "transform": "matrix(0, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "accordion_services_divider",
+            "rect": {
+              "x": 18.75,
+              "y": 6129.984375,
+              "width": 0,
+              "height": 1
+            },
+            "styles": {
+              "transform": "matrix(0, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "accordion_services_divider",
+            "rect": {
+              "x": 18.75,
+              "y": 6277.078125,
+              "width": 0,
+              "height": 1
+            },
+            "styles": {
+              "transform": "matrix(0, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "accordion_services_divider",
+            "rect": {
+              "x": 18.75,
+              "y": 6424.171875,
+              "width": 0,
+              "height": 1
+            },
+            "styles": {
+              "transform": "matrix(0, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "accordion_services_divider",
+            "rect": {
+              "x": 18.75,
+              "y": 6571.265625,
+              "width": 0,
+              "height": 1
+            },
+            "styles": {
+              "transform": "matrix(0, 0, 0, 1, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 139.5625,
+              "y": 7164.953125,
+              "width": 24,
+              "height": 24
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 115.5625,
+              "y": 7188.953125,
+              "width": 24,
+              "height": 24
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "contact-form_main_layout",
+            "rect": {
+              "x": -25.3125,
+              "y": 7200.5703125,
+              "width": 440.625,
+              "height": 1118.828125
+            },
+            "styles": {
+              "transform": "matrix(1.25, 0, 0, 1.25, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "contact-form_main_content u-flex-horizontal-wrap",
+            "rect": {
+              "x": 42.75,
+              "y": 7392.453125,
+              "width": 304.5,
+              "height": 735.0625
+            },
+            "styles": {
+              "transform": "matrix(0.8, 0, 0, 0.8, 0, 0)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "LABEL",
+            "id": null,
+            "className": "form_label_wrap",
+            "rect": {
+              "x": 42.75,
+              "y": 7518.7158203125,
+              "width": 304.5,
+              "height": 48
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 7.2)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "LABEL",
+            "id": null,
+            "className": "form_label_wrap",
+            "rect": {
+              "x": 42.75,
+              "y": 7598.7158203125,
+              "width": 304.5,
+              "height": 48
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 7.2)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "LABEL",
+            "id": null,
+            "className": "form_label_wrap",
+            "rect": {
+              "x": 42.75,
+              "y": 7678.7158203125,
+              "width": 304.5,
+              "height": 48
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 7.2)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "LABEL",
+            "id": null,
+            "className": "form_label_wrap u-zindex-1 u-column-span-2",
+            "rect": {
+              "x": 42.75,
+              "y": 7758.7158203125,
+              "width": 304.5,
+              "height": 48
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 7.2)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "FIELDSET",
+            "id": null,
+            "className": "form_fieldset_wrap",
+            "rect": {
+              "x": 42.75,
+              "y": 7849.515625,
+              "width": 304.5,
+              "height": 120
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 18)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "form_ui_item",
+            "rect": {
+              "x": 42.75,
+              "y": 7893.11572265625,
+              "width": 60.15625,
+              "height": 24
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 3.6)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "form_ui_item",
+            "rect": {
+              "x": 134.90623474121094,
+              "y": 7893.11572265625,
+              "width": 88.29689025878906,
+              "height": 24
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 3.6)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "form_ui_item",
+            "rect": {
+              "x": 255.203125,
+              "y": 7893.11572265625,
+              "width": 60.328125,
+              "height": 24
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 3.6)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "form_ui_item",
+            "rect": {
+              "x": 42.75,
+              "y": 7949.11572265625,
+              "width": 97.39060974121094,
+              "height": 24
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 3.6)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "LABEL",
+            "id": null,
+            "className": "form_label_wrap is-textarea u-column-2",
+            "rect": {
+              "x": 42.75,
+              "y": 7995.515625,
+              "width": 304.5,
+              "height": 80
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 12)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "u-button-wrapper u-margin-top-0 u-color-yellow u-flex-horizontal-nowrap u-justify-content-end",
+            "rect": {
+              "x": 42.75,
+              "y": 8100.3154296875,
+              "width": 304.5,
+              "height": 32
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, 4.8)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 323.25,
+              "y": 8104.3154296875,
+              "width": 24,
+              "height": 24
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 299.25,
+              "y": 8128.3154296875,
+              "width": 24,
+              "height": 24
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "footer_layout u-flex-vertical-nowrap u-gap-4",
+            "rect": {
+              "x": 18.75,
+              "y": 8090.74609375,
+              "width": 352.5,
+              "height": 595.078125
+            },
+            "styles": {
+              "transform": "matrix(1, 0, 0, 1, 0, -148.77)",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 355,
+              "y": 8170.74609375,
+              "width": 32,
+              "height": 32
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 323,
+              "y": 8202.74609375,
+              "width": 32,
+              "height": 32
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "transform 0.75s cubic-bezier(0.625, 0.05, 0, 1)",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 351.25,
+              "y": 8451.74609375,
+              "width": 20,
+              "height": 20
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 18.75,
+              "y": 8533.30859375,
+              "width": 22.8125,
+              "height": 22.8125
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 43,
+              "y": 8533.30859375,
+              "width": 22.8125,
+              "height": 22.8125
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 67.25,
+              "y": 8532.74609375,
+              "width": 23.953125,
+              "height": 23.953125
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 119.390625,
+              "y": 8533.85546875,
+              "width": 22.40625,
+              "height": 22.40625
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 151.859375,
+              "y": 8533.87109375,
+              "width": 22.390625,
+              "height": 22.390625
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 184.3125,
+              "y": 8532.74609375,
+              "width": 24.640625,
+              "height": 24.640625
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 219.015625,
+              "y": 8533.87109375,
+              "width": 22.390625,
+              "height": 22.390625
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 251.46875,
+              "y": 8533.85546875,
+              "width": 22.40625,
+              "height": 22.40625
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 283.9375,
+              "y": 8533.87109375,
+              "width": 22.390625,
+              "height": 22.390625
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 316.390625,
+              "y": 8533.85546875,
+              "width": 22.40625,
+              "height": 22.40625
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          },
+          {
+            "tag": "svg",
+            "id": null,
+            "className": null,
+            "rect": {
+              "x": 348.859375,
+              "y": 8533.87109375,
+              "width": 22.390625,
+              "height": 22.390625
+            },
+            "styles": {
+              "transform": "none",
+              "transition": "all",
+              "animationName": "none",
+              "animationDuration": "0s",
+              "willChange": "auto"
+            }
+          }
+        ]
+      },
+      "screenshot": "screenshots\\_services_mobile.png"
+    }
+  }
+}

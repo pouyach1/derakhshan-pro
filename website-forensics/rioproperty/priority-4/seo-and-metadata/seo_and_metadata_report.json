@@ -1,0 +1,45 @@
+{
+  "title": "RIO Property | Retail, Industrial, Office",
+  "language": "en",
+  "canonicalUrl": null,
+  "metaCount": 9,
+  "metaTags": [
+    {
+      "name": "description",
+      "content": "We specialise in commercial real estate within Cape Town and the surrounding suburbs. Across retail, industrial and office property we sell, lease and value assets for owners, developers, investors and banks."
+    },
+    {
+      "name": "og:title",
+      "content": "RIO Property | Retail, Industrial, Office"
+    },
+    {
+      "name": "og:description",
+      "content": "We specialise in commercial real estate within Cape Town and the surrounding suburbs. Across retail, industrial and office property we sell, lease and value assets for owners, developers, investors and banks."
+    },
+    {
+      "name": "og:image",
+      "content": "https://cdn.prod.website-files.com/69ad22b0209a3b56e37f5e4e/6a2a7adbe01d8fb35e5630dc_RIO%20Open%20Graph%20Image.jpg"
+    },
+    {
+      "name": "twitter:title",
+      "content": "RIO Property | Retail, Industrial, Office"
+    },
+    {
+      "name": "twitter:description",
+      "content": "We specialise in commercial real estate within Cape Town and the surrounding suburbs. Across retail, industrial and office property we sell, lease and value assets for owners, developers, investors and banks."
+    },
+    {
+      "name": "og:type",
+      "content": "website"
+    },
+    {
+      "name": "twitter:card",
+      "content": "summary_large_image"
+    },
+    {
+      "name": "viewport",
+      "content": "width=device-width, initial-scale=1"
+    }
+  ],
+  "jsonLdSchemas": []
+}

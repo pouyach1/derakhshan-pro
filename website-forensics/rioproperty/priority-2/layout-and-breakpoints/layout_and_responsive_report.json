@@ -1,0 +1,1876 @@
+{
+  "mediaQueries": [
+    {
+      "mediaText": "screen and (max-width: 991px)",
+      "rulesCount": 16
+    },
+    {
+      "mediaText": "screen and (max-width: 767px)",
+      "rulesCount": 16
+    },
+    {
+      "mediaText": "screen and (max-width: 479px)",
+      "rulesCount": 16
+    },
+    {
+      "mediaText": "(min-width: 768px)",
+      "rulesCount": 8
+    },
+    {
+      "mediaText": "screen and (max-width: 991px)",
+      "rulesCount": 2
+    },
+    {
+      "mediaText": "screen and (max-width: 767px)",
+      "rulesCount": 3
+    },
+    {
+      "mediaText": "screen and (max-width: 479px)",
+      "rulesCount": 2
+    },
+    {
+      "mediaText": "screen and (max-width: 479px)",
+      "rulesCount": 1
+    },
+    {
+      "mediaText": "screen and (max-width: 991px)",
+      "rulesCount": 12
+    },
+    {
+      "mediaText": "screen and (max-width: 767px)",
+      "rulesCount": 78
+    },
+    {
+      "mediaText": "screen and (max-width: 479px)",
+      "rulesCount": 6
+    },
+    {
+      "mediaText": "(prefers-color-scheme: light)",
+      "rulesCount": 1
+    },
+    {
+      "mediaText": "(hover: hover)",
+      "rulesCount": 2
+    },
+    {
+      "mediaText": "(hover: none)",
+      "rulesCount": 1
+    },
+    {
+      "mediaText": "(hover: hover) and (pointer: fine)",
+      "rulesCount": 3
+    },
+    {
+      "mediaText": "(hover: hover) and (pointer: fine)",
+      "rulesCount": 9
+    },
+    {
+      "mediaText": "(hover: hover) and (pointer: fine)",
+      "rulesCount": 1
+    },
+    {
+      "mediaText": "(hover: hover) and (pointer: fine)",
+      "rulesCount": 2
+    },
+    {
+      "mediaText": "(min-width: 768px)",
+      "rulesCount": 8
+    },
+    {
+      "mediaText": "(hover: hover) and (pointer: fine) and (min-width: 1240px)",
+      "rulesCount": 5
+    },
+    {
+      "mediaText": "(max-width: 991px)",
+      "rulesCount": 2
+    },
+    {
+      "mediaText": "(max-width: 1239px)",
+      "rulesCount": 2
+    }
+  ],
+  "layoutNodes": [
+    {
+      "id": "section-2",
+      "tag": "nav",
+      "className": "g_nav_wrap",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-3",
+      "tag": "div",
+      "className": "preloader_container u-container",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1320,
+        "height": 900
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "128px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 60px 0px 60px"
+      }
+    },
+    {
+      "id": "section-4",
+      "tag": "section",
+      "className": "hero_home_section u-section u-padding-block-0 u-theme-brand u-zindex-3 u-overflow-clip is-home",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1440,
+        "height": 2700
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-5",
+      "tag": "div",
+      "className": "hero_home_video_outer",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-6",
+      "tag": "div",
+      "className": "hero_home_video_wrap u-cover-absolute",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-7",
+      "tag": "div",
+      "className": "hero_home_video_inner u-cover-absolute",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-8",
+      "tag": "canvas",
+      "className": "hero_home_video_canvas u-cover-absolute",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-10",
+      "tag": "div",
+      "className": "hero_main_bg_wrap u-cover-absolute",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-11",
+      "tag": "div",
+      "className": "hero_home_bg u-cover-absolute u-theme-brand",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-12",
+      "tag": "div",
+      "className": "hero_main_text_wrap",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-13",
+      "tag": "div",
+      "className": "hero_main_text_container u-container-full",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1320,
+        "height": 900
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "128px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 60px 0px 60px"
+      }
+    },
+    {
+      "id": "section-14",
+      "tag": "div",
+      "className": "hero_main_text_layout u-min-height-screen u-flex-vertical-nowrap u-justify-content-end u-gap-custom",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1320,
+        "height": 900
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "56px",
+        "padding": "56px 0px 56px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-15",
+      "tag": "div",
+      "className": "hero_main_text_paragraphs_wrap u-grid-custom",
+      "layoutType": "grid",
+      "dimensions": {
+        "width": 1320,
+        "height": 72
+      },
+      "computedLayout": {
+        "display": "grid",
+        "flexDirection": "column",
+        "gridTemplateColumns": "95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-16",
+      "tag": "div",
+      "className": "hero_main_text_paragraphs_column u-column-span-3",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 318,
+        "height": 72
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-17",
+      "tag": "div",
+      "className": "hero_main_text_paragraphs_column u-column-span-5 u-column-start-8",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 541,
+        "height": 72
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-18",
+      "tag": "p",
+      "className": "hero_main_text_paragraph u-text-style-title-1 is-right is-home u-text-wrap-default",
+      "layoutType": "flow-root",
+      "dimensions": {
+        "width": 406,
+        "height": 48
+      },
+      "computedLayout": {
+        "display": "flow-root",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-19",
+      "tag": "div",
+      "className": "hero_main_text_heading_wrap u-flex-vertical-nowrap",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1320,
+        "height": 355
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "0px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-20",
+      "tag": "div",
+      "className": "hero_main_text_heading_row u-flex-horizontal-nowrap u-justify-content-between",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1320,
+        "height": 118
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-21",
+      "tag": "div",
+      "className": "hero_main_text_heading u-text-style-h1 is-home",
+      "layoutType": "flow-root",
+      "dimensions": {
+        "width": 211,
+        "height": 118
+      },
+      "computedLayout": {
+        "display": "flow-root",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-22",
+      "tag": "div",
+      "className": "hero_main_text_heading_row u-flex-horizontal-nowrap u-justify-content-between",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1320,
+        "height": 118
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-23",
+      "tag": "div",
+      "className": "hero_main_text_heading u-text-style-h1 is-home",
+      "layoutType": "flow-root",
+      "dimensions": {
+        "width": 690,
+        "height": 118
+      },
+      "computedLayout": {
+        "display": "flow-root",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-24",
+      "tag": "div",
+      "className": "hero_main_text_heading u-text-style-h1 u-alignment-end is-home",
+      "layoutType": "flow-root",
+      "dimensions": {
+        "width": 493,
+        "height": 118
+      },
+      "computedLayout": {
+        "display": "flow-root",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-25",
+      "tag": "div",
+      "className": "hero_main_text_heading_row u-flex-horizontal-nowrap u-justify-content-end",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1320,
+        "height": 118
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-26",
+      "tag": "div",
+      "className": "hero_main_text_heading u-text-style-h1 u-alignment-end is-home",
+      "layoutType": "flow-root",
+      "dimensions": {
+        "width": 795,
+        "height": 118
+      },
+      "computedLayout": {
+        "display": "flow-root",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-27",
+      "tag": "section",
+      "className": "cta_text_section u-section u-padding-0",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1440,
+        "height": 468
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-28",
+      "tag": "div",
+      "className": "cta_text_container u-container",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1320,
+        "height": 468
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "128px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 60px 0px 60px"
+      }
+    },
+    {
+      "id": "section-29",
+      "tag": "div",
+      "className": "cta_text_bottom_wrap u-grid-custom",
+      "layoutType": "grid",
+      "dimensions": {
+        "width": 1320,
+        "height": 128
+      },
+      "computedLayout": {
+        "display": "grid",
+        "flexDirection": "column",
+        "gridTemplateColumns": "95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-30",
+      "tag": "section",
+      "className": "carousel_home_section u-section u-padding-0",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1440,
+        "height": 465
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-31",
+      "tag": "div",
+      "className": "u-container",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1320,
+        "height": 52
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "128px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 60px 0px 60px"
+      }
+    },
+    {
+      "id": "section-32",
+      "tag": "section",
+      "className": "personas_home_section u-section u-padding-block-small",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1440,
+        "height": 763
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "80px 0px 80px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-33",
+      "tag": "div",
+      "className": "personas_home_container u-container",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1320,
+        "height": 603
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "128px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-34",
+      "tag": "div",
+      "className": "personas_home_columns u-grid-custom w-dyn-items",
+      "layoutType": "grid",
+      "dimensions": {
+        "width": 1320,
+        "height": 371
+      },
+      "computedLayout": {
+        "display": "grid",
+        "flexDirection": "column",
+        "gridTemplateColumns": "318px 318px 318px 318px",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-35",
+      "tag": "section",
+      "className": "done-deals_home_section u-section u-padding-block-small",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1440,
+        "height": 1042
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "80px 0px 160px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-36",
+      "tag": "div",
+      "className": "done-deals_home_container u-container",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1320,
+        "height": 802
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "128px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 60px 0px 60px"
+      }
+    },
+    {
+      "id": "section-37",
+      "tag": "div",
+      "className": "done-deals_component_overlay_text_details_wrap u-grid-custom u-overflow-clip",
+      "layoutType": "grid",
+      "dimensions": {
+        "width": 377,
+        "height": 24
+      },
+      "computedLayout": {
+        "display": "grid",
+        "flexDirection": "column",
+        "gridTemplateColumns": "180.438px 180.438px",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-38",
+      "tag": "div",
+      "className": "done-deals_component_overlay_text_details_wrap u-grid-custom u-overflow-clip",
+      "layoutType": "grid",
+      "dimensions": {
+        "width": 377,
+        "height": 24
+      },
+      "computedLayout": {
+        "display": "grid",
+        "flexDirection": "column",
+        "gridTemplateColumns": "180.438px 180.438px",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-39",
+      "tag": "div",
+      "className": "done-deals_component_overlay_text_details_wrap u-grid-custom u-overflow-clip",
+      "layoutType": "grid",
+      "dimensions": {
+        "width": 377,
+        "height": 24
+      },
+      "computedLayout": {
+        "display": "grid",
+        "flexDirection": "column",
+        "gridTemplateColumns": "180.438px 180.438px",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-40",
+      "tag": "div",
+      "className": "done-deals_component_overlay_text_details_wrap u-grid-custom u-overflow-clip",
+      "layoutType": "grid",
+      "dimensions": {
+        "width": 377,
+        "height": 24
+      },
+      "computedLayout": {
+        "display": "grid",
+        "flexDirection": "column",
+        "gridTemplateColumns": "180.438px 180.438px",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-41",
+      "tag": "div",
+      "className": "done-deals_component_overlay_text_details_wrap u-grid-custom u-overflow-clip",
+      "layoutType": "grid",
+      "dimensions": {
+        "width": 377,
+        "height": 24
+      },
+      "computedLayout": {
+        "display": "grid",
+        "flexDirection": "column",
+        "gridTemplateColumns": "180.438px 180.438px",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-42",
+      "tag": "div",
+      "className": "done-deals_component_overlay_text_details_wrap u-grid-custom u-overflow-clip",
+      "layoutType": "grid",
+      "dimensions": {
+        "width": 377,
+        "height": 24
+      },
+      "computedLayout": {
+        "display": "grid",
+        "flexDirection": "column",
+        "gridTemplateColumns": "180.438px 180.438px",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-43",
+      "tag": "div",
+      "className": "done-deals_component_overlay_text_details_wrap u-grid-custom u-overflow-clip",
+      "layoutType": "grid",
+      "dimensions": {
+        "width": 377,
+        "height": 24
+      },
+      "computedLayout": {
+        "display": "grid",
+        "flexDirection": "column",
+        "gridTemplateColumns": "180.438px 180.438px",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-44",
+      "tag": "section",
+      "className": "laws_home_section u-section u-padding-block-small",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1440,
+        "height": 1040
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "80px 0px 80px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-45",
+      "tag": "div",
+      "className": "laws_home_container u-container",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1320,
+        "height": 880
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "128px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 60px 0px 60px"
+      }
+    },
+    {
+      "id": "section-46",
+      "tag": "div",
+      "className": "laws_home_grid_outer",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 1320,
+        "height": 584
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-47",
+      "tag": "div",
+      "className": "laws_home_grid_bg",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 1320,
+        "height": 584
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-48",
+      "tag": "div",
+      "className": "laws_home_grid_wrap u-position-relative u-hide-mobile-landscape w-dyn-list",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 1320,
+        "height": 584
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-49",
+      "tag": "div",
+      "className": "laws_home_grid u-grid-custom w-dyn-items",
+      "layoutType": "grid",
+      "dimensions": {
+        "width": 1320,
+        "height": 584
+      },
+      "computedLayout": {
+        "display": "grid",
+        "flexDirection": "column",
+        "gridTemplateColumns": "439.328px 439.328px 439.344px",
+        "gap": "0px 1px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-50",
+      "tag": "div",
+      "className": "laws_home_grid_item w-dyn-item",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 439,
+        "height": 152
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-51",
+      "tag": "div",
+      "className": "laws_home_grid_component u-flex-vertical-nowrap u-gap-1 u-justify-content-start u-position-relative",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 439,
+        "height": 152
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "32px 18px 32px 18px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-52",
+      "tag": "div",
+      "className": "laws_home_grid_inner u-flex-vertical-nowrap u-gap-1",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 403,
+        "height": 64
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-54",
+      "tag": "div",
+      "className": "laws_home_grid_item w-dyn-item",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 439,
+        "height": 152
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-55",
+      "tag": "div",
+      "className": "laws_home_grid_component u-flex-vertical-nowrap u-gap-1 u-justify-content-start u-position-relative",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 439,
+        "height": 152
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "32px 18px 32px 18px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-56",
+      "tag": "div",
+      "className": "laws_home_grid_inner u-flex-vertical-nowrap u-gap-1",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 403,
+        "height": 88
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-58",
+      "tag": "div",
+      "className": "laws_home_grid_item w-dyn-item",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 439,
+        "height": 152
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-59",
+      "tag": "div",
+      "className": "laws_home_grid_component u-flex-vertical-nowrap u-gap-1 u-justify-content-start u-position-relative",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 439,
+        "height": 152
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "32px 18px 32px 18px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-60",
+      "tag": "div",
+      "className": "laws_home_grid_inner u-flex-vertical-nowrap u-gap-1",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 403,
+        "height": 88
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-62",
+      "tag": "div",
+      "className": "laws_home_grid_item w-dyn-item",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 439,
+        "height": 152
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-63",
+      "tag": "div",
+      "className": "laws_home_grid_component u-flex-vertical-nowrap u-gap-1 u-justify-content-start u-position-relative",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 439,
+        "height": 152
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "32px 18px 32px 18px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-64",
+      "tag": "div",
+      "className": "laws_home_grid_inner u-flex-vertical-nowrap u-gap-1",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 403,
+        "height": 88
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-66",
+      "tag": "div",
+      "className": "laws_home_grid_item w-dyn-item",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 439,
+        "height": 152
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-67",
+      "tag": "div",
+      "className": "laws_home_grid_component u-flex-vertical-nowrap u-gap-1 u-justify-content-start u-position-relative",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 439,
+        "height": 152
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "32px 18px 32px 18px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-68",
+      "tag": "div",
+      "className": "laws_home_grid_inner u-flex-vertical-nowrap u-gap-1",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 403,
+        "height": 64
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-70",
+      "tag": "div",
+      "className": "laws_home_grid_item w-dyn-item",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 439,
+        "height": 152
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-71",
+      "tag": "div",
+      "className": "laws_home_grid_component u-flex-vertical-nowrap u-gap-1 u-justify-content-start u-position-relative",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 439,
+        "height": 152
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "32px 18px 32px 18px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-72",
+      "tag": "div",
+      "className": "laws_home_grid_inner u-flex-vertical-nowrap u-gap-1",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 403,
+        "height": 88
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-74",
+      "tag": "div",
+      "className": "laws_home_grid_item w-dyn-item",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 439,
+        "height": 128
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-75",
+      "tag": "div",
+      "className": "laws_home_grid_component u-flex-vertical-nowrap u-gap-1 u-justify-content-start u-position-relative",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 439,
+        "height": 128
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "32px 18px 32px 18px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-76",
+      "tag": "div",
+      "className": "laws_home_grid_inner u-flex-vertical-nowrap u-gap-1",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 403,
+        "height": 64
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-78",
+      "tag": "div",
+      "className": "laws_home_grid_item w-dyn-item",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 439,
+        "height": 128
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-79",
+      "tag": "div",
+      "className": "laws_home_grid_component u-flex-vertical-nowrap u-gap-1 u-justify-content-start u-position-relative",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 439,
+        "height": 128
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "32px 18px 32px 18px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-80",
+      "tag": "div",
+      "className": "laws_home_grid_inner u-flex-vertical-nowrap u-gap-1",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 403,
+        "height": 64
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-82",
+      "tag": "div",
+      "className": "laws_home_grid_item w-dyn-item",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 439,
+        "height": 128
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-83",
+      "tag": "div",
+      "className": "laws_home_grid_component u-flex-vertical-nowrap u-gap-1 u-justify-content-start u-position-relative",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 439,
+        "height": 128
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "32px 18px 32px 18px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-84",
+      "tag": "div",
+      "className": "laws_home_grid_inner u-flex-vertical-nowrap u-gap-1",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 403,
+        "height": 64
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-86",
+      "tag": "div",
+      "className": "laws_home_grid_item w-dyn-item",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 439,
+        "height": 152
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-87",
+      "tag": "div",
+      "className": "laws_home_grid_component u-flex-vertical-nowrap u-gap-1 u-justify-content-start u-position-relative",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 439,
+        "height": 152
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "32px 18px 32px 18px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-88",
+      "tag": "div",
+      "className": "laws_home_grid_inner u-flex-vertical-nowrap u-gap-1",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 403,
+        "height": 64
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-90",
+      "tag": "div",
+      "className": "laws_home_grid_item w-dyn-item",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 439,
+        "height": 152
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-91",
+      "tag": "div",
+      "className": "laws_home_grid_component u-flex-vertical-nowrap u-gap-1 u-justify-content-start u-position-relative",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 439,
+        "height": 152
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "32px 18px 32px 18px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-92",
+      "tag": "div",
+      "className": "laws_home_grid_inner u-flex-vertical-nowrap u-gap-1",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 403,
+        "height": 88
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-94",
+      "tag": "div",
+      "className": "laws_home_grid_item w-dyn-item",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 439,
+        "height": 152
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-95",
+      "tag": "div",
+      "className": "laws_home_grid_component u-flex-vertical-nowrap u-gap-1 u-justify-content-start u-position-relative",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 439,
+        "height": 152
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "32px 18px 32px 18px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-96",
+      "tag": "div",
+      "className": "laws_home_grid_inner u-flex-vertical-nowrap u-gap-1",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 403,
+        "height": 64
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-124",
+      "tag": "section",
+      "className": "full-image_section u-section u-padding-block-small u-overflow-clip",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1440,
+        "height": 820
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "80px 0px 80px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-125",
+      "tag": "div",
+      "className": "full-image_container u-container",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1320,
+        "height": 660
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "128px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 60px 0px 60px"
+      }
+    },
+    {
+      "id": "section-126",
+      "tag": "section",
+      "className": "cta_text_section u-section u-padding-0",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1440,
+        "height": 787
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-127",
+      "tag": "div",
+      "className": "cta_text_container u-container",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1320,
+        "height": 787
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "128px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 60px 0px 60px"
+      }
+    },
+    {
+      "id": "section-128",
+      "tag": "div",
+      "className": "cta_text_bottom_wrap u-grid-custom",
+      "layoutType": "grid",
+      "dimensions": {
+        "width": 1320,
+        "height": 172
+      },
+      "computedLayout": {
+        "display": "grid",
+        "flexDirection": "column",
+        "gridTemplateColumns": "95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px 95.3281px",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-129",
+      "tag": "section",
+      "className": "contact-form_main_section u-section u-padding-block-2 u-overflow-clip",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1440,
+        "height": 784
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "32px 0px 32px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-130",
+      "tag": "div",
+      "className": "contact-form_main_container u-container",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1320,
+        "height": 720
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "128px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 60px 0px 60px"
+      }
+    },
+    {
+      "id": "section-132",
+      "tag": "footer",
+      "className": "footer_wrap u-theme-dark u-position-relative",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 1440,
+        "height": 630
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-133",
+      "tag": "div",
+      "className": "footer_container u-container",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 1320,
+        "height": 630
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "128px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 60px 0px 60px"
+      }
+    },
+    {
+      "id": "section-134",
+      "tag": "div",
+      "className": "footer_top_grid u-grid-custom",
+      "layoutType": "grid",
+      "dimensions": {
+        "width": 832,
+        "height": 150
+      },
+      "computedLayout": {
+        "display": "grid",
+        "flexDirection": "column",
+        "gridTemplateColumns": "266.656px 266.672px 266.656px",
+        "gap": "16px",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-135",
+      "tag": "div",
+      "className": "footer_top_grid_column",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 267,
+        "height": 150
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-136",
+      "tag": "section",
+      "className": "footer_group_wrap",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 267,
+        "height": 132
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-137",
+      "tag": "div",
+      "className": "footer_top_grid_column is-second",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 267,
+        "height": 150
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-138",
+      "tag": "section",
+      "className": "footer_group_wrap u-flex-vertical-nowrap u-align-items-end",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 267,
+        "height": 150
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-139",
+      "tag": "div",
+      "className": "footer_top_grid_column is-bottom",
+      "layoutType": "block",
+      "dimensions": {
+        "width": 267,
+        "height": 150
+      },
+      "computedLayout": {
+        "display": "block",
+        "flexDirection": "row",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    },
+    {
+      "id": "section-140",
+      "tag": "section",
+      "className": "footer_group_wrap is-bottom u-flex-vertical-nowrap u-align-items-end",
+      "layoutType": "flex",
+      "dimensions": {
+        "width": 267,
+        "height": 30
+      },
+      "computedLayout": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gridTemplateColumns": "none",
+        "gap": "normal",
+        "padding": "0px 0px 0px 0px",
+        "margin": "0px 0px 0px 0px"
+      }
+    }
+  ]
+}

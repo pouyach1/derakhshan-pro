@@ -21,5 +21,18 @@
     "@vitejs/plugin-react": "^5.0.2",
     "tailwindcss": "^4.1.13",
     "vite": "^7.1.5"
-  }
+  },
+  "description": "اپ React + Vite که **فقط** از پوشهٔ `website-forensics/findrealestate/luxury-places-design` ساخته شده.",
+  "main": "tailwind.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pouyach1/derakhshan-pro.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pouyach1/derakhshan-pro/issues"
+  },
+  "homepage": "https://github.com/pouyach1/derakhshan-pro#readme"
 }

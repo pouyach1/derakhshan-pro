@@ -1,0 +1,536 @@
+[
+  {
+    "url": "https://www.rioproperty.co.za/",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "resourceType": "document"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/attributes.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/gsap@3.15/dist/SplitText.min.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/gsap@3.15/dist/ScrollTrigger.min.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/gsap@3.15/dist/CustomEase.min.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/gsap@3.15/dist/Flip.min.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/gsap@3.15/dist/InertiaPlugin.min.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css",
+    "status": 200,
+    "contentType": "text/css; charset=utf-8",
+    "resourceType": "stylesheet"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69ad22b0209a3b56e37f5e4e/css/rio-property.webflow.shared.8b526ec9f.css",
+    "status": 200,
+    "contentType": "text/css",
+    "resourceType": "stylesheet"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69ad22b0209a3b56e37f5e4e/69ad6f1c4a348f86ce456790_Blauer-Nue-Semibold-iF6626350c8d55c.otf",
+    "status": 200,
+    "contentType": "font/otf",
+    "resourceType": "font"
+  },
+  {
+    "url": "https://unpkg.com/lenis@1.3.15/dist/lenis.css",
+    "status": 200,
+    "contentType": "text/css; charset=utf-8",
+    "resourceType": "stylesheet"
+  },
+  {
+    "url": "https://unpkg.com/lenis@1.3.15/dist/lenis.min.js",
+    "status": 200,
+    "contentType": "text/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69ad22b0209a3b56e37f5e4e/69ad6f699f9a3d467b9337da_Rubik-Regular.ttf",
+    "status": 200,
+    "contentType": "font/ttf",
+    "resourceType": "font"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69ad22b0209a3b56e37f5e4e/js/webflow.67b71535.f9549264bf878d25.js",
+    "status": 200,
+    "contentType": "text/javascript",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=69ad22b0209a3b56e37f5e4e",
+    "status": 200,
+    "contentType": "application/javascript",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/dist/chunk-J3PPETVR.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/dist/chunk-VDEO3AAR.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/dist/chunk-ADKL4AJZ.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/dist/chunk-N2ZCN6XY.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/dist/chunk-WIALCYDY.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/dist/chunk-L4B2V5MO.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/dist/chunk-OF4NI3Y7.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/dist/chunk-CB6LZ537.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/dist/chunk-ZI7TAH2K.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/dist/chunk-GGDEANQW.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/dist/chunk-K46K3RI5.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/dist/chunk-XRTLPMPO.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/dist/src-T7SM3ONB.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69ad22b0209a3b56e37f5e4e/6a0b2be79448f3484fdbcd0b_frame-131.webp",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/dist/chunk-WO4GQJHX.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/dist/chunk-WL5KIXHF.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/dist/chunk-ZZRTGM4V.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/dist/chunk-UAA7M346.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/dist/chunk-T2PNG2TC.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/dist/chunk-7CAOOJVW.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://rio-property.pages.dev/main.js",
+    "status": 304,
+    "contentType": "",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://rio-property.pages.dev/styles.css",
+    "status": 304,
+    "contentType": "",
+    "resourceType": "stylesheet"
+  },
+  {
+    "url": "https://unpkg.com/smooothy",
+    "status": 200,
+    "contentType": "text/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://unpkg.com/smooothy@0.0.35/dist/smooothy.min.js",
+    "status": 200,
+    "contentType": "text/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-001",
+    "status": 304,
+    "contentType": "",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/dist/src-MCTWDYVU.js",
+    "status": 200,
+    "contentType": "application/javascript; charset=utf-8",
+    "resourceType": "script"
+  },
+  {
+    "url": "https://www.rioproperty.co.za/?75559f7f_page=2",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "resourceType": "document"
+  },
+  {
+    "url": "https://www.rioproperty.co.za/?75559f7f_page=9999",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "resourceType": "fetch"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-145",
+    "status": 304,
+    "contentType": "",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-073",
+    "status": 304,
+    "contentType": "",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69ad22b0209a3b56e37f5e4e/69d743f72640573fd2f7e750_favicon.png",
+    "status": 200,
+    "contentType": "image/png",
+    "resourceType": "other"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-109",
+    "status": 304,
+    "contentType": "",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-037",
+    "status": 304,
+    "contentType": "",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-127",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-091",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-019",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-055",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-118",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-136",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-010",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-028",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-046",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-064",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-082",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-113",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-100",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://www.rioproperty.co.za/meet-the-team",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "resourceType": "document"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69ad22b0209a3b56e37f5e4e/69d73c9778019b6874d3292d_About_Us-p-1600.webp",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69ad22b0209a3b56e37f5e4e/69d73f5850c312953ce94bab_a6bb0420fee2f97b63c80cd2469b3f670b5ec7bd.webp",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://www.rioproperty.co.za/done-deals",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "resourceType": "document"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69ad22b0209a3b56e37f5e4e/69db6c82e278976269dc2e99_done_deals-p-1600.webp",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69d1317890ba2641cb65abf8/69fb554b759e16965b609fdf_BRP%20Exterior.webp",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69d1317890ba2641cb65abf8/69f8eb2b8aefcf18345f445e_Kent%20Street-p-1600.webp",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69d1317890ba2641cb65abf8/6a28061e66adc7259a5704f8_110%20Long%20Street-p-1600.webp",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69d1317890ba2641cb65abf8/6a2805c49cf2628126c82262_25%20Hope%20Street-p-1600.webp",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69d1317890ba2641cb65abf8/6a27ffe1cdd80dda2590bcfa_Cavendish%20Close-p-1600.webp",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69d1317890ba2641cb65abf8/69f8ec33c4e2cf4f996a0771_153%20Loop%20Street-p-1600.webp",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://www.rioproperty.co.za/services",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "resourceType": "document"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69ad22b0209a3b56e37f5e4e/69dfe66761ad1fc718527784_Services-p-1600.webp",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69ad22b0209a3b56e37f5e4e/69ea73a7d6970d1abe47d776_Check.svg",
+    "status": 200,
+    "contentType": "image/svg+xml",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69d1317890ba2641cb65abf8/69d140a7286ceef309d5679b_a2bfa96045a2855366a4a577ecbe89cc00ee0665-p-1600.webp",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69d1317890ba2641cb65abf8/69d13e01957fbe9dca66c9a6_5bb1c06badf1bc05fbc8e29447db6f20810c0332-p-1600.webp",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69d1317890ba2641cb65abf8/69d14316540fca64a97b9c39_ccac197fd7eb31d35f6c285d20f1e1eb09d28329.webp",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://www.rioproperty.co.za/contact",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "resourceType": "document"
+  },
+  {
+    "url": "https://www.rioproperty.co.za/?75559f7f_page=1",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "resourceType": "fetch"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-005",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-014",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-041",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-050",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-059",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://hishaam.eu.getafile.online/frame-068",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  },
+  {
+    "url": "https://cdn.prod.website-files.com/69d1317890ba2641cb65abf8/69d1437fbfb89085d70694e4_0a79ad5a5e06ba30c61f9a05513806533df916e3-p-500.webp",
+    "status": 200,
+    "contentType": "image/webp",
+    "resourceType": "image"
+  }
+]

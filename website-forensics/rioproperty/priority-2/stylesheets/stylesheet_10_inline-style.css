@@ -1,0 +1,6 @@
+@container (width < 40em) {
+  .form_fieldset_list:has(.form_fieldset_list) { display: flex; }
+}
+@container (width < 18em) {
+  .form_fieldset_list { display: flex; }
+}
