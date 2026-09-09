@@ -1,11 +1,13 @@
 "use client";
 
-import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
-import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { useIntro } from "@/components/providers/IntroProvider";
 import { EASE } from "@/lib/motion";
 
 const LETTERS = ["R", "I", "O", " ", "P", "R", "O", "P", "E", "R", "T", "Y"] as const;
+
+type Stage = "idle" | "brand" | "progress" | "exit" | "wipe" | "gone";
 
 /**
  * Forensic recreation of RIO Property preloader.
@@ -13,115 +15,56 @@ const LETTERS = ["R", "I", "O", " ", "P", "R", "O", "P", "E", "R", "T", "Y"] as 
  */
 export default function PageLoader() {
   const { phase, markDone, beginHeroReveal } = useIntro();
-  const [visible, setVisible] = useState(true);
-  const logoControls = useAnimationControls();
-  const letterControls = useAnimationControls();
-  const barWrapControls = useAnimationControls();
-  const barControls = useAnimationControls();
-  const curtainControls = useAnimationControls();
+  const [stage, setStage] = useState<Stage>("idle");
+  const runId = useRef(0);
 
   useEffect(() => {
     if (phase === "booting" || phase === "done") return;
 
-    let cancelled = false;
-    const runFull = phase === "full";
+    const id = ++runId.current;
+    const timers: number[] = [];
+    const after = (ms: number, fn: () => void) => {
+      timers.push(window.setTimeout(() => {
+        if (runId.current === id) fn();
+      }, ms));
+    };
 
-    async function play() {
-      if (!runFull) {
-        beginHeroReveal();
-        await curtainControls.start({
-          clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)",
-          transition: { duration: 1.1, ease: EASE.expoInOut },
-        });
-        if (!cancelled) {
-          setVisible(false);
-          markDone();
-        }
-        return;
-      }
-
-      // Stage 1 — Initial brand reveal
-      await Promise.all([
-        logoControls.start({
-          x: "6vw",
-          scale: 1,
-          transition: { duration: 2.5, ease: EASE.expoOut },
-        }),
-        letterControls.start((i) => ({
-          x: "0%",
-          transition: { duration: 1.5, ease: EASE.expoOut, delay: i * 0.1 },
-        })),
-      ]);
-      if (cancelled) return;
-
-      // Stage 2 — Progress / settle
-      await Promise.all([
-        logoControls.start({
-          x: 0,
-          transition: { duration: 2, ease: EASE.expoInOut },
-        }),
-        barWrapControls.start({
-          scaleX: 1,
-          transition: { duration: 2, ease: EASE.expoInOut },
-        }),
-        barControls.start({
-          scaleX: 1,
-          transition: { duration: 2.5, ease: EASE.site, delay: 0.15 },
-        }),
-      ]);
-      if (cancelled) return;
-
-      // Stage 3 — Exit + curtain wipe (hero starts with curtain; forensic at≈4s)
+    if (phase === "fast") {
+      setStage("wipe");
       beginHeroReveal();
-      await Promise.all([
-        logoControls.start({
-          x: "-300%",
-          transition: { duration: 2.5, ease: EASE.expoIn },
-        }),
-        barWrapControls.start({
-          x: "-300%",
-          transition: { duration: 2.5, ease: EASE.expoIn },
-        }),
-        barControls.start({
-          scaleX: 0,
-          transition: { duration: 1.5, ease: EASE.expoIn, delay: 0.25 },
-        }),
-        letterControls.start((i) => ({
-          x: "-125%",
-          transition: { duration: 1.5, ease: EASE.expoIn, delay: i * 0.05 },
-        })),
-        curtainControls.start({
-          clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)",
-          transition: { duration: 1.75, ease: EASE.expoInOut, delay: 1.25 },
-        }),
-      ]);
-
-      if (!cancelled) {
-        setVisible(false);
+      after(1100, () => {
+        setStage("gone");
         markDone();
-      }
+      });
+      return () => {
+        runId.current += 1;
+        timers.forEach((t) => window.clearTimeout(t));
+      };
     }
 
-    const timer = window.setTimeout(() => {
-      void play();
-    }, 500);
+    // Full intro — forensic delay 0.5s then staged timeline
+    after(500, () => setStage("brand"));
+    // Stage 1 settles ~2.5s (logo scale + letter stagger)
+    after(500 + 2500, () => setStage("progress"));
+    // Stage 2 progress bar ~2.5s (overlap with settle)
+    after(500 + 2500 + 2500, () => {
+      setStage("exit");
+      beginHeroReveal();
+    });
+    // Stage 3 logo exit starts; curtain wipe delayed ~1.25s (forensic at≈4 relative to exit cluster)
+    after(500 + 2500 + 2500 + 1250, () => setStage("wipe"));
+    // Wipe duration 1.75s
+    after(500 + 2500 + 2500 + 1250 + 1750, () => {
+      setStage("gone");
+      markDone();
+    });
 
     return () => {
-      cancelled = true;
-      window.clearTimeout(timer);
+      runId.current += 1;
+      timers.forEach((t) => window.clearTimeout(t));
     };
-  }, [
-    phase,
-    logoControls,
-    letterControls,
-    barWrapControls,
-    barControls,
-    curtainControls,
-    markDone,
-    beginHeroReveal,
-  ]);
+  }, [phase, markDone, beginHeroReveal]);
 
-  // Opaque brand veil until session decision — prevents hero flash
   if (phase === "booting") {
     return (
       <div
@@ -132,46 +75,72 @@ export default function PageLoader() {
     );
   }
 
-  if (phase === "done") return null;
+  if (phase === "done" || stage === "gone") return null;
+
+  const showFullChrome = phase === "full";
+  const inExit = stage === "exit" || stage === "wipe";
+  const wiping = stage === "wipe";
 
   return (
     <AnimatePresence>
-      {visible ? (
-        <motion.div
-          key="rio-page-loader"
-          className="preloader_wrap pointer-events-auto fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-brand-800 text-beige"
-          data-preloader-wrap
-          style={{
-            willChange: "transform, opacity, clip-path",
-            clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-          }}
-          initial={false}
-          animate={curtainControls}
-          exit={{ opacity: 0, transition: { duration: 0.2 } }}
-          role="status"
-          aria-live="polite"
-          aria-label="Loading RIO Property"
-        >
-          <div className="absolute inset-0 bg-brand-800" data-preloader-bg />
+      <motion.div
+        key="rio-page-loader"
+        className="preloader_wrap pointer-events-auto fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-brand-800 text-beige"
+        data-preloader-wrap
+        style={{ willChange: "transform, opacity, clip-path" }}
+        initial={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
+        animate={{
+          clipPath: wiping
+            ? "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)"
+            : "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        }}
+        transition={{ duration: phase === "fast" ? 1.1 : 1.75, ease: EASE.expoInOut }}
+        role="status"
+        aria-live="polite"
+        aria-label="Loading RIO Property"
+      >
+        <div className="absolute inset-0 bg-brand-800" data-preloader-bg />
 
-          <div className="relative z-10 flex flex-col items-center gap-8">
+        <div className="relative z-10 flex flex-col items-center gap-8">
+          {showFullChrome ? (
             <motion.div
               className="flex origin-center items-center will-change-transform"
-              initial={{ x: 0, scale: phase === "full" ? 2 : 1 }}
-              animate={logoControls}
               data-preloader-logo
+              initial={{ x: 0, scale: 2 }}
+              animate={
+                stage === "idle"
+                  ? { x: 0, scale: 2 }
+                  : stage === "brand"
+                    ? { x: "6vw", scale: 1 }
+                    : stage === "progress"
+                      ? { x: 0, scale: 1 }
+                      : { x: "-300%", scale: 1 }
+              }
+              transition={
+                inExit
+                  ? { duration: 2.5, ease: EASE.expoIn }
+                  : stage === "progress"
+                    ? { duration: 2, ease: EASE.expoInOut }
+                    : { duration: 2.5, ease: EASE.expoOut }
+              }
             >
               <div className="flex overflow-hidden">
                 {LETTERS.map((letter, index) =>
                   letter === " " ? (
-                    <span key={`space-${index}`} className="inline-block w-[0.35em]" />
+                    <span key={`space-${index}`} className="inline-block w-[0.35em]">
+                      {" "}
+                    </span>
                   ) : (
                     <motion.span
                       key={`${letter}-${index}`}
                       className="inline-block font-display text-[clamp(1.75rem,4vw,2.75rem)] uppercase tracking-[0.08em] will-change-transform"
-                      custom={index}
                       initial={{ x: "125%" }}
-                      animate={letterControls}
+                      animate={{ x: inExit ? "-125%" : stage === "idle" ? "125%" : "0%" }}
+                      transition={
+                        inExit
+                          ? { duration: 1.5, ease: EASE.expoIn, delay: index * 0.05 }
+                          : { duration: 1.5, ease: EASE.expoOut, delay: index * 0.1 }
+                      }
                     >
                       {letter}
                     </motion.span>
@@ -179,25 +148,37 @@ export default function PageLoader() {
                 )}
               </div>
             </motion.div>
+          ) : null}
 
-            {phase === "full" ? (
+          {showFullChrome ? (
+            <motion.div
+              className="h-px w-[33vw] origin-left overflow-hidden bg-beige/25 will-change-transform md:w-[12vw]"
+              data-preloader-bar-wrap
+              initial={{ scaleX: 0 }}
+              animate={
+                inExit
+                  ? { scaleX: 0, x: "-300%" }
+                  : stage === "progress" || stage === "brand"
+                    ? { scaleX: stage === "progress" ? 1 : 0, x: 0 }
+                    : { scaleX: 0, x: 0 }
+              }
+              transition={
+                inExit
+                  ? { duration: 2.5, ease: EASE.expoIn }
+                  : { duration: 2, ease: EASE.expoInOut }
+              }
+            >
               <motion.div
-                className="h-px w-[33vw] origin-left overflow-hidden bg-beige/25 will-change-transform md:w-[12vw]"
+                className="h-px w-full origin-left bg-beige will-change-transform"
+                data-preloader-bar
                 initial={{ scaleX: 0 }}
-                animate={barWrapControls}
-                data-preloader-bar-wrap
-              >
-                <motion.div
-                  className="h-px w-full origin-left bg-beige will-change-transform"
-                  initial={{ scaleX: 0 }}
-                  animate={barControls}
-                  data-preloader-bar
-                />
-              </motion.div>
-            ) : null}
-          </div>
-        </motion.div>
-      ) : null}
+                animate={{ scaleX: stage === "progress" || inExit ? 1 : 0 }}
+                transition={{ duration: 2.5, ease: EASE.site, delay: stage === "progress" ? 0.15 : 0 }}
+              />
+            </motion.div>
+          ) : null}
+        </div>
+      </motion.div>
     </AnimatePresence>
   );
 }
