@@ -1,19 +1,16 @@
-import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { LogoMark } from "../../assets/icons/Icons.jsx";
 import noise from "../../assets/noise.webp";
+import useLenis from "../../hooks/useLenis.js";
+import usePageLoader from "../../hooks/usePageLoader.js";
+import useViewportHeight from "../../hooks/useViewportHeight.js";
 import SiteFooter from "./SiteFooter.jsx";
 import SiteHeader from "./SiteHeader.jsx";
 
 export default function SiteLayout() {
-  useEffect(() => {
-    document.querySelector(".loader")?.classList.add("animate");
-    const timer = window.setTimeout(() => {
-      document.body.classList.add("is-ready");
-      document.querySelector(".loader")?.classList.add("disabled");
-    }, 1200);
-    return () => window.clearTimeout(timer);
-  }, []);
+  useViewportHeight();
+  useLenis();
+  usePageLoader();
 
   return (
     <div className="page-root" style={{ display: "flex", flexDirection: "column", minHeight: "100dvh" }}>

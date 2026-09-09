@@ -1,0 +1,90 @@
+/* Home motion glue — restores CSS contracts that the static rebuild had disabled. */
+
+body.is-loading {
+  overflow: hidden;
+}
+
+.properties_slider-swiper {
+  overflow: visible;
+  width: 100%;
+}
+
+.properties_slider-slide {
+  height: auto;
+  transform-origin: top right;
+  transition: transform 0.8s cubic-bezier(0.6, 0, 0.3, 1);
+  transform: translateX(0%) scale(0.92) translateZ(0);
+}
+
+.properties_slider-slide.swiper-slide-active {
+  transform: translateX(0%) scale(1) translateZ(0);
+}
+
+.properties_slider-slide.swiper-slide-prev,
+.properties_slider-slide.swiper-slide-next {
+  transform: translateX(0%) scale(0.92) translateZ(0);
+}
+
+.properties_slider-controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  justify-content: flex-end;
+  position: relative;
+  right: auto;
+  bottom: auto;
+  padding-inline: var(--container-gutter);
+}
+
+.highlighted_properties-preview {
+  transition: gap 0.8s cubic-bezier(0.6, 0, 0.3, 1), grid-template-columns 0.8s cubic-bezier(0.6, 0, 0.3, 1);
+}
+
+.highlighted_properties-preview-item img,
+.highlighted_properties-item-img,
+.mixed-img,
+.demonstration-wrapper video {
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.demonstration-wrapper video {
+  transition: transform 0.05s linear;
+}
+
+.news-illustration-img {
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease-out;
+}
+
+.highlighted_properties-count {
+  transform: translateY(0);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.home-reveal {
+  opacity: 0;
+  transform: translateY(1.5rem);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.home-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .properties_slider-slide,
+  .highlighted_properties-preview,
+  .demonstration-wrapper video,
+  .news-illustration-img,
+  .home-reveal {
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .properties_slider-slide.swiper-slide-active,
+  .properties_slider-slide.swiper-slide-prev,
+  .properties_slider-slide.swiper-slide-next {
+    transform: none !important;
+  }
+}
