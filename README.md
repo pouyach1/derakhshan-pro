@@ -1,32 +1,22 @@
-# Derakhshan Pro — Luxury Places
+# Derakhshan Pro — RIO Property
 
-اپ React + Vite که **فقط** از پوشهٔ `website-forensics/findrealestate/luxury-places-design` ساخته شده.
+Production rebuild of [RIO Property](https://www.rioproperty.co.za/) from forensic extraction in `website-forensics/rioproperty/`.
 
-داده و دیزاین قبلی (RIO Property / Done Deals / Rubik / بنفش) حذف شد.
+## Stack
 
-## منبع
+- Next.js 15 (App Router)
+- React 19
+- Tailwind CSS 3
+- TypeScript
 
-```
-website-forensics/findrealestate/luxury-places-design/
-├── SKILL.md
-├── DESIGN.md
-├── fonts/Poppins-*.ttf
-└── screenshots/homepage.png
-```
-
-توکن‌ها: پس‌زمینه `#ffffff`، سطح `#f0f0f0`، متن `#000000` / `#666666`، اکسنت `#ff6900`، فونت Poppins محلی، گرید ۴px، بدون سایه.
-
-## اجرا
+## Commands
 
 ```bash
 npm install
 npm run dev
+npm run build
 ```
 
-- `/` صفحهٔ اصلی
-- `/nos-proprietes` فهرست املاک
-- `/property/:slug` جزئیات ملک
-- `/notre-univers` جهان برند + FAQ
-- `/expertise` تخصص + ارقام + FAQ
-- `/actualites` ژورنال
-- `/contact` فرم تماس
+## Source of truth
+
+All visual tokens, copy, layout, and assets are derived from `website-forensics/rioproperty/` (priority-1 → priority-4 + animations). Do not invent brand colors or section copy.
