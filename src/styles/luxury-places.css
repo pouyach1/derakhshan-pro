@@ -917,5 +917,4 @@ body.is-ready .loader,
 .properties_slider-wrapper::-webkit-scrollbar{height:4px}
 .gform_wrapper .input:focus{border-color:#ff6900;outline:none}
 .footer-logo{opacity:1}
-.properties_slider-slide{transform:none;width:min(22rem,85vw)}
-.properties_slider-wrapper{display:flex;gap:1rem;overflow-x:auto}
+/* properties_slider motion restored via Swiper + home-motion.css */

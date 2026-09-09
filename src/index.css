@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 @import "./styles/luxury-places.css";
+@import "./styles/home-motion.css";
 
 :root {
   --background: #ffffff;
