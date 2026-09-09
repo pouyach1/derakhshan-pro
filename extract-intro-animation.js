@@ -94,7 +94,7 @@ if (!fs.existsSync(OUTPUT_DIR)) {
   });
 
   // ۳. ذخیره گزارش استخراج
-  const reportPath = path.join(OUTPUT_DIR, 'intro_animation_report.json');
+  const reportPath = path.join(OUTPUT_DIR, 'intro_animation_dom_dump.json');
   fs.writeFileSync(reportPath, JSON.stringify(introStructure, null, 2), 'utf8');
 
   await browser.close();

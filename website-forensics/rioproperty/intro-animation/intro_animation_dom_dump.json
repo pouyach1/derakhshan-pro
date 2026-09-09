@@ -1,0 +1,209 @@
+{
+  "foundElements": [
+    {
+      "selector": "[class*=\"loader\"]",
+      "tagName": "div",
+      "className": "preloader_wrap",
+      "id": "",
+      "htmlContent": "<div data-preloader-wrap=\"\" class=\"preloader_wrap\"><div class=\"preloader_container u-container\"><div class=\"preloader_layout u-min-height-screen u-flex-vertical-nowrap u-justify-content-center u-align-items-center\"><div data-preloader-mid=\"\" class=\"preloader_mid_wrap u-flex-horizontal-nowrap u-gap-3\"><div data-preloader-logo=\"\" class=\"g_logo_split u-flex-horizontal-nowrap u-gap-custom u-flex-noshrink\" style=\"translate: none; rotate: none; scale: none; transform: scale(2, 2);\"><div class=\"g_logo_",
+      "computedStyles": {
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1",
+        "position": "fixed",
+        "zIndex": "2",
+        "transform": "none",
+        "transition": "all",
+        "animation": "none"
+      }
+    },
+    {
+      "selector": "[class*=\"loader\"]",
+      "tagName": "div",
+      "className": "preloader_container u-container",
+      "id": "",
+      "htmlContent": "<div class=\"preloader_container u-container\"><div class=\"preloader_layout u-min-height-screen u-flex-vertical-nowrap u-justify-content-center u-align-items-center\"><div data-preloader-mid=\"\" class=\"preloader_mid_wrap u-flex-horizontal-nowrap u-gap-3\"><div data-preloader-logo=\"\" class=\"g_logo_split u-flex-horizontal-nowrap u-gap-custom u-flex-noshrink\" style=\"translate: none; rotate: none; scale: none; transform: scale(2, 2);\"><div class=\"g_logo_split_half_wrap u-flex-horizontal-nowrap u-gap-cust",
+      "computedStyles": {
+        "display": "flex",
+        "visibility": "visible",
+        "opacity": "1",
+        "position": "relative",
+        "zIndex": "auto",
+        "transform": "none",
+        "transition": "all",
+        "animation": "none"
+      }
+    },
+    {
+      "selector": "[class*=\"loader\"]",
+      "tagName": "div",
+      "className": "preloader_layout u-min-height-screen u-flex-vertical-nowrap u-justify-content-center u-align-items-center",
+      "id": "",
+      "htmlContent": "<div class=\"preloader_layout u-min-height-screen u-flex-vertical-nowrap u-justify-content-center u-align-items-center\"><div data-preloader-mid=\"\" class=\"preloader_mid_wrap u-flex-horizontal-nowrap u-gap-3\"><div data-preloader-logo=\"\" class=\"g_logo_split u-flex-horizontal-nowrap u-gap-custom u-flex-noshrink\" style=\"translate: none; rotate: none; scale: none; transform: scale(2, 2);\"><div class=\"g_logo_split_half_wrap u-flex-horizontal-nowrap u-gap-custom is-left\"><div class=\"g_logo_split_svg_wrap",
+      "computedStyles": {
+        "display": "flex",
+        "visibility": "visible",
+        "opacity": "1",
+        "position": "static",
+        "zIndex": "auto",
+        "transform": "none",
+        "transition": "all",
+        "animation": "none"
+      }
+    },
+    {
+      "selector": "[class*=\"loader\"]",
+      "tagName": "div",
+      "className": "preloader_mid_wrap u-flex-horizontal-nowrap u-gap-3",
+      "id": "",
+      "htmlContent": "<div data-preloader-mid=\"\" class=\"preloader_mid_wrap u-flex-horizontal-nowrap u-gap-3\"><div data-preloader-logo=\"\" class=\"g_logo_split u-flex-horizontal-nowrap u-gap-custom u-flex-noshrink\" style=\"translate: none; rotate: none; scale: none; transform: scale(2, 2);\"><div class=\"g_logo_split_half_wrap u-flex-horizontal-nowrap u-gap-custom is-left\"><div class=\"g_logo_split_svg_wrap\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"100%\" viewBox=\"0 0 32 36\" fill=\"none\" class=\"g_logo_split_svg\" style=\"",
+      "computedStyles": {
+        "display": "flex",
+        "visibility": "visible",
+        "opacity": "1",
+        "position": "static",
+        "zIndex": "auto",
+        "transform": "none",
+        "transition": "all",
+        "animation": "none"
+      }
+    },
+    {
+      "selector": "[class*=\"loader\"]",
+      "tagName": "div",
+      "className": "preloader_loading_bar_wrap",
+      "id": "",
+      "htmlContent": "<div data-preloader-bar-wrap=\"\" class=\"preloader_loading_bar_wrap\" style=\"translate: none; rotate: none; scale: none; transform: scale(0, 1);\"><div data-preloader-bar=\"\" class=\"preloader_loading_bar u-cover-absolute\"></div></div>",
+      "computedStyles": {
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1",
+        "position": "relative",
+        "zIndex": "auto",
+        "transform": "matrix(0, 0, 0, 1, 0, 0)",
+        "transition": "all",
+        "animation": "none"
+      }
+    },
+    {
+      "selector": "[class*=\"loader\"]",
+      "tagName": "div",
+      "className": "preloader_loading_bar u-cover-absolute",
+      "id": "",
+      "htmlContent": "<div data-preloader-bar=\"\" class=\"preloader_loading_bar u-cover-absolute\"></div>",
+      "computedStyles": {
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1",
+        "position": "absolute",
+        "zIndex": "auto",
+        "transform": "matrix(0, 0, 0, 1, 0, 0)",
+        "transition": "all",
+        "animation": "none"
+      }
+    },
+    {
+      "selector": "[class*=\"preloader\"]",
+      "tagName": "div",
+      "className": "preloader_wrap",
+      "id": "",
+      "htmlContent": "<div data-preloader-wrap=\"\" class=\"preloader_wrap\"><div class=\"preloader_container u-container\"><div class=\"preloader_layout u-min-height-screen u-flex-vertical-nowrap u-justify-content-center u-align-items-center\"><div data-preloader-mid=\"\" class=\"preloader_mid_wrap u-flex-horizontal-nowrap u-gap-3\"><div data-preloader-logo=\"\" class=\"g_logo_split u-flex-horizontal-nowrap u-gap-custom u-flex-noshrink\" style=\"translate: none; rotate: none; scale: none; transform: scale(2, 2);\"><div class=\"g_logo_",
+      "computedStyles": {
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1",
+        "position": "fixed",
+        "zIndex": "2",
+        "transform": "none",
+        "transition": "all",
+        "animation": "none"
+      }
+    },
+    {
+      "selector": "[class*=\"preloader\"]",
+      "tagName": "div",
+      "className": "preloader_container u-container",
+      "id": "",
+      "htmlContent": "<div class=\"preloader_container u-container\"><div class=\"preloader_layout u-min-height-screen u-flex-vertical-nowrap u-justify-content-center u-align-items-center\"><div data-preloader-mid=\"\" class=\"preloader_mid_wrap u-flex-horizontal-nowrap u-gap-3\"><div data-preloader-logo=\"\" class=\"g_logo_split u-flex-horizontal-nowrap u-gap-custom u-flex-noshrink\" style=\"translate: none; rotate: none; scale: none; transform: scale(2, 2);\"><div class=\"g_logo_split_half_wrap u-flex-horizontal-nowrap u-gap-cust",
+      "computedStyles": {
+        "display": "flex",
+        "visibility": "visible",
+        "opacity": "1",
+        "position": "relative",
+        "zIndex": "auto",
+        "transform": "none",
+        "transition": "all",
+        "animation": "none"
+      }
+    },
+    {
+      "selector": "[class*=\"preloader\"]",
+      "tagName": "div",
+      "className": "preloader_layout u-min-height-screen u-flex-vertical-nowrap u-justify-content-center u-align-items-center",
+      "id": "",
+      "htmlContent": "<div class=\"preloader_layout u-min-height-screen u-flex-vertical-nowrap u-justify-content-center u-align-items-center\"><div data-preloader-mid=\"\" class=\"preloader_mid_wrap u-flex-horizontal-nowrap u-gap-3\"><div data-preloader-logo=\"\" class=\"g_logo_split u-flex-horizontal-nowrap u-gap-custom u-flex-noshrink\" style=\"translate: none; rotate: none; scale: none; transform: scale(2, 2);\"><div class=\"g_logo_split_half_wrap u-flex-horizontal-nowrap u-gap-custom is-left\"><div class=\"g_logo_split_svg_wrap",
+      "computedStyles": {
+        "display": "flex",
+        "visibility": "visible",
+        "opacity": "1",
+        "position": "static",
+        "zIndex": "auto",
+        "transform": "none",
+        "transition": "all",
+        "animation": "none"
+      }
+    },
+    {
+      "selector": "[class*=\"preloader\"]",
+      "tagName": "div",
+      "className": "preloader_mid_wrap u-flex-horizontal-nowrap u-gap-3",
+      "id": "",
+      "htmlContent": "<div data-preloader-mid=\"\" class=\"preloader_mid_wrap u-flex-horizontal-nowrap u-gap-3\"><div data-preloader-logo=\"\" class=\"g_logo_split u-flex-horizontal-nowrap u-gap-custom u-flex-noshrink\" style=\"translate: none; rotate: none; scale: none; transform: scale(2, 2);\"><div class=\"g_logo_split_half_wrap u-flex-horizontal-nowrap u-gap-custom is-left\"><div class=\"g_logo_split_svg_wrap\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"100%\" viewBox=\"0 0 32 36\" fill=\"none\" class=\"g_logo_split_svg\" style=\"",
+      "computedStyles": {
+        "display": "flex",
+        "visibility": "visible",
+        "opacity": "1",
+        "position": "static",
+        "zIndex": "auto",
+        "transform": "none",
+        "transition": "all",
+        "animation": "none"
+      }
+    },
+    {
+      "selector": "[class*=\"preloader\"]",
+      "tagName": "div",
+      "className": "preloader_loading_bar_wrap",
+      "id": "",
+      "htmlContent": "<div data-preloader-bar-wrap=\"\" class=\"preloader_loading_bar_wrap\" style=\"translate: none; rotate: none; scale: none; transform: scale(0, 1);\"><div data-preloader-bar=\"\" class=\"preloader_loading_bar u-cover-absolute\"></div></div>",
+      "computedStyles": {
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1",
+        "position": "relative",
+        "zIndex": "auto",
+        "transform": "matrix(0, 0, 0, 1, 0, 0)",
+        "transition": "all",
+        "animation": "none"
+      }
+    },
+    {
+      "selector": "[class*=\"preloader\"]",
+      "tagName": "div",
+      "className": "preloader_loading_bar u-cover-absolute",
+      "id": "",
+      "htmlContent": "<div data-preloader-bar=\"\" class=\"preloader_loading_bar u-cover-absolute\"></div>",
+      "computedStyles": {
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1",
+        "position": "absolute",
+        "zIndex": "auto",
+        "transform": "matrix(0, 0, 0, 1, 0, 0)",
+        "transition": "all",
+        "animation": "none"
+      }
+    }
+  ],
+  "cssKeyframes": []
+}
