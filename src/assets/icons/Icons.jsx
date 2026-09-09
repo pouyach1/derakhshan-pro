@@ -25,9 +25,9 @@ export function LogoMark({ className = "", size = 71 }) {
   );
 }
 
-export function PlusIcon() {
+export function PlusIcon({ className = "icon" }) {
   return (
-    <svg aria-hidden="true" className="icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <svg aria-hidden="true" className={className} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
       <path d="M8.5 7.5H15V8.5H8.5V15H7.5V8.5H1V7.5H7.5V1H8.5V7.5Z" fill="black" />
     </svg>
   );
