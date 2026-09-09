@@ -21,7 +21,8 @@ export default function MixedBlock({ data, links = [], mediaRight = false }) {
       const rect = root.getBoundingClientRect();
       const viewport = window.innerHeight || 1;
       const progress = (viewport / 2 - (rect.top + rect.height / 2)) / viewport;
-      media.style.transform = `translate3d(0, ${progress * 8}%, 0) scale(1.04)`;
+      const shift = Math.max(-0.06, Math.min(0.06, progress * 0.08));
+      media.style.transform = `translate3d(0, ${(shift * 100).toFixed(3)}%, 0) scale(1.04)`;
     };
 
     const onScroll = () => {

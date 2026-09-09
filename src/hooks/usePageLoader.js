@@ -19,11 +19,13 @@ export default function usePageLoader() {
     const timers = [];
     const wait = (ms, fn) => timers.push(window.setTimeout(fn, ms));
 
-    loader.classList.remove("disabled", "hide", "translate", "exit");
+    loader.classList.remove("disabled", "hide", "translate", "exit", "animate");
     body.classList.remove("is-ready");
+    body.classList.add("is-loading");
 
     if (reducedMotion) {
       loader.classList.add("disabled");
+      body.classList.remove("is-loading");
       body.classList.add("is-ready");
       return undefined;
     }
@@ -32,14 +34,16 @@ export default function usePageLoader() {
     void loader.offsetWidth;
     loader.classList.add("animate");
 
-    wait(1600, () => {
+    // Matches CSS: logoLoading 1.6s → logoToHeader/logoHide → hide mask 1.6s
+    wait(1650, () => {
       loader.classList.add("translate");
-      wait(200, () => {
+      wait(300, () => {
         loader.classList.add("hide");
-        wait(900, () => {
+        wait(1650, () => {
           loader.classList.add("exit");
+          body.classList.remove("is-loading");
           body.classList.add("is-ready");
-          wait(200, () => {
+          wait(300, () => {
             loader.classList.add("disabled");
           });
         });
@@ -48,6 +52,7 @@ export default function usePageLoader() {
 
     return () => {
       timers.forEach((id) => window.clearTimeout(id));
+      body.classList.remove("is-loading");
     };
   }, [reducedMotion]);
 }

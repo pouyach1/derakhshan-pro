@@ -28,8 +28,8 @@ export default function ShowreelSection({ src }) {
       const start = viewport * 0.9;
       const end = viewport * 0.15;
       const progress = clamp((start - rect.top) / (start - end));
-      const scale = 0.6 + progress * 0.4;
-      video.style.transform = `scale(${scale})`;
+      const scale = Number((0.6 + progress * 0.4).toFixed(4));
+      video.style.transform = `scale(${scale}) translateZ(0)`;
     };
 
     const onScroll = () => {

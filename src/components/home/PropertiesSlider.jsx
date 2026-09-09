@@ -6,9 +6,11 @@ import Button from "../ui/Button.jsx";
 import PropertyCard from "../ui/PropertyCard.jsx";
 import { SITE } from "../../data/site.js";
 import usePrefersReducedMotion from "../../hooks/usePrefersReducedMotion.js";
+import useInViewReveal from "../../hooks/useInViewReveal.js";
 
 export default function PropertiesSlider({ properties }) {
   const rootRef = useRef(null);
+  const headingRef = useInViewReveal();
   const reducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
@@ -27,7 +29,7 @@ export default function PropertiesSlider({ properties }) {
 
   return (
     <section className="properties_slider" ref={rootRef} data-home-motion="slider">
-      <div className="properties_slider-heading container">
+      <div className="properties_slider-heading container home-reveal" ref={headingRef}>
         <h2 className="properties_slider-heading-title text-l">Notre sélection de propriétés</h2>
         <Button to="/nos-proprietes" text="Toutes nos propriétés" additional={`(${SITE.totalProperties})`} />
       </div>

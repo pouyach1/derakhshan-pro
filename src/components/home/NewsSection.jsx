@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import { ArrowIcon } from "../../assets/icons/Icons.jsx";
 import Button from "../ui/Button.jsx";
 import { SITE } from "../../data/site.js";
+import useInViewReveal from "../../hooks/useInViewReveal.js";
 
 export default function NewsSection({ items }) {
   const [activeNews, setActiveNews] = useState(items[0]?.id);
   const [visibleId, setVisibleId] = useState(items[0]?.id);
   const stageRef = useRef(null);
+  const headingRef = useInViewReveal();
 
   useEffect(() => {
     if (!activeNews || activeNews === visibleId) return undefined;
@@ -41,7 +43,7 @@ export default function NewsSection({ items }) {
 
   return (
     <section className="news container" data-home-motion="news">
-      <div className="news-heading">
+      <div className="news-heading home-reveal" ref={headingRef}>
         <h2 className="news-title text-l">Le Journal Luxury Places</h2>
         <Button to="/actualites" text="Tous nos articles" additional={`(${SITE.totalArticles})`} />
       </div>

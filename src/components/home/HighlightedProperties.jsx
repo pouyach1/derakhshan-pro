@@ -40,8 +40,9 @@ export default function HighlightedProperties({ featured, categories }) {
         const speed = Number(node.dataset.parallax) || 0.12;
         const rect = node.getBoundingClientRect();
         const center = rect.top + rect.height / 2 - viewport / 2;
-        const shift = (-center * speed) / viewport;
-        node.style.transform = `translate3d(0, ${shift * 100}%, 0)`;
+        // Keep parallax subtle: clamp to ±12% of element height.
+        const shift = clamp((-center * speed) / viewport, -0.12, 0.12);
+        node.style.transform = `translate3d(0, ${(shift * 100).toFixed(3)}%, 0)`;
       });
 
       let activeIndex = 0;

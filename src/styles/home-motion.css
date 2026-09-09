@@ -1,5 +1,9 @@
 /* Home motion glue — restores CSS contracts that the static rebuild had disabled. */
 
+body.is-loading {
+  overflow: hidden;
+}
+
 .properties_slider-swiper {
   overflow: visible;
   width: 100%;
