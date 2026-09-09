@@ -1,0 +1,608 @@
+{
+  "source": "https://findrealestate.com",
+  "generatedAt": "2026-09-09T11:00:25.487Z",
+  "levels": {
+    "1": "Global motion system",
+    "2": "Section motion",
+    "3": "Component motion",
+    "4": "Micro interaction"
+  },
+  "rawCandidateCount": 146,
+  "uniqueCssKeyframeCount": 30,
+  "systems": [
+    {
+      "id": "global-lenis-smooth-scroll",
+      "level": 1,
+      "name": "Lenis-like smooth scrolling",
+      "category": "global",
+      "trigger": "wheel/touch scroll",
+      "implementation": "Lenis (detected via html.lenis / runtime)",
+      "confidence": "high",
+      "notes": "Document root uses Lenis class patterns; continuous scroll interpolation observed."
+    },
+    {
+      "id": "global-loading-line",
+      "level": 1,
+      "name": "YouTube-style top loading line",
+      "category": "page-transition / loading",
+      "trigger": "route change / fetch",
+      "keyframes": [
+        "loading-line_youtubeLoading",
+        "loading-line_youtubeLoadingSlow",
+        "loading-line_youtubeCompleting"
+      ],
+      "from": {
+        "width": "0%"
+      },
+      "to": {
+        "width": "100%"
+      },
+      "easing": "CSS keyframes",
+      "confidence": "high"
+    },
+    {
+      "id": "header-scroll-bg-transform",
+      "level": 2,
+      "name": "Sticky header background/transform on scroll",
+      "category": "navigation",
+      "trigger": "scroll",
+      "properties": [
+        "background-color",
+        "transform"
+      ],
+      "duration": "0.3s",
+      "easing": "ease / ease-in-out",
+      "evidence": {
+        "top": {
+          "className": "header_wrapper__MJ5bn header_transparent__rCyyn",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "transform": "none",
+          "position": "sticky",
+          "height": 59
+        },
+        "scrolled": {
+          "className": "header_wrapper__MJ5bn header_transparent__rCyyn",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "transform": "none",
+          "position": "sticky",
+          "height": 59
+        }
+      },
+      "confidence": "high"
+    },
+    {
+      "id": "header-content-color-transition",
+      "level": 3,
+      "name": "Header content color/background transition",
+      "category": "navigation",
+      "properties": [
+        "background-color",
+        "color"
+      ],
+      "duration": "1s",
+      "easing": "ease-in-out",
+      "confidence": "high"
+    },
+    {
+      "id": "nav-label-transform-reveal",
+      "level": 4,
+      "name": "Nav label transform reveal",
+      "category": "micro-interaction",
+      "properties": [
+        "transform"
+      ],
+      "duration": "0.9s",
+      "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "instances": 26,
+      "confidence": "high"
+    },
+    {
+      "id": "nav-arrow-rotate",
+      "level": 4,
+      "name": "Header nav arrow transform",
+      "category": "micro-interaction",
+      "properties": [
+        "transform"
+      ],
+      "duration": "0.3s",
+      "easing": "ease",
+      "instances": 19,
+      "confidence": "high"
+    },
+    {
+      "id": "drop-menu-appear",
+      "level": 3,
+      "name": "Dropdown menu appear",
+      "category": "navigation",
+      "keyframes": [
+        "drop-menu_appear"
+      ],
+      "from": {
+        "opacity": 0,
+        "transform": "translateY(5%)"
+      },
+      "to": {
+        "opacity": 1,
+        "transform": "translateY(0)"
+      },
+      "confidence": "high"
+    },
+    {
+      "id": "burger-menu-collapse",
+      "level": 3,
+      "name": "Burger accordion slideUp/slideDown",
+      "category": "navigation",
+      "trigger": "data-state open/closed",
+      "keyframes": [
+        "burger-menu_slideDown",
+        "burger-menu_slideUp"
+      ],
+      "duration": "0.3s",
+      "easing": "ease-out",
+      "from": {
+        "height": 0,
+        "opacity": 0
+      },
+      "to": {
+        "height": "var(--radix-collapsible-content-height)",
+        "opacity": 1
+      },
+      "technology": "Radix collapsible + CSS keyframes",
+      "instances": 4,
+      "confidence": "high"
+    },
+    {
+      "id": "agent-join-modal-system",
+      "level": 3,
+      "name": "agent-join-modal overlay + content + collapse",
+      "category": "modal",
+      "keyframes": [
+        "agent-join-modal_overlayShow",
+        "agent-join-modal_contentShow",
+        "agent-join-modal_slideDown",
+        "agent-join-modal_slideUp"
+      ],
+      "from": {
+        "opacity": 0,
+        "transform": "translate(-50%, -48%) scale(0.96)"
+      },
+      "to": {
+        "opacity": 1,
+        "transform": "translate(-50%, -50%) scale(1)"
+      },
+      "technology": "Radix Dialog/Collapsible + CSS keyframes",
+      "confidence": "high"
+    },
+    {
+      "id": "contact-us-modal-system",
+      "level": 3,
+      "name": "contact-us-modal overlay + content + collapse",
+      "category": "modal",
+      "keyframes": [
+        "contact-us-modal_overlayShow",
+        "contact-us-modal_contentShow",
+        "contact-us-modal_slideDown",
+        "contact-us-modal_slideUp"
+      ],
+      "from": {
+        "opacity": 0,
+        "transform": "translate(-50%, -48%) scale(0.96)"
+      },
+      "to": {
+        "opacity": 1,
+        "transform": "translate(-50%, -50%) scale(1)"
+      },
+      "technology": "Radix Dialog/Collapsible + CSS keyframes",
+      "confidence": "high"
+    },
+    {
+      "id": "find-properties-modal-system",
+      "level": 3,
+      "name": "find-properties-modal overlay + content + collapse",
+      "category": "modal",
+      "keyframes": [
+        "find-properties-modal_overlayShow",
+        "find-properties-modal_contentShow",
+        "find-properties-modal_slideDown",
+        "find-properties-modal_slideUp"
+      ],
+      "from": {
+        "opacity": 0,
+        "transform": "translate(-50%, -48%) scale(0.96)"
+      },
+      "to": {
+        "opacity": 1,
+        "transform": "translate(-50%, -50%) scale(1)"
+      },
+      "technology": "Radix Dialog/Collapsible + CSS keyframes",
+      "confidence": "high"
+    },
+    {
+      "id": "hero-scroll-parallax-house",
+      "level": 2,
+      "name": "Hero house scale/translateY scrub",
+      "category": "hero / scroll",
+      "trigger": "scroll",
+      "scrub": true,
+      "evidenceStages": [
+        {
+          "scrollY": 0,
+          "house": {
+            "className": "hero_house__aJy7p",
+            "transform": "matrix(1.0018, 0, 0, 1.0018, 0, -3.06928)",
+            "opacity": "1",
+            "filter": "none",
+            "clipPath": "none",
+            "willChange": "auto",
+            "top": 595,
+            "height": 1283,
+            "width": 1443,
+            "parsed": {
+              "raw": "matrix(1.0018, 0, 0, 1.0018, 0, -3.06928)",
+              "tx": 0,
+              "ty": -3.06928,
+              "scaleX": 1.0018,
+              "scaleY": 1.0018,
+              "rotateApproxDeg": 0
+            }
+          }
+        },
+        {
+          "scrollY": 100,
+          "house": {
+            "className": "hero_house__aJy7p",
+            "transform": "matrix(1.0136, 0, 0, 1.0136, 0, -23.2988)",
+            "opacity": "1",
+            "filter": "none",
+            "clipPath": "none",
+            "willChange": "auto",
+            "top": 559,
+            "height": 1298,
+            "width": 1460,
+            "parsed": {
+              "raw": "matrix(1.0136, 0, 0, 1.0136, 0, -23.2988)",
+              "tx": 0,
+              "ty": -23.2988,
+              "scaleX": 1.0136,
+              "scaleY": 1.0136,
+              "rotateApproxDeg": 0
+            }
+          }
+        },
+        {
+          "scrollY": 200,
+          "house": {
+            "className": "hero_house__aJy7p",
+            "transform": "matrix(1.0252, 0, 0, 1.0252, 0, -43.1185)",
+            "opacity": "1",
+            "filter": "none",
+            "clipPath": "none",
+            "willChange": "auto",
+            "top": 525,
+            "height": 1313,
+            "width": 1476,
+            "parsed": {
+              "raw": "matrix(1.0252, 0, 0, 1.0252, 0, -43.1185)",
+              "tx": 0,
+              "ty": -43.1185,
+              "scaleX": 1.0252,
+              "scaleY": 1.0252,
+              "rotateApproxDeg": 0
+            }
+          }
+        },
+        {
+          "scrollY": 400,
+          "house": {
+            "className": "hero_house__aJy7p",
+            "transform": "matrix(1.0477, 0, 0, 1.0477, 0, -81.528)",
+            "opacity": "1",
+            "filter": "none",
+            "clipPath": "none",
+            "willChange": "auto",
+            "top": 457,
+            "height": 1342,
+            "width": 1509,
+            "parsed": {
+              "raw": "matrix(1.0477, 0, 0, 1.0477, 0, -81.528)",
+              "tx": 0,
+              "ty": -81.528,
+              "scaleX": 1.0477,
+              "scaleY": 1.0477,
+              "rotateApproxDeg": 0
+            }
+          }
+        },
+        {
+          "scrollY": 600,
+          "house": {
+            "className": "hero_house__aJy7p",
+            "transform": "matrix(1.0693, 0, 0, 1.0693, 0, -118.298)",
+            "opacity": "1",
+            "filter": "none",
+            "clipPath": "none",
+            "willChange": "auto",
+            "top": 393,
+            "height": 1370,
+            "width": 1540,
+            "parsed": {
+              "raw": "matrix(1.0693, 0, 0, 1.0693, 0, -118.298)",
+              "tx": 0,
+              "ty": -118.298,
+              "scaleX": 1.0693,
+              "scaleY": 1.0693,
+              "rotateApproxDeg": 0
+            }
+          }
+        },
+        {
+          "scrollY": 900,
+          "house": {
+            "className": "hero_house__aJy7p",
+            "transform": "matrix(1.0998, 0, 0, 1.0998, 0, -170.378)",
+            "opacity": "1",
+            "filter": "none",
+            "clipPath": "none",
+            "willChange": "auto",
+            "top": 302,
+            "height": 1409,
+            "width": 1584,
+            "parsed": {
+              "raw": "matrix(1.0998, 0, 0, 1.0998, 0, -170.378)",
+              "tx": 0,
+              "ty": -170.378,
+              "scaleX": 1.0998,
+              "scaleY": 1.0998,
+              "rotateApproxDeg": 0
+            }
+          }
+        },
+        {
+          "scrollY": 1200,
+          "house": {
+            "className": "hero_house__aJy7p",
+            "transform": "matrix(1.1281, 0, 0, 1.1281, 0, -218.769)",
+            "opacity": "1",
+            "filter": "none",
+            "clipPath": "none",
+            "willChange": "auto",
+            "top": 217,
+            "height": 1445,
+            "width": 1624,
+            "parsed": {
+              "raw": "matrix(1.1281, 0, 0, 1.1281, 0, -218.769)",
+              "tx": 0,
+              "ty": -218.769,
+              "scaleX": 1.1281,
+              "scaleY": 1.1281,
+              "rotateApproxDeg": 0
+            }
+          }
+        }
+      ],
+      "properties": [
+        "transform (scale + translateY)"
+      ],
+      "confidence": "high",
+      "notes": "Observed continuous transform changes while scrolling through hero; not a CSS keyframe."
+    },
+    {
+      "id": "hero-clouds-drift",
+      "level": 2,
+      "name": "Hero clouds translateX drift",
+      "category": "hero",
+      "trigger": "time/scroll",
+      "properties": [
+        "transform translateX"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "hero-smoke-rise",
+      "level": 2,
+      "name": "Hero smoke translateY",
+      "category": "hero",
+      "trigger": "scroll/init",
+      "properties": [
+        "transform translateY"
+      ],
+      "initialCssHint": "hero_top .hero_smoke { transform: translateY(70%) }",
+      "confidence": "high"
+    },
+    {
+      "id": "hero-content-fade-scale",
+      "level": 2,
+      "name": "Hero content opacity/scale on scroll",
+      "category": "hero / scroll",
+      "properties": [
+        "opacity",
+        "transform scale"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "hero-video-mask-scale",
+      "level": 2,
+      "name": "Hero masked video scale(1.8)",
+      "category": "hero / image",
+      "properties": [
+        "transform scale"
+      ],
+      "staticCss": "hero_mask video { transform: scale(1.8) }",
+      "confidence": "high"
+    },
+    {
+      "id": "section-rewired-list-reveal",
+      "level": 2,
+      "name": "Rewired list items reveal (y:70 → 0, opacity 0→1)",
+      "category": "scroll reveal",
+      "trigger": "IntersectionObserver / scroll",
+      "from": {
+        "y": 70,
+        "opacity": 0
+      },
+      "to": {
+        "y": 0,
+        "opacity": 1
+      },
+      "transition": "opacity 0.4s, transform 4s / cubic-bezier variants observed on related nodes",
+      "confidence": "high"
+    },
+    {
+      "id": "arrows-section-parallax",
+      "level": 2,
+      "name": "Arrows section scale/opacity/translate",
+      "category": "scroll",
+      "from": {
+        "scale": 0.8,
+        "opacity": 0.1,
+        "tx": -25.95
+      },
+      "confidence": "medium"
+    },
+    {
+      "id": "services-bg-hover-scale",
+      "level": 3,
+      "name": "Services item background scale 1.05 + svg slide",
+      "category": "hover / component",
+      "from": {
+        "scale": 1.05,
+        "opacity": 0,
+        "svgTx": -18
+      },
+      "to": {
+        "scale": 1,
+        "opacity": 1,
+        "svgTx": 0
+      },
+      "confidence": "medium"
+    },
+    {
+      "id": "swiper-carousel",
+      "level": 3,
+      "name": "Swiper carousel + bullet micro-rotate",
+      "category": "component",
+      "technology": "Swiper",
+      "confidence": "high"
+    },
+    {
+      "id": "footer-scale-parallax",
+      "level": 2,
+      "name": "Footer content scale/translateY scrub",
+      "category": "scroll",
+      "from": {
+        "scale": 0.98,
+        "ty": -304,
+        "opacity": 0
+      },
+      "confidence": "high"
+    },
+    {
+      "id": "tooltip-appear",
+      "level": 4,
+      "name": "App tooltip fade appear",
+      "keyframes": [
+        "app-tooltip_appear"
+      ],
+      "from": {
+        "opacity": 0
+      },
+      "to": {
+        "opacity": 1
+      },
+      "confidence": "high"
+    },
+    {
+      "id": "skeleton-pulse",
+      "level": 4,
+      "name": "Skeleton loading pulse",
+      "keyframes": [
+        "skeleton_skeleton-pulse"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "property-gallery-swiper",
+      "level": 3,
+      "name": "Property detail gallery / Swiper",
+      "category": "component",
+      "trigger": "drag / pagination / navigation",
+      "technology": "Swiper",
+      "confidence": "high",
+      "evidence": {
+        "sampleUrl": "https://findrealestate.com/properties/3071551",
+        "swipers": [
+          {
+            "index": 0,
+            "class": "swiper swiper-initialized swiper-horizontal swiper-free-mode progress-slider_slider__vRu_h",
+            "slides": 16,
+            "bullets": 0,
+            "next": false,
+            "prev": false
+          }
+        ]
+      },
+      "notes": "Observed on property detail; Swiper also present on agents and other listing surfaces."
+    }
+  ],
+  "librariesDetected": {
+    "gsap": false,
+    "ScrollTrigger": false,
+    "framerMotion": true,
+    "anime": false,
+    "lenis": true,
+    "swiper": false,
+    "three": false,
+    "webAnimations": true
+  },
+  "pageTransitions": {
+    "observed": [
+      {
+        "from": "/",
+        "to": "/about",
+        "elapsedMs": 1135,
+        "overlaysDuringOrAfter": [
+          {
+            "className": "",
+            "opacity": "0.9",
+            "transform": "matrix(1, 0, 0, 1, 0, 0)",
+            "animation": "none"
+          },
+          {
+            "className": "",
+            "opacity": "0.9",
+            "transform": "none",
+            "animation": "none"
+          },
+          {
+            "className": "",
+            "opacity": "0.9",
+            "transform": "none",
+            "animation": "none"
+          },
+          {
+            "className": "",
+            "opacity": "0.9",
+            "transform": "none",
+            "animation": "none"
+          },
+          {
+            "className": "",
+            "opacity": "0.9",
+            "transform": "none",
+            "animation": "none"
+          }
+        ],
+        "loadingLine": {
+          "className": "loading-line_loadingLine__br2iU",
+          "animation": "none",
+          "width": "1440px"
+        }
+      }
+    ],
+    "note": null
+  },
+  "hoverChangedCount": 13,
+  "scrollSampleCount": 11,
+  "pagesInventoried": 15
+}

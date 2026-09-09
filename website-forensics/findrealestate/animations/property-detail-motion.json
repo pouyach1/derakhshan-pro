@@ -1,0 +1,658 @@
+{
+  "source": "https://findrealestate.com",
+  "sampleUrl": "https://findrealestate.com/properties/3071551",
+  "extractedAt": "2026-09-09T11:00:07.866Z",
+  "runtime": {
+    "gsap": false,
+    "framerGlobal": false,
+    "swiper": true,
+    "lenis": true,
+    "three": false,
+    "lottie": false,
+    "title": "Property Details | FIND Real Estate",
+    "images": 24,
+    "canvas": 0,
+    "video": []
+  },
+  "galleries": {
+    "swipers": [
+      {
+        "index": 0,
+        "class": "swiper swiper-initialized swiper-horizontal swiper-free-mode progress-slider_slider__vRu_h",
+        "slides": 16,
+        "bullets": 0,
+        "next": false,
+        "prev": false
+      }
+    ]
+  },
+  "scrollSamples": [
+    {
+      "y": 0,
+      "header": {
+        "class": "header_wrapper__MJ5bn",
+        "bg": "rgb(255, 255, 255)",
+        "transform": "none"
+      },
+      "transforms": [
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "swiper-wrapper property-slider_slider-wrapper__kobJG progress-slider_slider-wrapper__Pv7Nu",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        }
+      ]
+    },
+    {
+      "y": 500,
+      "header": {
+        "class": "header_wrapper__MJ5bn",
+        "bg": "rgb(255, 255, 255)",
+        "transform": "none"
+      },
+      "transforms": [
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "swiper-wrapper property-slider_slider-wrapper__kobJG progress-slider_slider-wrapper__Pv7Nu",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        }
+      ]
+    },
+    {
+      "y": 1200,
+      "header": {
+        "class": "header_wrapper__MJ5bn header_-hidden__CVUoR",
+        "bg": "rgb(255, 255, 255)",
+        "transform": "matrix(1, 0, 0, 1, 0, -58.5)"
+      },
+      "transforms": [
+        {
+          "class": "header_wrapper__MJ5bn header_-hidden__CVUoR",
+          "transform": "matrix(1, 0, 0, 1, 0, -58.5)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "swiper-wrapper property-slider_slider-wrapper__kobJG progress-slider_slider-wrapper__Pv7Nu",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        }
+      ]
+    },
+    {
+      "y": 2200,
+      "header": {
+        "class": "header_wrapper__MJ5bn header_-hidden__CVUoR",
+        "bg": "rgb(255, 255, 255)",
+        "transform": "matrix(1, 0, 0, 1, 0, -58.5)"
+      },
+      "transforms": [
+        {
+          "class": "header_wrapper__MJ5bn header_-hidden__CVUoR",
+          "transform": "matrix(1, 0, 0, 1, 0, -58.5)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "swiper-wrapper property-slider_slider-wrapper__kobJG progress-slider_slider-wrapper__Pv7Nu",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        }
+      ]
+    },
+    {
+      "y": 3500,
+      "header": {
+        "class": "header_wrapper__MJ5bn header_-fixed__r0usw header_-hidden__CVUoR",
+        "bg": "rgb(255, 255, 255)",
+        "transform": "matrix(1, 0, 0, 1, 0, -58.5)"
+      },
+      "transforms": [
+        {
+          "class": "header_wrapper__MJ5bn header_-fixed__r0usw header_-hidden__CVUoR",
+          "transform": "matrix(1, 0, 0, 1, 0, -58.5)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 22.425)",
+          "opacity": "1"
+        },
+        {
+          "class": "swiper-wrapper property-slider_slider-wrapper__kobJG progress-slider_slider-wrapper__Pv7Nu",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        },
+        {
+          "class": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "opacity": "1"
+        }
+      ]
+    }
+  ],
+  "hoverChanges": [
+    {
+      "before": {
+        "class": "button_button-round__TFjlU button_color-primary__JJ7Hh",
+        "transform": "none",
+        "opacity": "1",
+        "filter": "none",
+        "transition": "transform 0.3s"
+      },
+      "after": {
+        "transform": "matrix(1.03773, 0, 0, 1, 0, 0)",
+        "opacity": "1",
+        "filter": "none",
+        "backgroundColor": "rgb(21, 23, 23)"
+      }
+    },
+    {
+      "before": {
+        "class": "button_icon-button__pp9M4 button_color-secondary__FZDOG",
+        "transform": "none",
+        "opacity": "1",
+        "filter": "none",
+        "transition": "transform 0.3s"
+      },
+      "after": {
+        "transform": "matrix(1.0544, 0, 0, 1, 0, 0)",
+        "opacity": "1",
+        "filter": "none",
+        "backgroundColor": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "before": {
+        "class": "button_button-round__TFjlU button_color-primary__JJ7Hh",
+        "transform": "none",
+        "opacity": "1",
+        "filter": "none",
+        "transition": "transform 0.3s"
+      },
+      "after": {
+        "transform": "matrix(1.03773, 0, 0, 1, 0, 0)",
+        "opacity": "1",
+        "filter": "none",
+        "backgroundColor": "rgb(21, 23, 23)"
+      }
+    },
+    {
+      "before": {
+        "class": "button_icon-button__pp9M4 button_color-secondary__FZDOG",
+        "transform": "none",
+        "opacity": "1",
+        "filter": "none",
+        "transition": "transform 0.3s"
+      },
+      "after": {
+        "transform": "matrix(1.05441, 0, 0, 1, 0, 0)",
+        "opacity": "1",
+        "filter": "none",
+        "backgroundColor": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "before": {
+        "class": "button_icon-button__pp9M4 button_color-secondary__FZDOG",
+        "transform": "none",
+        "opacity": "1",
+        "filter": "none",
+        "transition": "transform 0.3s"
+      },
+      "after": {
+        "transform": "matrix(1.05441, 0, 0, 1, 0, 0)",
+        "opacity": "1",
+        "filter": "none",
+        "backgroundColor": "rgb(255, 255, 255)"
+      }
+    }
+  ]
+}
