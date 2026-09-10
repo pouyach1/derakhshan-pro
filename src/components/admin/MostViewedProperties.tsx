@@ -58,7 +58,7 @@ export default function MostViewedProperties() {
   };
 
   return (
-    <section className="relative overflow-hidden rounded-[1.85rem] border border-sky-500/15 bg-admin-card/80 p-4 shadow-[0_24px_60px_-28px_rgba(0,163,255,0.28)] backdrop-blur-md sm:p-6">
+    <section className="relative overflow-visible rounded-[1.85rem] border border-sky-500/15 bg-admin-card/80 p-4 shadow-[0_24px_60px_-28px_rgba(0,163,255,0.28)] backdrop-blur-md sm:p-6">
       <div
         aria-hidden
         className="pointer-events-none absolute -start-16 top-0 h-56 w-56 rounded-full bg-gradient-to-tr from-sky-500/20 to-transparent blur-3xl"
@@ -88,7 +88,7 @@ export default function MostViewedProperties() {
 
       <div
         data-wheel-self
-        className="relative overflow-hidden py-3"
+        className="relative overflow-x-auto overflow-y-visible px-1 pt-4 pb-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         style={{ perspective: 1000 }}
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => {
