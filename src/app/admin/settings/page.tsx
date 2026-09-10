@@ -53,10 +53,10 @@ export default function SettingsPage() {
             {tab === "profile" ? (
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="نام نمایشی">
-                  <input className={inputClass} defaultValue="مدیر سیستم RIO" />
+                  <input className={inputClass} defaultValue="مدیر دفتر درخشان" />
                 </Field>
                 <Field label="ایمیل">
-                  <input className={inputClass} type="email" defaultValue="admin@rioproperty.co.za" />
+                  <input className={inputClass} type="email" defaultValue="manager@derakhshan.ir" />
                 </Field>
                 <Field label="شماره تماس">
                   <input className={inputClass} defaultValue="۰۲۱-۹۱۰۰۰۰۰۰" />
@@ -76,10 +76,10 @@ export default function SettingsPage() {
             {tab === "site" ? (
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="نام برند">
-                  <input className={inputClass} defaultValue="RIO Property" />
+                  <input className={inputClass} defaultValue="درخشان پرو" />
                 </Field>
                 <Field label="دامنه عمومی">
-                  <input className={inputClass} defaultValue="https://www.rioproperty.co.za" />
+                  <input className={inputClass} defaultValue="https://derakhshan.ir" />
                 </Field>
                 <Field label="واحد پول پیش‌فرض">
                   <select className={inputClass} defaultValue="irr">
@@ -95,7 +95,7 @@ export default function SettingsPage() {
                   </select>
                 </Field>
                 <Field label="آدرس دفتر" className="sm:col-span-2">
-                  <input className={inputClass} defaultValue="تهران، خیابان ولیعصر" />
+                  <input className={inputClass} defaultValue="تهران، ونک، خیابان خدامی، پلاک ۱۲" />
                 </Field>
               </div>
             ) : null}
@@ -103,19 +103,19 @@ export default function SettingsPage() {
             {tab === "notifications" ? (
               <div className="space-y-3">
                 <ToggleRow
-                  title="اعلان ایمیل برای سرنخ جدید"
-                  description="هر درخواست جدید بلافاصله به ایمیل ادمین ارسال شود"
+                  title="ایمیل برای مشتری تازه"
+                  description="هر درخواست جدید همان لحظه به ایمیل دفتر برود"
                   checked={emailAlerts}
                   onChange={setEmailAlerts}
                 />
                 <ToggleRow
-                  title="پیامک وضعیت معامله"
-                  description="اطلاع‌رسانی پیامکی هنگام تغییر وضعیت سرنخ"
+                  title="پیامک تغییر وضعیت"
+                  description="وقتی نوبت بازدید یا معامله جابه‌جا شد، پیامک بفرست"
                   checked={smsAlerts}
                   onChange={setSmsAlerts}
                 />
                 <Field label="ایمیل اعلان‌ها">
-                  <input className={inputClass} type="email" defaultValue="alerts@rioproperty.co.za" />
+                  <input className={inputClass} type="email" defaultValue="office@derakhshan.ir" />
                 </Field>
               </div>
             ) : null}

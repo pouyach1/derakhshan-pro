@@ -29,36 +29,36 @@ export default function MostViewedProperties() {
     [],
   );
 
+  // RTL gallery: scroll so later cards enter from the left (reading-forward)
   useAnimationFrame((_, delta) => {
     if (paused || dragging) return;
-    const next = x.get() - (VELOCITY * delta) / 1000;
-    x.set(wrapOffset(next, loopWidth));
+    const next = x.get() + (VELOCITY * delta) / 1000;
+    x.set(wrapOffsetRtl(next, loopWidth));
   });
 
   useEffect(() => {
-    x.set(0);
-  }, [x]);
+    x.set(-loopWidth);
+  }, [x, loopWidth]);
 
   const onDragEnd = (_: unknown, info: PanInfo) => {
     setDragging(false);
-    // Soft inertia settle toward nearest card rhythm
     const projected = x.get() + info.velocity.x * 0.12;
-    x.set(wrapOffset(projected, loopWidth));
+    x.set(wrapOffsetRtl(projected, loopWidth));
   };
 
   return (
     <section className="rounded-[1.75rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 sm:p-6">
       <div className="mb-5 flex items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold text-admin-navy sm:text-xl">املاک پربازدید</h2>
-          <p className="text-sm text-slate-500">داغ‌ترین آگهی‌های امروز در تهران و حومه</p>
+          <h2 className="text-lg font-semibold text-admin-navy sm:text-xl">پربازدیدهای امروز</h2>
+          <p className="text-sm text-slate-500">آگهی‌هایی که مشاوران و خریداران بیشتر باز کرده‌اند</p>
         </div>
         <Link
           href="/admin/properties"
           className="inline-flex items-center gap-1.5 rounded-full bg-admin-soft px-3.5 py-2 text-sm font-medium text-admin-navy transition hover:bg-admin-sky hover:text-white"
         >
-          مشاهده همه
-          <span aria-hidden>↗</span>
+          همه آگهی‌ها
+          <span aria-hidden>←</span>
         </Link>
       </div>
 
@@ -89,10 +89,11 @@ export default function MostViewedProperties() {
   );
 }
 
-function wrapOffset(value: number, width: number) {
+/** Keep offset in (-2*width, 0] while scrolling positively through a tripled track. */
+function wrapOffsetRtl(value: number, width: number) {
   let next = value;
-  while (next <= -width) next += width;
   while (next > 0) next -= width;
+  while (next <= -width * 2) next += width;
   return next;
 }
 
@@ -136,7 +137,7 @@ function PropertyCard({
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-t from-admin-navy/55 via-transparent to-transparent" />
         <span className="absolute bottom-3 start-3 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-admin-navy">
-          {property.planning}
+          {property.usage}
         </span>
       </div>
 
@@ -169,9 +170,9 @@ function PropertyCard({
         <p className="text-sm font-semibold text-admin-sky">{property.price}</p>
 
         <div className="grid grid-cols-3 gap-2 border-t border-slate-100 pt-3 text-[11px]">
-          <Stat label="هر متر" value={property.pricePerSqft} />
-          <Stat label="میانگین بازار" value={property.averageValue} />
-          <Stat label="نوع" value={property.planning} accent />
+          <Stat label="متری" value={property.pricePerMeter} />
+          <Stat label="میانگین محله" value={property.neighborhoodAvg} />
+          <Stat label="کاربری" value={property.usage} accent />
         </div>
       </div>
     </motion.article>

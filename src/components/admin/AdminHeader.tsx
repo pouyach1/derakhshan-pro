@@ -6,9 +6,9 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { href: "/admin/dashboard", label: "داشبورد" },
-  { href: "/admin/properties", label: "املاک" },
-  { href: "/admin/leads", label: "سرنخ‌ها" },
+  { href: "/admin/dashboard", label: "خانه" },
+  { href: "/admin/properties", label: "آگهی‌ها" },
+  { href: "/admin/leads", label: "پیگیری‌ها" },
   { href: "/admin/agents", label: "مشاوران" },
   { href: "/admin/settings", label: "تنظیمات" },
 ] as const;
@@ -37,17 +37,17 @@ export default function AdminHeader({
             </svg>
           </span>
           <div className="hidden sm:block">
-            <p className="text-sm font-semibold text-admin-navy">RIO ادمین</p>
-            <p className="text-[11px] text-slate-500">کنسول املاک</p>
+            <p className="text-sm font-semibold text-admin-navy">درخشان پرو</p>
+            <p className="text-[11px] text-slate-500">سامانه مدیریت آگهی</p>
           </div>
         </Link>
 
         <div className="flex flex-1 flex-wrap items-center gap-2">
           <FilterChip label="تهران" />
-          <FilterChip label="منطقه یک" />
+          <FilterChip label="منطقه ۱" />
           <button
             type="button"
-            aria-label="جستجو"
+            aria-label="جستجوی کد یا محله"
             className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-600 shadow-sm ring-1 ring-slate-200 transition hover:text-admin-sky"
           >
             <SearchIcon />

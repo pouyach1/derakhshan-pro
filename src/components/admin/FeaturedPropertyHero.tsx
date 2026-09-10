@@ -34,7 +34,8 @@ export default function FeaturedPropertyHero() {
   const rotateY = useMotionValue(0);
   const springX = useSpring(rotateX, SPRING);
   const springY = useSpring(rotateY, SPRING);
-  const parallaxX = useTransform(springY, [-3, 3], [10, -10]);
+  // In RTL, mouse X maps inverted for a natural card lean
+  const parallaxX = useTransform(springY, [-3, 3], [-10, 10]);
   const parallaxY = useTransform(springX, [-3, 3], [-8, 8]);
 
   const property = FEATURED_PROPERTIES[index];
@@ -59,7 +60,7 @@ export default function FeaturedPropertyHero() {
     if (!rect) return;
     const px = (event.clientX - rect.left) / rect.width;
     const py = (event.clientY - rect.top) / rect.height;
-    rotateY.set((px - 0.5) * 6);
+    rotateY.set((0.5 - px) * 6);
     rotateX.set((0.5 - py) * 6);
   };
 
@@ -85,6 +86,8 @@ export default function FeaturedPropertyHero() {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ type: "spring", stiffness: 100, damping: 20 }}
       className="relative overflow-hidden rounded-[1.75rem] bg-admin-sky text-white shadow-2xl shadow-sky-500/25"
+      aria-roledescription="carousel"
+      aria-label="آگهی‌های ویژه امروز"
     >
       <AnimatePresence mode="wait">
         <motion.div
@@ -104,8 +107,8 @@ export default function FeaturedPropertyHero() {
             sizes="(max-width: 1024px) 100vw, 70vw"
             className="object-cover object-center opacity-50"
           />
-          <div className="absolute inset-0 bg-gradient-to-l from-admin-sky/30 via-admin-sky/75 to-admin-sky" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.18),transparent_45%)]" />
+          <div className="absolute inset-0 bg-gradient-to-r from-admin-sky/30 via-admin-sky/75 to-admin-sky" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.18),transparent_45%)]" />
         </motion.div>
       </AnimatePresence>
 
@@ -134,10 +137,10 @@ export default function FeaturedPropertyHero() {
             </AnimatePresence>
 
             <div className="flex gap-2">
-              <GlassButton label="نشان‌کردن">
+              <GlassButton label="ذخیره در علاقه‌مندی‌ها">
                 <BookmarkIcon />
               </GlassButton>
-              <GlassButton label="اشتراک‌گذاری">
+              <GlassButton label="اشتراک‌گذاری در واتساپ">
                 <ShareIcon />
               </GlassButton>
             </div>
@@ -167,6 +170,16 @@ export default function FeaturedPropertyHero() {
               <motion.p variants={textItem} className="max-w-lg text-sm leading-relaxed text-white/90 sm:text-base">
                 {property.address}
               </motion.p>
+              <motion.div variants={textItem} className="flex flex-wrap gap-1.5">
+                {property.highlights.map((item) => (
+                  <span
+                    key={item}
+                    className="rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-medium ring-1 ring-white/25 backdrop-blur-md"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </motion.div>
               <motion.p variants={textItem} className="text-lg font-semibold text-white sm:text-xl">
                 {property.price}
               </motion.p>
@@ -175,16 +188,11 @@ export default function FeaturedPropertyHero() {
 
           <div className="flex items-end justify-between gap-4">
             <div className="flex items-center gap-2">
-              <NavArrow
-                label="قبلی"
-                onClick={() => goTo(index - 1)}
-                icon={<ChevronRight />}
-              />
-              <NavArrow
-                label="بعدی"
-                onClick={() => goTo(index + 1)}
-                icon={<ChevronLeft />}
-              />
+              <NavArrow label="آگهی قبلی" onClick={() => goTo(index - 1)} icon={<ChevronRight />} />
+              <NavArrow label="آگهی بعدی" onClick={() => goTo(index + 1)} icon={<ChevronLeft />} />
+              <span className="ms-1 text-xs text-white/75">
+                {toFaDigits(index + 1)} از {toFaDigits(count)}
+              </span>
             </div>
             <span className="rounded-full bg-admin-navy px-3.5 py-2 text-xs font-semibold text-white shadow-lg sm:text-sm">
               {property.area}
@@ -205,6 +213,10 @@ export default function FeaturedPropertyHero() {
             >
               <Image src={property.image} alt={property.title} fill sizes="40vw" className="object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-admin-navy/50 to-transparent" />
+              <div className="absolute bottom-4 start-4 end-4 rounded-2xl bg-white/15 p-3 backdrop-blur-xl ring-1 ring-white/30">
+                <p className="text-xs text-white/80">هماهنگی بازدید</p>
+                <p className="mt-0.5 text-sm font-semibold">امروز · با هماهنگی مشاور</p>
+              </div>
             </motion.div>
           </AnimatePresence>
         </div>
@@ -222,6 +234,10 @@ export default function FeaturedPropertyHero() {
       </div>
     </motion.section>
   );
+}
+
+function toFaDigits(value: number) {
+  return String(value).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[Number(d)]);
 }
 
 function NavArrow({

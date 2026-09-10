@@ -5,10 +5,10 @@ import { motion } from "framer-motion";
 import { ADMIN_LEADS, type LeadStatus } from "@/config/admin";
 
 const COLUMNS: { id: LeadStatus; title: string }[] = [
-  { id: "new", title: "جدید" },
-  { id: "contacted", title: "تماس گرفته‌شده" },
-  { id: "viewing", title: "قرار بازدید" },
-  { id: "closed", title: "نهایی‌شده" },
+  { id: "new", title: "تازه رسیده" },
+  { id: "contacted", title: "تماس اولیه" },
+  { id: "viewing", title: "نوبت بازدید" },
+  { id: "closed", title: "معامله شد" },
 ];
 
 export default function LeadsPage() {
@@ -28,8 +28,8 @@ export default function LeadsPage() {
   return (
     <div className="space-y-4">
       <div className="rounded-[1.75rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 sm:p-5">
-        <h1 className="text-xl font-semibold text-admin-navy sm:text-2xl">مدیریت سرنخ‌ها و درخواست‌ها</h1>
-        <p className="mt-1 text-sm text-slate-500">پیگیری مشتری از اولین تماس تا نهایی شدن معامله</p>
+        <h1 className="text-xl font-semibold text-admin-navy sm:text-2xl">پیگیری مشتریان</h1>
+        <p className="mt-1 text-sm text-slate-500">از اولین تماس تا امضای قولنامه، وضعیت هر مشتری را اینجا جابه‌جا کنید</p>
       </div>
 
       <div className="grid gap-4 xl:grid-cols-4">
@@ -65,7 +65,7 @@ export default function LeadsPage() {
                       {column.title}
                     </span>
                   </div>
-                  <p className="mt-3 text-xs text-slate-600">ملک هدف: {lead.propertyTitle}</p>
+                  <p className="mt-3 text-xs text-slate-600">آگهی موردنظر: {lead.propertyTitle}</p>
                   <p className="mt-1 text-[11px] text-slate-400">{lead.date}</p>
 
                   <div className="mt-3 flex flex-wrap gap-1.5">
@@ -76,7 +76,7 @@ export default function LeadsPage() {
                         onClick={() => moveLead(lead.id, item.id)}
                         className="rounded-full bg-white px-2.5 py-1 text-[10px] font-medium text-slate-600 ring-1 ring-slate-200 transition hover:text-admin-sky hover:ring-admin-sky/40"
                       >
-                        → {item.title}
+                        ← {item.title}
                       </button>
                     ))}
                   </div>

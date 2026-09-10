@@ -35,7 +35,7 @@ export default function ContactsSidebar() {
   return (
     <aside className="flex h-full min-h-[32rem] flex-col rounded-[1.75rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 lg:p-5">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-admin-navy">مخاطبین</h2>
+        <h2 className="text-lg font-semibold text-admin-navy">دفترچه تماس</h2>
         <button
           type="button"
           aria-label="فیلتر مخاطبین"
@@ -117,7 +117,7 @@ export default function ContactsSidebar() {
                       <IconButton active={active} label={`تماس با ${contact.name}`}>
                         <PhoneIcon />
                       </IconButton>
-                      <IconButton active={active} label={`باز کردن ${contact.name}`}>
+                      <IconButton active={active} label={`پروفایل ${contact.name}`}>
                         <ExternalIcon />
                       </IconButton>
                       <button
@@ -129,7 +129,7 @@ export default function ContactsSidebar() {
                             : "bg-white text-admin-navy ring-1 ring-slate-200 hover:ring-admin-sky/40",
                         )}
                       >
-                        ارسال نامه
+                        پیامک
                       </button>
                     </div>
                   </div>

@@ -9,8 +9,8 @@ const vazirmatn = Vazirmatn({
 });
 
 export const metadata: Metadata = {
-  title: "پنل مدیریت | RIO Property",
-  description: "داشبورد مدیریت املاک، سرنخ‌ها، مشاوران و تنظیمات",
+  title: "پنل مدیریت | درخشان پرو",
+  description: "مدیریت آگهی‌ها، پیگیری مشتریان، مشاوران و تنظیمات دفتر املاک",
 };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

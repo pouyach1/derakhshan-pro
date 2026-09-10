@@ -8,8 +8,8 @@ export default function AgentsPage() {
   return (
     <div className="space-y-4">
       <div className="rounded-[1.75rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 sm:p-5">
-        <h1 className="text-xl font-semibold text-admin-navy sm:text-2xl">مدیریت مشاوران املاک</h1>
-        <p className="mt-1 text-sm text-slate-500">عملکرد، موجودی آگهی و کمیسیون هر مشاور</p>
+        <h1 className="text-xl font-semibold text-admin-navy sm:text-2xl">تیم مشاوران</h1>
+        <p className="mt-1 text-sm text-slate-500">آگهی‌های فعال، معاملات بسته‌شده و سهم کمیسیون هر نفر</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-2">
@@ -40,14 +40,14 @@ export default function AgentsPage() {
                     type="button"
                     className="rounded-full bg-admin-soft px-3 py-1.5 text-xs font-medium text-admin-navy transition hover:bg-admin-sky hover:text-white"
                   >
-                    ارسال نامه
+                    پیامک
                   </button>
                 </div>
 
                 <div className="mt-4 grid grid-cols-3 gap-2">
-                  <Stat label="املاک ثبت‌شده" value={String(agent.listedProperties)} />
-                  <Stat label="معاملات بسته‌شده" value={String(agent.dealsClosed)} />
-                  <Stat label="کمیسیون" value={agent.commission} accent />
+                  <Stat label="آگهی فعال" value={String(agent.listedProperties)} />
+                  <Stat label="معامله شده" value={String(agent.dealsClosed)} />
+                  <Stat label="سهم کمیسیون" value={agent.commission} accent />
                 </div>
               </div>
             </div>
