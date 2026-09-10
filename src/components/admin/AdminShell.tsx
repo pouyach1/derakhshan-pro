@@ -6,8 +6,8 @@ import AdminHeader from "@/components/admin/AdminHeader";
 import ContactsSidebar from "@/components/admin/ContactsSidebar";
 
 /**
- * Admin chrome only. Proportional scroll sync is owned by the dashboard page
- * (`useScrollSync`) — this shell does not intercept wheel events or lock overflow.
+ * Admin chrome with a sticky contacts column.
+ * Scrolling is native CSS only — no wheel interception.
  */
 export default function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
