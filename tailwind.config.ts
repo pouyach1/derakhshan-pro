@@ -45,6 +45,7 @@ const config: Config = {
       fontFamily: {
         sans: ["Rubik", "Arial", "sans-serif"],
         display: ['"Blauer Nue"', "Rubik", "Verdana", "sans-serif"],
+        vazir: ["var(--font-vazirmatn)", "Vazirmatn", "Tahoma", "sans-serif"],
       },
       borderRadius: {
         rio: "1rem",
