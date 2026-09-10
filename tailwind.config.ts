@@ -32,6 +32,15 @@ const config: Config = {
           200: "#ccc",
           300: "#b8b8b8",
         },
+        admin: {
+          canvas: "#F4F6F8",
+          soft: "#EFEFEF",
+          card: "#FFFFFF",
+          sky: "#00A3FF",
+          "sky-soft": "#38BDF8",
+          navy: "#0F172A",
+          "navy-soft": "#1E293B",
+        },
       },
       fontFamily: {
         sans: ["Rubik", "Arial", "sans-serif"],
