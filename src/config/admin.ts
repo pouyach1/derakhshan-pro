@@ -32,6 +32,7 @@ export type ViewedProperty = {
   pricePerMeter: string;
   neighborhoodAvg: string;
   usage: string;
+  views: string;
 };
 
 export type PropertyStatus = "published" | "draft" | "archived";
@@ -199,6 +200,7 @@ export const MOST_VIEWED_PROPERTIES: ViewedProperty[] = [
     pricePerMeter: "۱۲۷ میلیون",
     neighborhoodAvg: "۱۷٫۲ میلیارد",
     usage: "مسکونی",
+    views: "۱۴٫۲ هزار بازدید",
   },
   {
     id: "p2",
@@ -212,6 +214,7 @@ export const MOST_VIEWED_PROPERTIES: ViewedProperty[] = [
     pricePerMeter: "۶۸ میلیون",
     neighborhoodAvg: "۲۴ میلیارد",
     usage: "ویلایی",
+    views: "۹٫۸ هزار بازدید",
   },
   {
     id: "p3",
@@ -225,6 +228,7 @@ export const MOST_VIEWED_PROPERTIES: ViewedProperty[] = [
     pricePerMeter: "۱۲۷ میلیون",
     neighborhoodAvg: "۱۳٫۴ میلیارد",
     usage: "مسکونی",
+    views: "۷٫۴ هزار بازدید",
   },
   {
     id: "p4",
@@ -238,6 +242,7 @@ export const MOST_VIEWED_PROPERTIES: ViewedProperty[] = [
     pricePerMeter: "۲۵۰ میلیون",
     neighborhoodAvg: "۵۱ میلیارد",
     usage: "پنت‌هاوس",
+    views: "۱۸٫۶ هزار بازدید",
   },
   {
     id: "p5",
@@ -251,6 +256,7 @@ export const MOST_VIEWED_PROPERTIES: ViewedProperty[] = [
     pricePerMeter: "۱۳۱ میلیون",
     neighborhoodAvg: "۱۹٫۸ میلیارد",
     usage: "مسکونی",
+    views: "۶٫۱ هزار بازدید",
   },
   {
     id: "p6",
@@ -264,6 +270,7 @@ export const MOST_VIEWED_PROPERTIES: ViewedProperty[] = [
     pricePerMeter: "۳۳۹ هزار",
     neighborhoodAvg: "۸۵ م / ماه",
     usage: "اداری",
+    views: "۴٫۹ هزار بازدید",
   },
 ];
 

@@ -13,7 +13,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       <AdminHeader />
 
       <div className="mx-auto grid max-w-[1600px] gap-4 px-4 py-4 lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-5 lg:px-6 lg:py-6">
-        <div className="lg:sticky lg:top-[4.75rem] lg:self-start">
+        <div className="h-fit lg:sticky lg:top-6 lg:self-start">
           <ContactsSidebar />
         </div>
 
