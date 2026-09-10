@@ -20,7 +20,6 @@ import {
   Layers,
   Maximize2,
   Sparkles,
-  TrendingUp,
 } from "lucide-react";
 import { MOST_VIEWED_PROPERTIES, type ViewedProperty } from "@/config/admin";
 import { cn } from "@/lib/utils";
@@ -43,18 +42,19 @@ export default function MostViewedProperties() {
 
   useAnimationFrame((_, delta) => {
     if (paused || dragging) return;
-    x.set(wrapOffset(x.get() - (VELOCITY * delta) / 1000, loopWidth));
+    // RTL: advance toward +x so the gallery flows with Persian reading direction.
+    x.set(wrapOffsetRtl(x.get() + (VELOCITY * delta) / 1000, loopWidth));
   });
 
   useEffect(() => {
-    x.set(0);
-  }, [x]);
+    x.set(-loopWidth);
+  }, [x, loopWidth]);
 
   const onDragEnd = (_: unknown, info: PanInfo) => {
     setDragging(false);
-    const projected = x.get() + info.velocity.x * 0.16;
+    const projected = x.get() + info.velocity.x * 0.18;
     const snapped = Math.round(projected / STEP) * STEP;
-    x.set(wrapOffset(snapped, loopWidth));
+    x.set(wrapOffsetRtl(snapped, loopWidth));
   };
 
   return (
@@ -88,7 +88,7 @@ export default function MostViewedProperties() {
 
       <div
         data-wheel-self
-        className="relative overflow-x-auto overflow-y-visible px-1 pt-4 pb-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="relative overflow-visible px-1 pt-4 pb-8"
         style={{ perspective: 1000 }}
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => {
@@ -101,8 +101,8 @@ export default function MostViewedProperties() {
           drag="x"
           dragConstraints={{ left: -loopWidth * 2, right: 0 }}
           dragElastic={0.06}
-          dragTransition={{ bounceStiffness: 180, bounceDamping: 22, power: 0.2 }}
-          style={{ x, gap: GAP, willChange: "transform" }}
+          dragTransition={{ bounceStiffness: 180, bounceDamping: 22, power: 0.25 }}
+          style={{ x, gap: GAP, willChange: "transform", direction: "rtl" }}
           onDragStart={() => setDragging(true)}
           onDragEnd={onDragEnd}
         >
@@ -115,10 +115,11 @@ export default function MostViewedProperties() {
   );
 }
 
-function wrapOffset(value: number, width: number) {
+/** Keep offset in (-2w, 0] while auto-scrolling positively for RTL. */
+function wrapOffsetRtl(value: number, width: number) {
   let next = value;
-  while (next <= -width) next += width;
   while (next > 0) next -= width;
+  while (next <= -width * 2) next += width;
   return next;
 }
 
@@ -214,7 +215,7 @@ function PropertyCard3D({ property, index }: { property: ViewedProperty; index: 
             <div className="absolute inset-0 bg-gradient-to-t from-admin-navy/70 via-admin-navy/15 to-transparent" />
 
             <span className="absolute start-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-admin-sky/95 px-2.5 py-1 text-[11px] font-semibold text-white shadow-[0_0_20px_rgba(0,163,255,0.45)] backdrop-blur-md">
-              <TrendingUp className="h-3.5 w-3.5 text-sky-100" strokeWidth={2.2} />
+              <Eye className="h-3.5 w-3.5 text-sky-100" strokeWidth={2.2} />
               {property.views}
             </span>
 

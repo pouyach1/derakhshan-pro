@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { Bookmark, ChevronLeft, ChevronRight, Share2 } from "lucide-react";
 import { FEATURED_PROPERTIES } from "@/config/admin";
 
 const AUTO_MS = 5000;
@@ -138,10 +139,10 @@ export default function FeaturedPropertyHero() {
 
             <div className="flex gap-2">
               <GlassButton label="ذخیره در علاقه‌مندی‌ها">
-                <BookmarkIcon />
+                <Bookmark className="h-4 w-4" strokeWidth={2} />
               </GlassButton>
               <GlassButton label="اشتراک‌گذاری در واتساپ">
-                <ShareIcon />
+                <Share2 className="h-4 w-4" strokeWidth={2} />
               </GlassButton>
             </div>
           </div>
@@ -188,8 +189,16 @@ export default function FeaturedPropertyHero() {
 
           <div className="flex items-end justify-between gap-4">
             <div className="flex items-center gap-2">
-              <NavArrow label="آگهی قبلی" onClick={() => goTo(index - 1)} icon={<ChevronRight />} />
-              <NavArrow label="آگهی بعدی" onClick={() => goTo(index + 1)} icon={<ChevronLeft />} />
+              <NavArrow
+                label="آگهی قبلی"
+                onClick={() => goTo(index - 1)}
+                icon={<ChevronRight className="h-4 w-4" strokeWidth={2.2} />}
+              />
+              <NavArrow
+                label="آگهی بعدی"
+                onClick={() => goTo(index + 1)}
+                icon={<ChevronLeft className="h-4 w-4" strokeWidth={2.2} />}
+              />
               <span className="ms-1 text-xs text-white/75">
                 {toFaDigits(index + 1)} از {toFaDigits(count)}
               </span>
@@ -276,40 +285,5 @@ function GlassButton({ label, children }: { label: string; children: React.React
     >
       {children}
     </motion.button>
-  );
-}
-
-function BookmarkIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M7 4h10v17l-5-3-5 3V4Z" />
-    </svg>
-  );
-}
-
-function ShareIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-      <circle cx="18" cy="5" r="2.5" />
-      <circle cx="6" cy="12" r="2.5" />
-      <circle cx="18" cy="19" r="2.5" />
-      <path d="m8.2 13.2 7.5 4.3M15.7 6.5l-7.5 4.3" />
-    </svg>
-  );
-}
-
-function ChevronLeft() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2">
-      <path d="m15 6-6 6 6 6" />
-    </svg>
-  );
-}
-
-function ChevronRight() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2">
-      <path d="m9 6 6 6-6 6" />
-    </svg>
   );
 }

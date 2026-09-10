@@ -2,7 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, LayoutGrid, List, Bell, Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -42,16 +45,10 @@ export default function AdminHeader({
           </div>
         </Link>
 
-        <div className="flex flex-1 flex-wrap items-center gap-2">
+        <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
           <FilterChip label="تهران" />
           <FilterChip label="منطقه ۱" />
-          <button
-            type="button"
-            aria-label="جستجوی کد یا محله"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-600 shadow-sm ring-1 ring-slate-200 transition hover:text-admin-sky"
-          >
-            <SearchIcon />
-          </button>
+          <LuxurySearch />
         </div>
 
         <nav className="flex flex-wrap items-center gap-1 rounded-full bg-white p-1 shadow-sm ring-1 ring-slate-200/80">
@@ -80,7 +77,7 @@ export default function AdminHeader({
             aria-label="اعلان‌ها"
             className="relative inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-600 shadow-sm ring-1 ring-slate-200"
           >
-            <BellIcon />
+            <Bell className="h-5 w-5" strokeWidth={1.8} />
             <span className="absolute left-2 top-2 h-2 w-2 rounded-full bg-admin-sky" />
           </button>
           <Image
@@ -97,28 +94,106 @@ export default function AdminHeader({
                 aria-label="نمای شبکه‌ای"
                 onClick={() => onViewModeChange("grid")}
                 className={cn(
-                  "inline-flex h-8 w-8 items-center justify-center rounded-full text-sm transition",
+                  "inline-flex h-8 w-8 items-center justify-center rounded-full transition",
                   viewMode === "grid" ? "bg-admin-navy text-white" : "text-slate-500 hover:bg-admin-soft",
                 )}
               >
-                ⊞
+                <LayoutGrid className="h-4 w-4" strokeWidth={1.9} />
               </button>
               <button
                 type="button"
                 aria-label="نمای لیستی"
                 onClick={() => onViewModeChange("list")}
                 className={cn(
-                  "inline-flex h-8 w-8 items-center justify-center rounded-full text-sm transition",
+                  "inline-flex h-8 w-8 items-center justify-center rounded-full transition",
                   viewMode === "list" ? "bg-admin-navy text-white" : "text-slate-500 hover:bg-admin-soft",
                 )}
               >
-                ≡
+                <List className="h-4 w-4" strokeWidth={1.9} />
               </button>
             </div>
           ) : null}
         </div>
       </div>
     </header>
+  );
+}
+
+function LuxurySearch() {
+  const [query, setQuery] = useState("");
+  const [focused, setFocused] = useState(false);
+  const [isMac, setIsMac] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setIsMac(/Mac|iPhone|iPad|iPod/i.test(navigator.platform) || /Mac OS/i.test(navigator.userAgent));
+  }, []);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      const meta = event.metaKey || event.ctrlKey;
+      if (meta && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        inputRef.current?.focus();
+      }
+      if (event.key === "Escape" && document.activeElement === inputRef.current) {
+        inputRef.current?.blur();
+        setQuery("");
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  return (
+    <div
+      className={cn(
+        "group relative flex h-11 min-w-[12rem] flex-1 items-center gap-2 rounded-2xl px-3 transition-all duration-300",
+        "border border-white/10 bg-slate-900/40 text-white shadow-lg shadow-sky-950/10 backdrop-blur-xl",
+        "sm:max-w-md",
+        focused && "border-sky-500/50 ring-4 ring-sky-500/10",
+      )}
+    >
+      <Search
+        className={cn("h-4 w-4 shrink-0 transition-colors", focused ? "text-sky-300" : "text-slate-300")}
+        strokeWidth={1.9}
+      />
+      <input
+        ref={inputRef}
+        value={query}
+        onChange={(event) => setQuery(event.target.value)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        placeholder="جستجوی کد، محله یا مشاور…"
+        className="h-full w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-400"
+        aria-label="جستجو"
+      />
+      <AnimatePresence initial={false}>
+        {query ? (
+          <motion.button
+            type="button"
+            aria-label="پاک کردن جستجو"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.18 }}
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => {
+              setQuery("");
+              inputRef.current?.focus();
+            }}
+            className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/10 text-slate-200 transition hover:bg-white/20 hover:text-white"
+          >
+            <X className="h-3.5 w-3.5" strokeWidth={2} />
+          </motion.button>
+        ) : (
+          <kbd className="hidden items-center gap-1 rounded-md border border-slate-700 bg-slate-800 px-2 py-0.5 font-mono text-[10px] text-slate-400 sm:inline-flex">
+            {isMac ? "⌘" : "Ctrl"}
+            <span>K</span>
+          </kbd>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -129,33 +204,7 @@ function FilterChip({ label }: { label: string }) {
       className="inline-flex h-10 items-center gap-2 rounded-full bg-white px-3.5 text-sm text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:ring-admin-sky/40"
     >
       <span>{label}</span>
-      <ChevronIcon />
+      <ChevronDown className="h-4 w-4 text-slate-400" strokeWidth={2} />
     </button>
-  );
-}
-
-function SearchIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4.5 w-4.5" fill="none" stroke="currentColor" strokeWidth="2">
-      <circle cx="11" cy="11" r="7" />
-      <path d="m20 20-3.5-3.5" />
-    </svg>
-  );
-}
-
-function BellIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M6 9a6 6 0 1 1 12 0c0 7 3 7 3 7H3s3 0 3-7" />
-      <path d="M10 19a2 2 0 0 0 4 0" />
-    </svg>
-  );
-}
-
-function ChevronIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="m6 9 6 6 6-6" />
-    </svg>
   );
 }
