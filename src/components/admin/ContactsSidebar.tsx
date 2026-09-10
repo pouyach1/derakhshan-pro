@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type RefObject } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ADMIN_CONTACTS, type ContactRole } from "@/config/admin";
 import { cn } from "@/lib/utils";
@@ -19,7 +19,11 @@ function roleLabel(role: ContactRole) {
   return "مشتری";
 }
 
-export default function ContactsSidebar() {
+type ContactsSidebarProps = {
+  scrollRef?: RefObject<HTMLElement | null>;
+};
+
+export default function ContactsSidebar({ scrollRef }: ContactsSidebarProps) {
   const [category, setCategory] = useState<(typeof CATEGORIES)[number]["id"]>("all");
   const [activeId, setActiveId] = useState(ADMIN_CONTACTS[0]?.id ?? "");
 
@@ -33,7 +37,11 @@ export default function ContactsSidebar() {
   const cityCount = ADMIN_CONTACTS.filter((contact) => contact.city === "تهران").length;
 
   return (
-    <aside className="flex max-h-[calc(100vh-120px)] flex-col overflow-y-auto rounded-[1.75rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 [scrollbar-color:rgba(0,163,255,0.35)_transparent] [scrollbar-width:thin] lg:p-5">
+    <aside
+      ref={scrollRef}
+      data-contacts-scroll
+      className="flex max-h-[calc(100vh-120px)] flex-col overflow-y-auto overscroll-y-contain rounded-[1.75rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 [scrollbar-color:rgba(0,163,255,0.35)_transparent] [scrollbar-width:thin] lg:p-5"
+    >
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-admin-navy">دفترچه تماس</h2>
         <button

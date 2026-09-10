@@ -12,14 +12,24 @@ import {
   useTransform,
   type PanInfo,
 } from "framer-motion";
+import {
+  ArrowUpRight,
+  BedDouble,
+  Bookmark,
+  Eye,
+  Layers,
+  Maximize2,
+  Sparkles,
+  TrendingUp,
+} from "lucide-react";
 import { MOST_VIEWED_PROPERTIES, type ViewedProperty } from "@/config/admin";
 import { cn } from "@/lib/utils";
 
-const CARD_WIDTH = 320;
-const GAP = 20;
+const CARD_WIDTH = 328;
+const GAP = 22;
 const STEP = CARD_WIDTH + GAP;
-const VELOCITY = 34;
-const TILT_SPRING = { stiffness: 160, damping: 16 };
+const VELOCITY = 32;
+const TILT = { stiffness: 170, damping: 18, mass: 0.35 };
 
 export default function MostViewedProperties() {
   const [paused, setPaused] = useState(false);
@@ -33,8 +43,7 @@ export default function MostViewedProperties() {
 
   useAnimationFrame((_, delta) => {
     if (paused || dragging) return;
-    const next = x.get() - (VELOCITY * delta) / 1000;
-    x.set(wrapOffset(next, loopWidth));
+    x.set(wrapOffset(x.get() - (VELOCITY * delta) / 1000, loopWidth));
   });
 
   useEffect(() => {
@@ -43,33 +52,44 @@ export default function MostViewedProperties() {
 
   const onDragEnd = (_: unknown, info: PanInfo) => {
     setDragging(false);
-    const projected = x.get() + info.velocity.x * 0.14;
-    x.set(wrapOffset(projected, loopWidth));
+    const projected = x.get() + info.velocity.x * 0.16;
+    const snapped = Math.round(projected / STEP) * STEP;
+    x.set(wrapOffset(snapped, loopWidth));
   };
 
   return (
-    <section className="relative overflow-hidden rounded-[1.75rem] bg-admin-card/90 p-4 shadow-xl shadow-sky-500/5 ring-1 ring-slate-200/70 backdrop-blur-sm sm:p-6">
+    <section className="relative overflow-hidden rounded-[1.85rem] border border-sky-500/15 bg-admin-card/80 p-4 shadow-[0_24px_60px_-28px_rgba(0,163,255,0.28)] backdrop-blur-md sm:p-6">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_20%,rgba(0,163,255,0.12),transparent_42%),radial-gradient(circle_at_88%_80%,rgba(15,23,42,0.06),transparent_40%)]"
+        className="pointer-events-none absolute -start-16 top-0 h-56 w-56 rounded-full bg-gradient-to-tr from-sky-500/20 to-transparent blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -end-10 bottom-0 h-48 w-48 rounded-full bg-gradient-to-bl from-admin-navy/10 to-transparent blur-3xl"
       />
 
-      <div className="relative mb-5 flex items-center justify-between gap-3">
+      <div className="relative mb-6 flex items-end justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold text-admin-navy sm:text-xl">پربازدیدهای امروز</h2>
-          <p className="text-sm text-slate-500">ویترین سه‌بعدی آگهی‌هایی که امروز بیشتر دیده شده‌اند</p>
+          <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-sky-500/10 px-2.5 py-1 text-[11px] font-semibold text-admin-sky ring-1 ring-sky-500/20">
+            <Sparkles className="h-3.5 w-3.5" strokeWidth={2} />
+            ویترین زنده
+          </div>
+          <h2 className="text-lg font-semibold tracking-tight text-admin-navy sm:text-xl">پربازدیدهای امروز</h2>
+          <p className="mt-1 text-sm text-slate-500">ویترین سه‌بعدی آگهی‌هایی که امروز بیشتر دیده شده‌اند</p>
         </div>
         <Link
           href="/admin/properties"
-          className="inline-flex items-center gap-1.5 rounded-full bg-admin-soft px-3.5 py-2 text-sm font-medium text-admin-navy transition hover:bg-admin-sky hover:text-white"
+          className="group inline-flex items-center gap-1.5 rounded-full bg-admin-soft px-3.5 py-2 text-sm font-medium text-admin-navy transition hover:bg-admin-sky hover:text-white"
         >
           همه آگهی‌ها
-          <span aria-hidden>←</span>
+          <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 rtl:rotate-180" />
         </Link>
       </div>
 
       <div
-        className="relative overflow-hidden py-2"
+        data-wheel-self
+        className="relative overflow-hidden py-3"
+        style={{ perspective: 1000 }}
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => {
           setPaused(false);
@@ -80,7 +100,8 @@ export default function MostViewedProperties() {
           className="flex cursor-grab active:cursor-grabbing"
           drag="x"
           dragConstraints={{ left: -loopWidth * 2, right: 0 }}
-          dragElastic={0.08}
+          dragElastic={0.06}
+          dragTransition={{ bounceStiffness: 180, bounceDamping: 22, power: 0.2 }}
           style={{ x, gap: GAP, willChange: "transform" }}
           onDragStart={() => setDragging(true)}
           onDragEnd={onDragEnd}
@@ -108,27 +129,29 @@ function PropertyCard3D({ property, index }: { property: ViewedProperty; index: 
 
   const rotateX = useMotionValue(0);
   const rotateY = useMotionValue(0);
-  const springX = useSpring(rotateX, TILT_SPRING);
-  const springY = useSpring(rotateY, TILT_SPRING);
-  const elevateY = useSpring(0, { stiffness: 180, damping: 18 });
-  const glareX = useTransform(springY, [-10, 10], [80, 20]);
-  const glareY = useTransform(springX, [-8, 8], [20, 80]);
-  const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.8), transparent 55%)`;
+  const springX = useSpring(rotateX, TILT);
+  const springY = useSpring(rotateY, TILT);
+  const lift = useSpring(0, { stiffness: 200, damping: 20 });
+  const depth = useSpring(0, { stiffness: 200, damping: 20 });
+  const glareX = useTransform(springY, [-12, 12], [78, 22]);
+  const glareY = useTransform(springX, [-10, 10], [22, 78]);
+  const glare = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.85), transparent 58%)`;
 
   useEffect(() => {
-    elevateY.set(hovered ? -12 : 0);
-  }, [hovered, elevateY]);
+    lift.set(hovered ? -14 : 0);
+    depth.set(hovered ? 28 : 0);
+  }, [hovered, lift, depth]);
 
   const onMove = (event: React.MouseEvent<HTMLElement>) => {
     const rect = cardRef.current?.getBoundingClientRect();
     if (!rect) return;
     const px = (event.clientX - rect.left) / rect.width;
     const py = (event.clientY - rect.top) / rect.height;
-    rotateY.set((0.5 - px) * 14);
-    rotateX.set((0.5 - py) * 10);
+    rotateY.set((0.5 - px) * 16);
+    rotateX.set((py - 0.5) * -12);
   };
 
-  const onLeave = () => {
+  const reset = () => {
     rotateX.set(0);
     rotateY.set(0);
     setHovered(false);
@@ -137,53 +160,61 @@ function PropertyCard3D({ property, index }: { property: ViewedProperty; index: 
   return (
     <motion.article
       ref={cardRef}
-      initial={{ opacity: 0, y: 32 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ type: "spring", stiffness: 100, damping: 20, delay: Math.min(index, 6) * 0.07 }}
+      initial={{ opacity: 0, y: 36, rotateX: 8 }}
+      animate={{ opacity: 1, y: 0, rotateX: 0 }}
+      transition={{ type: "spring", stiffness: 100, damping: 20, delay: Math.min(index, 5) * 0.06 }}
       onMouseMove={onMove}
       onMouseEnter={() => setHovered(true)}
-      onMouseLeave={onLeave}
+      onMouseLeave={reset}
       style={{
         width: CARD_WIDTH,
         rotateX: springX,
         rotateY: springY,
-        y: elevateY,
-        transformPerspective: 1100,
+        y: lift,
+        z: depth,
+        transformPerspective: 1000,
         transformStyle: "preserve-3d",
         willChange: "transform",
       }}
       className="group relative shrink-0 transform-gpu"
     >
+      <motion.div
+        aria-hidden
+        animate={{ opacity: hovered ? 1 : 0.35, scale: hovered ? 1.08 : 0.92 }}
+        transition={{ duration: 0.45 }}
+        className="pointer-events-none absolute -inset-6 -z-10 rounded-[2rem] bg-gradient-to-tr from-sky-500/20 via-sky-400/5 to-transparent blur-2xl"
+      />
+
       <div
         className={cn(
-          "relative overflow-hidden rounded-[1.45rem] border border-white/70 bg-white/85 p-[1px]",
-          "shadow-xl shadow-sky-500/5 backdrop-blur-xl transition-shadow duration-500",
-          hovered && "shadow-[0_28px_60px_-20px_rgba(0,163,255,0.45)]",
+          "relative overflow-hidden rounded-[1.5rem] border border-sky-500/20 bg-white/80 p-[1px]",
+          "shadow-xl shadow-sky-500/10 backdrop-blur-md transition-shadow duration-500",
+          hovered && "border-sky-500/35 shadow-[0_30px_70px_-24px_rgba(0,163,255,0.55)]",
         )}
         style={{ transformStyle: "preserve-3d" }}
       >
-        <div className="absolute inset-0 rounded-[1.45rem] bg-gradient-to-br from-admin-sky/35 via-white/40 to-admin-navy/20 opacity-80" />
+        <div className="absolute inset-0 rounded-[1.5rem] bg-gradient-to-br from-sky-400/25 via-white/30 to-admin-navy/15" />
 
-        <div className="relative overflow-hidden rounded-[1.4rem] bg-white/90 backdrop-blur-md">
+        <div className="relative overflow-hidden rounded-[1.45rem] bg-white/90 backdrop-blur-md">
           <motion.div
             aria-hidden
             className="pointer-events-none absolute inset-0 z-20 mix-blend-soft-light"
-            style={{ background: glareBackground, opacity: hovered ? 0.55 : 0 }}
+            style={{ background: glare, opacity: hovered ? 0.6 : 0 }}
           />
 
-          <div className="relative h-48 overflow-hidden" style={{ transform: "translateZ(24px)" }}>
-            <div
-              className={cn(
-                "absolute inset-0 origin-center transition-transform duration-500",
-                hovered ? "scale-105" : "scale-100",
-              )}
+          <div className="relative h-48 overflow-hidden" style={{ transform: "translateZ(26px)" }}>
+            <motion.div
+              className="absolute inset-0"
+              animate={{ scale: hovered ? 1.08 : 1 }}
+              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              style={{ willChange: "transform" }}
             >
               <Image src={property.image} alt={property.title} fill sizes="340px" className="object-cover" />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-admin-navy/65 via-admin-navy/10 to-transparent" />
+            </motion.div>
+            <div className="absolute inset-0 bg-gradient-to-t from-admin-navy/70 via-admin-navy/15 to-transparent" />
 
-            <span className="absolute start-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-admin-sky px-2.5 py-1 text-[11px] font-semibold text-white shadow-[0_0_18px_rgba(0,163,255,0.55)]">
-              <FlameIcon />
+            <span className="absolute start-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-admin-sky/95 px-2.5 py-1 text-[11px] font-semibold text-white shadow-[0_0_20px_rgba(0,163,255,0.45)] backdrop-blur-md">
+              <TrendingUp className="h-3.5 w-3.5 text-sky-100" strokeWidth={2.2} />
               {property.views}
             </span>
 
@@ -194,52 +225,54 @@ function PropertyCard3D({ property, index }: { property: ViewedProperty; index: 
               )}
             >
               <ActionButton label="بازدید سریع">
-                <EyeIcon />
+                <Eye className="h-4 w-4" strokeWidth={1.9} />
               </ActionButton>
               <ActionButton
                 label={saved ? "حذف از علاقه‌مندی" : "ذخیره آگهی"}
                 active={saved}
                 onClick={() => setSaved((value) => !value)}
               >
-                <BookmarkIcon filled={saved} />
+                <Bookmark className="h-4 w-4" strokeWidth={1.9} fill={saved ? "currentColor" : "none"} />
               </ActionButton>
             </div>
 
-            <span className="absolute bottom-3 start-3 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-admin-navy backdrop-blur-md">
+            <span className="absolute bottom-3 start-3 inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-admin-navy backdrop-blur-md">
+              <Sparkles className="h-3 w-3 text-admin-sky" strokeWidth={2} />
               {property.usage}
             </span>
           </div>
 
-          <div className="relative space-y-3 p-4" style={{ transform: "translateZ(36px)" }}>
+          <div className="relative space-y-3 p-4" style={{ transform: "translateZ(40px)" }}>
             <div>
               <h3 className="text-base font-semibold text-admin-navy">{property.title}</h3>
               <p className="text-xs text-slate-500">{property.location}</p>
             </div>
 
             <div className="flex flex-wrap gap-1.5">
-              {[property.rooms, property.size, property.finish].map((badge, badgeIndex) => (
-                <motion.span
-                  key={badge}
-                  initial={false}
-                  animate={hovered ? { opacity: 1, y: 0 } : { opacity: 0.92, y: 5 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 170,
-                    damping: 18,
-                    delay: hovered ? badgeIndex * 0.05 : 0,
-                  }}
-                  className="rounded-full bg-white/70 px-2.5 py-1 text-[11px] font-medium text-slate-600 ring-1 ring-slate-200/80 backdrop-blur-md"
-                  style={{ willChange: "transform, opacity" }}
-                >
-                  {badge}
-                </motion.span>
-              ))}
+              <SpecPill
+                hovered={hovered}
+                delay={0}
+                icon={<BedDouble className="h-3 w-3" strokeWidth={1.8} />}
+                label={property.rooms}
+              />
+              <SpecPill
+                hovered={hovered}
+                delay={0.05}
+                icon={<Maximize2 className="h-3 w-3" strokeWidth={1.8} />}
+                label={property.size}
+              />
+              <SpecPill
+                hovered={hovered}
+                delay={0.1}
+                icon={<Layers className="h-3 w-3" strokeWidth={1.8} />}
+                label={property.finish}
+              />
             </div>
 
             <motion.p
               animate={
                 hovered
-                  ? { textShadow: "0 0 18px rgba(0,163,255,0.45)" }
+                  ? { textShadow: "0 0 20px rgba(0,163,255,0.5)" }
                   : { textShadow: "0 0 0 rgba(0,163,255,0)" }
               }
               className="text-sm font-semibold text-admin-sky"
@@ -256,6 +289,31 @@ function PropertyCard3D({ property, index }: { property: ViewedProperty; index: 
         </div>
       </div>
     </motion.article>
+  );
+}
+
+function SpecPill({
+  icon,
+  label,
+  hovered,
+  delay,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  hovered: boolean;
+  delay: number;
+}) {
+  return (
+    <motion.span
+      initial={false}
+      animate={hovered ? { opacity: 1, y: 0 } : { opacity: 0.92, y: 5 }}
+      transition={{ type: "spring", stiffness: 170, damping: 18, delay: hovered ? delay : 0 }}
+      className="inline-flex items-center gap-1 rounded-full bg-white/75 px-2.5 py-1 text-[11px] font-medium text-slate-600 ring-1 ring-slate-200/80 backdrop-blur-md"
+      style={{ willChange: "transform, opacity" }}
+    >
+      <span className="text-admin-sky">{icon}</span>
+      {label}
+    </motion.span>
   );
 }
 
@@ -299,36 +357,5 @@ function ActionButton({
     >
       {children}
     </motion.button>
-  );
-}
-
-function FlameIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor" aria-hidden>
-      <path d="M12 2s4 4.2 4 8.2c0 1.7-.6 3.2-1.6 4.3.9-.3 1.8-1.1 2.3-2.2.3 3.4-2 6.7-4.7 7.7-2.7-1-5-4.3-4.7-7.7.5 1.1 1.4 1.9 2.3 2.2C8.6 13.4 8 11.9 8 10.2 8 6.2 12 2 12 2Z" />
-    </svg>
-  );
-}
-
-function EyeIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" />
-      <circle cx="12" cy="12" r="2.6" />
-    </svg>
-  );
-}
-
-function BookmarkIcon({ filled }: { filled?: boolean }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-4 w-4"
-      fill={filled ? "currentColor" : "none"}
-      stroke="currentColor"
-      strokeWidth="1.8"
-    >
-      <path d="M7 4h10v16l-5-3-5 3V4Z" />
-    </svg>
   );
 }
