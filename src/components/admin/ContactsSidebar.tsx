@@ -36,8 +36,8 @@ export default function ContactsSidebar() {
     <aside
       data-contacts-scroll
       className={cn(
-        "flex h-auto max-h-none flex-col overflow-y-auto overscroll-contain rounded-[1.75rem]",
-        "bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 lg:h-[calc(100vh-100px)] lg:p-5",
+        "flex h-full flex-col rounded-[1.75rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 lg:p-5",
+        "max-lg:max-h-[min(70vh,36rem)] max-lg:overflow-y-auto max-lg:overscroll-contain",
         "[scrollbar-width:thin] [scrollbar-color:rgba(14,165,233,0.2)_transparent]",
       )}
     >
