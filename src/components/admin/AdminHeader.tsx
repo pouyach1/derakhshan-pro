@@ -44,7 +44,7 @@ export default function AdminHeader({
 
         <div className="flex flex-1 flex-wrap items-center gap-2">
           <FilterChip label="تهران" />
-          <FilterChip label="منطقه" />
+          <FilterChip label="منطقه یک" />
           <button
             type="button"
             aria-label="جستجو"
