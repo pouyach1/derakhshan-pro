@@ -6,34 +6,39 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ADMIN_CONTACTS, type ContactRole } from "@/config/admin";
 import { cn } from "@/lib/utils";
 
-const CATEGORIES = ["All", "Realtors", "Builders", "Clients"] as const;
+const CATEGORIES = [
+  { id: "all", label: "همه", role: "All" as const },
+  { id: "realtors", label: "مشاوران", role: "Realtor" as const },
+  { id: "builders", label: "سازندگان", role: "Builder" as const },
+  { id: "clients", label: "مشتریان", role: "Client" as const },
+];
 
-const ROLE_MAP: Record<(typeof CATEGORIES)[number], ContactRole | "All"> = {
-  All: "All",
-  Realtors: "Realtor",
-  Builders: "Builder",
-  Clients: "Client",
-};
+function roleLabel(role: ContactRole) {
+  if (role === "Realtor") return "مشاور املاک";
+  if (role === "Builder") return "سازنده";
+  return "مشتری";
+}
 
 export default function ContactsSidebar() {
-  const [category, setCategory] = useState<(typeof CATEGORIES)[number]>("All");
+  const [category, setCategory] = useState<(typeof CATEGORIES)[number]["id"]>("all");
   const [activeId, setActiveId] = useState(ADMIN_CONTACTS[0]?.id ?? "");
 
-  const contacts = useMemo(() => {
-    const role = ROLE_MAP[category];
-    if (role === "All") return ADMIN_CONTACTS;
-    return ADMIN_CONTACTS.filter((contact) => contact.role === role);
-  }, [category]);
+  const activeCategory = CATEGORIES.find((item) => item.id === category) ?? CATEGORIES[0];
 
-  const cityCount = ADMIN_CONTACTS.filter((c) => c.city === "San Francisco").length;
+  const contacts = useMemo(() => {
+    if (activeCategory.role === "All") return ADMIN_CONTACTS;
+    return ADMIN_CONTACTS.filter((contact) => contact.role === activeCategory.role);
+  }, [activeCategory]);
+
+  const cityCount = ADMIN_CONTACTS.filter((contact) => contact.city === "تهران").length;
 
   return (
     <aside className="flex h-full min-h-[32rem] flex-col rounded-[1.75rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 lg:p-5">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-admin-navy">Contacts</h2>
+        <h2 className="text-lg font-semibold text-admin-navy">مخاطبین</h2>
         <button
           type="button"
-          aria-label="Filter contacts"
+          aria-label="فیلتر مخاطبین"
           className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-admin-soft text-slate-600 transition hover:text-admin-sky"
         >
           <FilterIcon />
@@ -42,20 +47,18 @@ export default function ContactsSidebar() {
 
       <div className="mb-3 flex flex-wrap gap-1.5">
         {CATEGORIES.map((item) => {
-          const active = category === item;
+          const active = category === item.id;
           return (
             <button
-              key={item}
+              key={item.id}
               type="button"
-              onClick={() => setCategory(item)}
+              onClick={() => setCategory(item.id)}
               className={cn(
                 "rounded-full px-3 py-1.5 text-xs font-medium transition",
-                active
-                  ? "bg-admin-navy text-white"
-                  : "bg-admin-soft text-slate-600 hover:bg-slate-200/80",
+                active ? "bg-admin-navy text-white" : "bg-admin-soft text-slate-600 hover:bg-slate-200/80",
               )}
             >
-              {item}
+              {item.label}
             </button>
           );
         })}
@@ -63,18 +66,18 @@ export default function ContactsSidebar() {
 
       <button
         type="button"
-        className="mb-4 inline-flex w-full items-center justify-between rounded-2xl bg-admin-soft px-3 py-2.5 text-left text-sm text-admin-navy"
+        className="mb-4 inline-flex w-full items-center justify-between rounded-2xl bg-admin-soft px-3 py-2.5 text-sm text-admin-navy"
       >
         <span className="inline-flex items-center gap-2">
           <span className="rounded-full bg-white px-2 py-0.5 text-xs font-semibold text-admin-sky ring-1 ring-sky-100">
             {cityCount}
           </span>
-          San Francisco
+          تهران
         </span>
         <ChevronIcon />
       </button>
 
-      <div className="flex-1 space-y-2.5 overflow-y-auto pr-1">
+      <div className="flex-1 space-y-2.5 overflow-y-auto pe-1">
         <AnimatePresence mode="popLayout">
           {contacts.map((contact) => {
             const active = contact.id === activeId;
@@ -104,43 +107,29 @@ export default function ContactsSidebar() {
                     />
                   </button>
                   <div className="min-w-0 flex-1">
-                    <button type="button" className="w-full text-left" onClick={() => setActiveId(contact.id)}>
+                    <button type="button" className="w-full text-start" onClick={() => setActiveId(contact.id)}>
                       <p className="truncate text-sm font-semibold">{contact.name}</p>
                       <p className={cn("text-xs", active ? "text-white/85" : "text-slate-500")}>
-                        {contact.role}
+                        {roleLabel(contact.role)}
                       </p>
                     </button>
                     <div className="mt-3 flex items-center gap-2">
-                      <button
-                        type="button"
-                        aria-label={`Call ${contact.name}`}
-                        className={cn(
-                          "inline-flex h-8 w-8 items-center justify-center rounded-full transition",
-                          active ? "bg-white/20 text-white" : "bg-white text-slate-600",
-                        )}
-                      >
+                      <IconButton active={active} label={`تماس با ${contact.name}`}>
                         <PhoneIcon />
-                      </button>
-                      <button
-                        type="button"
-                        aria-label={`Open ${contact.name}`}
-                        className={cn(
-                          "inline-flex h-8 w-8 items-center justify-center rounded-full transition",
-                          active ? "bg-white/20 text-white" : "bg-white text-slate-600",
-                        )}
-                      >
+                      </IconButton>
+                      <IconButton active={active} label={`باز کردن ${contact.name}`}>
                         <ExternalIcon />
-                      </button>
+                      </IconButton>
                       <button
                         type="button"
                         className={cn(
-                          "ml-auto rounded-full px-3 py-1.5 text-xs font-medium transition",
+                          "ms-auto rounded-full px-3 py-1.5 text-xs font-medium transition",
                           active
                             ? "bg-white text-admin-sky"
                             : "bg-white text-admin-navy ring-1 ring-slate-200 hover:ring-admin-sky/40",
                         )}
                       >
-                        Send letter
+                        ارسال نامه
                       </button>
                     </div>
                   </div>
@@ -151,6 +140,29 @@ export default function ContactsSidebar() {
         </AnimatePresence>
       </div>
     </aside>
+  );
+}
+
+function IconButton({
+  active,
+  label,
+  children,
+}: {
+  active: boolean;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      className={cn(
+        "inline-flex h-8 w-8 items-center justify-center rounded-full transition",
+        active ? "bg-white/20 text-white" : "bg-white text-slate-600",
+      )}
+    >
+      {children}
+    </button>
   );
 }
 
