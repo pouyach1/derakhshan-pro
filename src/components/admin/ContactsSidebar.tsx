@@ -40,7 +40,7 @@ export default function ContactsSidebar({ scrollRef }: ContactsSidebarProps) {
     <aside
       ref={scrollRef}
       data-contacts-scroll
-      className="flex max-h-[calc(100vh-120px)] flex-col overflow-y-auto overscroll-y-contain rounded-[1.75rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 [scrollbar-color:rgba(0,163,255,0.35)_transparent] [scrollbar-width:thin] lg:p-5"
+      className="flex max-h-[calc(100vh-120px)] flex-col overflow-y-auto overscroll-y-contain scroll-smooth rounded-[1.75rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 [scrollbar-color:rgba(0,163,255,0.35)_transparent] [scrollbar-width:thin] lg:p-5"
     >
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-admin-navy">دفترچه تماس</h2>
