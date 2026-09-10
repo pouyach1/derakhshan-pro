@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 import { MANAGED_PROPERTIES, type PropertyStatus } from "@/config/admin";
 import { cn } from "@/lib/utils";
 
@@ -164,9 +165,15 @@ export default function PropertiesPage() {
               <p className="text-sm font-semibold text-admin-sky">{property.price}</p>
 
               <div className="mt-auto flex items-center gap-2">
-                <QuickAction label="ویرایش">✏️</QuickAction>
-                <QuickAction label="حذف">🗑️</QuickAction>
-                <QuickAction label="نمایش">👁️</QuickAction>
+                <QuickAction label="مشاهده">
+                  <Eye className="h-4 w-4 text-sky-500" strokeWidth={1.9} />
+                </QuickAction>
+                <QuickAction label="ویرایش">
+                  <Pencil className="h-4 w-4 text-slate-600 dark:text-slate-300" strokeWidth={1.9} />
+                </QuickAction>
+                <QuickAction label="حذف">
+                  <Trash2 className="h-4 w-4 text-rose-500/80 transition-colors group-hover/action:text-rose-600" strokeWidth={1.9} />
+                </QuickAction>
               </div>
             </div>
           </motion.article>
@@ -181,7 +188,7 @@ function QuickAction({ label, children }: { label: string; children: React.React
     <button
       type="button"
       aria-label={label}
-      className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-admin-soft text-sm transition hover:bg-admin-sky hover:text-white"
+      className="group/action inline-flex items-center justify-center rounded-xl border border-slate-200/50 bg-white/60 p-2 shadow-sm backdrop-blur-md transition-all duration-200 hover:scale-110 hover:bg-white active:scale-95 dark:border-white/10 dark:bg-slate-800/60 dark:hover:bg-slate-800"
     >
       {children}
     </button>

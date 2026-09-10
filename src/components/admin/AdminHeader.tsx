@@ -149,15 +149,16 @@ function LuxurySearch() {
     <div
       className={cn(
         "group relative flex h-11 min-w-[12rem] flex-1 items-center gap-2 rounded-2xl px-3 transition-all duration-300",
-        "border border-white/10 bg-slate-900/40 text-white shadow-lg shadow-sky-950/10 backdrop-blur-xl",
+        "border border-white/30 bg-white/40 shadow-sm backdrop-blur-md dark:border-white/10 dark:bg-slate-900/20",
         "sm:max-w-md",
-        focused && "border-sky-500/50 ring-4 ring-sky-500/10",
+        "focus-within:border-sky-500/40 focus-within:ring-4 focus-within:ring-sky-500/10",
+        focused && "border-sky-500/40 ring-4 ring-sky-500/10",
       )}
     >
-      <Search
-        className={cn("h-4 w-4 shrink-0 transition-colors", focused ? "text-sky-300" : "text-slate-300")}
-        strokeWidth={1.9}
-      />
+      <kbd className="hidden shrink-0 items-center gap-1 rounded-md border border-slate-200/70 bg-white/50 px-1.5 py-0.5 font-mono text-[10px] font-medium text-slate-500 sm:inline-flex dark:border-white/10 dark:bg-white/5 dark:text-slate-400">
+        {isMac ? "⌘" : "Ctrl"}
+        <span>K</span>
+      </kbd>
       <input
         ref={inputRef}
         value={query}
@@ -165,7 +166,7 @@ function LuxurySearch() {
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         placeholder="جستجوی کد، محله یا مشاور…"
-        className="h-full w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-400"
+        className="h-full w-full min-w-0 bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400 dark:text-slate-100"
         aria-label="جستجو"
       />
       <AnimatePresence initial={false}>
@@ -182,17 +183,15 @@ function LuxurySearch() {
               setQuery("");
               inputRef.current?.focus();
             }}
-            className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/10 text-slate-200 transition hover:bg-white/20 hover:text-white"
+            className="inline-flex h-6 w-6 items-center justify-center rounded-full text-slate-400 transition hover:bg-white/70 hover:text-slate-700 dark:hover:bg-white/10 dark:hover:text-white"
           >
             <X className="h-3.5 w-3.5" strokeWidth={2} />
           </motion.button>
-        ) : (
-          <kbd className="hidden items-center gap-1 rounded-md border border-slate-700 bg-slate-800 px-2 py-0.5 font-mono text-[10px] text-slate-400 sm:inline-flex">
-            {isMac ? "⌘" : "Ctrl"}
-            <span>K</span>
-          </kbd>
-        )}
+        ) : null}
       </AnimatePresence>
+      <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-sky-500/10 text-sky-500">
+        <Search className="h-4 w-4" strokeWidth={1.9} />
+      </span>
     </div>
   );
 }
