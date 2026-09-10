@@ -15,11 +15,12 @@ import {
 import {
   ArrowUpRight,
   BedDouble,
-  Bookmark,
   Eye,
   Layers,
   Maximize2,
+  Pencil,
   Sparkles,
+  Trash2,
 } from "lucide-react";
 import { MOST_VIEWED_PROPERTIES, type ViewedProperty } from "@/config/admin";
 import { cn } from "@/lib/utils";
@@ -126,7 +127,6 @@ function wrapOffsetRtl(value: number, width: number) {
 function PropertyCard3D({ property, index }: { property: ViewedProperty; index: number }) {
   const cardRef = useRef<HTMLElement>(null);
   const [hovered, setHovered] = useState(false);
-  const [saved, setSaved] = useState(false);
 
   const rotateX = useMotionValue(0);
   const rotateY = useMotionValue(0);
@@ -225,15 +225,14 @@ function PropertyCard3D({ property, index }: { property: ViewedProperty; index: 
                 hovered ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0",
               )}
             >
-              <ActionButton label="بازدید سریع">
-                <Eye className="h-4 w-4" strokeWidth={1.9} />
+              <ActionButton label="مشاهده">
+                <Eye className="h-4 w-4 text-sky-500" strokeWidth={1.9} />
               </ActionButton>
-              <ActionButton
-                label={saved ? "حذف از علاقه‌مندی" : "ذخیره آگهی"}
-                active={saved}
-                onClick={() => setSaved((value) => !value)}
-              >
-                <Bookmark className="h-4 w-4" strokeWidth={1.9} fill={saved ? "currentColor" : "none"} />
+              <ActionButton label="ویرایش">
+                <Pencil className="h-4 w-4 text-slate-600 dark:text-slate-300" strokeWidth={1.9} />
+              </ActionButton>
+              <ActionButton label="حذف">
+                <Trash2 className="h-4 w-4 text-rose-500/80 transition-colors group-hover/action:text-rose-600" strokeWidth={1.9} />
               </ActionButton>
             </div>
 
@@ -330,30 +329,18 @@ function Stat({ label, value, accent }: { label: string; value: string; accent?:
 function ActionButton({
   label,
   children,
-  onClick,
-  active,
 }: {
   label: string;
   children: React.ReactNode;
-  onClick?: () => void;
-  active?: boolean;
 }) {
   return (
     <motion.button
       type="button"
       aria-label={label}
-      onClick={(event) => {
-        event.stopPropagation();
-        onClick?.();
-      }}
-      whileHover={{ scale: 1.12 }}
-      whileTap={{ scale: 0.92 }}
-      className={cn(
-        "inline-flex h-9 w-9 items-center justify-center rounded-full backdrop-blur-xl ring-1 transition",
-        active
-          ? "bg-admin-sky text-white ring-admin-sky/40"
-          : "bg-white/85 text-admin-navy ring-white/70 hover:bg-admin-sky hover:text-white",
-      )}
+      onClick={(event) => event.stopPropagation()}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.95 }}
+      className="group/action inline-flex items-center justify-center rounded-xl border border-slate-200/50 bg-white/60 p-2 shadow-sm backdrop-blur-md transition-all duration-200 hover:bg-white dark:border-white/10 dark:bg-slate-800/60 dark:hover:bg-slate-800"
       style={{ willChange: "transform" }}
     >
       {children}
