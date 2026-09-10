@@ -115,6 +115,48 @@ export const ADMIN_CONTACTS: Contact[] = [
     city: "تهران",
     avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=160&q=80",
   },
+  {
+    id: "c7",
+    name: "کاوه مرادی",
+    role: "Realtor",
+    city: "تهران",
+    avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=160&q=80",
+  },
+  {
+    id: "c8",
+    name: "لیلا اکبری",
+    role: "Realtor",
+    city: "شیراز",
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=160&q=80",
+  },
+  {
+    id: "c9",
+    name: "حمید رستمی",
+    role: "Builder",
+    city: "تهران",
+    avatar: "https://images.unsplash.com/photo-1507591064344-4c6ce005bff4?auto=format&fit=crop&w=160&q=80",
+  },
+  {
+    id: "c10",
+    name: "نازنین قاسمی",
+    role: "Client",
+    city: "کرج",
+    avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=160&q=80",
+  },
+  {
+    id: "c11",
+    name: "پویا شریفی",
+    role: "Realtor",
+    city: "تهران",
+    avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=160&q=80",
+  },
+  {
+    id: "c12",
+    name: "هانیه موسوی",
+    role: "Client",
+    city: "تهران",
+    avatar: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=160&q=80",
+  },
 ];
 
 export const FEATURED_PROPERTIES: FeaturedProperty[] = [
@@ -200,7 +242,7 @@ export const MOST_VIEWED_PROPERTIES: ViewedProperty[] = [
     pricePerMeter: "۱۲۷ میلیون",
     neighborhoodAvg: "۱۷٫۲ میلیارد",
     usage: "مسکونی",
-    views: "۱۴٫۲ هزار بازدید",
+    views: "۱۴٬۲۰۰ بازدید",
   },
   {
     id: "p2",
@@ -214,7 +256,7 @@ export const MOST_VIEWED_PROPERTIES: ViewedProperty[] = [
     pricePerMeter: "۶۸ میلیون",
     neighborhoodAvg: "۲۴ میلیارد",
     usage: "ویلایی",
-    views: "۹٫۸ هزار بازدید",
+    views: "۹٬۸۰۰ بازدید",
   },
   {
     id: "p3",
@@ -228,7 +270,7 @@ export const MOST_VIEWED_PROPERTIES: ViewedProperty[] = [
     pricePerMeter: "۱۲۷ میلیون",
     neighborhoodAvg: "۱۳٫۴ میلیارد",
     usage: "مسکونی",
-    views: "۷٫۴ هزار بازدید",
+    views: "۷٬۴۰۰ بازدید",
   },
   {
     id: "p4",
@@ -242,7 +284,7 @@ export const MOST_VIEWED_PROPERTIES: ViewedProperty[] = [
     pricePerMeter: "۲۵۰ میلیون",
     neighborhoodAvg: "۵۱ میلیارد",
     usage: "پنت‌هاوس",
-    views: "۱۸٫۶ هزار بازدید",
+    views: "۱۸٬۶۰۰ بازدید",
   },
   {
     id: "p5",
@@ -256,7 +298,7 @@ export const MOST_VIEWED_PROPERTIES: ViewedProperty[] = [
     pricePerMeter: "۱۳۱ میلیون",
     neighborhoodAvg: "۱۹٫۸ میلیارد",
     usage: "مسکونی",
-    views: "۶٫۱ هزار بازدید",
+    views: "۶٬۱۰۰ بازدید",
   },
   {
     id: "p6",
@@ -270,7 +312,7 @@ export const MOST_VIEWED_PROPERTIES: ViewedProperty[] = [
     pricePerMeter: "۳۳۹ هزار",
     neighborhoodAvg: "۸۵ م / ماه",
     usage: "اداری",
-    views: "۴٫۹ هزار بازدید",
+    views: "۴٬۹۰۰ بازدید",
   },
 ];
 
