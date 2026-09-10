@@ -33,7 +33,7 @@ export default function ContactsSidebar() {
   const cityCount = ADMIN_CONTACTS.filter((contact) => contact.city === "تهران").length;
 
   return (
-    <aside className="flex h-full min-h-[32rem] flex-col rounded-[1.75rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 lg:p-5">
+    <aside className="flex max-h-[calc(100vh-120px)] flex-col overflow-y-auto rounded-[1.75rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 [scrollbar-color:rgba(0,163,255,0.35)_transparent] [scrollbar-width:thin] lg:p-5">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-admin-navy">دفترچه تماس</h2>
         <button
@@ -77,7 +77,7 @@ export default function ContactsSidebar() {
         <ChevronIcon />
       </button>
 
-      <div className="flex-1 space-y-2.5 overflow-y-auto pe-1">
+      <div className="flex-1 space-y-2.5 pe-1">
         <AnimatePresence mode="popLayout">
           {contacts.map((contact) => {
             const active = contact.id === activeId;
