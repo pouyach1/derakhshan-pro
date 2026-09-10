@@ -1,28 +1,19 @@
-"use client";
-
 import FeaturedPropertyHero from "@/components/admin/FeaturedPropertyHero";
 import MostViewedProperties from "@/components/admin/MostViewedProperties";
-import { useScrollSync } from "@/hooks/useScrollSync";
 
 /**
- * Dashboard with proportional scroll sync:
- * ~40% of the journey feeds the contacts sidebar, then the page unlocks (60%).
- * Disabled automatically below the lg breakpoint.
+ * Pure CSS scroll architecture:
+ * - Hero stays sticky while the page scrolls
+ * - Contacts sidebar (in AdminShell) scrolls independently via overflow CSS
+ * - No JS wheel listeners or scroll locks
  */
 export default function AdminDashboardPage() {
-  useScrollSync({
-    enabled: true,
-    sidebarShare: 0.4,
-    minWidth: 1024,
-    sidebarSelector: "[data-contacts-scroll]",
-  });
-
   return (
-    <div className="flex min-w-0 flex-col gap-4 scroll-smooth lg:gap-5" data-dashboard-main>
-      <div className="sticky top-6 z-20 h-fit">
+    <div className="flex min-w-0 flex-col gap-4 lg:gap-5" data-dashboard-main>
+      <div className="sticky top-6 z-10 h-fit">
         <FeaturedPropertyHero />
       </div>
-      <div className="relative z-10">
+      <div className="relative z-0">
         <MostViewedProperties />
       </div>
     </div>
