@@ -1,7 +1,4 @@
 import type { Metadata } from "next";
-import Navbar from "@/components/navigation/Navbar";
-import Footer from "@/components/navigation/Footer";
-import IntroShell from "@/components/providers/IntroShell";
 import { SITE } from "@/config/site";
 import "@/styles/globals.css";
 
@@ -53,11 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <IntroShell>
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-        </IntroShell>
+        {children}
       </body>
     </html>
   );
