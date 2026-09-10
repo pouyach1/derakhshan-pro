@@ -33,18 +33,18 @@ export default function MostViewedProperties() {
 
   useAnimationFrame((_, delta) => {
     if (paused || dragging) return;
-    const next = x.get() + (VELOCITY * delta) / 1000;
-    x.set(wrapOffsetRtl(next, loopWidth));
+    const next = x.get() - (VELOCITY * delta) / 1000;
+    x.set(wrapOffset(next, loopWidth));
   });
 
   useEffect(() => {
-    x.set(-loopWidth);
-  }, [x, loopWidth]);
+    x.set(0);
+  }, [x]);
 
   const onDragEnd = (_: unknown, info: PanInfo) => {
     setDragging(false);
     const projected = x.get() + info.velocity.x * 0.14;
-    x.set(wrapOffsetRtl(projected, loopWidth));
+    x.set(wrapOffset(projected, loopWidth));
   };
 
   return (
@@ -81,7 +81,7 @@ export default function MostViewedProperties() {
           drag="x"
           dragConstraints={{ left: -loopWidth * 2, right: 0 }}
           dragElastic={0.08}
-          style={{ x, gap: GAP, willChange: "transform", perspective: 1200 }}
+          style={{ x, gap: GAP, willChange: "transform" }}
           onDragStart={() => setDragging(true)}
           onDragEnd={onDragEnd}
         >
@@ -94,10 +94,10 @@ export default function MostViewedProperties() {
   );
 }
 
-function wrapOffsetRtl(value: number, width: number) {
+function wrapOffset(value: number, width: number) {
   let next = value;
+  while (next <= -width) next += width;
   while (next > 0) next -= width;
-  while (next <= -width * 2) next += width;
   return next;
 }
 

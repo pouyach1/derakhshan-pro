@@ -7,7 +7,9 @@ export default function AdminDashboardPage() {
       <div className="sticky top-6 z-20 h-fit">
         <FeaturedPropertyHero />
       </div>
-      <MostViewedProperties />
+      <div className="relative z-10">
+        <MostViewedProperties />
+      </div>
     </div>
   );
 }
