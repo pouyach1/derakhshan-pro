@@ -1,134 +1,181 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import Link from "next/link";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  motion,
+  useAnimationFrame,
+  useMotionValue,
+  useSpring,
+  type PanInfo,
+} from "framer-motion";
 import { MOST_VIEWED_PROPERTIES } from "@/config/admin";
 import { cn } from "@/lib/utils";
 
-const AUTOPLAY_MS = 4200;
-const CARD_WIDTH = 320;
+const CARD_WIDTH = 300;
 const GAP = 18;
+const STEP = CARD_WIDTH + GAP;
+const VELOCITY = 38;
 
 export default function MostViewedProperties() {
-  const constraintsRef = useRef<HTMLDivElement>(null);
-  const [index, setIndex] = useState(0);
+  const trackRef = useRef<HTMLDivElement>(null);
   const [paused, setPaused] = useState(false);
-  const maxIndex = Math.max(0, MOST_VIEWED_PROPERTIES.length - 1);
+  const [dragging, setDragging] = useState(false);
+  const x = useMotionValue(0);
+  const loopWidth = useMemo(() => MOST_VIEWED_PROPERTIES.length * STEP, []);
+  const gallery = useMemo(
+    () => [...MOST_VIEWED_PROPERTIES, ...MOST_VIEWED_PROPERTIES, ...MOST_VIEWED_PROPERTIES],
+    [],
+  );
+
+  // RTL gallery: scroll so later cards enter from the left (reading-forward)
+  useAnimationFrame((_, delta) => {
+    if (paused || dragging) return;
+    const next = x.get() + (VELOCITY * delta) / 1000;
+    x.set(wrapOffsetRtl(next, loopWidth));
+  });
 
   useEffect(() => {
-    if (paused) return;
-    const timer = window.setInterval(() => {
-      setIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
-    }, AUTOPLAY_MS);
-    return () => window.clearInterval(timer);
-  }, [paused, maxIndex]);
+    x.set(-loopWidth);
+  }, [x, loopWidth]);
+
+  const onDragEnd = (_: unknown, info: PanInfo) => {
+    setDragging(false);
+    const projected = x.get() + info.velocity.x * 0.12;
+    x.set(wrapOffsetRtl(projected, loopWidth));
+  };
 
   return (
     <section className="rounded-[1.75rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 sm:p-6">
       <div className="mb-5 flex items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold text-admin-navy sm:text-xl">Most Viewed Properties</h2>
-          <p className="text-sm text-slate-500">املاک پربازدید · live demand across active listings</p>
+          <h2 className="text-lg font-semibold text-admin-navy sm:text-xl">پربازدیدهای امروز</h2>
+          <p className="text-sm text-slate-500">آگهی‌هایی که مشاوران و خریداران بیشتر باز کرده‌اند</p>
         </div>
-        <button
-          type="button"
+        <Link
+          href="/admin/properties"
           className="inline-flex items-center gap-1.5 rounded-full bg-admin-soft px-3.5 py-2 text-sm font-medium text-admin-navy transition hover:bg-admin-sky hover:text-white"
         >
-          Show More
-          <span aria-hidden>↗</span>
-        </button>
+          همه آگهی‌ها
+          <span aria-hidden>←</span>
+        </Link>
       </div>
 
       <div
-        ref={constraintsRef}
+        ref={trackRef}
         className="overflow-hidden"
         onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
+        onMouseLeave={() => {
+          setPaused(false);
+          setDragging(false);
+        }}
       >
         <motion.div
           className="flex cursor-grab active:cursor-grabbing"
           drag="x"
-          dragConstraints={constraintsRef}
-          dragElastic={0.12}
-          style={{ gap: GAP }}
-          animate={{ x: -(index * (CARD_WIDTH + GAP)) }}
-          transition={{ type: "spring", stiffness: 260, damping: 32 }}
-          onDragEnd={(_, info) => {
-            const delta = info.offset.x;
-            if (delta < -80) setIndex((prev) => Math.min(maxIndex, prev + 1));
-            else if (delta > 80) setIndex((prev) => Math.max(0, prev - 1));
-          }}
+          dragConstraints={{ left: -loopWidth * 2, right: 0 }}
+          dragElastic={0.08}
+          style={{ x, gap: GAP, willChange: "transform" }}
+          onDragStart={() => setDragging(true)}
+          onDragEnd={onDragEnd}
         >
-          {MOST_VIEWED_PROPERTIES.map((property, i) => (
-            <motion.article
-              key={property.id}
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.08 * i, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              whileHover={{ y: -6 }}
-              className="group relative w-[min(100%,320px)] shrink-0 overflow-hidden rounded-[1.35rem] bg-white ring-1 ring-slate-200/80 transition hover:shadow-xl hover:shadow-sky-500/15 hover:ring-admin-sky/50"
-              style={{ width: CARD_WIDTH }}
-            >
-              <div className="relative h-44 overflow-hidden">
-                <Image
-                  src={property.image}
-                  alt={property.title}
-                  fill
-                  sizes="320px"
-                  className="object-cover transition duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-admin-navy/55 via-transparent to-transparent" />
-                <span className="absolute bottom-3 left-3 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-admin-navy">
-                  {property.planning}
-                </span>
-              </div>
-
-              <div className="space-y-3 p-4">
-                <div>
-                  <h3 className="text-base font-semibold text-admin-navy">{property.title}</h3>
-                  <p className="text-xs text-slate-500">{property.location}</p>
-                </div>
-
-                <div className="flex flex-wrap gap-1.5">
-                  {[property.rooms, property.size, property.finish].map((badge) => (
-                    <span
-                      key={badge}
-                      className="rounded-full bg-admin-soft px-2.5 py-1 text-[11px] font-medium text-slate-600"
-                    >
-                      {badge}
-                    </span>
-                  ))}
-                </div>
-
-                <p className="text-sm font-semibold text-admin-sky">{property.price}</p>
-
-                <div className="grid grid-cols-3 gap-2 border-t border-slate-100 pt-3 text-[11px]">
-                  <Stat label="Per sq ft" value={property.pricePerSqft} />
-                  <Stat label="Avg value" value={property.averageValue} />
-                  <Stat label="Planning" value={property.planning} accent />
-                </div>
-              </div>
-            </motion.article>
+          {gallery.map((property, i) => (
+            <PropertyCard key={`${property.id}-${i}`} property={property} index={i} />
           ))}
         </motion.div>
       </div>
-
-      <div className="mt-5 flex items-center justify-center gap-2">
-        {MOST_VIEWED_PROPERTIES.map((property, i) => (
-          <button
-            key={property.id}
-            type="button"
-            aria-label={`Go to ${property.title}`}
-            onClick={() => setIndex(i)}
-            className={cn(
-              "h-2 rounded-full transition-all",
-              i === index ? "w-6 bg-admin-sky" : "w-2 bg-slate-300 hover:bg-slate-400",
-            )}
-          />
-        ))}
-      </div>
     </section>
+  );
+}
+
+/** Keep offset in (-2*width, 0] while scrolling positively through a tripled track. */
+function wrapOffsetRtl(value: number, width: number) {
+  let next = value;
+  while (next > 0) next -= width;
+  while (next <= -width * 2) next += width;
+  return next;
+}
+
+function PropertyCard({
+  property,
+  index,
+}: {
+  property: (typeof MOST_VIEWED_PROPERTIES)[number];
+  index: number;
+}) {
+  const [hovered, setHovered] = useState(false);
+  const lift = useSpring(0, { stiffness: 180, damping: 18 });
+
+  useEffect(() => {
+    lift.set(hovered ? -10 : 0);
+  }, [hovered, lift]);
+
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 28 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 100, damping: 20, delay: Math.min(index, 6) * 0.06 }}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      whileHover={{ scale: 1.02 }}
+      style={{ y: lift, width: CARD_WIDTH, willChange: "transform" }}
+      className={cn(
+        "group relative shrink-0 overflow-hidden rounded-[1.35rem] bg-white ring-1 ring-slate-200/80",
+        "transition-shadow duration-300",
+        hovered && "shadow-[0_24px_50px_-18px_rgba(0,163,255,0.45)] ring-admin-sky/55",
+      )}
+    >
+      <div className="relative h-44 overflow-hidden">
+        <motion.div
+          className="absolute inset-0"
+          animate={{ scale: hovered ? 1.08 : 1 }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          style={{ willChange: "transform" }}
+        >
+          <Image src={property.image} alt={property.title} fill sizes="320px" className="object-cover" />
+        </motion.div>
+        <div className="absolute inset-0 bg-gradient-to-t from-admin-navy/55 via-transparent to-transparent" />
+        <span className="absolute bottom-3 start-3 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-admin-navy">
+          {property.usage}
+        </span>
+      </div>
+
+      <div className="space-y-3 p-4">
+        <div>
+          <h3 className="text-base font-semibold text-admin-navy">{property.title}</h3>
+          <p className="text-xs text-slate-500">{property.location}</p>
+        </div>
+
+        <div className="flex flex-wrap gap-1.5">
+          {[property.rooms, property.size, property.finish].map((badge, badgeIndex) => (
+            <motion.span
+              key={badge}
+              initial={false}
+              animate={hovered ? { opacity: 1, y: 0 } : { opacity: 0.9, y: 6 }}
+              transition={{
+                type: "spring",
+                stiffness: 160,
+                damping: 18,
+                delay: hovered ? badgeIndex * 0.06 : 0,
+              }}
+              className="rounded-full bg-admin-soft px-2.5 py-1 text-[11px] font-medium text-slate-600"
+              style={{ willChange: "transform, opacity" }}
+            >
+              {badge}
+            </motion.span>
+          ))}
+        </div>
+
+        <p className="text-sm font-semibold text-admin-sky">{property.price}</p>
+
+        <div className="grid grid-cols-3 gap-2 border-t border-slate-100 pt-3 text-[11px]">
+          <Stat label="متری" value={property.pricePerMeter} />
+          <Stat label="میانگین محله" value={property.neighborhoodAvg} />
+          <Stat label="کاربری" value={property.usage} accent />
+        </div>
+      </div>
+    </motion.article>
   );
 }
 
