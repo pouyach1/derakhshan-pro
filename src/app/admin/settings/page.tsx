@@ -91,7 +91,7 @@ export default function SettingsPage() {
                 <Field label="زبان پنل">
                   <select className={inputClass} defaultValue="fa">
                     <option value="fa">فارسی</option>
-                    <option value="en">English</option>
+                    <option value="en">انگلیسی</option>
                   </select>
                 </Field>
                 <Field label="آدرس دفتر" className="sm:col-span-2">

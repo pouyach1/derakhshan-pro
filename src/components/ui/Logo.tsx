@@ -7,7 +7,7 @@ export default function Logo({ className, href = "/" }: { className?: string; hr
     <Link
       href={href}
       className={cn("group inline-flex flex-col items-start", className)}
-      aria-label={`${SITE.brandEn} home`}
+      aria-label={`${SITE.brandEn} — صفحه اصلی`}
     >
       <span className="font-sans text-sm font-semibold uppercase tracking-[0.28em] text-sky-400 transition group-hover:text-sky-300 md:text-base">
         {SITE.brandEn}

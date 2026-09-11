@@ -10,10 +10,10 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          300: "#b39cff",
-          500: "#4725b8",
-          800: "#230f66",
-          DEFAULT: "#4725b8",
+          300: "#7DD3FC",
+          500: "#00A3FF",
+          800: "#0B3A5C",
+          DEFAULT: "#00A3FF",
         },
         beige: {
           500: "#fffefc",
@@ -24,7 +24,7 @@ const config: Config = {
           DEFAULT: "#ffea00",
         },
         ink: {
-          DEFAULT: "#230f66",
+          DEFAULT: "#0B3A5C",
           soft: "#3d3d3d",
         },
         mist: {

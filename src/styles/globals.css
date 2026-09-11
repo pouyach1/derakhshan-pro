@@ -19,9 +19,9 @@
 }
 
 :root {
-  --swatch--brand-500: #4725b8;
-  --swatch--brand-800: #230f66;
-  --swatch--brand-300: #b39cff;
+  --swatch--brand-500: #00A3FF;
+  --swatch--brand-800: #0B3A5C;
+  --swatch--brand-300: #7DD3FC;
   --swatch--beige-500: #fffefc;
   --swatch--yellow-500: #ffea00;
   --swatch--dark-900: var(--swatch--brand-800);

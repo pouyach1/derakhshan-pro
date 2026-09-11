@@ -24,8 +24,8 @@ export default function PropertyCard({ deal, className }: { deal: Deal; classNam
             {deal.area}
             {deal.size ? ` · ${deal.size}` : ""}
           </p>
-          <h3 className="mt-2 font-display text-xl uppercase leading-tight tracking-tight">{deal.title}</h3>
-          <p className="mt-3 text-sm uppercase text-yellow-500">{deal.status}</p>
+          <h3 className="mt-2 font-vazirmatn text-xl font-semibold leading-relaxed tracking-tight">{deal.title}</h3>
+          <p className="mt-3 font-vazirmatn text-sm text-yellow-500">{deal.status}</p>
         </div>
       </div>
     </article>

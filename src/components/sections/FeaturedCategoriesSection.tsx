@@ -8,8 +8,8 @@ export default function FeaturedCategoriesSection() {
       <div className="rio-container">
         <div className="mb-12 flex flex-wrap items-end justify-between gap-4">
           <div className="max-w-2xl">
-            <p className="font-sans text-xs font-semibold uppercase tracking-[0.22em] text-sky-500">
-              Featured Collections
+            <p className="font-vazirmatn text-xs font-semibold tracking-[0.08em] text-sky-500">
+              مجموعه‌های گزیده
             </p>
             <h2 className="mt-3 font-vazirmatn text-2xl font-semibold leading-relaxed md:text-4xl">
               دسته‌بندی‌های پیشنهادی

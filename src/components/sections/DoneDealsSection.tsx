@@ -7,7 +7,9 @@ export default function DoneDealsSection() {
     <section className="bg-beige py-section-md text-brand-800">
       <div className="rio-container">
         <div className="mb-12 grid gap-8 md:grid-cols-12 md:items-end">
-          <h2 className="rio-h2 md:col-span-8 font-vazirmatn leading-relaxed">نمونه معاملات موفقی که با همراهی ما به سرانجام رسیده‌اند.</h2>
+          <h2 className="md:col-span-8 font-vazirmatn text-h2 font-semibold leading-relaxed normal-case tracking-tight">
+            نمونه معاملات موفقی که با همراهی ما به سرانجام رسیده‌اند.
+          </h2>
           <div className="md:col-span-4 md:justify-self-end">
             <Button href="/done-deals" variant="primary" className="font-vazirmatn normal-case tracking-normal">
               مشاهده کارنامه معاملات
