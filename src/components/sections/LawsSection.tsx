@@ -5,8 +5,8 @@ export default function LawsSection() {
     <section className="bg-beige py-section-md text-brand-800">
       <div className="rio-container">
         <div className="mb-12 max-w-4xl">
-          <h2 className="rio-h2">When you do a lot of deals, you start to notice patterns.</h2>
-          <p className="mt-4 text-sm uppercase tracking-[0.16em] text-brand-500">Rio&apos;s Laws of Brokering</p>
+          <h2 className="rio-h2 font-vazirmatn leading-relaxed">وقتی معاملات زیادی انجام می‌دهید، الگوها خودشان را نشان می‌دهند.</h2>
+          <p className="mt-4 font-vazirmatn text-sm text-brand-500">قوانین معامله‌گری درخشان پرو</p>
         </div>
 
         <div className="grid gap-px bg-brand-800/15 md:grid-cols-3">
@@ -18,10 +18,10 @@ export default function LawsSection() {
               <p className="text-xs uppercase tracking-wide text-brand-500 group-hover:text-yellow-500">
                 {String(index + 1).padStart(2, "0")}
               </p>
-              <h3 className="mt-4 font-display text-xl uppercase leading-tight tracking-tight text-brand-800 transition-colors duration-300 group-hover:text-beige">
+              <h3 className="mt-4 font-vazirmatn text-xl font-semibold leading-relaxed tracking-tight text-brand-800 transition-colors duration-300 group-hover:text-beige">
                 {law.title}
               </h3>
-              <p className="mt-3 text-sm text-brand-800/70 transition-colors duration-300 group-hover:text-beige/80">
+              <p className="mt-3 font-vazirmatn text-sm leading-relaxed text-brand-800/70 transition-colors duration-300 group-hover:text-beige/80">
                 {law.text}
               </p>
             </article>

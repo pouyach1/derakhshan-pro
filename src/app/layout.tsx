@@ -38,14 +38,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       addressLocality: SITE.address.city,
       addressRegion: SITE.address.region,
       postalCode: SITE.address.postal,
-      addressCountry: "ZA",
+      addressCountry: "IR",
     },
     sameAs: [SITE.social.linkedin],
   };
 
   return (
-    <html lang="en">
-      <body>
+    <html lang="fa">
+      <body className="antialiased">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
