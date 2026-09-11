@@ -11,3 +11,6 @@ dist-ssr
 next-env.d.ts
 .dev.vars
 cloudflare-env.d.ts
+
+bun.lock
+bun.lockb
