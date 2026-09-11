@@ -35,29 +35,47 @@ export function isValidIranMobile(phone: string): boolean {
   return /^09\d{9}$/.test(normalizePhone(phone));
 }
 
-export function lookupRole(phone: string): UserRole {
-  const normalized = normalizePhone(phone);
-  return AUTH_USERS.find((u) => u.phone === normalized)?.role ?? "client";
+export function normalizeIdentifier(raw: string): string {
+  const trimmed = raw.trim().toLowerCase();
+  if (trimmed.includes("@")) return trimmed;
+  return normalizePhone(raw);
 }
 
-export function findAuthUser(phone: string): AuthUser | undefined {
-  return AUTH_USERS.find((u) => u.phone === normalizePhone(phone));
+export function isValidIdentifier(raw: string): boolean {
+  const value = raw.trim();
+  if (value.includes("@")) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.toLowerCase());
+  }
+  return isValidIranMobile(value);
 }
 
-export function resolveUser(phone: string): AuthUser {
-  const normalized = normalizePhone(phone);
-  return (
-    findAuthUser(normalized) ?? {
-      id: `client-${normalized}`,
-      phone: normalized,
-      name: "کاربر مهمان",
-      role: "client",
-    }
+export function lookupRole(identifier: string): UserRole {
+  return findAuthUser(identifier)?.role ?? "client";
+}
+
+export function findAuthUser(identifier: string): AuthUser | undefined {
+  const value = normalizeIdentifier(identifier);
+  return AUTH_USERS.find(
+    (u) => u.phone === value || (u.email ? u.email.toLowerCase() === value : false),
   );
 }
 
-export function verifyCredentials(phone: string, secret: string): AuthUser | null {
-  const user = resolveUser(phone);
+export function resolveUser(identifier: string): AuthUser {
+  const existing = findAuthUser(identifier);
+  if (existing) return existing;
+  const value = normalizeIdentifier(identifier);
+  const isEmail = value.includes("@");
+  return {
+    id: `client-${value}`,
+    phone: isEmail ? "09000000000" : value,
+    email: isEmail ? value : undefined,
+    name: "Guest User",
+    role: "client",
+  };
+}
+
+export function verifyCredentials(identifier: string, secret: string): AuthUser | null {
+  const user = resolveUser(identifier);
   if (user.role === "client") {
     return secret.trim() === DEMO_OTP ? user : null;
   }
