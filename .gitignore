@@ -1,5 +1,7 @@
 node_modules
 .next
+.open-next
+.wrangler
 out
 dist
 dist-ssr
@@ -7,3 +9,5 @@ dist-ssr
 .DS_Store
 .vite
 next-env.d.ts
+.dev.vars
+cloudflare-env.d.ts
