@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   motion,
+  useInView,
   useMotionTemplate,
   useMotionValue,
   useSpring,
@@ -45,36 +46,61 @@ const cardVariants: Variants = {
 };
 
 export default function LawsSection() {
+  const gridRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(gridRef, { once: true, amount: 0.15 });
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    if (inView) setRevealed(true);
+  }, [inView]);
+
+  // Safety net if IntersectionObserver misses (e.g. overlays / headless)
+  useEffect(() => {
+    const timer = window.setTimeout(() => setRevealed(true), 1800);
+    return () => window.clearTimeout(timer);
+  }, []);
+
   return (
-    <section className="relative overflow-hidden bg-slate-950 py-section-md text-white">
+    <section
+      className="relative overflow-hidden py-section-md text-slate-900"
+      style={{ backgroundColor: "#EAF6FF" }}
+    >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(0,163,255,0.12),_transparent_55%)]"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse at top, rgba(0,163,255,0.18), transparent 55%)",
+        }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-24 top-1/3 h-72 w-72 rounded-full bg-sky-500/10 blur-3xl"
+        className="pointer-events-none absolute -right-16 top-10 h-72 w-72 rounded-full bg-sky-400/20 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-20 bottom-0 h-64 w-64 rounded-full bg-sky-300/25 blur-3xl"
       />
 
       <div className="rio-container relative">
         <div className="mb-12 max-w-4xl">
-          <p className="font-sans text-xs font-semibold uppercase tracking-[0.22em] text-sky-400">
+          <p className="font-sans text-xs font-semibold uppercase tracking-[0.22em] text-sky-500">
             Investment Principles
           </p>
-          <h2 className="mt-3 font-vazirmatn text-2xl font-semibold leading-relaxed md:text-4xl">
+          <h2 className="mt-3 font-vazirmatn text-2xl font-semibold leading-relaxed text-slate-900 md:text-4xl">
             ۱۲ اصل کلیدی سرمایه‌گذاری ملکی
           </h2>
-          <p className="mt-4 font-vazirmatn text-sm leading-relaxed text-slate-300 md:text-base">
+          <p className="mt-4 font-vazirmatn text-sm leading-relaxed text-slate-600 md:text-base">
             وقتی معاملات زیادی انجام می‌دهید، الگوها خودشان را نشان می‌دهند.
           </p>
         </div>
 
         <motion.div
+          ref={gridRef}
           className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
           variants={containerVariants}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          animate={revealed ? "visible" : "hidden"}
         >
           {LAWS.map((law, index) => (
             <motion.div key={law.statement} variants={cardVariants} className="h-full">
@@ -100,7 +126,7 @@ function PrincipleCard({ law, index }: { law: Law; index: number }) {
 
   const glareX = useTransform(springY, [-14, 14], [78, 22]);
   const glareY = useTransform(springX, [-12, 12], [22, 78]);
-  const glare = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(0,163,255,0.35), transparent 55%)`;
+  const glare = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(56,189,248,0.45), transparent 55%)`;
 
   const indexLabel = String(index + 1).padStart(2, "0");
 
@@ -147,8 +173,8 @@ function PrincipleCard({ law, index }: { law: Law; index: number }) {
     >
       <div
         className={cn(
-          "relative h-full overflow-hidden rounded-2xl border border-white/10 bg-slate-900/40 p-6 backdrop-blur-xl",
-          "transition-colors duration-500 hover:border-sky-500/40",
+          "relative h-full overflow-hidden rounded-2xl border border-sky-200/70 bg-white/55 p-6 shadow-[0_18px_50px_-28px_rgba(0,163,255,0.45)] backdrop-blur-xl",
+          "transition-colors duration-500 hover:border-sky-400/70 hover:bg-white/75",
         )}
         style={{ transformStyle: "preserve-3d" }}
       >
@@ -157,13 +183,13 @@ function PrincipleCard({ law, index }: { law: Law; index: number }) {
           className="pointer-events-none absolute inset-0 transition-opacity duration-500"
           style={{
             background: glare,
-            opacity: hovered ? 1 : 0,
+            opacity: hovered ? 1 : 0.35,
           }}
         />
 
         <span
           aria-hidden
-          className="pointer-events-none absolute -left-1 -top-1 font-mono text-4xl font-bold text-sky-500/20 transition-colors duration-500 group-hover:text-sky-400/40 md:text-5xl"
+          className="pointer-events-none absolute -left-1 -top-1 font-mono text-4xl font-bold text-sky-400/25 transition-colors duration-500 group-hover:text-sky-500/45 md:text-5xl"
           style={{ transform: "translateZ(8px)" }}
         >
           {indexLabel}
@@ -173,14 +199,7 @@ function PrincipleCard({ law, index }: { law: Law; index: number }) {
           className="relative z-10 flex h-full flex-col justify-end pt-10"
           style={{ transform: "translateZ(24px)" }}
         >
-          <p
-            className={cn(
-              "font-vazirmatn text-base font-medium leading-relaxed md:text-lg",
-              "bg-gradient-to-l from-white via-white to-white bg-clip-text text-transparent",
-              "transition-all duration-500",
-              "group-hover:from-sky-200 group-hover:via-white group-hover:to-sky-300",
-            )}
-          >
+          <p className="font-vazirmatn text-base font-medium leading-relaxed text-slate-800 transition-colors duration-500 group-hover:text-sky-700 md:text-lg">
             {law.statement}
           </p>
         </div>
