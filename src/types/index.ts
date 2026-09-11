@@ -15,8 +15,7 @@ export type Deal = {
 };
 
 export type Law = {
-  title: string;
-  text: string;
+  statement: string;
 };
 
 export type ContactInterest =
