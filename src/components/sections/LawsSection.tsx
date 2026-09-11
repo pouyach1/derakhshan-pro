@@ -18,10 +18,10 @@ export default function LawsSection() {
               <p className="text-xs uppercase tracking-wide text-brand-500 group-hover:text-yellow-500">
                 {String(index + 1).padStart(2, "0")}
               </p>
-              <h3 className="mt-4 font-display text-xl uppercase leading-tight tracking-tight text-brand-800 transition-colors duration-300 group-hover:text-beige">
+              <h3 className="mt-4 font-vazirmatn text-xl font-semibold leading-relaxed tracking-tight text-brand-800 transition-colors duration-300 group-hover:text-beige">
                 {law.title}
               </h3>
-              <p className="mt-3 text-sm text-brand-800/70 transition-colors duration-300 group-hover:text-beige/80">
+              <p className="mt-3 font-vazirmatn text-sm leading-relaxed text-brand-800/70 transition-colors duration-300 group-hover:text-beige/80">
                 {law.text}
               </p>
             </article>
