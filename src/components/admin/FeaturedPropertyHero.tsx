@@ -132,7 +132,7 @@ export default function FeaturedPropertyHero() {
                   className="h-7 w-7 rounded-full object-cover"
                 />
                 <span className="text-xs font-medium sm:text-sm">
-                  {property.agent.name} · {property.agent.roleLabel}
+                  {property.agent.roleLabel}: {property.agent.name}
                 </span>
               </motion.div>
             </AnimatePresence>
@@ -223,8 +223,8 @@ export default function FeaturedPropertyHero() {
               <Image src={property.image} alt={property.title} fill sizes="40vw" className="object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-admin-navy/50 to-transparent" />
               <div className="absolute bottom-4 start-4 end-4 rounded-2xl bg-white/15 p-3 backdrop-blur-xl ring-1 ring-white/30">
-                <p className="text-xs text-white/80">هماهنگی بازدید</p>
-                <p className="mt-0.5 text-sm font-semibold">امروز · با هماهنگی مشاور</p>
+                <p className="text-xs text-white/80">هماهنگی بازدید حضوری</p>
+                <p className="mt-0.5 text-sm font-semibold">امروز · با هماهنگی مشاور ارشد</p>
               </div>
             </motion.div>
           </AnimatePresence>

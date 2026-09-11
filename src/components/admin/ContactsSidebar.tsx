@@ -8,15 +8,15 @@ import { cn } from "@/lib/utils";
 
 const CATEGORIES = [
   { id: "all", label: "همه", role: "All" as const },
-  { id: "realtors", label: "مشاوران", role: "Realtor" as const },
+  { id: "realtors", label: "مشاورین ارشد", role: "Realtor" as const },
   { id: "builders", label: "سازندگان", role: "Builder" as const },
-  { id: "clients", label: "مشتریان", role: "Client" as const },
+  { id: "clients", label: "خریداران VIP", role: "Client" as const },
 ];
 
 function roleLabel(role: ContactRole) {
-  if (role === "Realtor") return "مشاور املاک";
+  if (role === "Realtor") return "مشاور ارشد";
   if (role === "Builder") return "سازنده";
-  return "مشتری";
+  return "خریدار VIP";
 }
 
 export default function ContactsSidebar() {
@@ -121,10 +121,10 @@ export default function ContactsSidebar() {
                       </p>
                     </button>
                     <div className="mt-3 flex items-center gap-2">
-                      <IconButton active={active} label={`تماس با ${contact.name}`}>
+                      <IconButton active={active} label={`تماس سریع با ${contact.name}`}>
                         <PhoneIcon />
                       </IconButton>
-                      <IconButton active={active} label={`پروفایل ${contact.name}`}>
+                      <IconButton active={active} label={`مشاهده سوابق ${contact.name}`}>
                         <ExternalIcon />
                       </IconButton>
                       <button
@@ -136,7 +136,7 @@ export default function ContactsSidebar() {
                             : "bg-white text-admin-navy ring-1 ring-slate-200 hover:ring-admin-sky/40",
                         )}
                       >
-                        پیامک
+                        ارسال پیام
                       </button>
                     </div>
                   </div>
