@@ -35,31 +35,45 @@ export default function MostViewedProperties() {
   const [paused, setPaused] = useState(false);
   const [dragging, setDragging] = useState(false);
   const x = useMotionValue(0);
-  const loopWidth = useMemo(() => MOST_VIEWED_PROPERTIES.length * STEP, []);
-  const gallery = useMemo(
-    () => [...MOST_VIEWED_PROPERTIES, ...MOST_VIEWED_PROPERTIES, ...MOST_VIEWED_PROPERTIES],
-    [],
+
+  const properties = MOST_VIEWED_PROPERTIES;
+  // Triple the list so one full set can slide off while an identical set fills the viewport.
+  const duplicatedProperties = useMemo(
+    () => [...properties, ...properties, ...properties],
+    [properties],
   );
+  // Width of ONE original set (card + gap slots) — used for seamless modulo wrap.
+  const loopWidth = properties.length * STEP;
 
   useAnimationFrame((_, delta) => {
     if (paused || dragging) return;
-    // RTL: advance toward +x so the gallery flows with Persian reading direction.
-    x.set(wrapOffsetRtl(x.get() + (VELOCITY * delta) / 1000, loopWidth));
+    // Continuous leftward marquee; jump forward by exactly one set when it clears.
+    let next = x.get() - (VELOCITY * delta) / 1000;
+    if (next <= -loopWidth) next += loopWidth;
+    x.set(next);
   });
 
-  useEffect(() => {
-    x.set(-loopWidth);
-  }, [x, loopWidth]);
+  const wrapX = (value: number) => {
+    let next = value % loopWidth;
+    // JS % can be negative; normalize into (-loopWidth, 0]
+    if (next > 0) next -= loopWidth;
+    if (next <= -loopWidth) next += loopWidth;
+    return next;
+  };
+
+  const onDrag = () => {
+    // Live wrap while dragging so the track never hits a hard "end".
+    x.set(wrapX(x.get()));
+  };
 
   const onDragEnd = (_: unknown, info: PanInfo) => {
     setDragging(false);
-    const projected = x.get() + info.velocity.x * 0.18;
-    const snapped = Math.round(projected / STEP) * STEP;
-    x.set(wrapOffsetRtl(snapped, loopWidth));
+    const projected = x.get() + info.velocity.x * 0.12;
+    x.set(wrapX(projected));
   };
 
   return (
-    <section className="relative overflow-visible rounded-[1.85rem] border border-sky-500/15 bg-admin-card/80 p-4 shadow-[0_24px_60px_-28px_rgba(0,163,255,0.28)] backdrop-blur-md sm:p-6">
+    <section className="relative overflow-hidden rounded-[1.85rem] border border-sky-500/15 bg-admin-card/80 p-4 shadow-[0_24px_60px_-28px_rgba(0,163,255,0.28)] backdrop-blur-md sm:p-6">
       <div
         aria-hidden
         className="pointer-events-none absolute -start-16 top-0 h-56 w-56 rounded-full bg-gradient-to-tr from-sky-500/20 to-transparent blur-3xl"
@@ -89,7 +103,7 @@ export default function MostViewedProperties() {
 
       <div
         data-wheel-self
-        className="relative overflow-visible px-1 pt-4 pb-8"
+        className="relative overflow-x-hidden overflow-y-visible px-1 pt-4 pb-8"
         style={{ perspective: 1000 }}
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => {
@@ -98,30 +112,22 @@ export default function MostViewedProperties() {
         }}
       >
         <motion.div
-          className="flex cursor-grab active:cursor-grabbing"
+          className="flex w-max cursor-grab active:cursor-grabbing"
           drag="x"
-          dragConstraints={{ left: -loopWidth * 2, right: 0 }}
-          dragElastic={0.06}
-          dragTransition={{ bounceStiffness: 180, bounceDamping: 22, power: 0.25 }}
-          style={{ x, gap: GAP, willChange: "transform", direction: "rtl" }}
+          dragElastic={0.04}
+          dragMomentum={false}
+          style={{ x, gap: GAP, willChange: "transform" }}
           onDragStart={() => setDragging(true)}
+          onDrag={onDrag}
           onDragEnd={onDragEnd}
         >
-          {gallery.map((property, i) => (
+          {duplicatedProperties.map((property, i) => (
             <PropertyCard3D key={`${property.id}-${i}`} property={property} index={i} />
           ))}
         </motion.div>
       </div>
     </section>
   );
-}
-
-/** Keep offset in (-2w, 0] while auto-scrolling positively for RTL. */
-function wrapOffsetRtl(value: number, width: number) {
-  let next = value;
-  while (next > 0) next -= width;
-  while (next <= -width * 2) next += width;
-  return next;
 }
 
 function PropertyCard3D({ property, index }: { property: ViewedProperty; index: number }) {
