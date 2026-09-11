@@ -16,11 +16,17 @@ export default function FullImageCtaSection() {
         <div className="absolute inset-0 bg-brand-800/70" />
       </div>
       <div className="rio-container relative z-10 grid gap-10 py-section-lg md:grid-cols-12">
-        <h2 className="rio-h2 md:col-span-7">{OFF_MARKET_CTA.title}</h2>
+        <h2 className="md:col-span-7 font-vazirmatn text-h2 font-semibold leading-relaxed normal-case tracking-tight">
+          {OFF_MARKET_CTA.title}
+        </h2>
         <div className="md:col-span-5">
-          <p className="text-beige/85">{OFF_MARKET_CTA.body}</p>
+          <p className="font-vazirmatn leading-relaxed text-beige/85">{OFF_MARKET_CTA.body}</p>
           <div className="mt-8">
-            <Button href={OFF_MARKET_CTA.cta.href} variant="yellow">
+            <Button
+              href={OFF_MARKET_CTA.cta.href}
+              variant="yellow"
+              className="font-vazirmatn normal-case tracking-normal"
+            >
               {OFF_MARKET_CTA.cta.label}
             </Button>
           </div>

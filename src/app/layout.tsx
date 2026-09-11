@@ -3,18 +3,18 @@ import { SITE } from "@/config/site";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
-  title: `${SITE.name} | ${SITE.tagline}`,
+  title: `${SITE.name} | ${SITE.taglineFa}`,
   description: SITE.description,
   metadataBase: new URL(SITE.url),
   openGraph: {
-    title: `${SITE.name} | ${SITE.tagline}`,
+    title: `${SITE.name} | ${SITE.taglineFa}`,
     description: SITE.description,
     type: "website",
     images: [{ url: SITE.ogImage }],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE.name} | ${SITE.tagline}`,
+    title: `${SITE.name} | ${SITE.taglineFa}`,
     description: SITE.description,
     images: [SITE.ogImage],
   },

@@ -5,8 +5,8 @@ export default function ValuePropsSection() {
     <section className="bg-slate-50 py-section-md text-slate-900">
       <div className="rio-container">
         <div className="mb-12 max-w-3xl">
-          <p className="font-sans text-xs font-semibold uppercase tracking-[0.22em] text-sky-500">
-            Why Derakhshan
+          <p className="font-vazirmatn text-xs font-semibold tracking-[0.08em] text-sky-500">
+            چرا درخشان پرو
           </p>
           <h2 className="mt-3 font-vazirmatn text-2xl font-semibold leading-relaxed md:text-4xl">
             چهار ستون یک تجربه ملکی فاخر
@@ -26,7 +26,7 @@ export default function ValuePropsSection() {
                 <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-sky-500/10 font-sans text-sm font-semibold text-sky-500">
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <span className="font-sans text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                <span className="font-vazirmatn text-[11px] font-medium text-slate-400">
                   {item.subtitle}
                 </span>
               </div>

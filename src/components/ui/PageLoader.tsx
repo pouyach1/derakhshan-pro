@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useIntro } from "@/components/providers/IntroProvider";
 import { EASE } from "@/lib/motion";
 
-const LETTERS = ["R", "I", "O", " ", "P", "R", "O", "P", "E", "R", "T", "Y"] as const;
+const LETTERS = ["D", "E", "R", "A", "K", "H", "S", "H", "A", "N", " ", "P", "R", "O"] as const;
 
 type Stage = "idle" | "brand" | "progress" | "exit" | "wipe" | "gone";
 
@@ -97,7 +97,7 @@ export default function PageLoader() {
         transition={{ duration: phase === "fast" ? 1.1 : 1.75, ease: EASE.expoInOut }}
         role="status"
         aria-live="polite"
-        aria-label="Loading RIO Property"
+        aria-label="در حال بارگذاری Derakhshan Properties"
       >
         <div className="absolute inset-0 bg-brand-800" data-preloader-bg />
 

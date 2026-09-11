@@ -84,8 +84,8 @@ export default function LawsSection() {
 
       <div className="rio-container relative">
         <div className="mb-12 max-w-4xl">
-          <p className="font-sans text-xs font-semibold uppercase tracking-[0.22em] text-sky-500">
-            Investment Principles
+          <p className="font-vazirmatn text-xs font-semibold tracking-[0.08em] text-sky-500">
+            اصول سرمایه‌گذاری
           </p>
           <h2 className="mt-3 font-vazirmatn text-2xl font-semibold leading-relaxed text-slate-900 md:text-4xl">
             ۱۲ اصل کلیدی سرمایه‌گذاری ملکی

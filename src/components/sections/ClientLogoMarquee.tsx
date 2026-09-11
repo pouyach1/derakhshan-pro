@@ -7,8 +7,8 @@ export default function ClientLogoMarquee() {
   return (
     <section className="overflow-hidden border-y border-brand-800/10 bg-beige py-12">
       <div className="rio-container mb-8">
-        <p className="text-sm uppercase tracking-[0.16em] text-brand-500">
-          Some of the people we&apos;ve worked with
+        <p className="font-vazirmatn text-sm leading-relaxed text-brand-500">
+          بخشی از برندها و مجموعه‌هایی که با ما کار کرده‌اند
         </p>
       </div>
       <div className="relative">
