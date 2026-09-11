@@ -1,7 +1,7 @@
 {
   "name": "derakhshan-pro",
   "private": true,
-  "version": "2.0.1",
+  "version": "2.0.2",
   "engines": {
     "node": ">=20.9.0"
   },
@@ -38,19 +38,5 @@
     "typescript": "^5.9.2",
     "wrangler": "^4.131.1"
   },
-  "description": "Derakhshan Properties — Next.js App Router + Tailwind luxury real estate site.",
-  "optionalDependencies": {
-    "@next/swc-linux-x64-gnu": "15.5.25",
-    "@next/swc-linux-x64-musl": "15.5.25"
-  },
-  "overrides": {
-    "@next/swc-linux-x64-gnu": "15.5.25",
-    "@next/swc-linux-x64-musl": "15.5.25",
-    "@next/swc-linux-arm64-gnu": "15.5.25",
-    "@next/swc-linux-arm64-musl": "15.5.25",
-    "@next/swc-darwin-arm64": "15.5.25",
-    "@next/swc-darwin-x64": "15.5.25",
-    "@next/swc-win32-arm64-msvc": "15.5.25",
-    "@next/swc-win32-x64-msvc": "15.5.25"
-  }
+  "description": "Derakhshan Properties — Next.js App Router + Tailwind luxury real estate site."
 }
