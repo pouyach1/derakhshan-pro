@@ -81,7 +81,7 @@ export default function AdminHeader({
             <span className="absolute left-2 top-2 h-2 w-2 rounded-full bg-admin-sky" />
           </button>
           <Image
-            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80"
+            src="/images/admin/avatars/arash-shayegan.jpg"
             alt="آواتار کاربر"
             width={40}
             height={40}

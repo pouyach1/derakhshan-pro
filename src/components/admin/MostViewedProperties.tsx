@@ -73,16 +73,16 @@ export default function MostViewedProperties() {
         <div>
           <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-sky-500/10 px-2.5 py-1 text-[11px] font-semibold text-admin-sky ring-1 ring-sky-500/20">
             <Sparkles className="h-3.5 w-3.5" strokeWidth={2} />
-            ویترین زنده
+            ویترین VIP
           </div>
-          <h2 className="text-lg font-semibold tracking-tight text-admin-navy sm:text-xl">پربازدیدهای امروز</h2>
-          <p className="mt-1 text-sm text-slate-500">ویترین سه‌بعدی آگهی‌هایی که امروز بیشتر دیده شده‌اند</p>
+          <h2 className="text-lg font-semibold tracking-tight text-admin-navy sm:text-xl">پربازدیدترین املاک امروز</h2>
+          <p className="mt-1 text-sm text-slate-500">ویترین VIP آگهی‌های برجسته با بیشترین آمار بازدید و تقاضا</p>
         </div>
         <Link
           href="/admin/properties"
           className="group inline-flex items-center gap-1.5 rounded-full bg-admin-soft px-3.5 py-2 text-sm font-medium text-admin-navy transition hover:bg-admin-sky hover:text-white"
         >
-          همه آگهی‌ها
+          مشاهده آرشیو کامل املاک
           <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 rtl:rotate-180" />
         </Link>
       </div>
