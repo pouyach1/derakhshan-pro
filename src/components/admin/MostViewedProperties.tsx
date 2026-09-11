@@ -35,6 +35,8 @@ export default function MostViewedProperties() {
   const [paused, setPaused] = useState(false);
   const [dragging, setDragging] = useState(false);
   const x = useMotionValue(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const loopWidthRef = useRef(MOST_VIEWED_PROPERTIES.length * STEP);
 
   const properties = MOST_VIEWED_PROPERTIES;
   // Triple the list so one full set can slide off while an identical set fills the viewport.
@@ -42,11 +44,31 @@ export default function MostViewedProperties() {
     () => [...properties, ...properties, ...properties],
     [properties],
   );
-  // Width of ONE original set (card + gap slots) — used for seamless modulo wrap.
-  const loopWidth = properties.length * STEP;
+
+  useEffect(() => {
+    const measure = () => {
+      const track = trackRef.current;
+      if (!track) return;
+      const cards = track.querySelectorAll<HTMLElement>("[data-carousel-card]");
+      if (cards.length < properties.length + 1) return;
+      // Exact distance from card[0] to card[n] (= one set), avoids gap/subpixel drift.
+      const first = cards[0].offsetLeft;
+      const nextSet = cards[properties.length].offsetLeft;
+      const width = Math.abs(nextSet - first);
+      if (width > 0) loopWidthRef.current = width;
+    };
+    measure();
+    const timer = window.setTimeout(measure, 700);
+    window.addEventListener("resize", measure);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("resize", measure);
+    };
+  }, [properties.length, duplicatedProperties]);
 
   useAnimationFrame((_, delta) => {
     if (paused || dragging) return;
+    const loopWidth = loopWidthRef.current;
     // Continuous leftward marquee; jump forward by exactly one set when it clears.
     let next = x.get() - (VELOCITY * delta) / 1000;
     if (next <= -loopWidth) next += loopWidth;
@@ -54,6 +76,8 @@ export default function MostViewedProperties() {
   });
 
   const wrapX = (value: number) => {
+    const loopWidth = loopWidthRef.current;
+    if (loopWidth <= 0) return value;
     let next = value % loopWidth;
     // JS % can be negative; normalize into (-loopWidth, 0]
     if (next > 0) next -= loopWidth;
@@ -103,6 +127,7 @@ export default function MostViewedProperties() {
 
       <div
         data-wheel-self
+        dir="ltr"
         className="relative overflow-x-hidden overflow-y-visible px-1 pt-4 pb-8"
         style={{ perspective: 1000 }}
         onMouseEnter={() => setPaused(true)}
@@ -112,11 +137,12 @@ export default function MostViewedProperties() {
         }}
       >
         <motion.div
+          ref={trackRef}
           className="flex w-max cursor-grab active:cursor-grabbing"
           drag="x"
           dragElastic={0.04}
           dragMomentum={false}
-          style={{ x, gap: GAP, willChange: "transform" }}
+          style={{ x, gap: GAP, willChange: "transform", direction: "ltr" }}
           onDragStart={() => setDragging(true)}
           onDrag={onDrag}
           onDragEnd={onDragEnd}
@@ -184,6 +210,7 @@ function PropertyCard3D({ property, index }: { property: ViewedProperty; index: 
         willChange: "transform",
       }}
       className="group relative shrink-0 transform-gpu"
+      data-carousel-card
     >
       <motion.div
         aria-hidden
