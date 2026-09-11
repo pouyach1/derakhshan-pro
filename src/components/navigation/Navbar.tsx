@@ -29,17 +29,17 @@ export default function Navbar() {
       <header
         className={cn(
           "fixed inset-x-0 top-0 z-50 transition-colors duration-500",
-          scrolled || open ? "bg-brand-800/95 backdrop-blur-md" : "bg-transparent",
+          scrolled || open ? "border-b border-white/10 bg-slate-950/90 backdrop-blur-md" : "bg-transparent",
         )}
       >
         <div className="rio-container flex h-16 items-center justify-between py-6 md:h-20">
           <Logo />
-          <nav className="hidden items-center gap-8 lg:flex" aria-label="Primary">
+          <nav className="hidden items-center gap-7 lg:flex" aria-label="اصلی">
             {NAV.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm uppercase tracking-wide text-beige/90 transition-colors duration-300 hover:text-yellow-500"
+                className="font-vazirmatn text-sm text-beige/90 transition-colors duration-300 hover:text-sky-400"
               >
                 {item.label}
               </Link>
@@ -50,7 +50,7 @@ export default function Navbar() {
             className="relative z-50 flex h-10 w-10 flex-col items-center justify-center gap-1.5 lg:hidden"
             aria-expanded={open}
             aria-controls="mobile-nav"
-            aria-label={open ? "Close menu" : "Open menu"}
+            aria-label={open ? "بستن منو" : "باز کردن منو"}
             onClick={() => setOpen((value) => !value)}
           >
             <span
@@ -78,17 +78,20 @@ export default function Navbar() {
       <div
         id="mobile-nav"
         className={cn(
-          "fixed inset-0 z-40 bg-brand-800 transition-transform duration-700 ease-rio lg:hidden",
+          "fixed inset-0 z-40 bg-slate-950 transition-transform duration-700 ease-rio lg:hidden",
           open ? "translate-y-0" : "-translate-y-full",
         )}
       >
-        <nav className="rio-container flex h-full flex-col justify-center gap-6 pt-20" aria-label="Mobile">
+        <nav
+          className="rio-container flex h-full flex-col justify-center gap-6 pt-20"
+          aria-label="موبایل"
+        >
           {NAV.map((item, index) => (
             <Link
               key={item.href}
               href={item.href}
               onClick={() => setOpen(false)}
-              className="font-display text-4xl uppercase tracking-tight text-beige transition-colors duration-300 hover:text-yellow-500"
+              className="font-vazirmatn text-3xl text-beige transition-colors duration-300 hover:text-sky-400"
               style={{ transitionDelay: open ? `${index * 60}ms` : "0ms" }}
             >
               {item.label}

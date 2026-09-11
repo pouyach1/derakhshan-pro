@@ -5,8 +5,8 @@ export default function LawsSection() {
     <section className="bg-beige py-section-md text-brand-800">
       <div className="rio-container">
         <div className="mb-12 max-w-4xl">
-          <h2 className="rio-h2">When you do a lot of deals, you start to notice patterns.</h2>
-          <p className="mt-4 text-sm uppercase tracking-[0.16em] text-brand-500">Rio&apos;s Laws of Brokering</p>
+          <h2 className="rio-h2 font-vazirmatn leading-relaxed">وقتی معاملات زیادی انجام می‌دهید، الگوها خودشان را نشان می‌دهند.</h2>
+          <p className="mt-4 font-vazirmatn text-sm text-brand-500">قوانین معامله‌گری درخشان پرو</p>
         </div>
 
         <div className="grid gap-px bg-brand-800/15 md:grid-cols-3">

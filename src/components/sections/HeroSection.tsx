@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { HERO } from "@/config/home";
+import { SITE } from "@/config/site";
 import { useIntro } from "@/components/providers/IntroProvider";
 import { EASE } from "@/lib/motion";
 
@@ -10,28 +12,19 @@ const container = {
   hidden: {},
   show: {
     transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.08,
+      staggerChildren: 0.1,
+      delayChildren: 0.12,
     },
   },
 };
 
 const fadeUp = {
-  hidden: { opacity: 0, x: "40%", scale: 0.5 },
+  hidden: { opacity: 0, y: 28, filter: "blur(8px)" },
   show: {
     opacity: 1,
-    x: "0%",
-    scale: 1,
-    transition: { duration: 1.35, ease: EASE.expoOut },
-  },
-};
-
-const titleWord = {
-  hidden: { x: "100%", opacity: 0 },
-  show: {
-    x: "0%",
-    opacity: 1,
-    transition: { duration: 1.5, ease: EASE.expoOut },
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.9, ease: EASE.expoOut },
   },
 };
 
@@ -41,54 +34,67 @@ export default function HeroSection() {
   return (
     <section
       data-home-hero
-      className="relative min-h-[100dvh] overflow-hidden bg-brand-800 text-beige"
+      className="relative min-h-[100dvh] overflow-hidden bg-slate-950 text-white"
     >
       <Image
         src={HERO.image}
-        alt="Cape Town commercial property skyline"
+        alt={HERO.title}
         fill
         priority
         sizes="100vw"
-        className="object-cover object-center opacity-90"
+        className="object-cover object-center"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-brand-800/80 via-brand-800/25 to-brand-800/40" />
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/55 to-slate-900/30" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(0,163,255,0.22),transparent_42%)]" />
 
       <motion.div
-        className="rio-container relative z-10 flex min-h-[100dvh] flex-col justify-end pb-16 pt-page-top md:pb-24"
+        className="rio-container relative z-10 flex min-h-[100dvh] flex-col justify-end pb-16 pt-28 md:pb-24"
         variants={container}
         initial="hidden"
         animate={heroReady ? "show" : "hidden"}
       >
-        <div className="mb-10 grid max-w-3xl gap-6 md:grid-cols-[auto_1fr] md:items-end">
-          <motion.p
-            variants={fadeUp}
-            className="text-sm uppercase tracking-[0.18em] text-beige/85"
-            data-paragraph="left"
-          >
-            {HERO.eyebrow.join(" / ")}
-          </motion.p>
-          <motion.p
-            variants={fadeUp}
-            className="max-w-md text-sm leading-relaxed text-beige/85 md:text-base"
-            data-paragraph="right"
-          >
-            {HERO.support}
-          </motion.p>
-        </div>
+        <motion.p
+          variants={fadeUp}
+          className="mb-5 font-sans text-xs font-semibold uppercase tracking-[0.28em] text-sky-400 md:text-sm"
+        >
+          {SITE.brandEn}
+        </motion.p>
 
-        <h1 className="max-w-5xl font-display text-[clamp(3.2rem,9vw,7rem)] uppercase leading-[0.92] tracking-tight text-beige">
-          {HERO.title.split(" ").map((word) => (
-            <span key={word} className="mr-[0.25em] inline-block overflow-hidden align-bottom">
-              <motion.span
-                className="inline-block will-change-transform"
-                variants={titleWord}
-                transition={{ duration: 1.5, ease: EASE.expoOut }}
-              >
-                {word}
-              </motion.span>
-            </span>
-          ))}
-        </h1>
+        <motion.span
+          variants={fadeUp}
+          className="mb-5 inline-flex w-fit items-center rounded-full border border-white/20 bg-white/10 px-4 py-1.5 font-vazirmatn text-xs text-white/90 backdrop-blur-md md:text-sm"
+        >
+          {HERO.badge}
+        </motion.span>
+
+        <motion.h1
+          variants={fadeUp}
+          className="max-w-4xl font-vazirmatn text-[clamp(1.85rem,5.2vw,3.6rem)] font-semibold leading-relaxed tracking-tight text-white"
+        >
+          {HERO.title}
+        </motion.h1>
+
+        <motion.p
+          variants={fadeUp}
+          className="mt-5 max-w-2xl font-vazirmatn text-sm leading-relaxed text-white/85 md:text-base"
+        >
+          {HERO.subtitle}
+        </motion.p>
+
+        <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center gap-3">
+          <Link
+            href={HERO.primaryCta.href}
+            className="inline-flex items-center justify-center rounded-full bg-sky-500 px-6 py-3 font-vazirmatn text-sm font-semibold text-white shadow-[0_12px_40px_-12px_rgba(0,163,255,0.8)] transition hover:bg-sky-400"
+          >
+            {HERO.primaryCta.label}
+          </Link>
+          <Link
+            href={HERO.secondaryCta.href}
+            className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/10 px-6 py-3 font-vazirmatn text-sm font-medium text-white backdrop-blur-md transition hover:border-sky-400/50 hover:bg-white/15"
+          >
+            {HERO.secondaryCta.label}
+          </Link>
+        </motion.div>
       </motion.div>
     </section>
   );

@@ -41,11 +41,18 @@ const config: Config = {
           navy: "#0F172A",
           "navy-soft": "#1E293B",
         },
+        sky: {
+          400: "#38BDF8",
+          500: "#00A3FF",
+          600: "#0086D1",
+          DEFAULT: "#00A3FF",
+        },
       },
       fontFamily: {
         sans: ["Rubik", "Arial", "sans-serif"],
         display: ['"Blauer Nue"', "Rubik", "Verdana", "sans-serif"],
         vazir: ["var(--font-vazirmatn)", "Vazirmatn", "Tahoma", "sans-serif"],
+        vazirmatn: ["var(--font-vazirmatn)", "Vazirmatn", "Tahoma", "sans-serif"],
       },
       borderRadius: {
         rio: "1rem",

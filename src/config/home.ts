@@ -1,17 +1,75 @@
 import type { Deal, Law, Persona } from "@/types";
 
 export const HERO = {
-  eyebrow: ["Retail", "Industrial", "Office"],
-  support: "We broker, value and track commercial property across Cape Town.",
-  title: "Rio Property knows Cape Town",
-  image: "/assets/images/hero-mobile.webp",
+  badge: "✦ مرجع تخصصی املاک و پنت‌هاوس‌های لوکس",
+  title: "تجربه‌ای متفاوت از خرید و سرمایه‌گذاری در فاخرترین املاک کشور",
+  subtitle:
+    "دسترسی اختصاصی به برترین آرشیو پنت‌هاوس‌ها، برج‌های مدرن و ویلاهای VIP همراه با مشاوره تخصصی حقوقی.",
+  primaryCta: { href: "/done-deals", label: "مشاهده آرشیو املاک VIP" },
+  secondaryCta: { href: "/contact", label: "درخواست مشاوره اختصاصی" },
+  image: "/images/landing/hero/banner.jpg",
 };
 
 export const INTRO_CTA = {
-  title: "You’re probably here to see what we actually do.",
-  cta: { href: "/done-deals", label: "See our track record" },
-  body: "We specialise in commercial real estate within Cape Town and the surrounding suburbs. Across retail, industrial and office property we sell, lease and value assets for owners, developers, investors and banks.",
+  title: "اینجا برای دیدن عمق واقعی خدمات ما هستید.",
+  cta: { href: "/done-deals", label: "مرور معاملات شاخص" },
+  body: "درخشان پرو روی املاک فاخر تهران و حومه متمرکز است؛ از پنت‌هاوس و برج‌های لوکس تا ویلاهای VIP و مستغلات تجاری. فروش، اجاره و ارزش‌گذاری را با نگاه سرمایه‌گذاری و انضباط حقوقی پیش می‌بریم.",
 };
+
+export const VALUE_PROPS = [
+  {
+    id: "off-market",
+    title: "آرشیو اختصاصی",
+    subtitle: "Off-Market Properties",
+    description: "دسترسی به ملک‌های ویژه و معرفی‌نشده در بازار عمومی",
+    image: "/images/landing/features/archive.jpg",
+  },
+  {
+    id: "valuation",
+    title: "کارشناسی و ارزش‌گذاری دقیق",
+    subtitle: "Market Intelligence",
+    description: "تحلیل سابقه قیمتی و ارزش‌گذاری هوشمند بر پایه داده‌های روز بازار",
+    image: "/images/landing/categories/penthouse.jpg",
+  },
+  {
+    id: "legal",
+    title: "همراهی حقوقی صفر تا صد",
+    subtitle: "Legal Escort",
+    description: "تنظیم قراردادهای رسمی تحت نظر مستمر وکلای پایه یک دادگستری",
+    image: "/images/landing/categories/commercial.jpg",
+  },
+  {
+    id: "investment",
+    title: "مشاوره سرمایه‌گذاری",
+    subtitle: "Capital Strategy",
+    description: "ارائه استراتژی‌های رشد سرمایه در پروژه‌های ملکی برتر",
+    image: "/images/landing/categories/villa.jpg",
+  },
+] as const;
+
+export const FEATURED_CATEGORIES = [
+  {
+    id: "penthouse",
+    title: "پنت‌هاوس و برج‌های لوکس",
+    locations: "نیاوران، زعفرانیه، فرشته",
+    image: "/images/landing/categories/penthouse.jpg",
+    href: "/done-deals",
+  },
+  {
+    id: "villa",
+    title: "ویلاهای مدرن و خاص",
+    locations: "لواسان، کردان، شمال",
+    image: "/images/landing/categories/villa.jpg",
+    href: "/done-deals",
+  },
+  {
+    id: "commercial",
+    title: "مستغلات و پروژه‌های تجاری",
+    locations: "منطقه ۱ و ۳",
+    image: "/images/landing/categories/commercial.jpg",
+    href: "/services",
+  },
+] as const;
 
 export const CLIENT_LOGOS = [
   "/assets/logos/client-1.svg",
@@ -25,26 +83,26 @@ export const CLIENT_LOGOS = [
 export const PERSONAS: Persona[] = [
   {
     id: "buyers",
-    title: "Buyers",
-    description: "You need good options, clear numbers and a deal that holds together.",
+    title: "خریداران VIP",
+    description: "گزینه‌های گزیده، اعداد شفاف و معامله‌ای که تا انتها پایدار بماند.",
     image: "/assets/images/persona-buyers.webp",
   },
   {
     id: "sellers",
-    title: "Sellers",
-    description: "You need the right price and a deal that actually completes.",
+    title: "مالکان و فروشندگان",
+    description: "قیمت درست، خریدار جدی و پرونده‌ای که واقعاً به قرارداد برسد.",
     image: "/assets/images/persona-sellers.webp",
   },
   {
     id: "tenants",
-    title: "Tenants",
-    description: "You need options that fit your business and lease terms you understand.",
+    title: "مستأجران حرفه‌ای",
+    description: "فضایی هم‌تراز کسب‌وکار شما و شروطی که شفاف و قابل اتکا باشد.",
     image: "/assets/images/persona-tenants.webp",
   },
   {
     id: "landlords",
-    title: "Landlords",
-    description: "You need steady rental income and tenants you can rely on.",
+    title: "سرمایه‌گذاران ملکی",
+    description: "جریان اجاره پایدار و مستأجرانی که اعتبارشان قابل اتکا باشد.",
     image: "/assets/images/persona-landlords.webp",
   },
 ];
@@ -52,55 +110,55 @@ export const PERSONAS: Persona[] = [
 export const DEALS: Deal[] = [
   {
     id: "church",
-    area: "CBD",
-    size: "24000 m² Bulk",
-    title: "Church Street Development Site",
+    area: "نیاوران",
+    size: "۴۵۰ متر",
+    title: "برج لوکس دراک (کوچه چناران)",
     status: "Sold",
-    image: "/assets/images/deal-church-street.webp",
+    image: "/images/landing/hero/banner.jpg",
   },
   {
     id: "lower-main",
-    area: "Observatory",
-    size: "573 m²",
-    title: "Lower Main Road Restaurant & Bar",
+    area: "لواسان",
+    size: "۸۵۰ متر",
+    title: "ویلای مدرن دوبلکس لواسان",
     status: "Sold",
-    image: "/assets/images/deal-lower-main.webp",
+    image: "/images/landing/categories/villa.jpg",
   },
   {
     id: "silo",
-    area: "V&A Waterfront",
-    size: "1120 m²",
-    title: "The Silo Office",
+    area: "فرشته",
+    size: "۲۲۰ متر",
+    title: "آپارتمان مدرن فرشته",
     status: "Leased",
-    image: "/assets/images/deal-the-silo.webp",
+    image: "/images/landing/categories/penthouse.jpg",
   },
   {
     id: "buitengracht",
-    area: "CBD",
-    size: "4864 m²",
-    title: "Buitengracht Street Mixed Use",
+    area: "زعفرانیه",
+    size: "۳۸۰ متر",
+    title: "پنت‌هاوس پانوراما زعفرانیه",
     status: "Sold",
-    image: "/assets/images/deal-buitengracht.webp",
+    image: "/images/landing/hero/side.jpg",
   },
   {
     id: "loop",
-    area: "CBD",
-    title: "Loop Street Retail",
+    area: "ونک",
+    title: "دفتر کار میدان ونک",
     status: "Leased",
-    image: "/assets/images/deal-loop-street.webp",
+    image: "/images/landing/categories/commercial.jpg",
   },
   {
     id: "burg",
-    area: "CBD",
-    size: "1078 m²",
-    title: "Burg Street Residential",
+    area: "جردن",
+    size: "۱۶۰ متر",
+    title: "آپارتمان بازسازی‌شده جردن",
     status: "Leased",
-    image: "/assets/images/deal-burg-street.webp",
+    image: "/images/landing/features/archive.jpg",
   },
   {
     id: "wembley",
-    area: "Gardens",
-    title: "Wembley Square Retail",
+    area: "سعادت‌آباد",
+    title: "واحد سعادت‌آباد فاز ۱",
     status: "Leased",
     image: "/assets/images/deal-wembley.webp",
   },
@@ -108,58 +166,58 @@ export const DEALS: Deal[] = [
 
 export const LAWS: Law[] = [
   {
-    title: "A deal that is 99% done is not done.",
-    text: "That 1% is everything.",
+    title: "معامله‌ای که ۹۹٪ جلو رفته، هنوز تمام نشده است.",
+    text: "همان ۱٪ باقی‌مانده، همه چیز را می‌سازد.",
   },
   {
-    title: "The Sea Point investor and Salt River Investor are not the same person.",
-    text: "Strategy changes with the street.",
+    title: "سرمایه‌گذار نیاوران با سرمایه‌گذار شهرری یکی نیست.",
+    text: "استراتژی با محله عوض می‌شود.",
   },
   {
-    title: "Your broker should know the zoning, the yield and the exit.",
-    text: "Not just the coffee shops nearby.",
+    title: "مشاور شما باید کاربری، بازده و مسیر خروج را بداند.",
+    text: "نه فقط کافه و ویوی اطراف.",
   },
   {
-    title: "If you have to lean out the window to see the mountain, it’s not a mountain view.",
-    text: "A good view should not require imagination.",
+    title: "اگر برای دیدن منظره باید از پنجره خم شوید، منظره نیست.",
+    text: "دید خوب نباید به خیال نیاز داشته باشد.",
   },
   {
-    title: "Client matters are not public matters.",
-    text: "Discretion is part of the service.",
+    title: "امور موکل، امور عمومی نیست.",
+    text: "محرمانگی بخشی از خدمات است.",
   },
   {
-    title: "If the lease is not understood, the asset is not understood.",
-    text: "The real value is written in the fine print.",
+    title: "اگر قرارداد را نفهمیده‌اید، ملک را نفهمیده‌اید.",
+    text: "ارزش واقعی در جزئیات نوشته شده است.",
   },
   {
-    title: "The most expensive mistake is rushing.",
-    text: "The second most expensive is hesitating.",
+    title: "گران‌ترین اشتباه، عجله است.",
+    text: "دومین اشتباه گران، تردید بیش از حد است.",
   },
   {
-    title: "Trust makes the deal.",
-    text: "The contract protects it.",
+    title: "اعتماد معامله را می‌سازد.",
+    text: "قرارداد از آن محافظت می‌کند.",
   },
   {
-    title: "Most deals don’t fail on price.",
-    text: "They fail on expectations.",
+    title: "بیشتر معاملات روی قیمت نمی‌شکنند.",
+    text: "روی انتظارهای ناهم‌خوان می‌شکنند.",
   },
   {
-    title: "“Not in a rush” usually means “Not at that price.”",
-    text: "Timing often has a number attached.",
+    title: "«عجله‌ای نیست» معمولاً یعنی «به آن قیمت نه.»",
+    text: "زمان‌بندی اغلب عدد دارد.",
   },
   {
-    title: "A comp without context is just gossip.",
-    text: "Numbers need neighbourhoods.",
+    title: "معاملهٔ هم‌تراز بدون زمینه، فقط شایعه است.",
+    text: "عدد بدون محله معنا ندارد.",
   },
   {
-    title: "Never make the brochure prettier than the building.",
-    text: "Reality always wins the inspection.",
+    title: "هرگز بروشور را از خود ملک زیباتر نکنید.",
+    text: "بازدید حضوری همیشه برنده است.",
   },
 ];
 
 export const OFF_MARKET_CTA = {
-  title: "We don’t list our (thousands of) properties on purpose.",
-  body: "You won’t see them all on Property24, and that’s by design. Portals are useful. We use them too. But many of our opportunities are off-market or privately shared. Tell us what you’re looking for and we’ll show you more.",
-  cta: { href: "/contact", label: "Get in touch" },
-  image: "/assets/images/full-bleed.webp",
+  title: "هزاران فرصت را عمداً در پورتال‌ها منتشر نمی‌کنیم.",
+  body: "همه چیز را در آگهی‌های عمومی نمی‌بینید؛ و این طراحی ماست. پورتال‌ها مفیدند و ما هم از آن‌ها استفاده می‌کنیم. اما بسیاری از فرصت‌های ما آف‌مارکت یا به‌صورت خصوصی معرفی می‌شوند. بگویید دنبال چه هستید تا بیشتر نشان‌تان دهیم.",
+  cta: { href: "/contact", label: "درخواست دسترسی اختصاصی" },
+  image: "/images/landing/hero/side.jpg",
 };
