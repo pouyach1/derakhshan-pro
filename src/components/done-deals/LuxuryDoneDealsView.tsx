@@ -63,61 +63,61 @@ const DEALS = [
   {
     id: "fershteh-duplex",
     category: "penthouse" as DealCategory,
-    title: "پنت‌هاوس دوبلکس ۸۰۰ متری فرشته",
+    title: "دپارتمان درخشان",
     image:
       "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1600&q=80",
     details: ["۶ خواب", "استخر اختصاصی", "معامله‌شده در ۱۴۰۲"],
-    location: "فرشته",
+    location: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
     valueLabel: "Luxury Penthouse",
   },
   {
     id: "niavaran-tower",
     category: "penthouse" as DealCategory,
-    title: "برج‌باغ لوکس ۱۲ طبقه نیاوران",
+    title: "دپارتمان درخشان",
     image:
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
     details: ["۳۵۰ متر", "تراس گاردن", "معامله‌شده در ۱۴۰۲"],
-    location: "نیاوران",
+    location: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
     valueLabel: "Modern Glass Tower",
   },
   {
     id: "lavasan-villa",
     category: "villa" as DealCategory,
-    title: "ویلای مدرن ۱۰۰۰ متری لواسان",
+    title: "دپارتمان درخشان",
     image:
       "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=80",
     details: ["فرنیش کامل", "دید ۳۶۰ درجه", "معامله‌شده در ۱۴۰۳"],
-    location: "لواسان",
+    location: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
     valueLabel: "Forest Villa Architecture",
   },
   {
     id: "elahieh-commercial",
     category: "commercial" as DealCategory,
-    title: "مجتمع تجاری اداری الهیه",
+    title: "دپارتمان درخشان",
     image:
       "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80",
     details: ["۲۰ واحد تجاری", "معامله یکجا", "معامله‌شده در ۱۴۰۳"],
-    location: "الهیه",
+    location: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
     valueLabel: "Executive Commercial Complex",
   },
   {
     id: "zaferanieh-minimal",
     category: "penthouse" as DealCategory,
-    title: "پنت‌هاوس مینیمال ۴۵۰ متری زعفرانیه",
+    title: "دپارتمان درخشان",
     image:
       "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1600&q=80",
     details: ["پاگرد اختصاصی", "۴ پارکینگ", "معامله‌شده در ۱۴۰۳"],
-    location: "زعفرانیه",
+    location: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
     valueLabel: "Minimalist Interior Lounge",
   },
   {
     id: "mahmoudieh-mansion",
     category: "diplomatic" as DealCategory,
-    title: "عمارت کلاسیک ۵۰۰ متری محمودیه",
+    title: "دپارتمان درخشان",
     image:
       "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1600&q=80",
     details: ["معماری اصیل", "حیاط مشجر", "معامله‌شده در ۱۴۰۳"],
-    location: "محمودیه",
+    location: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
     valueLabel: "Classical Estate",
   },
 ] as const;
@@ -130,22 +130,22 @@ const TIMELINE = [
   },
   {
     year: "۱۴۰۲",
-    title: "رکورد گران‌ترین پنت‌هاوس فرشته",
+    title: "دپارتمان درخشان",
     body: "بستن معامله دوبلکس ۸۰۰ متری با کارشناسی کامل سند و تحویل بدون حاشیه.",
   },
   {
     year: "۱۴۰۲",
-    title: "پورتفوی برج‌باغ نیاوران",
+    title: "دپارتمان درخشان",
     body: "انتقال مالکیت واحدهای منتخب برج‌باغ با ساختار حقوقی چندلایه.",
   },
   {
     year: "۱۴۰۳",
-    title: "معامله یکجای مجتمع الهیه",
+    title: "دپارتمان درخشان",
     body: "خرید یکجای ۲۰ واحد تجاری برای سرمایه‌گذار نهادی در کمتر از سه هفته.",
   },
   {
     year: "۱۴۰۳",
-    title: "پرونده‌های دیپلماتیک محمودیه",
+    title: "دپارتمان درخشان",
     body: "تکمیل عمارت کلاسیک با قرارداد دوزبانه و محرمانگی کامل هویت طرفین.",
   },
 ] as const;
@@ -161,12 +161,12 @@ const TESTIMONIALS = [
   {
     quote:
       "سرعت بستن معامله شگفت‌انگیز بود؛ بدون افشای هویت و با دقت حقوقی کامل.",
-    name: "مالک پنت‌هاوس فرشته",
+    name: "مالک دپارتمان درخشان",
     role: "فروشنده · پرونده ۱۴۰۲",
   },
   {
     quote:
-      "برای خرید ویلای لواسان همه چیز محرمانه و حرفه‌ای پیش رفت؛ از کارشناسی تا انتقال سند.",
+      "برای خرید دپارتمان درخشان همه چیز محرمانه و حرفه‌ای پیش رفت؛ از کارشناسی تا انتقال سند.",
     name: "خریدار بین‌المللی",
     role: "خریدار · پرونده ۱۴۰۳",
   },
@@ -174,7 +174,7 @@ const TESTIMONIALS = [
     quote:
       "معامله یکجای مجتمع اداری را در زمانی بستیم که بازار هنوز در حال مذاکره بود.",
     name: "مدیر سرمایه‌گذاری",
-    role: "خریدار نهادی · الهیه",
+    role: "خریدار نهادی · مشکین دشت",
   },
 ] as const;
 
