@@ -9,9 +9,9 @@ import { AuthField, PasswordField } from "@/components/auth/AuthFields";
 import SocialButtons from "@/components/auth/SocialButtons";
 import {
   ROLE_LABELS,
-  homeForRole,
   isValidIdentifier,
   lookupRole,
+  postAuthPath,
   setClientSession,
   toSession,
   verifyCredentials,
@@ -65,9 +65,10 @@ export default function LoginForm() {
         );
         return;
       }
-      setClientSession(toSession(user));
+      const session = toSession(user);
+      setClientSession(session);
       void remember;
-      router.replace(homeForRole(user.role));
+      router.replace(postAuthPath(session));
       router.refresh();
     }, 700);
   }

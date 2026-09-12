@@ -9,15 +9,60 @@ import {
 
 export const AUTH_COOKIE = "derakhshan_auth";
 
+export type DealIntent = "buy" | "rent" | "invest";
+
+export type ClientProfile = {
+  fullName: string;
+  intent: DealIntent;
+  neighborhoods: string[];
+  budgetMin: number;
+  budgetMax: number;
+  areaMin: number;
+  areaMax: number;
+  bedrooms: number;
+  hasElevator: boolean;
+  hasParking: boolean;
+};
+
 export type AuthSession = {
   id: string;
   phone: string;
   name: string;
   role: UserRole;
   agentId?: string;
+  /** Clients must finish CRM onboarding before browsing as a known profile. */
+  onboardingComplete?: boolean;
+  clientProfile?: ClientProfile;
 };
 
 export { ROLE_LABELS, ROLE_HOME, type UserRole, type AuthUser };
+
+export const DEAL_INTENT_LABELS: Record<DealIntent, string> = {
+  buy: "خرید",
+  rent: "رهن و اجاره",
+  invest: "سرمایه‌گذاری",
+};
+
+export const NEIGHBORHOOD_OPTIONS = [
+  "نیاوران",
+  "فرشته",
+  "زعفرانیه",
+  "الهیه",
+  "جردن",
+  "ونک",
+  "سعادت‌آباد",
+  "شهرک غرب",
+  "لواسان",
+  "اقدسیه",
+] as const;
+
+export const BUDGET_PRESETS = [
+  { label: "تا ۱۰ میلیارد", min: 0, max: 10_000_000_000 },
+  { label: "۱۰–۲۰ میلیارد", min: 10_000_000_000, max: 20_000_000_000 },
+  { label: "۲۰–۴۰ میلیارد", min: 20_000_000_000, max: 40_000_000_000 },
+  { label: "۴۰–۸۰ میلیارد", min: 40_000_000_000, max: 80_000_000_000 },
+  { label: "بیش از ۸۰ میلیارد", min: 80_000_000_000, max: 200_000_000_000 },
+] as const;
 
 export function normalizePhone(raw: string): string {
   const persian = "۰۱۲۳۴۵۶۷۸۹";
@@ -69,7 +114,7 @@ export function resolveUser(identifier: string): AuthUser {
     id: `client-${value}`,
     phone: isEmail ? "09000000000" : value,
     email: isEmail ? value : undefined,
-    name: "Guest User",
+    name: "کاربر مهمان",
     role: "client",
   };
 }
@@ -89,6 +134,28 @@ export function toSession(user: AuthUser): AuthSession {
     name: user.name,
     role: user.role,
     agentId: user.agentId,
+    onboardingComplete: user.role !== "client",
+  };
+}
+
+export function needsClientOnboarding(session: AuthSession | null | undefined): boolean {
+  return Boolean(session && session.role === "client" && !session.onboardingComplete);
+}
+
+export function postAuthPath(session: AuthSession): string {
+  if (needsClientOnboarding(session)) return "/client/onboarding";
+  return ROLE_HOME[session.role];
+}
+
+export function completeClientOnboarding(
+  session: AuthSession,
+  profile: ClientProfile,
+): AuthSession {
+  return {
+    ...session,
+    name: profile.fullName.trim() || session.name,
+    onboardingComplete: true,
+    clientProfile: profile,
   };
 }
 
@@ -131,4 +198,12 @@ export function readClientSession(): AuthSession | null {
   if (typeof document === "undefined") return null;
   const match = document.cookie.match(new RegExp(`(?:^|; )${AUTH_COOKIE}=([^;]*)`));
   return decodeSession(match?.[1] ? decodeURIComponent(match[1]) : null);
+}
+
+export function displayNameForSession(session: AuthSession): string {
+  if (session.clientProfile?.fullName) return session.clientProfile.fullName;
+  if (session.name && session.name !== "Guest User" && session.name !== "کاربر مهمان") {
+    return session.name;
+  }
+  return ROLE_LABELS[session.role];
 }
