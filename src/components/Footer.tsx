@@ -219,10 +219,10 @@ export default function Footer() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#00F0FF] opacity-70" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-[#00F0FF]" />
               </span>
-              دفتر مرکزی نیاوران • آماده پاسخگویی به متقاضیان VIP
+              دفتر مرکزی مشکین دشت • آماده پاسخگویی به متقاضیان VIP
             </div>
             <p className="text-sm leading-7 text-slate-300">
-              تهران، نیاوران، خیابان فرشته، برج اداری درخشان، طبقه اختصاصی ۱۲
+              مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش
             </p>
             <p className="text-xs text-slate-500">
               {SITE.address.line1} · {SITE.phone} · {SITE.email}
@@ -290,7 +290,7 @@ export default function Footer() {
         <section className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <p className="mb-4 text-sm font-bold tracking-wide text-sky-300">
-              دپارتمان املاک
+              دپارتمان درخشان
             </p>
             <ul className="space-y-3">
               {PROPERTY_LINKS.map((item) => (
@@ -369,7 +369,7 @@ export default function Footer() {
         <section className="flex flex-col gap-4 border-t border-white/10 pt-8 md:flex-row md:items-center md:justify-between">
           <div className="space-y-2">
             <p className="text-xs leading-6 text-slate-400 md:text-sm">
-              تمامی حقوق مادی و معنوی متعلق به دپارتمان املاک درخشان است © ۲۰۲۶
+              تمامی حقوق مادی و معنوی متعلق به دپارتمان درخشان است © ۲۰۲۶
             </p>
             <p className="inline-flex items-center gap-2 text-[11px] text-slate-500">
               <ShieldCheck className="h-3.5 w-3.5 text-sky-400" />

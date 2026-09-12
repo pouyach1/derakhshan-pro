@@ -60,8 +60,8 @@ const AGENT_DASHBOARD: Record<string, AgentDashboardData> = {
     listings: [
       {
         id: "al1",
-        title: "پنت‌هاوس نیاوران",
-        location: "تهران · نیاوران",
+        title: "دپارتمان درخشان",
+        location: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
         price: "۴۸ میلیارد",
         views: 2140,
         status: "published",
@@ -69,8 +69,8 @@ const AGENT_DASHBOARD: Record<string, AgentDashboardData> = {
       },
       {
         id: "al2",
-        title: "ویلای لواسان",
-        location: "لواسان · جاده دماوند",
+        title: "دپارتمان درخشان",
+        location: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
         price: "۳۲ میلیارد",
         views: 1680,
         status: "negotiation",
@@ -78,8 +78,8 @@ const AGENT_DASHBOARD: Record<string, AgentDashboardData> = {
       },
       {
         id: "al3",
-        title: "آپارتمان فرشته",
-        location: "تهران · فرشته",
+        title: "دپارتمان درخشان",
+        location: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
         price: "۱۸ میلیارد",
         views: 980,
         status: "published",
@@ -87,8 +87,8 @@ const AGENT_DASHBOARD: Record<string, AgentDashboardData> = {
       },
       {
         id: "al4",
-        title: "دفتر ونک",
-        location: "تهران · ونک",
+        title: "دپارتمان درخشان",
+        location: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
         price: "۱۲ میلیارد",
         views: 640,
         status: "draft",

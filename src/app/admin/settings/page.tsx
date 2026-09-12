@@ -76,7 +76,7 @@ export default function SettingsPage() {
             {tab === "site" ? (
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="نام برند">
-                  <input className={inputClass} defaultValue="درخشان پرو" />
+                  <input className={inputClass} defaultValue="دپارتمان درخشان" />
                 </Field>
                 <Field label="دامنه عمومی">
                   <input className={inputClass} defaultValue="https://derakhshan.ir" />
@@ -95,7 +95,7 @@ export default function SettingsPage() {
                   </select>
                 </Field>
                 <Field label="آدرس دفتر" className="sm:col-span-2">
-                  <input className={inputClass} defaultValue="تهران، ونک، خیابان خدامی، پلاک ۱۲" />
+                  <input className={inputClass} defaultValue="مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش" />
                 </Field>
               </div>
             ) : null}

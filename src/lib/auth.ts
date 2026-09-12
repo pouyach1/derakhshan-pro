@@ -44,16 +44,8 @@ export const DEAL_INTENT_LABELS: Record<DealIntent, string> = {
 };
 
 export const NEIGHBORHOOD_OPTIONS = [
-  "نیاوران",
-  "فرشته",
-  "زعفرانیه",
-  "الهیه",
-  "جردن",
-  "ونک",
-  "سعادت‌آباد",
-  "شهرک غرب",
-  "لواسان",
-  "اقدسیه",
+  "مشکین دشت",
+  "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
 ] as const;
 
 export const BUDGET_PRESETS = [

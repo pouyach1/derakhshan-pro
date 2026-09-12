@@ -1,6 +1,6 @@
 export const SITE = {
   name: "Derakhshan Properties",
-  nameFa: "درخشان پرو",
+  nameFa: "دپارتمان درخشان",
   brandEn: "Derakhshan Properties",
   tagline: "Luxury Residences & Investment",
   taglineFa: "مرجع تخصصی املاک و پنت‌هاوس‌های لوکس",
@@ -10,11 +10,11 @@ export const SITE = {
   email: "hello@derakhshan.pro",
   phone: "۰۲۱-۹۱۰۰۰۰۰۰",
   address: {
-    line1: "نیاوران، خیابان یاسر",
-    line2: "تهران",
-    region: "تهران",
-    city: "تهران",
-    postal: "۱۹۷۸۷",
+    line1: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
+    line2: "مشکین دشت",
+    region: "البرز",
+    city: "مشکین دشت",
+    postal: "۳۱۷۷۶",
   },
   social: {
     linkedin: "https://www.linkedin.com/company/derakhshan-properties",

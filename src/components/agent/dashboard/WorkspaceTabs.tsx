@@ -122,7 +122,7 @@ function TodayPanel({ tasks }: { tasks: AgentTask[] }) {
     {
       id: "seed-note",
       at: "امروز · ۰۹:۱۵",
-      text: "تماس صبحگاهی با مالک فرشته — آمادگی بازدید ساعت ۱۰:۳۰ تأیید شد.",
+      text: "تماس صبحگاهی با مالک دپارتمان درخشان — آمادگی بازدید ساعت ۱۰:۳۰ تأیید شد.",
     },
   ]);
   const [draft, setDraft] = useState("");
@@ -227,7 +227,7 @@ function TodayPanel({ tasks }: { tasks: AgentTask[] }) {
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           rows={4}
-          placeholder="مثلاً: تماس با خریدار نیاوران — درخواست تخفیف ۳٪ و بازدید مجدد..."
+          placeholder="مثلاً: تماس با خریدار دپارتمان درخشان — درخواست تخفیف ۳٪ و بازدید مجدد..."
           className="w-full resize-none rounded-2xl border border-slate-200 bg-[#F1EFEA]/60 px-3.5 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
         />
         <button
@@ -475,7 +475,7 @@ function ClientsPanel({
 
 function ToolsPanel({ commissionRate }: { commissionRate: number }) {
   const [priceInput, setPriceInput] = useState("18000000000");
-  const [dealTitle, setDealTitle] = useState("پنت‌هاوس نیاوران");
+  const [dealTitle, setDealTitle] = useState("دپارتمان درخشان");
   const [buyer, setBuyer] = useState("علی رضایی");
   const [seller, setSeller] = useState("مالک محترم");
   const [generated, setGenerated] = useState("");

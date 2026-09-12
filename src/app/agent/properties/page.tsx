@@ -359,7 +359,7 @@ export default function AgentPropertiesPage() {
                             value={draft.title}
                             onChange={(e) => setDraft((d) => ({ ...d, title: e.target.value }))}
                             className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
-                            placeholder="مثلاً پنت‌هاوس نیاوران"
+                            placeholder="مثلاً دپارتمان درخشان"
                           />
                         </label>
                         <label className="block text-sm text-slate-600">

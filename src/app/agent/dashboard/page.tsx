@@ -67,7 +67,7 @@ export default function AgentDashboardPage() {
       >
         <p className="text-xs font-medium text-amber-800">نکته VIP دفتر</p>
         <h2 className="mt-1 text-lg font-semibold text-slate-900 sm:text-xl">
-          تمرکز این هفته: بستن مذاکره‌های نیاوران و لواسان
+          تمرکز این هفته: بستن مذاکره‌های دپارتمان درخشان
         </h2>
         <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">
           دو فایل در وضعیت مذاکره ظرفیت کمیسیون قابل‌توجهی دارند. پیشنهاد می‌شود قبل از پایان هفته،
