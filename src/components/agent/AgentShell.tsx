@@ -3,11 +3,23 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Building2, LayoutDashboard, LogOut } from "lucide-react";
+import {
+  Building2,
+  CalendarDays,
+  LayoutDashboard,
+  LogOut,
+  Home,
+  Users,
+} from "lucide-react";
 import { clearClientSession } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
-const nav = [{ href: "/agent/dashboard", label: "داشبورد", icon: LayoutDashboard }];
+const nav = [
+  { href: "/agent/dashboard", label: "داشبورد", icon: LayoutDashboard },
+  { href: "/agent/properties", label: "املاک من", icon: Home },
+  { href: "/agent/clients", label: "مشتریان", icon: Users },
+  { href: "/agent/schedule", label: "بازدیدها", icon: CalendarDays },
+];
 
 export default function AgentShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -20,22 +32,27 @@ export default function AgentShell({ children }: { children: React.ReactNode }) 
   }
 
   return (
-    <div dir="rtl" lang="fa" className="min-h-dvh bg-admin-canvas font-vazirmatn text-slate-900 antialiased">
-      <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-admin-canvas/90 backdrop-blur-md">
-        <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-4 px-4 py-3 sm:px-6">
+    <div
+      dir="rtl"
+      lang="fa"
+      className="min-h-dvh bg-[#F1EFEA] font-vazirmatn text-slate-900 antialiased"
+    >
+      <header className="sticky top-0 z-40 border-b border-slate-200/60 bg-white/70 backdrop-blur-md">
+        <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-admin-navy text-white shadow-sm">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-sm">
               <Building2 className="h-5 w-5" />
             </span>
             <div>
-              <p className="text-sm font-semibold text-admin-navy">پنل مشاور</p>
-              <p className="text-xs text-slate-500">درخشان پرو</p>
+              <p className="text-sm font-semibold text-slate-900">پنل مشاور</p>
+              <p className="text-xs text-slate-500">CRM اختصاصی · درخشان پرو</p>
             </div>
           </div>
 
-          <nav className="flex items-center gap-1">
+          <nav className="flex flex-wrap items-center gap-1.5">
             {nav.map((item) => {
-              const active = pathname.startsWith(item.href);
+              const active =
+                pathname === item.href || pathname.startsWith(`${item.href}/`);
               return (
                 <Link
                   key={item.href}
@@ -43,22 +60,22 @@ export default function AgentShell({ children }: { children: React.ReactNode }) 
                   className={cn(
                     "inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-sm transition",
                     active
-                      ? "bg-admin-navy text-white"
-                      : "bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50",
+                      ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/25"
+                      : "bg-white/80 text-slate-600 ring-1 ring-slate-200/60 hover:bg-white hover:text-slate-900",
                   )}
                 >
                   <item.icon className="h-4 w-4" />
-                  {item.label}
+                  <span className="hidden sm:inline">{item.label}</span>
                 </Link>
               );
             })}
             <button
               type="button"
               onClick={logout}
-              className="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-2 text-sm text-slate-600 ring-1 ring-slate-200 transition hover:bg-rose-50 hover:text-rose-700 hover:ring-rose-200"
+              className="inline-flex items-center gap-2 rounded-full bg-white/80 px-3.5 py-2 text-sm text-slate-600 ring-1 ring-slate-200/60 transition hover:bg-rose-50 hover:text-rose-700 hover:ring-rose-200"
             >
               <LogOut className="h-4 w-4" />
-              خروج
+              <span className="hidden sm:inline">خروج</span>
             </button>
           </nav>
         </div>
@@ -67,10 +84,10 @@ export default function AgentShell({ children }: { children: React.ReactNode }) 
       <AnimatePresence mode="wait">
         <motion.main
           key={pathname}
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
           className="mx-auto max-w-[1200px] px-4 py-6 sm:px-6"
         >
           {children}

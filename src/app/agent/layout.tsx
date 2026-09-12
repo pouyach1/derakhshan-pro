@@ -10,7 +10,7 @@ const vazirmatn = Vazirmatn({
 
 export const metadata: Metadata = {
   title: "پنل مشاور | درخشان پرو",
-  description: "مدیریت آگهی‌ها، بازدیدها و معاملات شخصی مشاور",
+  description: "CRM اختصاصی مشاور — املاک، مشتریان و بازدیدهای شخصی",
 };
 
 export default function AgentLayout({ children }: { children: React.ReactNode }) {
