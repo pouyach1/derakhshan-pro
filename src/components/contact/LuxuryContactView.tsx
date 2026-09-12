@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
@@ -7,10 +8,8 @@ import {
   CalendarClock,
   CheckCircle2,
   ChevronDown,
-  ClipboardPen,
   Clock3,
-  FileText,
-  Headphones,
+  FileSearch,
   MapPin,
   MessageCircle,
   Navigation,
@@ -22,57 +21,44 @@ import {
 } from "lucide-react";
 import { SITE } from "@/config/site";
 
-type FormTab = "consult" | "visit" | "appraisal";
+type FormTab = "vip" | "appraisal" | "legal";
 type FormStatus = "idle" | "loading" | "success";
 
+const spring = { type: "spring" as const, stiffness: 100, damping: 20 };
+
 const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
+  hidden: { opacity: 0, y: 48 },
   show: { opacity: 1, y: 0 },
 };
 
 const glass =
-  "rounded-[2rem] border border-slate-200/80 bg-white/70 shadow-2xl shadow-slate-200/50 backdrop-blur-xl";
+  "rounded-[2rem] border border-sky-100/50 bg-white/40 shadow-[0_30px_80px_-40px_rgba(11,19,43,0.35)] backdrop-blur-2xl";
 
-const CONTACT_CARDS = [
+const GALLERY = [
   {
-    id: "sales",
-    title: "مشاوره و فروش",
-    subtitle: "Sales & Investment",
-    description:
-      "مشاوره سرمایه‌گذاری و خرید/فروش املاک لوکس با تضمین پاسخگویی VIP در کمتر از ۱۵ دقیقه.",
-    icon: Headphones,
-    href: `tel:${SITE.phone.replace(/\s/g, "")}`,
-    cta: "تماس مستقیم با مشاور ارشد",
-    meta: "پاسخگویی VIP · کمتر از ۱۵ دقیقه",
+    src: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1600&q=80",
+    alt: "معماری پنت‌هاوس مدرن",
+    tag: "دفتر مرکزی فرشته",
+    className: "md:col-span-2 md:row-span-2 min-h-[280px] md:min-h-[520px]",
   },
   {
-    id: "legal",
-    title: "امور حقوقی و قراردادها",
-    subtitle: "Legal & Contracts",
-    description:
-      "دسترسی مستقیم به کارشناسان حقوقی برای بررسی قرارداد، استعلام سند و تأیید مدارک معامله.",
-    icon: Scale,
-    href: `mailto:${SITE.email}`,
-    cta: "ارتباط با تیم حقوقی",
-    meta: "بررسی تخصصی قرارداد و سند",
+    src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
+    alt: "طراحی داخلی مینیمال",
+    tag: "سالن کنفرانس VIP",
+    className: "min-h-[220px] md:min-h-[250px]",
   },
   {
-    id: "hq",
-    title: "دفتر مرکزی و مدیریت",
-    subtitle: "Headquarters & Admin",
-    description:
-      "هماهنگی جلسات مدیریتی، پیگیری پرونده‌های ویژه و ارتباط مستقیم با دفتر مرکزی.",
-    icon: Building2,
-    href: `tel:${SITE.phone.replace(/\s/g, "")}`,
-    cta: "تماس با دفتر مرکزی",
-    meta: "شنبه تا پنجشنبه · ۹ تا ۱۸",
+    src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+    alt: "فضای مشاوره اجرایی",
+    tag: "لانژ مشاوره اختصاصی",
+    className: "min-h-[220px] md:min-h-[250px]",
   },
 ] as const;
 
-const FORM_TABS: { id: FormTab; label: string; icon: typeof ClipboardPen }[] = [
-  { id: "consult", label: "درخواست مشاوره خرید/فروش", icon: ClipboardPen },
-  { id: "visit", label: "رزرو جلسات حضوری", icon: CalendarClock },
-  { id: "appraisal", label: "درخواست کارشناسی ملک", icon: FileText },
+const FORM_TABS: { id: FormTab; label: string; icon: typeof CalendarClock }[] = [
+  { id: "vip", label: "جلسه حضوری VIP", icon: CalendarClock },
+  { id: "appraisal", label: "کارشناسی برج و ملک", icon: FileSearch },
+  { id: "legal", label: "مشاوره حقوقی", icon: Scale },
 ];
 
 const BUDGET_OPTIONS = [
@@ -80,77 +66,175 @@ const BUDGET_OPTIONS = [
   "۲۰ تا ۵۰ میلیارد تومان",
   "۵۰ تا ۱۰۰ میلیارد تومان",
   "بیش از ۱۰۰ میلیارد تومان",
-  "مشاوره سرمایه‌گذاری بدون محدودیت بودجه",
+  "پورتفوی سرمایه‌گذاری بدون سقف",
 ];
 
-const NAV_ACTIONS = [
+const HUB_CARDS = [
   {
-    id: "waze",
+    id: "phone",
+    title: "خط مستقیم VIP",
+    detail: SITE.phone,
+    href: `tel:${SITE.phone.replace(/\s/g, "")}`,
+    icon: Phone,
+    meta: "پاسخگویی فوری در ساعات کاری",
+  },
+  {
+    id: "maps",
+    title: "مسیریابی دفتر مرکزی",
+    detail: `${SITE.address.line1} · ${SITE.address.city}`,
+    href: "https://www.google.com/maps/search/?api=1&query=%D9%86%DB%8C%D8%A7%D9%88%D8%B1%D8%A7%D9%86%20%D8%AE%DB%8C%D8%A7%D8%A8%D8%A7%D9%86%20%DB%8C%D8%A7%D8%B3%D8%B1",
+    icon: Navigation,
+    meta: "Google Maps · Waze · نشان",
+  },
+  {
+    id: "telegram",
+    title: "ارتباط تلگرام",
+    detail: "@derakhshanpro",
+    href: "https://t.me/derakhshanpro",
+    icon: MessageCircle,
+    meta: "پیام‌رسانی امن برای مشتریان خاص",
+  },
+  {
+    id: "hours",
+    title: "ساعات پذیرش",
+    detail: "شنبه تا پنجشنبه · ۹ تا ۱۸",
+    href: "#branch",
+    icon: Clock3,
+    meta: "جلسات مدیریتی با هماهنگی قبلی",
+  },
+] as const;
+
+const NAV_LINKS = [
+  {
     label: "Waze",
-    href: "https://waze.com/ul?q=%D9%86%DB%8C%D8%A7%D9%88%D8%B1%D8%A7%D9%86%20%D8%AE%DB%8C%D8%A7%D8%A8%D8%A7%D9%86%20%D9%81%D8%B1%D8%B4%D8%AA%D9%87&navigate=yes",
+    href: "https://waze.com/ul?q=%D9%86%DB%8C%D8%A7%D9%88%D8%B1%D8%A7%D9%86%20%DB%8C%D8%A7%D8%B3%D8%B1&navigate=yes",
   },
   {
-    id: "gmaps",
     label: "Google Maps",
-    href: "https://www.google.com/maps/search/?api=1&query=%D9%86%DB%8C%D8%A7%D9%88%D8%B1%D8%A7%D9%86%20%D8%AE%DB%8C%D8%A7%D8%A8%D8%A7%D9%86%20%D9%81%D8%B1%D8%B4%D8%AA%D9%87%20%D8%AA%D9%87%D8%B1%D8%A7%D9%86",
+    href: "https://www.google.com/maps/search/?api=1&query=%D9%86%DB%8C%D8%A7%D9%88%D8%B1%D8%A7%D9%86%20%D8%AE%DB%8C%D8%A7%D8%A8%D8%A7%D9%86%20%DB%8C%D8%A7%D8%B3%D8%B1",
   },
   {
-    id: "neshan",
     label: "نشان",
     href: "https://neshan.org/maps/@35.8048,51.4321,16.0z",
   },
   {
-    id: "call",
-    label: "تماس مستقیم",
+    label: "تماس",
     href: `tel:${SITE.phone.replace(/\s/g, "")}`,
   },
   {
-    id: "telegram",
     label: "تلگرام",
     href: "https://t.me/derakhshanpro",
   },
 ] as const;
 
-const FACILITIES = [
-  "پارکینگ اختصاصی مشتریان VIP",
-  "سالن کنفرانس و نشست‌های اختصاصی",
-  "پذیرایی لوکس و فضای انتظار خصوصی",
-  "اتاق نمایش فایل‌های منتخب",
+const ROUTE_STEPS = [
+  "ورود از خیابان یاسر به محوطه اختصاصی ساختمان",
+  "استفاده از پارکینگ VIP در طبقه منفی یک",
+  "ورود به لابی و اعلام نام به پذیرش اختصاصی",
+  "هدایت به سالن کنفرانس یا اتاق مشاوره",
 ];
 
 const STATS = [
-  { value: 1500, suffix: "+", label: "معامله موفق", display: "۱,۵۰۰+" },
-  { value: 99, suffix: "٪", label: "رضایت مشتریان", display: "۹۹٪" },
-  { value: 40, suffix: "+", label: "مشاور متخصص مناطق لوکس", display: "۴۰+" },
-  { value: 18, suffix: "", label: "سال تجربه در بازار تهران", display: "۱۸" },
+  {
+    value: 1.5,
+    decimals: 1,
+    suffix: "",
+    label: "میلیارد دلار ارزش سبد گردانی",
+    display: "۱.۵",
+  },
+  {
+    value: 100,
+    decimals: 0,
+    suffix: "٪",
+    label: "محرمانه بودن معاملات",
+    display: "۱۰۰٪",
+  },
+  {
+    value: 50,
+    decimals: 0,
+    suffix: "+",
+    label: "مشاور تراز اول کشوری",
+    display: "۵۰+",
+  },
+  {
+    value: 24,
+    decimals: 0,
+    suffix: "/۷",
+    label: "پاسخگویی اختصاصی",
+    display: "۲۴/۷",
+  },
 ];
 
 const FAQS = [
   {
-    q: "کارشناسی و ارزش‌گذاری ملک چگونه انجام می‌شود؟",
-    a: "پس از ثبت درخواست، کارشناس ارشد با هماهنگی شما از ملک بازدید می‌کند و گزارش قیمت‌گذاری مبتنی بر معاملات اخیر منطقه، موقعیت، و کیفیت ساخت ارائه می‌دهد.",
+    q: "فرآیند خریدهای غیرحضوری چگونه است؟",
+    a: "پس از احراز هویت دیجیتال، تور مجازی اختصاصی، بررسی حقوقی آنلاین و امضای قرارداد در بستر امن انجام می‌شود. نماینده حقوقی شما در تمام مراحل حضور دارد.",
   },
   {
-    q: "هزینه مشاوره حقوقی و بررسی قرارداد چقدر است؟",
-    a: "مشاوره اولیه حقوقی برای مشتریان VIP رایگان است. در صورت نیاز به بررسی کامل سند و قرارداد، تعرفه شفاف پیش از شروع کار اعلام می‌شود.",
+    q: "شرایط رزرو جلسه با مدیریت ارشد چیست؟",
+    a: "جلسات مدیریت ارشد برای پرتفوی‌های خاص و معاملات استراتژیک رزرو می‌شود. از طریق تب «جلسه حضوری VIP» درخواست دهید تا هماهنگ‌کننده زمان را تأیید کند.",
   },
   {
-    q: "ساعات بازدید حضوری از دفتر مرکزی چیست؟",
-    a: "دفتر مرکزی نیاوران از شنبه تا پنجشنبه ۹ تا ۱۸ پاسخگو است. رزرو جلسه حضوری از طریق فرم همین صفحه یا تماس تلفنی امکان‌پذیر است.",
+    q: "آیا کارشناسی برج و ملک شامل گزارش رسمی است؟",
+    a: "بله. گزارش کارشناسی شامل تحلیل مقایسه‌ای منطقه، کیفیت ساخت، نقدشوندگی و بازه قیمت پیشنهادی است و ظرف ۴۸ ساعت کاری ارائه می‌شود.",
   },
   {
-    q: "زمان پاسخگویی به درخواست‌های VIP چقدر است؟",
-    a: "درخواست‌های مشاوره خرید/فروش در ساعات کاری معمولاً کمتر از ۱۵ دقیقه و خارج از ساعات اداری در اولین فرصت روز بعد پیگیری می‌شوند.",
+    q: "محرمانگی اطلاعات مشتریان چگونه تضمین می‌شود؟",
+    a: "تمام پرونده‌ها در فضای امن داخلی نگه‌داری می‌شوند؛ دسترسی فقط برای تیم اختصاصی معامله فعال است و هیچ اطلاعات هویتی بدون مجوز شما منتشر نمی‌شود.",
   },
 ];
 
+function AmbientOrbs({ reduceMotion }: { reduceMotion: boolean | null }) {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <motion.div
+        className="absolute -right-24 -top-10 h-[28rem] w-[28rem] rounded-full bg-[#00F0FF]/25 blur-3xl"
+        animate={
+          reduceMotion
+            ? undefined
+            : {
+                x: [0, 40, -20, 0],
+                y: [0, 30, -10, 0],
+                scale: [1, 1.08, 0.96, 1],
+              }
+        }
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute left-[-8rem] top-[18%] h-[32rem] w-[32rem] rounded-full bg-sky-400/20 blur-3xl"
+        animate={
+          reduceMotion
+            ? undefined
+            : {
+                x: [0, -30, 20, 0],
+                y: [0, 40, 10, 0],
+                scale: [1, 0.94, 1.06, 1],
+              }
+        }
+        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute bottom-[10%] right-[20%] h-72 w-72 rounded-full bg-blue-600/15 blur-3xl"
+        animate={
+          reduceMotion
+            ? undefined
+            : { opacity: [0.45, 0.8, 0.45], scale: [1, 1.12, 1] }
+        }
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </div>
+  );
+}
+
 function AnimatedStat({
   target,
+  decimals,
   suffix,
   display,
   reduceMotion,
 }: {
   target: number;
+  decimals: number;
   suffix: string;
   display: string;
   reduceMotion: boolean | null;
@@ -162,24 +246,31 @@ function AnimatedStat({
       setValue(target);
       return;
     }
-
     let frame = 0;
-    const frames = 48;
+    const frames = 52;
     const id = window.setInterval(() => {
       frame += 1;
       const progress = Math.min(1, frame / frames);
       const eased = 1 - Math.pow(1 - progress, 3);
-      setValue(Math.round(target * eased));
+      setValue(Number((target * eased).toFixed(decimals)));
       if (progress >= 1) window.clearInterval(id);
     }, 28);
-
     return () => window.clearInterval(id);
-  }, [target, reduceMotion]);
+  }, [target, decimals, reduceMotion]);
 
   if (reduceMotion) return <>{display}</>;
+
+  const formatted =
+    decimals > 0
+      ? value.toLocaleString("fa-IR", {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        })
+      : Math.round(value).toLocaleString("fa-IR");
+
   return (
     <>
-      {value.toLocaleString("fa-IR")}
+      {formatted}
       {suffix}
     </>
   );
@@ -187,7 +278,7 @@ function AnimatedStat({
 
 export function LuxuryContactView() {
   const reduceMotion = useReducedMotion();
-  const [activeTab, setActiveTab] = useState<FormTab>("consult");
+  const [activeTab, setActiveTab] = useState<FormTab>("vip");
   const [status, setStatus] = useState<FormStatus>("idle");
   const [openFaq, setOpenFaq] = useState(0);
   const [form, setForm] = useState({
@@ -199,13 +290,13 @@ export function LuxuryContactView() {
   });
 
   const tabHint = useMemo(() => {
-    if (activeTab === "visit") {
-      return "زمان پیشنهادی جلسه حضوری را مشخص کنید تا هماهنگ‌کننده VIP با شما تماس بگیرد.";
-    }
     if (activeTab === "appraisal") {
-      return "جزئیات ملک و محل را در پیام بنویسید تا کارشناس ارزیابی زمان بازدید را اعلام کند.";
+      return "جزئیات برج یا ملک را بنویسید؛ کارشناس ارشد ظرف ۴۸ ساعت گزارش اولیه می‌دهد.";
     }
-    return "مشاور ارشد سرمایه‌گذاری ظرف کمتر از ۱۵ دقیقه با شما تماس خواهد گرفت.";
+    if (activeTab === "legal") {
+      return "موضوع حقوقی را شرح دهید تا تیم قراردادها زمان مشاوره اختصاصی را هماهنگ کند.";
+    }
+    return "زمان پیشنهادی جلسه حضوری VIP را مشخص کنید تا هماهنگ‌کننده تأیید کند.";
   }, [activeTab]);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -227,355 +318,486 @@ export function LuxuryContactView() {
   return (
     <div
       dir="rtl"
-      className="relative min-h-screen overflow-hidden bg-[#F1EFEA] font-vazirmatn text-slate-900"
+      className="relative min-h-screen overflow-hidden bg-[#F4F7F9] font-vazirmatn text-[#0B132B]"
     >
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -right-24 top-10 h-80 w-80 rounded-full bg-emerald-400/20 blur-3xl" />
-        <div className="absolute left-[-6rem] top-[28%] h-96 w-96 rounded-full bg-amber-300/25 blur-3xl" />
-        <div className="absolute bottom-20 right-1/3 h-72 w-72 rounded-full bg-emerald-600/10 blur-3xl" />
-      </div>
+      <AmbientOrbs reduceMotion={reduceMotion} />
 
-      <div className="rio-container relative z-10 space-y-16 pb-24 pt-28 md:space-y-24 md:pb-32 md:pt-36">
-        {/* A. Hero */}
-        <motion.section
-          initial="hidden"
-          animate="show"
-          variants={{
-            hidden: {},
-            show: {
-              transition: { staggerChildren: reduceMotion ? 0 : 0.12 },
-            },
-          }}
-          className="mx-auto max-w-4xl text-center"
-        >
+      {/* Section 1 — Cinematic Hero */}
+      <section className="relative isolate min-h-[88vh] overflow-hidden">
+        <div className="absolute inset-0">
+          <Image
+            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=80"
+            alt="نما معماری لوکس"
+            fill
+            priority
+            className="object-cover scale-105"
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0B132B] via-[#0B132B]/75 to-[#0B132B]/35" />
+          <div className="absolute inset-0 bg-gradient-to-l from-sky-500/20 via-transparent to-[#00F0FF]/10" />
+        </div>
+
+        <div className="rio-container relative z-10 flex min-h-[88vh] flex-col justify-end pb-20 pt-36 md:pb-28 md:pt-44">
           <motion.div
-            variants={fadeUp}
-            transition={{ duration: 0.55 }}
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-200/80 bg-white/70 px-4 py-2 text-sm text-emerald-800 shadow-lg shadow-emerald-100/60 backdrop-blur-xl"
+            initial="hidden"
+            animate="show"
+            variants={{
+              hidden: {},
+              show: {
+                transition: { staggerChildren: reduceMotion ? 0 : 0.12 },
+              },
+            }}
+            className="max-w-4xl"
           >
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
-            </span>
-            دفتر مرکزی هم‌اکنون فعال و پاسخگو است
-          </motion.div>
-
-          <motion.h1
-            variants={fadeUp}
-            transition={{ duration: 0.6 }}
-            className="text-4xl font-black leading-tight tracking-tight text-slate-900 md:text-6xl"
-          >
-            ارتباط با دپارتمان املاک درخشان
-          </motion.h1>
-
-          <motion.p
-            variants={fadeUp}
-            transition={{ duration: 0.6 }}
-            className="mx-auto mt-5 max-w-2xl text-base leading-8 text-slate-600 md:text-lg"
-          >
-            پشتیبانی اختصاصی مشتریان VIP و مشاوره معماری–سرمایه‌گذاری برای املاک
-            لوکس تهران؛ از اولین تماس تا امضای قرارداد، در کنار شما هستیم.
-          </motion.p>
-
-          <motion.div
-            variants={fadeUp}
-            transition={{ duration: 0.55 }}
-            className="mt-8 flex flex-wrap items-center justify-center gap-3"
-          >
-            <a
-              href={`tel:${SITE.phone.replace(/\s/g, "")}`}
-              className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-6 py-3 text-sm font-bold text-white shadow-xl shadow-emerald-600/25 transition hover:bg-emerald-500"
+            <motion.div
+              variants={fadeUp}
+              transition={spring}
+              className="mb-7 inline-flex items-center gap-3 rounded-full border border-sky-300/30 bg-white/10 px-4 py-2 text-sm text-sky-100 backdrop-blur-2xl"
             >
-              <Phone className="h-4 w-4" />
-              تماس فوری: {SITE.phone}
-            </a>
-            <a
-              href="#vip-form"
-              className="inline-flex items-center gap-2 rounded-full border border-slate-300/80 bg-white/80 px-6 py-3 text-sm font-bold text-slate-800 backdrop-blur-xl transition hover:border-emerald-300 hover:text-emerald-700"
-            >
-              <Sparkles className="h-4 w-4" />
-              رزرو مشاوره VIP
-            </a>
-          </motion.div>
-        </motion.section>
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#00F0FF] opacity-70" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#00F0FF] shadow-[0_0_18px_#00F0FF]" />
+              </span>
+              تیم پشتیبانی VIP - فعال و پاسخگوی آنلاین
+            </motion.div>
 
-        {/* B. Quick Contact Grid */}
+            <motion.h1
+              variants={fadeUp}
+              transition={spring}
+              className="text-4xl font-black leading-[1.15] tracking-tight text-white md:text-6xl lg:text-7xl"
+            >
+              ارتباط با سرآغاز معمارانه‌ای نو در املاک درخشان
+            </motion.h1>
+
+            <motion.p
+              variants={fadeUp}
+              transition={spring}
+              className="mt-6 max-w-2xl text-base leading-8 tracking-wide text-sky-50/85 md:text-lg"
+            >
+              تجربه‌ای سینمایی از ارتباط با دپارتمان لوکس؛ از مشاوره معماری و
+              سرمایه‌گذاری تا هماهنگی جلسات VIP و پشتیبانی حقوقی اختصاصی.
+            </motion.p>
+
+            <motion.div
+              variants={fadeUp}
+              transition={spring}
+              className="mt-10 flex flex-wrap gap-3"
+            >
+              <motion.a
+                href="#split-contact"
+                whileHover={
+                  reduceMotion ? undefined : { scale: 1.03, rotate: 0.5 }
+                }
+                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-l from-sky-500 to-[#00F0FF] px-7 py-3.5 text-sm font-bold text-[#0B132B] shadow-[0_20px_50px_-20px_rgba(0,240,255,0.8)]"
+              >
+                <Sparkles className="h-4 w-4" />
+                شروع ارتباط VIP
+              </motion.a>
+              <motion.a
+                href={`tel:${SITE.phone.replace(/\s/g, "")}`}
+                whileHover={
+                  reduceMotion ? undefined : { scale: 1.03, rotate: -0.5 }
+                }
+                className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-2xl"
+              >
+                <Phone className="h-4 w-4" />
+                {SITE.phone}
+              </motion.a>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      <div className="rio-container relative z-10 space-y-24 py-20 md:space-y-32 md:py-28">
+        {/* Section 2 — Gallery */}
         <motion.section
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: false, amount: 0.2 }}
           variants={{
             hidden: {},
             show: {
               transition: { staggerChildren: reduceMotion ? 0 : 0.1 },
             },
           }}
-          className="grid gap-5 md:grid-cols-3"
         >
-          {CONTACT_CARDS.map((card) => {
-            const Icon = card.icon;
-            return (
-              <motion.a
-                key={card.id}
-                href={card.href}
+          <motion.div
+            variants={fadeUp}
+            transition={spring}
+            className="mb-10 max-w-2xl"
+          >
+            <p className="text-sm font-semibold tracking-[0.2em] text-sky-500">
+              گالری معماری
+            </p>
+            <h2 className="mt-3 text-3xl font-black tracking-tight text-[#0B132B] md:text-5xl">
+              فضاهایی که برای ملاقات‌های خاص طراحی شده‌اند
+            </h2>
+          </motion.div>
+
+          <div className="grid gap-4 md:grid-cols-3 md:grid-rows-2">
+            {GALLERY.map((item) => (
+              <motion.article
+                key={item.src}
                 variants={fadeUp}
-                transition={{ duration: 0.5 }}
-                whileHover={reduceMotion ? undefined : { y: -8, scale: 1.015 }}
-                className={`${glass} group block p-7 transition`}
+                transition={spring}
+                whileHover={
+                  reduceMotion ? undefined : { scale: 1.03, rotate: 0.5 }
+                }
+                className={`group relative overflow-hidden rounded-[2rem] border border-sky-100/50 shadow-[0_30px_80px_-40px_rgba(11,19,43,0.4)] ${item.className}`}
               >
-                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-900 text-emerald-300 shadow-lg shadow-slate-900/20 transition group-hover:bg-emerald-600 group-hover:text-white">
-                  <Icon className="h-6 w-6" />
+                <Image
+                  src={item.src}
+                  alt={item.alt}
+                  fill
+                  className="object-cover transition duration-700 group-hover:scale-110"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0B132B]/80 via-[#0B132B]/10 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-5 opacity-0 transition duration-500 group-hover:opacity-100 md:p-6">
+                  <span className="inline-flex rounded-full border border-sky-100/40 bg-white/20 px-4 py-2 text-sm font-bold text-white backdrop-blur-2xl">
+                    {item.tag}
+                  </span>
                 </div>
-                <p className="text-xs font-semibold tracking-wide text-emerald-700">
-                  {card.subtitle}
-                </p>
-                <h2 className="mt-1 text-xl font-black text-slate-900">
-                  {card.title}
-                </h2>
-                <p className="mt-3 text-sm leading-7 text-slate-600">
-                  {card.description}
-                </p>
-                <div className="mt-6 flex items-center justify-between gap-3 border-t border-slate-200/80 pt-4">
-                  <span className="text-sm font-bold text-emerald-700">
-                    {card.cta}
-                  </span>
-                  <span className="text-[11px] text-slate-500">{card.meta}</span>
-                </div>
-              </motion.a>
-            );
-          })}
-        </motion.section>
-
-        {/* C. VIP Form */}
-        <motion.section
-          id="vip-form"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.55 }}
-          className={`${glass} relative overflow-hidden p-6 md:p-10`}
-        >
-          <div className="pointer-events-none absolute -left-16 top-0 h-56 w-56 rounded-full bg-emerald-400/15 blur-3xl" />
-          <div className="pointer-events-none absolute -right-10 bottom-0 h-48 w-48 rounded-full bg-amber-300/20 blur-3xl" />
-
-          <div className="relative">
-            <div className="mb-8 max-w-2xl">
-              <p className="text-sm font-semibold text-emerald-700">
-                فرم ارتباط VIP
-              </p>
-              <h2 className="mt-2 text-3xl font-black text-slate-900 md:text-4xl">
-                درخواست مشاوره و رزرو جلسه
-              </h2>
-              <p className="mt-3 text-sm leading-7 text-slate-600 md:text-base">
-                مسیر ارتباطی اختصاصی برای مشتریان ویژه؛ درخواست شما مستقیماً به
-                تیم مربوطه ارجاع می‌شود.
-              </p>
-            </div>
-
-            <div className="mb-8 flex flex-col gap-2 rounded-2xl bg-slate-900/5 p-2 md:flex-row">
-              {FORM_TABS.map((tab) => {
-                const Icon = tab.icon;
-                const active = activeTab === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`relative flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold transition ${
-                      active
-                        ? "text-white"
-                        : "text-slate-600 hover:text-slate-900"
-                    }`}
-                  >
-                    {active && (
-                      <motion.span
-                        layoutId="contact-tab-pill"
-                        className="absolute inset-0 rounded-xl bg-slate-900 shadow-lg"
-                        transition={{
-                          type: "spring",
-                          stiffness: 380,
-                          damping: 30,
-                        }}
-                      />
-                    )}
-                    <span className="relative z-10 flex items-center gap-2">
-                      <Icon className="h-4 w-4" />
-                      {tab.label}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-
-            <AnimatePresence mode="wait">
-              <motion.form
-                key={activeTab}
-                initial={reduceMotion ? false : { opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={reduceMotion ? undefined : { opacity: 0, y: -12 }}
-                transition={{ duration: 0.28 }}
-                onSubmit={onSubmit}
-                className="relative grid gap-5 md:grid-cols-2"
-              >
-                <p className="md:col-span-2 rounded-2xl border border-emerald-100 bg-emerald-50/70 px-4 py-3 text-sm text-emerald-900">
-                  {tabHint}
-                </p>
-
-                <label className="block space-y-2">
-                  <span className="text-sm font-bold text-slate-700">
-                    نام و نام خانوادگی
-                  </span>
-                  <input
-                    required
-                    value={form.name}
-                    onChange={(e) =>
-                      setForm((prev) => ({ ...prev, name: e.target.value }))
-                    }
-                    placeholder="مثلاً: آریا درخشان"
-                    className="w-full rounded-2xl border border-slate-200 bg-white/90 px-4 py-3.5 text-sm outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
-                  />
-                </label>
-
-                <label className="block space-y-2">
-                  <span className="text-sm font-bold text-slate-700">
-                    شماره تماس
-                  </span>
-                  <input
-                    required
-                    inputMode="tel"
-                    value={form.phone}
-                    onChange={(e) =>
-                      setForm((prev) => ({ ...prev, phone: e.target.value }))
-                    }
-                    placeholder="۰۹۱۲xxxxxxx"
-                    className="w-full rounded-2xl border border-slate-200 bg-white/90 px-4 py-3.5 text-sm outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
-                    dir="ltr"
-                  />
-                </label>
-
-                <label className="block space-y-2">
-                  <span className="text-sm font-bold text-slate-700">
-                    بازه بودجه
-                  </span>
-                  <select
-                    value={form.budget}
-                    onChange={(e) =>
-                      setForm((prev) => ({ ...prev, budget: e.target.value }))
-                    }
-                    className="w-full rounded-2xl border border-slate-200 bg-white/90 px-4 py-3.5 text-sm outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
-                  >
-                    {BUDGET_OPTIONS.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <label className="block space-y-2">
-                  <span className="text-sm font-bold text-slate-700">
-                    تاریخ و ساعت ترجیحی تماس
-                  </span>
-                  <input
-                    type="datetime-local"
-                    required
-                    value={form.datetime}
-                    onChange={(e) =>
-                      setForm((prev) => ({
-                        ...prev,
-                        datetime: e.target.value,
-                      }))
-                    }
-                    className="w-full rounded-2xl border border-slate-200 bg-white/90 px-4 py-3.5 text-sm outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
-                    dir="ltr"
-                  />
-                </label>
-
-                <label className="block space-y-2 md:col-span-2">
-                  <span className="text-sm font-bold text-slate-700">
-                    پیام تفصیلی
-                  </span>
-                  <textarea
-                    required
-                    rows={5}
-                    value={form.message}
-                    onChange={(e) =>
-                      setForm((prev) => ({ ...prev, message: e.target.value }))
-                    }
-                    placeholder="نوع ملک، محله موردنظر، زمان بازدید یا جزئیات کارشناسی را بنویسید..."
-                    className="w-full resize-none rounded-2xl border border-slate-200 bg-white/90 px-4 py-3.5 text-sm outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
-                  />
-                </label>
-
-                <div className="md:col-span-2">
-                  <button
-                    type="submit"
-                    disabled={status === "loading"}
-                    className="inline-flex min-w-[220px] items-center justify-center gap-2 rounded-full bg-emerald-600 px-8 py-4 text-sm font-bold text-white shadow-xl shadow-emerald-600/25 transition hover:bg-emerald-500 disabled:cursor-wait disabled:opacity-80"
-                  >
-                    {status === "loading" ? (
-                      <>
-                        <motion.span
-                          className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white"
-                          animate={{ rotate: 360 }}
-                          transition={{
-                            repeat: Infinity,
-                            duration: 0.8,
-                            ease: "linear",
-                          }}
-                        />
-                        در حال ارسال...
-                      </>
-                    ) : status === "success" ? (
-                      <>
-                        <CheckCircle2 className="h-4 w-4" />
-                        درخواست ثبت شد
-                      </>
-                    ) : (
-                      <>
-                        <Send className="h-4 w-4" />
-                        ارسال درخواست VIP
-                      </>
-                    )}
-                  </button>
-
-                  <AnimatePresence>
-                    {status === "success" && (
-                      <motion.p
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0 }}
-                        className="mt-4 text-sm font-semibold text-emerald-700"
-                      >
-                        درخواست شما با موفقیت ثبت شد. هماهنگ‌کننده VIP به‌زودی
-                        تماس می‌گیرد.
-                      </motion.p>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </motion.form>
-            </AnimatePresence>
+              </motion.article>
+            ))}
           </div>
         </motion.section>
 
-        {/* D. Location & Branch */}
+        {/* Section 3 — Split Contact */}
         <motion.section
-          initial={{ opacity: 0, y: 40 }}
+          id="split-contact"
+          initial={{ opacity: 0, y: 48 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.55 }}
+          viewport={{ once: false, amount: 0.15 }}
+          transition={spring}
           className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]"
         >
+          <div className={`${glass} relative overflow-hidden p-6 md:p-9`}>
+            <div className="pointer-events-none absolute -left-20 top-0 h-56 w-56 rounded-full bg-[#00F0FF]/20 blur-3xl" />
+            <div className="pointer-events-none absolute -right-10 bottom-0 h-48 w-48 rounded-full bg-sky-400/20 blur-3xl" />
+
+            <div className="relative">
+              <p className="text-sm font-semibold tracking-[0.18em] text-sky-500">
+                فرم ارتباط آیس‌بلو
+              </p>
+              <h2 className="mt-2 text-3xl font-black text-[#0B132B] md:text-4xl">
+                درخواست جلسه و مشاوره اختصاصی
+              </h2>
+              <p className="mt-3 max-w-xl text-sm leading-7 text-slate-600 md:text-base">
+                فرم شیشه‌ای با فوکوس نئون آسمانی — درخواست شما مستقیم به تیم VIP
+                ارجاع می‌شود.
+              </p>
+
+              <div className="mt-8 flex flex-col gap-2 rounded-2xl bg-[#0B132B]/5 p-2 md:flex-row">
+                {FORM_TABS.map((tab) => {
+                  const Icon = tab.icon;
+                  const active = activeTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`relative flex flex-1 items-center justify-center gap-2 rounded-xl px-3 py-3 text-sm font-bold transition ${
+                        active
+                          ? "text-[#0B132B]"
+                          : "text-slate-500 hover:text-[#0B132B]"
+                      }`}
+                    >
+                      {active && (
+                        <motion.span
+                          layoutId="activeTab"
+                          className="absolute inset-0 rounded-xl bg-gradient-to-l from-sky-300/90 to-[#00F0FF] shadow-lg shadow-sky-300/40"
+                          transition={spring}
+                        />
+                      )}
+                      <span className="relative z-10 flex items-center gap-2">
+                        <Icon className="h-4 w-4" />
+                        {tab.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <AnimatePresence mode="wait">
+                <motion.form
+                  key={activeTab}
+                  initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={reduceMotion ? undefined : { opacity: 0, y: -12 }}
+                  transition={spring}
+                  onSubmit={onSubmit}
+                  className="mt-6 grid gap-5 md:grid-cols-2"
+                >
+                  <p className="md:col-span-2 rounded-2xl border border-sky-200/70 bg-sky-50/70 px-4 py-3 text-sm text-sky-900">
+                    {tabHint}
+                  </p>
+
+                  <label className="block space-y-2">
+                    <span className="text-sm font-bold text-slate-700">
+                      نام و نام خانوادگی
+                    </span>
+                    <input
+                      required
+                      value={form.name}
+                      onChange={(e) =>
+                        setForm((prev) => ({ ...prev, name: e.target.value }))
+                      }
+                      placeholder="مثلاً: آریا درخشان"
+                      className="w-full rounded-2xl border border-sky-100 bg-white/70 px-4 py-3.5 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/30"
+                    />
+                  </label>
+
+                  <label className="block space-y-2">
+                    <span className="text-sm font-bold text-slate-700">
+                      شماره تماس
+                    </span>
+                    <input
+                      required
+                      inputMode="tel"
+                      value={form.phone}
+                      onChange={(e) =>
+                        setForm((prev) => ({ ...prev, phone: e.target.value }))
+                      }
+                      placeholder="۰۹۱۲xxxxxxx"
+                      dir="ltr"
+                      className="w-full rounded-2xl border border-sky-100 bg-white/70 px-4 py-3.5 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/30"
+                    />
+                  </label>
+
+                  <label className="block space-y-2">
+                    <span className="text-sm font-bold text-slate-700">
+                      بازه بودجه
+                    </span>
+                    <select
+                      value={form.budget}
+                      onChange={(e) =>
+                        setForm((prev) => ({ ...prev, budget: e.target.value }))
+                      }
+                      className="w-full rounded-2xl border border-sky-100 bg-white/70 px-4 py-3.5 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/30"
+                    >
+                      {BUDGET_OPTIONS.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="block space-y-2">
+                    <span className="text-sm font-bold text-slate-700">
+                      تاریخ و ساعت ترجیحی
+                    </span>
+                    <input
+                      type="datetime-local"
+                      required
+                      value={form.datetime}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          datetime: e.target.value,
+                        }))
+                      }
+                      dir="ltr"
+                      className="w-full rounded-2xl border border-sky-100 bg-white/70 px-4 py-3.5 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/30"
+                    />
+                  </label>
+
+                  <label className="block space-y-2 md:col-span-2">
+                    <span className="text-sm font-bold text-slate-700">
+                      پیام تفصیلی
+                    </span>
+                    <textarea
+                      required
+                      rows={5}
+                      value={form.message}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          message: e.target.value,
+                        }))
+                      }
+                      placeholder="جزئیات جلسه، ملک، یا موضوع حقوقی را بنویسید..."
+                      className="w-full resize-none rounded-2xl border border-sky-100 bg-white/70 px-4 py-3.5 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/30"
+                    />
+                  </label>
+
+                  <div className="md:col-span-2">
+                    <motion.button
+                      type="submit"
+                      disabled={status === "loading"}
+                      whileHover={
+                        reduceMotion ? undefined : { scale: 1.03, rotate: 0.5 }
+                      }
+                      whileTap={{ scale: 0.98 }}
+                      className="inline-flex min-w-[220px] items-center justify-center gap-2 rounded-full bg-[#0B132B] px-8 py-4 text-sm font-bold text-white shadow-[0_20px_50px_-24px_rgba(0,240,255,0.9)] transition hover:bg-sky-600 disabled:cursor-wait disabled:opacity-80"
+                    >
+                      {status === "loading" ? (
+                        <>
+                          <motion.span
+                            className="h-4 w-4 rounded-full border-2 border-white/30 border-t-[#00F0FF]"
+                            animate={{ rotate: 360 }}
+                            transition={{
+                              repeat: Infinity,
+                              duration: 0.8,
+                              ease: "linear",
+                            }}
+                          />
+                          در حال ارسال...
+                        </>
+                      ) : status === "success" ? (
+                        <>
+                          <CheckCircle2 className="h-4 w-4 text-[#00F0FF]" />
+                          درخواست ثبت شد
+                        </>
+                      ) : (
+                        <>
+                          <Send className="h-4 w-4" />
+                          ارسال درخواست
+                        </>
+                      )}
+                    </motion.button>
+
+                    <AnimatePresence>
+                      {status === "success" && (
+                        <motion.p
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0 }}
+                          className="mt-4 text-sm font-semibold text-sky-600"
+                        >
+                          درخواست شما ثبت شد. هماهنگ‌کننده VIP به‌زودی تماس
+                          می‌گیرد.
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </motion.form>
+              </AnimatePresence>
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+            {HUB_CARDS.map((card) => {
+              const Icon = card.icon;
+              return (
+                <motion.a
+                  key={card.id}
+                  href={card.href}
+                  target={card.href.startsWith("http") ? "_blank" : undefined}
+                  rel={
+                    card.href.startsWith("http")
+                      ? "noopener noreferrer"
+                      : undefined
+                  }
+                  initial={{ opacity: 0, y: 36 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: false, amount: 0.2 }}
+                  transition={spring}
+                  whileHover={
+                    reduceMotion ? undefined : { scale: 1.03, rotate: 0.5 }
+                  }
+                  className={`${glass} group block p-5 transition`}
+                >
+                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0B132B] text-[#00F0FF] shadow-[0_0_30px_-8px_#00F0FF] transition group-hover:bg-sky-500 group-hover:text-white">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-lg font-black text-[#0B132B]">
+                    {card.title}
+                  </h3>
+                  <p className="mt-1 text-sm font-semibold text-sky-600">
+                    {card.detail}
+                  </p>
+                  <p className="mt-2 text-xs leading-6 text-slate-500">
+                    {card.meta}
+                  </p>
+                </motion.a>
+              );
+            })}
+          </div>
+        </motion.section>
+      </div>
+
+      {/* Section 4 — Dark Stats */}
+      <section className="relative overflow-hidden bg-slate-950 py-20 md:py-28">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute left-1/4 top-0 h-64 w-64 rounded-full bg-[#00F0FF]/20 blur-3xl" />
+          <div className="absolute bottom-0 right-1/5 h-72 w-72 rounded-full bg-sky-500/15 blur-3xl" />
+        </div>
+        <div className="rio-container relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.3 }}
+            transition={spring}
+            className="mb-12 max-w-2xl"
+          >
+            <p className="text-sm font-semibold tracking-[0.22em] text-[#00F0FF]">
+              استانداردهای جهانی
+            </p>
+            <h2 className="mt-3 text-3xl font-black text-white md:text-5xl">
+              مقیاس اعتماد در معاملات تراز اول
+            </h2>
+          </motion.div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {STATS.map((stat) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={spring}
+                whileHover={
+                  reduceMotion ? undefined : { scale: 1.03, rotate: 0.5 }
+                }
+                className="rounded-[1.75rem] border border-sky-400/20 bg-white/5 px-6 py-8 text-center backdrop-blur-2xl"
+              >
+                <p className="text-3xl font-black text-[#00F0FF] md:text-4xl">
+                  <AnimatedStat
+                    target={stat.value}
+                    decimals={stat.decimals}
+                    suffix={stat.suffix}
+                    display={stat.display}
+                    reduceMotion={reduceMotion}
+                  />
+                </p>
+                <p className="mt-3 text-sm leading-7 text-sky-100/80">
+                  {stat.label}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="rio-container relative z-10 space-y-24 py-20 md:space-y-32 md:py-28">
+        {/* Section 5 — Branch Showcase */}
+        <motion.section
+          id="branch"
+          initial={{ opacity: 0, y: 48 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.2 }}
+          transition={spring}
+          className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]"
+        >
           <div className={`${glass} overflow-hidden`}>
-            <div className="relative h-56 bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 md:h-72">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(16,185,129,0.35),transparent_55%)]" />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_70%,rgba(251,191,36,0.2),transparent_45%)]" />
+            <div className="relative h-64 md:h-80">
+              <Image
+                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80"
+                alt="دفتر مرکزی درخشان"
+                fill
+                className="object-cover transition duration-700 hover:scale-105"
+                sizes="(max-width: 1024px) 100vw, 60vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0B132B] via-[#0B132B]/40 to-transparent" />
               <div className="absolute bottom-6 right-6 left-6 text-white">
-                <p className="text-sm text-emerald-200">دفتر مرکزی</p>
+                <p className="text-sm text-[#00F0FF]">دفتر مرکزی</p>
                 <h3 className="mt-1 text-2xl font-black md:text-3xl">
                   {SITE.address.line1}
                 </h3>
-                <p className="mt-2 max-w-xl text-sm leading-7 text-white/80">
+                <p className="mt-2 text-sm text-sky-100/85">
                   {SITE.address.line2} · {SITE.address.city} · کد پستی{" "}
                   {SITE.address.postal}
                 </p>
@@ -584,35 +806,45 @@ export function LuxuryContactView() {
 
             <div className="space-y-5 p-6 md:p-8">
               <div className="flex flex-wrap gap-2">
-                {NAV_ACTIONS.map((action) => (
-                  <a
-                    key={action.id}
-                    href={action.href}
-                    target={action.id === "call" ? undefined : "_blank"}
+                {NAV_LINKS.map((link) => (
+                  <motion.a
+                    key={link.label}
+                    href={link.href}
+                    target={link.href.startsWith("http") ? "_blank" : undefined}
                     rel={
-                      action.id === "call" ? undefined : "noopener noreferrer"
+                      link.href.startsWith("http")
+                        ? "noopener noreferrer"
+                        : undefined
                     }
-                    className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-4 py-2.5 text-xs font-bold text-slate-700 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:text-emerald-700"
+                    whileHover={
+                      reduceMotion ? undefined : { scale: 1.03, rotate: 0.5 }
+                    }
+                    className="inline-flex items-center gap-2 rounded-full border border-sky-100 bg-white/70 px-4 py-2.5 text-xs font-bold text-[#0B132B] transition hover:border-sky-300 hover:text-sky-600"
                   >
-                    {action.id === "call" ? (
+                    {link.label === "تماس" ? (
                       <Phone className="h-3.5 w-3.5" />
-                    ) : action.id === "telegram" ? (
+                    ) : link.label === "تلگرام" ? (
                       <MessageCircle className="h-3.5 w-3.5" />
                     ) : (
                       <Navigation className="h-3.5 w-3.5" />
                     )}
-                    {action.label}
-                  </a>
+                    {link.label}
+                  </motion.a>
                 ))}
               </div>
 
               <div className="grid gap-3 sm:grid-cols-2">
-                {FACILITIES.map((item) => (
+                {[
+                  "پارکینگ اختصاصی مشتریان VIP",
+                  "سالن کنفرانس و نشست خصوصی",
+                  "پذیرش لابی ۲۴ ساعته برای جلسات رزروشده",
+                  "اتاق نمایش فایل‌های منتخب",
+                ].map((item) => (
                   <div
                     key={item}
-                    className="flex items-start gap-3 rounded-2xl border border-slate-200/80 bg-white/60 px-4 py-3"
+                    className="flex items-start gap-3 rounded-2xl border border-sky-100/60 bg-white/50 px-4 py-3"
                   >
-                    <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                    <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-sky-500" />
                     <span className="text-sm leading-6 text-slate-700">
                       {item}
                     </span>
@@ -622,99 +854,55 @@ export function LuxuryContactView() {
             </div>
           </div>
 
-          <div className={`${glass} flex flex-col justify-between p-7 md:p-8`}>
-            <div>
-              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-600 text-white">
-                <MapPin className="h-5 w-5" />
-              </div>
-              <h3 className="text-2xl font-black text-slate-900">
-                اطلاعات دفتر و ساعات کاری
-              </h3>
-              <ul className="mt-6 space-y-4 text-sm leading-7 text-slate-600">
-                <li className="flex items-start gap-3">
-                  <Clock3 className="mt-1 h-4 w-4 shrink-0 text-emerald-600" />
-                  <span>
-                    شنبه تا پنجشنبه · ۹:۰۰ تا ۱۸:۰۰
-                    <br />
-                    جمعه‌ها با هماهنگی قبلی
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Phone className="mt-1 h-4 w-4 shrink-0 text-emerald-600" />
-                  <span>
-                    تلفن: {SITE.phone}
-                    <br />
-                    ایمیل: {SITE.email}
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Building2 className="mt-1 h-4 w-4 shrink-0 text-emerald-600" />
-                  <span>
-                    پذیرش مشتریان VIP با هماهنگی قبلی — فضای اختصاصی مذاکره و
-                    امضای قرارداد.
-                  </span>
-                </li>
-              </ul>
+          <div className={`${glass} flex flex-col p-7 md:p-8`}>
+            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-500 text-white shadow-[0_0_28px_-6px_#38bdf8]">
+              <MapPin className="h-5 w-5" />
             </div>
-
-            <a
-              href={`tel:${SITE.phone.replace(/\s/g, "")}`}
-              className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-emerald-700"
-            >
-              <Phone className="h-4 w-4" />
-              تماس با دفتر مرکزی
-            </a>
+            <h3 className="text-2xl font-black text-[#0B132B]">
+              راهنمای مسیر و پارکینگ
+            </h3>
+            <p className="mt-3 text-sm leading-7 text-slate-600">
+              مسیر گام‌به‌گام از ورود تا سالن مشاوره؛ برای مشتریان VIP بدون
+              انتظار در لابی عمومی.
+            </p>
+            <ol className="mt-6 space-y-4">
+              {ROUTE_STEPS.map((step, index) => (
+                <li key={step} className="flex gap-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0B132B] text-xs font-bold text-[#00F0FF]">
+                    {(index + 1).toLocaleString("fa-IR")}
+                  </span>
+                  <span className="pt-1 text-sm leading-7 text-slate-700">
+                    {step}
+                  </span>
+                </li>
+              ))}
+            </ol>
+            <div className="mt-auto pt-8">
+              <div className="flex items-start gap-3 rounded-2xl border border-sky-100 bg-sky-50/60 px-4 py-3">
+                <Building2 className="mt-0.5 h-4 w-4 shrink-0 text-sky-600" />
+                <p className="text-sm leading-6 text-slate-700">
+                  برای ورود با خودرو، پلاک را حداقل ۳۰ دقیقه قبل از جلسه به
+                  پذیرش اعلام کنید.
+                </p>
+              </div>
+            </div>
           </div>
         </motion.section>
 
-        {/* E. Trust metrics */}
+        {/* Section 6 — FAQ */}
         <motion.section
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={{
-            hidden: {},
-            show: {
-              transition: { staggerChildren: reduceMotion ? 0 : 0.1 },
-            },
-          }}
-          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
-        >
-          {STATS.map((stat) => (
-            <motion.div
-              key={stat.label}
-              variants={fadeUp}
-              transition={{ duration: 0.45 }}
-              whileHover={reduceMotion ? undefined : { y: -6 }}
-              className={`${glass} px-6 py-7 text-center`}
-            >
-              <p className="text-3xl font-black text-slate-900 md:text-4xl">
-                <AnimatedStat
-                  target={stat.value}
-                  suffix={stat.suffix}
-                  display={stat.display}
-                  reduceMotion={reduceMotion}
-                />
-              </p>
-              <p className="mt-2 text-sm text-slate-600">{stat.label}</p>
-            </motion.div>
-          ))}
-        </motion.section>
-
-        {/* F. FAQ */}
-        <motion.section
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 48 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.55 }}
+          viewport={{ once: false, amount: 0.2 }}
+          transition={spring}
           className="mx-auto max-w-3xl"
         >
-          <div className="mb-8 text-center">
-            <p className="text-sm font-semibold text-emerald-700">
+          <div className="mb-10 text-center">
+            <p className="text-sm font-semibold tracking-[0.2em] text-sky-500">
               سوالات متداول
             </p>
-            <h2 className="mt-2 text-3xl font-black text-slate-900 md:text-4xl">
-              پیش از تماس، این‌ها را بدانید
+            <h2 className="mt-3 text-3xl font-black text-[#0B132B] md:text-5xl">
+              پاسخ‌هایی برای مشتریان خاص
             </h2>
           </div>
 
@@ -728,13 +916,13 @@ export function LuxuryContactView() {
                     onClick={() => setOpenFaq(open ? -1 : index)}
                     className="flex w-full items-center justify-between gap-4 px-5 py-4 text-right md:px-6"
                   >
-                    <span className="text-sm font-bold text-slate-900 md:text-base">
+                    <span className="text-sm font-bold text-[#0B132B] md:text-base">
                       {item.q}
                     </span>
                     <motion.span
                       animate={{ rotate: open ? 180 : 0 }}
-                      transition={{ duration: 0.25 }}
-                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-900/5 text-slate-700"
+                      transition={spring}
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sky-500/10 text-sky-600"
                     >
                       <ChevronDown className="h-4 w-4" />
                     </motion.span>
@@ -745,9 +933,9 @@ export function LuxuryContactView() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.28 }}
+                        transition={spring}
                       >
-                        <p className="border-t border-slate-200/80 px-5 pb-5 pt-3 text-sm leading-7 text-slate-600 md:px-6">
+                        <p className="border-t border-sky-100/70 px-5 pb-5 pt-3 text-sm leading-7 text-slate-600 md:px-6">
                           {item.a}
                         </p>
                       </motion.div>

@@ -3,9 +3,9 @@ import { LuxuryContactView } from "@/components/contact/LuxuryContactView";
 import { SITE } from "@/config/site";
 
 export const metadata: Metadata = {
-  title: `ارتباط با ما | ${SITE.nameFa}`,
+  title: `ارتباط VIP | ${SITE.nameFa}`,
   description:
-    "ارتباط با دپارتمان املاک درخشان — پشتیبانی VIP، مشاوره حقوقی و رزرو جلسه حضوری در دفتر مرکزی نیاوران.",
+    "صفحه ارتباط لوکس درخشان پرو — پشتیبانی VIP، جلسه حضوری، کارشناسی ملک و مشاوره حقوقی با زیبایی‌شناسی آیس‌اسکای.",
 };
 
 export default function ContactPage() {
