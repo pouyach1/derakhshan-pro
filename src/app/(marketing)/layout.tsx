@@ -1,6 +1,6 @@
 import { Vazirmatn } from "next/font/google";
 import Navbar from "@/components/navigation/Navbar";
-import Footer from "@/components/navigation/Footer";
+import Footer from "@/components/Footer";
 import IntroShell from "@/components/providers/IntroShell";
 
 const vazirmatn = Vazirmatn({
