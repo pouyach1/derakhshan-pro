@@ -34,9 +34,9 @@ export const AUTH_USERS: AuthUser[] = [
 export const DEMO_OTP = "1234";
 
 export const ROLE_LABELS: Record<UserRole, string> = {
-  admin: "Admin",
-  agent: "Agent",
-  client: "Client",
+  admin: "مدیر",
+  agent: "مشاور",
+  client: "مشتری",
 };
 
 export const ROLE_HOME: Record<UserRole, string> = {

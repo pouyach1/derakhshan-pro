@@ -18,7 +18,7 @@ export default function SocialButtons({ onGoogle, onFacebook }: SocialButtonsPro
         className="inline-flex h-12 items-center justify-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50"
       >
         <GoogleIcon />
-        Continue with Google
+        ادامه با گوگل
       </motion.button>
       <motion.button
         type="button"
@@ -28,7 +28,7 @@ export default function SocialButtons({ onGoogle, onFacebook }: SocialButtonsPro
         className="inline-flex h-12 items-center justify-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50"
       >
         <FacebookIcon />
-        Continue with Facebook
+        ادامه با فیسبوک
       </motion.button>
     </div>
   );

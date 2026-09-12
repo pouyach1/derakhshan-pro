@@ -6,13 +6,23 @@ import LoginHero from "@/components/auth/LoginHero";
 
 export default function LoginPage() {
   return (
-    <div className="relative flex min-h-dvh items-center justify-center overflow-hidden px-4 py-8 sm:px-6 sm:py-12">
+    <div
+      dir="rtl"
+      lang="fa"
+      className="relative flex min-h-dvh items-center justify-center overflow-hidden px-4 py-8 font-vazirmatn sm:px-6 sm:py-12"
+    >
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_#DBEAFE_0%,_transparent_55%),radial-gradient(ellipse_at_bottom_right,_#E0F2FE_0%,_transparent_45%)]"
       />
-      <div aria-hidden className="pointer-events-none absolute -left-24 top-16 h-72 w-72 rounded-full bg-blue-200/30 blur-3xl" />
-      <div aria-hidden className="pointer-events-none absolute -right-20 bottom-10 h-80 w-80 rounded-full bg-sky-100/80 blur-3xl" />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-24 top-16 h-72 w-72 rounded-full bg-blue-200/30 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-20 bottom-10 h-80 w-80 rounded-full bg-sky-100/80 blur-3xl"
+      />
 
       <motion.div
         initial={{ opacity: 0, scale: 0.98, y: 18 }}

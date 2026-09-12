@@ -84,7 +84,7 @@ export function PasswordField({
         />
         <button
           type="button"
-          aria-label={visible ? "Hide password" : "Show password"}
+          aria-label={visible ? "مخفی کردن رمز عبور" : "نمایش رمز عبور"}
           onClick={() => setVisible((v) => !v)}
           className="absolute end-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-slate-400 transition hover:bg-white hover:text-slate-700"
         >
