@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { clearClientSession, readClientSession } from "@/lib/auth";
 import { cn } from "@/lib/utils";
+import AuthToast from "@/components/auth/AuthToast";
 
 const NAV_ITEMS = [
   { href: "/admin/dashboard", label: "خانه" },
@@ -128,6 +129,7 @@ function AdminAccountMenu() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("مدیر سیستم");
+  const [toast, setToast] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -154,75 +156,81 @@ function AdminAccountMenu() {
   function logout() {
     clearClientSession();
     setOpen(false);
-    router.replace("/login");
-    router.refresh();
+    setToast(true);
+    window.setTimeout(() => {
+      router.replace("/login");
+      router.refresh();
+    }, 900);
   }
 
   return (
-    <div ref={rootRef} className="relative">
-      <button
-        type="button"
-        aria-label="منوی حساب کاربری"
-        aria-expanded={open}
-        onClick={() => setOpen((value) => !value)}
-        className="inline-flex items-center gap-1.5 rounded-full bg-white p-0.5 pe-2 shadow-sm ring-1 ring-slate-200 transition hover:ring-admin-sky/40"
-      >
-        <Image
-          src="/images/admin/avatars/arash-shayegan.jpg"
-          alt="آواتار کاربر"
-          width={40}
-          height={40}
-          className="h-9 w-9 rounded-full object-cover ring-2 ring-white"
-        />
-        <ChevronDown
-          className={cn("hidden h-4 w-4 text-slate-400 transition sm:block", open && "rotate-180")}
-          strokeWidth={2}
-        />
-      </button>
+    <>
+      <div ref={rootRef} className="relative">
+        <button
+          type="button"
+          aria-label="منوی حساب کاربری"
+          aria-expanded={open}
+          onClick={() => setOpen((value) => !value)}
+          className="inline-flex items-center gap-1.5 rounded-full bg-white p-0.5 pe-2 shadow-sm ring-1 ring-slate-200 transition hover:ring-admin-sky/40"
+        >
+          <Image
+            src="/images/admin/avatars/arash-shayegan.jpg"
+            alt="آواتار کاربر"
+            width={40}
+            height={40}
+            className="h-9 w-9 rounded-full object-cover ring-2 ring-white"
+          />
+          <ChevronDown
+            className={cn("hidden h-4 w-4 text-slate-400 transition sm:block", open && "rotate-180")}
+            strokeWidth={2}
+          />
+        </button>
 
-      <AnimatePresence>
-        {open ? (
-          <motion.div
-            initial={{ opacity: 0, y: 8, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 6, scale: 0.98 }}
-            transition={{ duration: 0.16 }}
-            className="absolute end-0 top-[calc(100%+0.5rem)] z-50 w-56 overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-slate-200"
-          >
-            <div className="border-b border-slate-100 px-3.5 py-3">
-              <p className="truncate text-sm font-semibold text-admin-navy">{name}</p>
-              <p className="text-[11px] text-slate-500">پنل مدیریت</p>
-            </div>
-            <div className="p-1.5">
-              <Link
-                href="/admin/settings"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm text-slate-700 transition hover:bg-admin-soft"
-              >
-                <Settings className="h-4 w-4 text-slate-500" strokeWidth={1.9} />
-                تنظیمات حساب
-              </Link>
-              <Link
-                href="/"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm text-slate-700 transition hover:bg-admin-soft"
-              >
-                <ExternalLink className="h-4 w-4 text-slate-500" strokeWidth={1.9} />
-                مشاهده سایت
-              </Link>
-              <button
-                type="button"
-                onClick={logout}
-                className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm text-rose-600 transition hover:bg-rose-50"
-              >
-                <LogOut className="h-4 w-4" strokeWidth={1.9} />
-                خروج از حساب
-              </button>
-            </div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
-    </div>
+        <AnimatePresence>
+          {open ? (
+            <motion.div
+              initial={{ opacity: 0, y: 8, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 6, scale: 0.98 }}
+              transition={{ duration: 0.16 }}
+              className="absolute end-0 top-[calc(100%+0.5rem)] z-50 w-56 overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-slate-200"
+            >
+              <div className="border-b border-slate-100 px-3.5 py-3">
+                <p className="truncate text-sm font-semibold text-admin-navy">{name} - مدیر</p>
+                <p className="text-[11px] text-slate-500">پنل مدیریت</p>
+              </div>
+              <div className="p-1.5">
+                <Link
+                  href="/admin/settings"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm text-slate-700 transition hover:bg-admin-soft"
+                >
+                  <Settings className="h-4 w-4 text-slate-500" strokeWidth={1.9} />
+                  تنظیمات حساب
+                </Link>
+                <Link
+                  href="/"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm text-slate-700 transition hover:bg-admin-soft"
+                >
+                  <ExternalLink className="h-4 w-4 text-slate-500" strokeWidth={1.9} />
+                  مشاهده سایت
+                </Link>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm text-rose-600 transition hover:bg-rose-50"
+                >
+                  <LogOut className="h-4 w-4" strokeWidth={1.9} />
+                  خروج از حساب
+                </button>
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+      </div>
+      <AuthToast open={toast} message="با موفقیت از حساب کاربری خارج شدید" />
+    </>
   );
 }
 

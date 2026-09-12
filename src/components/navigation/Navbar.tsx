@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { LogIn } from "lucide-react";
-import { NAV } from "@/config/site";
+import UserAccountMenu from "@/components/auth/UserAccountMenu";
 import Logo from "@/components/ui/Logo";
+import { NAV } from "@/config/site";
+import { readClientSession, type AuthSession } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
 function LoginButton({
@@ -45,6 +47,11 @@ function LoginButton({
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [session, setSession] = useState<AuthSession | null>(null);
+
+  useEffect(() => {
+    setSession(readClientSession());
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -81,11 +88,19 @@ export default function Navbar() {
                 {item.label}
               </Link>
             ))}
-            <LoginButton className="ms-2" />
+            {session ? (
+              <UserAccountMenu tone="dark" className="ms-2" />
+            ) : (
+              <LoginButton className="ms-2" />
+            )}
           </nav>
 
           <div className="flex items-center gap-2 lg:hidden">
-            <LoginButton className="px-4 py-2 text-xs" />
+            {session ? (
+              <UserAccountMenu tone="dark" onNavigated={() => setOpen(false)} />
+            ) : (
+              <LoginButton className="px-4 py-2 text-xs" />
+            )}
             <button
               type="button"
               className="relative z-50 flex h-10 w-10 flex-col items-center justify-center gap-1.5"
@@ -139,10 +154,12 @@ export default function Navbar() {
               {item.label}
             </Link>
           ))}
-          <LoginButton
-            className="mt-4 w-full max-w-xs py-3.5 text-base"
-            onClick={() => setOpen(false)}
-          />
+          {!session ? (
+            <LoginButton
+              className="mt-4 w-full max-w-xs py-3.5 text-base"
+              onClick={() => setOpen(false)}
+            />
+          ) : null}
         </nav>
       </div>
     </>
