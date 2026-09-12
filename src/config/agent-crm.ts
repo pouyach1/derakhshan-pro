@@ -64,6 +64,22 @@ export type AgentCrmProfile = {
   title: string;
   commissionRate: number;
   avatar: string;
+  rankLabel: string;
+  monthlyTarget: number;
+  monthlyClosed: number;
+};
+
+export type AgentTaskKind = "visit" | "callback" | "contract" | "note";
+
+export type AgentTask = {
+  id: string;
+  agentId: string;
+  kind: AgentTaskKind;
+  title: string;
+  detail: string;
+  time: string;
+  dayLabel: string;
+  done?: boolean;
 };
 
 const media = {
@@ -83,6 +99,9 @@ export const AGENT_PROFILES: Record<string, AgentCrmProfile> = {
     title: "مشاور ارشد منطقه یک",
     commissionRate: 2.5,
     avatar: media.arash,
+    rankLabel: "مشاور فعال - رتبه ممتاز دفتر",
+    monthlyTarget: 3_000_000_000,
+    monthlyClosed: 1_850_000_000,
   },
 };
 
@@ -316,10 +335,59 @@ export const AGENT_TOURS: AgentTour[] = [
   },
 ];
 
+export const AGENT_TASKS: AgentTask[] = [
+  {
+    id: "task1",
+    agentId: "a1",
+    kind: "visit",
+    title: "بازدید آپارتمان فرشته",
+    detail: "همراه سارا محمدی · بررسی نور و نقشه",
+    time: "۱۰:۳۰",
+    dayLabel: "امروز",
+  },
+  {
+    id: "task2",
+    agentId: "a1",
+    kind: "callback",
+    title: "تماس با مالک نیاوران",
+    detail: "پیگیری تخفیف و زمان قرارداد",
+    time: "۱۲:۰۰",
+    dayLabel: "امروز",
+  },
+  {
+    id: "task3",
+    agentId: "a1",
+    kind: "visit",
+    title: "بازدید پنت‌هاوس نیاوران",
+    detail: "علی رضایی · تور کامل واحد و روف",
+    time: "۱۶:۰۰",
+    dayLabel: "امروز",
+  },
+  {
+    id: "task4",
+    agentId: "a1",
+    kind: "contract",
+    title: "جلسه پیش‌قرارداد لواسان",
+    detail: "مریم کریمی · هماهنگی مدارک و بیعانه",
+    time: "۱۱:۰۰",
+    dayLabel: "فردا",
+  },
+  {
+    id: "task5",
+    agentId: "a1",
+    kind: "note",
+    title: "ثبت گزارش تماس ونک",
+    detail: "رضا اکبری · نیاز به فایل اداری نزدیک ونک",
+    time: "۱۸:۳۰",
+    dayLabel: "امروز",
+    done: true,
+  },
+];
+
 export const PROPERTY_STATUS_LABEL: Record<AgentPropertyStatus, string> = {
   active: "فعال",
   negotiation: "در حال مذاکره",
-  sold: "واگذار شده",
+  sold: "واگذار شد",
 };
 
 export const URGENCY_LABEL: Record<ClientUrgency, string> = {
@@ -332,6 +400,13 @@ export const TOUR_STATUS_LABEL: Record<TourStatus, string> = {
   upcoming: "پیش‌رو",
   completed: "انجام‌شده",
   canceled: "لغو شده",
+};
+
+export const TASK_KIND_LABEL: Record<AgentTaskKind, string> = {
+  visit: "بازدید",
+  callback: "تماس با مالک",
+  contract: "قرارداد",
+  note: "یادداشت",
 };
 
 export const PROPERTY_FEATURE_OPTIONS = [
@@ -361,6 +436,10 @@ export function getAgentTours(agentId: string): AgentTour[] {
   return AGENT_TOURS.filter((t) => t.agentId === agentId);
 }
 
+export function getAgentTasks(agentId: string): AgentTask[] {
+  return AGENT_TASKS.filter((t) => t.agentId === agentId);
+}
+
 export function matchPropertiesForClient(
   agentId: string,
   client: AgentClient,
@@ -383,28 +462,84 @@ export function matchPropertiesForClient(
   });
 }
 
+/** 0–100 score for smart matching CRM badges */
+export function scorePropertyMatch(
+  property: AgentProperty,
+  client: AgentClient,
+): number {
+  if (property.status === "sold") return 0;
+
+  let score = 35;
+
+  const mid = (client.budgetMin + client.budgetMax) / 2;
+  const span = Math.max(client.budgetMax - client.budgetMin, 1);
+  const budgetDelta = Math.abs(property.price - mid) / span;
+  score += Math.max(0, 35 - budgetDelta * 35);
+
+  if (
+    property.neighborhood.includes(client.preferredNeighborhood) ||
+    client.preferredNeighborhood.includes(property.neighborhood)
+  ) {
+    score += 20;
+  }
+
+  if (
+    client.preferredBedrooms &&
+    client.preferredBedrooms > 0 &&
+    property.bedrooms >= client.preferredBedrooms
+  ) {
+    score += 10;
+  }
+
+  return Math.max(0, Math.min(98, Math.round(score)));
+}
+
+export function bestMatchForClient(
+  agentId: string,
+  client: AgentClient,
+): { property: AgentProperty; score: number } | null {
+  const matches = matchPropertiesForClient(agentId, client)
+    .map((property) => ({ property, score: scorePropertyMatch(property, client) }))
+    .sort((a, b) => b.score - a.score);
+  return matches[0] ?? null;
+}
+
 export function getAgentCrmMetrics(agentId: string) {
   const properties = getAgentProperties(agentId);
   const clients = getAgentClients(agentId);
   const tours = getAgentTours(agentId);
+  const tasks = getAgentTasks(agentId);
   const profile = getAgentProfile(agentId);
 
   const activeProperties = properties.filter((p) => p.status === "active").length;
+  const negotiationCount = properties.filter((p) => p.status === "negotiation").length;
+  const highUrgencyClients = clients.filter((c) => c.urgency === "high").length;
   const upcomingTours = tours.filter((t) => t.status === "upcoming").length;
+  const todayTasks = tasks.filter((t) => t.dayLabel === "امروز").length;
   const negotiationValue = properties
     .filter((p) => p.status === "negotiation")
     .reduce((sum, p) => sum + p.price, 0);
   const estimatedCommission = Math.round(
     (negotiationValue * profile.commissionRate) / 100,
   );
+  const targetProgress = Math.min(
+    100,
+    Math.round((profile.monthlyClosed / profile.monthlyTarget) * 100),
+  );
 
   return {
     activeProperties,
+    negotiationCount,
     assignedClients: clients.length,
+    highUrgencyClients,
     scheduledTours: upcomingTours,
+    todayTasks,
     estimatedCommission,
     estimatedCommissionLabel: formatBillion(estimatedCommission),
     commissionRate: profile.commissionRate,
+    targetProgress,
+    monthlyTargetLabel: formatBillion(profile.monthlyTarget),
+    monthlyClosedLabel: formatBillion(profile.monthlyClosed),
   };
 }
 
