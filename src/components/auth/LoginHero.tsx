@@ -33,21 +33,20 @@ export default function LoginHero() {
       ref={ref}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
-      initial={{ opacity: 0, x: 28 }}
+      initial={{ opacity: 0, x: -28 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-      className="relative hidden h-full min-h-[560px] lg:block"
+      className="relative hidden h-full min-h-[560px] font-vazirmatn lg:block"
+      dir="rtl"
     >
       <div
         className="absolute inset-3 overflow-hidden shadow-2xl shadow-slate-900/20"
-        style={{
-          borderRadius: "2rem 2.75rem 2rem 6rem",
-        }}
+        style={{ borderRadius: "2rem 2.75rem 2rem 6rem" }}
       >
         <motion.div style={{ x: shiftX, y: shiftY }} className="absolute -inset-8">
           <Image
             src="/images/landing/hero/banner.jpg"
-            alt="Architectural city skyline"
+            alt="نمای معماری لوکس املاک درخشان"
             fill
             priority
             className="object-cover"
@@ -57,19 +56,23 @@ export default function LoginHero() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B1B3A]/85 via-[#0B1B3A]/30 to-[#0B1B3A]/10" />
         <motion.div style={{ background: glare }} className="absolute inset-0 mix-blend-soft-light" />
 
-        {/* Organic notch accent */}
         <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10 blur-2xl" />
         <div className="absolute -bottom-10 -left-6 h-32 w-32 rounded-full bg-sky-300/20 blur-2xl" />
 
-        <div className="absolute inset-0 flex items-start justify-end p-8 xl:p-10">
-          <motion.p
+        <div className="absolute inset-0 flex items-start justify-start p-8 xl:p-10">
+          <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35, duration: 0.55 }}
-            className="max-w-[15.5rem] text-right text-lg font-semibold leading-snug text-white drop-shadow-[0_10px_28px_rgba(0,0,0,0.45)] xl:max-w-[17.5rem] xl:text-xl"
+            className="max-w-[17rem] space-y-3"
           >
-            Browse thousands of properties to buy, sell, or rent with trusted agents.
-          </motion.p>
+            <span className="inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white/90 ring-1 ring-white/20 backdrop-blur-md">
+              املاک منتخب درخشان
+            </span>
+            <p className="text-lg font-semibold leading-snug text-white drop-shadow-[0_10px_28px_rgba(0,0,0,0.45)] xl:text-xl">
+              هزاران ملک برای خرید، فروش یا اجاره را با مشاوران معتمد مرور کنید.
+            </p>
+          </motion.div>
         </div>
       </div>
     </motion.div>

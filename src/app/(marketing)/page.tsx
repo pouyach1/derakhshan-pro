@@ -1,4 +1,5 @@
 import HeroSection from "@/components/sections/HeroSection";
+import VideoTourSection from "@/components/sections/VideoTourSection";
 import CtaTextSection from "@/components/sections/CtaTextSection";
 import ValuePropsSection from "@/components/sections/ValuePropsSection";
 import FeaturedCategoriesSection from "@/components/sections/FeaturedCategoriesSection";
@@ -13,6 +14,7 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
+      <VideoTourSection />
       <CtaTextSection title={INTRO_CTA.title} body={INTRO_CTA.body} cta={INTRO_CTA.cta} />
       <ValuePropsSection />
       <FeaturedCategoriesSection />
