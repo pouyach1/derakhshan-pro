@@ -20,6 +20,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import { SITE } from "@/config/site";
+import { siteConfig } from "@/config/siteConfig";
+import type { LucideIcon } from "lucide-react";
 
 type FormTab = "vip" | "appraisal" | "legal";
 type FormStatus = "idle" | "loading" | "success";
@@ -34,156 +36,31 @@ const fadeUp = {
 const glass =
   "rounded-[2rem] border border-sky-100/50 bg-white/40 shadow-[0_30px_80px_-40px_rgba(11,19,43,0.35)] backdrop-blur-2xl";
 
-const GALLERY = [
-  {
-    src: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1600&q=80",
-    alt: "معماری پنت‌هاوس مدرن",
-    tag: "دفتر مرکزی مشکین دشت",
-    className: "md:col-span-2 md:row-span-2 min-h-[280px] md:min-h-[520px]",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
-    alt: "طراحی داخلی مینیمال",
-    tag: "سالن کنفرانس VIP",
-    className: "min-h-[220px] md:min-h-[250px]",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-    alt: "فضای مشاوره اجرایی",
-    tag: "لانژ مشاوره اختصاصی",
-    className: "min-h-[220px] md:min-h-[250px]",
-  },
-] as const;
+const CONTACT_ICONS: Record<string, LucideIcon> = {
+  phone: Phone,
+  navigation: Navigation,
+  "message-circle": MessageCircle,
+  clock: Clock3,
+  "calendar-clock": CalendarClock,
+  "file-search": FileSearch,
+  scale: Scale,
+};
 
-const FORM_TABS: { id: FormTab; label: string; icon: typeof CalendarClock }[] = [
-  { id: "vip", label: "جلسه حضوری VIP", icon: CalendarClock },
-  { id: "appraisal", label: "کارشناسی برج و ملک", icon: FileSearch },
-  { id: "legal", label: "مشاوره حقوقی", icon: Scale },
-];
-
-const BUDGET_OPTIONS = [
-  "کمتر از ۲۰ میلیارد تومان",
-  "۲۰ تا ۵۰ میلیارد تومان",
-  "۵۰ تا ۱۰۰ میلیارد تومان",
-  "بیش از ۱۰۰ میلیارد تومان",
-  "پورتفوی سرمایه‌گذاری بدون سقف",
-];
-
-const HUB_CARDS = [
-  {
-    id: "phone",
-    title: "خط مستقیم VIP",
-    detail: SITE.phone,
-    href: `tel:${SITE.phone.replace(/\s/g, "")}`,
-    icon: Phone,
-    meta: "پاسخگویی فوری در ساعات کاری",
-  },
-  {
-    id: "maps",
-    title: "مسیریابی دفتر مرکزی",
-    detail: `${SITE.address.line1} · ${SITE.address.city}`,
-    href: "https://www.google.com/maps/search/?api=1&query=%D9%86%DB%8C%D8%A7%D9%88%D8%B1%D8%A7%D9%86%20%D8%AE%DB%8C%D8%A7%D8%A8%D8%A7%D9%86%20%DB%8C%D8%A7%D8%B3%D8%B1",
-    icon: Navigation,
-    meta: "Google Maps · Waze · نشان",
-  },
-  {
-    id: "telegram",
-    title: "ارتباط تلگرام",
-    detail: "@derakhshanpro",
-    href: "https://t.me/derakhshanpro",
-    icon: MessageCircle,
-    meta: "پیام‌رسانی امن برای مشتریان خاص",
-  },
-  {
-    id: "hours",
-    title: "ساعات پذیرش",
-    detail: "شنبه تا پنجشنبه · ۹ تا ۱۸",
-    href: "#branch",
-    icon: Clock3,
-    meta: "جلسات مدیریتی با هماهنگی قبلی",
-  },
-] as const;
-
-const NAV_LINKS = [
-  {
-    label: "Waze",
-    href: "https://waze.com/ul?q=%D9%86%DB%8C%D8%A7%D9%88%D8%B1%D8%A7%D9%86%20%DB%8C%D8%A7%D8%B3%D8%B1&navigate=yes",
-  },
-  {
-    label: "Google Maps",
-    href: "https://www.google.com/maps/search/?api=1&query=%D9%86%DB%8C%D8%A7%D9%88%D8%B1%D8%A7%D9%86%20%D8%AE%DB%8C%D8%A7%D8%A8%D8%A7%D9%86%20%DB%8C%D8%A7%D8%B3%D8%B1",
-  },
-  {
-    label: "نشان",
-    href: "https://neshan.org/maps/@35.8048,51.4321,16.0z",
-  },
-  {
-    label: "تماس",
-    href: `tel:${SITE.phone.replace(/\s/g, "")}`,
-  },
-  {
-    label: "تلگرام",
-    href: "https://t.me/derakhshanpro",
-  },
-] as const;
-
-const ROUTE_STEPS = [
-  "ورود از خیابان هدایتکار، جنب فروشگاه افق کوروش",
-  "استفاده از پارکینگ VIP در طبقه منفی یک",
-  "ورود به لابی و اعلام نام به پذیرش اختصاصی",
-  "هدایت به سالن کنفرانس یا اتاق مشاوره",
-];
-
-const STATS = [
-  {
-    value: 1.5,
-    decimals: 1,
-    suffix: "",
-    label: "میلیارد دلار ارزش سبد گردانی",
-    display: "۱.۵",
-  },
-  {
-    value: 100,
-    decimals: 0,
-    suffix: "٪",
-    label: "محرمانه بودن معاملات",
-    display: "۱۰۰٪",
-  },
-  {
-    value: 50,
-    decimals: 0,
-    suffix: "+",
-    label: "مشاور تراز اول کشوری",
-    display: "۵۰+",
-  },
-  {
-    value: 24,
-    decimals: 0,
-    suffix: "/۷",
-    label: "پاسخگویی اختصاصی",
-    display: "۲۴/۷",
-  },
-];
-
-const FAQS = [
-  {
-    q: "فرآیند خریدهای غیرحضوری چگونه است؟",
-    a: "پس از احراز هویت دیجیتال، تور مجازی اختصاصی، بررسی حقوقی آنلاین و امضای قرارداد در بستر امن انجام می‌شود. نماینده حقوقی شما در تمام مراحل حضور دارد.",
-  },
-  {
-    q: "شرایط رزرو جلسه با مدیریت ارشد چیست؟",
-    a: "جلسات مدیریت ارشد برای پرتفوی‌های خاص و معاملات استراتژیک رزرو می‌شود. از طریق تب «جلسه حضوری VIP» درخواست دهید تا هماهنگ‌کننده زمان را تأیید کند.",
-  },
-  {
-    q: "آیا کارشناسی برج و ملک شامل گزارش رسمی است؟",
-    a: "بله. گزارش کارشناسی شامل تحلیل مقایسه‌ای منطقه، کیفیت ساخت، نقدشوندگی و بازه قیمت پیشنهادی است و ظرف ۴۸ ساعت کاری ارائه می‌شود.",
-  },
-  {
-    q: "محرمانگی اطلاعات مشتریان چگونه تضمین می‌شود؟",
-    a: "تمام پرونده‌ها در فضای امن داخلی نگه‌داری می‌شوند؛ دسترسی فقط برای تیم اختصاصی معامله فعال است و هیچ اطلاعات هویتی بدون مجوز شما منتشر نمی‌شود.",
-  },
-];
-
+const page = siteConfig.contactPage;
+const GALLERY = page.gallery;
+const FORM_TABS = page.formTabs.map((tab) => ({
+  ...tab,
+  icon: CONTACT_ICONS[tab.icon] ?? CalendarClock,
+}));
+const BUDGET_OPTIONS: string[] = [...page.budgetOptions];
+const HUB_CARDS = page.hubCards.map((card) => ({
+  ...card,
+  icon: CONTACT_ICONS[card.icon] ?? Phone,
+}));
+const NAV_LINKS = page.navLinks;
+const ROUTE_STEPS = page.routeSteps;
+const STATS = siteConfig.stats;
+const FAQS = page.faqs;
 function AmbientOrbs({ reduceMotion }: { reduceMotion: boolean | null }) {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -358,7 +235,7 @@ export function LuxuryContactView() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#00F0FF] opacity-70" />
                 <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#00F0FF] shadow-[0_0_18px_#00F0FF]" />
               </span>
-              تیم پشتیبانی VIP - فعال و پاسخگوی آنلاین
+              {page.hero.badge}
             </motion.div>
 
             <motion.h1
@@ -366,7 +243,7 @@ export function LuxuryContactView() {
               transition={spring}
               className="text-4xl font-black leading-[1.15] tracking-tight text-white md:text-6xl lg:text-7xl"
             >
-              ارتباط با سرآغاز معمارانه‌ای نو در املاک درخشان
+              {page.hero.title}
             </motion.h1>
 
             <motion.p
@@ -374,8 +251,7 @@ export function LuxuryContactView() {
               transition={spring}
               className="mt-6 max-w-2xl text-base leading-8 tracking-wide text-sky-50/85 md:text-lg"
             >
-              تجربه‌ای سینمایی از ارتباط با دپارتمان لوکس؛ از مشاوره معماری و
-              سرمایه‌گذاری تا هماهنگی جلسات VIP و پشتیبانی حقوقی اختصاصی.
+              {page.hero.subtitle}
             </motion.p>
 
             <motion.div
@@ -392,7 +268,7 @@ export function LuxuryContactView() {
                 className="inline-flex items-center gap-2 rounded-full bg-gradient-to-l from-sky-500 to-[#00F0FF] px-7 py-3.5 text-sm font-bold text-[#0B132B] shadow-[0_20px_50px_-20px_rgba(0,240,255,0.8)]"
               >
                 <Sparkles className="h-4 w-4" />
-                شروع ارتباط VIP
+                {page.hero.primaryCta}
               </motion.a>
               <motion.a
                 href={`tel:${SITE.phone.replace(/\s/g, "")}`}
@@ -428,10 +304,10 @@ export function LuxuryContactView() {
             className="mb-10 max-w-2xl"
           >
             <p className="text-sm font-semibold tracking-[0.2em] text-sky-500">
-              گالری معماری
+              {page.gallerySection.eyebrow}
             </p>
             <h2 className="mt-3 text-3xl font-black tracking-tight text-[#0B132B] md:text-5xl">
-              فضاهایی که برای ملاقات‌های خاص طراحی شده‌اند
+              {page.gallerySection.title}
             </h2>
           </motion.div>
 
@@ -544,7 +420,7 @@ export function LuxuryContactView() {
                       onChange={(e) =>
                         setForm((prev) => ({ ...prev, name: e.target.value }))
                       }
-                      placeholder="مثلاً: آریا درخشان"
+                      placeholder={`مثلاً: ${siteConfig.brand.managerNameFa}`}
                       className="w-full rounded-2xl border border-sky-100 bg-white/70 px-4 py-3.5 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/30"
                     />
                   </label>
@@ -786,7 +662,7 @@ export function LuxuryContactView() {
             <div className="relative h-64 md:h-80">
               <Image
                 src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80"
-                alt="دفتر مرکزی درخشان"
+                alt={`دفتر مرکزی ${siteConfig.brand.nameFa}`}
                 fill
                 className="object-cover transition duration-700 hover:scale-105"
                 sizes="(max-width: 1024px) 100vw, 60vw"

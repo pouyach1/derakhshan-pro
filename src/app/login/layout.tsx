@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/siteConfig";
 import type { Metadata } from "next";
 import { Vazirmatn } from "next/font/google";
 
@@ -8,8 +9,8 @@ const vazirmatn = Vazirmatn({
 });
 
 export const metadata: Metadata = {
-  title: "ورود | درخشان پرو",
-  description: "به پنل درخشان پرو وارد شوید و املاک منتخب را با مشاوران معتبر مدیریت کنید.",
+  title: `${siteConfig.panels.loginTitle} | ${siteConfig.brand.productNameFa}`,
+  description: siteConfig.panels.loginDescription,
 };
 
 export default function LoginLayout({ children }: { children: React.ReactNode }) {

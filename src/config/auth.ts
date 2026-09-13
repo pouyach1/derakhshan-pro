@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/siteConfig";
 export type UserRole = "admin" | "agent" | "client";
 
 export type AuthUser = {
@@ -15,7 +16,7 @@ export const AUTH_USERS: AuthUser[] = [
   {
     id: "admin-1",
     phone: "09121111111",
-    email: "admin@derakhshan.pro",
+    email: siteConfig.panels.demoAdminEmail,
     name: "مدیر سیستم",
     role: "admin",
     password: "123456",
@@ -23,7 +24,7 @@ export const AUTH_USERS: AuthUser[] = [
   {
     id: "agent-1",
     phone: "09122222222",
-    email: "agent@derakhshan.pro",
+    email: siteConfig.panels.demoAgentEmail,
     name: "آرش شایگان",
     role: "agent",
     password: "123456",

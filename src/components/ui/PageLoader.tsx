@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useIntro } from "@/components/providers/IntroProvider";
 import { EASE } from "@/lib/motion";
+import { siteConfig } from "@/config/siteConfig";
 
 const LETTERS = ["D", "E", "R", "A", "K", "H", "S", "H", "A", "N", " ", "P", "R", "O"] as const;
 
@@ -97,7 +98,7 @@ export default function PageLoader() {
         transition={{ duration: phase === "fast" ? 1.1 : 1.75, ease: EASE.expoInOut }}
         role="status"
         aria-live="polite"
-        aria-label="در حال بارگذاری Derakhshan Properties"
+        aria-label={`در حال بارگذاری ${siteConfig.brand.name}`}
       >
         <div className="absolute inset-0 bg-brand-800" data-preloader-bg />
 

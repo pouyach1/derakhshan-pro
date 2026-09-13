@@ -27,6 +27,8 @@ import {
   X,
 } from "lucide-react";
 import { SITE } from "@/config/site";
+import { siteConfig } from "@/config/siteConfig";
+import type { LucideIcon } from "lucide-react";
 
 const spring = { type: "spring" as const, stiffness: 90, damping: 20 };
 
@@ -38,202 +40,31 @@ const fadeUp = {
 const glass =
   "rounded-[2rem] border border-sky-100/60 bg-white/50 shadow-xl shadow-sky-500/5 backdrop-blur-2xl";
 
-const SERVICES = [
-  {
-    id: "sales",
-    title: "خرید و فروش پنت‌هاوس و برج‌های ساختمانی",
-    summary:
-      "معاملات فاخر در نوار شمالی تهران با دسترسی خصوصی به فایل‌های محدود و مذاکره سطح مدیریتی.",
-    image:
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1400&q=80",
-    icon: Building2,
-    features: [
-      "بانک فایل اختصاصی پنت‌هاوس و اسکای‌ویو",
-      "تحلیل مقایسه‌ای قیمت و نقدشوندگی",
-      "هماهنگی بازدید خصوصی خارج از ساعات عمومی",
-    ],
-  },
-  {
-    id: "lease",
-    title: "رهن و اجاره اختصاصی دیپلماتیک و VIP",
-    summary:
-      "اجاره و رهن برای سفارت‌ها، مدیران ارشد و خانواده‌های خاص با بررسی اعتبار و قرارداد امن.",
-    image:
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
-    icon: KeyRound,
-    features: [
-      "غربالگری مستأجر و تضمین اعتبار",
-      "قرارداد دو زبانه برای پرونده‌های بین‌المللی",
-      "مدیریت تحویل و صورت‌جلسه دارایی‌ها",
-    ],
-  },
-  {
-    id: "invest",
-    title: "مدیریت سرمایه‌گذاری و تهاتر املاک کلان",
-    summary:
-      "طراحی پرتفوی ملکی، تهاتر دارایی‌های بزرگ و سناریوهای خروج با نگاه سرمایه‌گذاری نهادی.",
-    image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-    icon: BriefcaseBusiness,
-    features: [
-      "مدل‌سازی بازده و ریسک نقدینگی",
-      "تهاتر ملک با ملک / ملک با پروژه",
-      "گزارش تصمیم‌گیری برای هیئت سرمایه‌گذاری",
-    ],
-  },
-  {
-    id: "legal",
-    title: "مشاوره حقوقی تخصصی و استعلامات ثبتی",
-    summary:
-      "بررسی سند، بازداشت، رهن و تعارضات ثبتی پیش از هر تعهد مالی برای حذف ریسک حقوقی پنهان.",
-    image:
-      "https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=1200&q=80",
-    icon: Scale,
-    features: [
-      "استعلام ثبت و وضعیت مالکیت",
-      "بازبینی بندهای قرارداد پیش از امضا",
-      "همراهی تا تنظیم سند رسمی",
-    ],
-  },
-  {
-    id: "appraisal",
-    title: "ارزیابی و کارشناسی دقیق قیمت (هوشمند)",
-    summary:
-      "قیمت‌گذاری مبتنی بر معاملات اخیر، کیفیت ساخت، موقعیت و ظرفیت سرمایه‌ای ملک.",
-    image:
-      "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80",
-    icon: FileSearch,
-    features: [
-      "گزارش کارشناسی ۴۸ ساعته",
-      "تحلیل حساسیت قیمت و زمان فروش",
-      "پیشنهاد استراتژی مذاکره",
-    ],
-  },
-  {
-    id: "design",
-    title: "بازسازی لوکس و دیزاین اختصاصی ملک",
-    summary:
-      "ارتقای ارزش ملک با طراحی داخلی سطح بالا، مدیریت پیمان و نظارت زیبایی‌شناختی.",
-    image:
-      "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80",
-    icon: Paintbrush,
-    features: [
-      "کانسپت معماری داخلی اختصاصی",
-      "بودجه‌بندی شفاف و کنترل هزینه",
-      "تحویل کلیدآماده با استاندارد VIP",
-    ],
-  },
-] as const;
+const SERVICE_ICONS: Record<string, LucideIcon> = {
+  building: Building2,
+  key: KeyRound,
+  briefcase: BriefcaseBusiness,
+  scale: Scale,
+  "file-search": FileSearch,
+  paintbrush: Paintbrush,
+  sparkles: Sparkles,
+  "calendar-check": CalendarCheck2,
+  shield: ShieldCheck,
+};
 
-const STEPS = [
-  {
-    title: "مشاوره و نیازسنجی اولیه",
-    body: "جلسه کشف اهداف، بودجه، افق زمانی و ترجیحات سبک زندگی یا سرمایه‌گذاری.",
-    icon: Sparkles,
-  },
-  {
-    title: "کارشناسی فنی و حقوقی",
-    body: "بازدید تخصصی، ارزیابی قیمت و استعلامات ثبتی پیش از هر پیشنهاد جدی.",
-    icon: FileSearch,
-  },
-  {
-    title: "برگزاری نشست VIP",
-    body: "نشست خصوصی مذاکره، تطبیق پیشنهادات و تصمیم‌گیری در فضای اختصاصی دفتر.",
-    icon: CalendarCheck2,
-  },
-  {
-    title: "پشتیبانی و انتقال سند",
-    body: "هماهنگی محضر، انتقال امن مالکیت و پیگیری پس از معامله تا تحویل نهایی.",
-    icon: ShieldCheck,
-  },
-] as const;
-
-const COMPARISON = [
-  {
-    feature: "دسترسی به فایل‌های محدود و آف‌مارکت",
-    standard: false,
-    vip: true,
-  },
-  {
-    feature: "پشتیبانی حقوقی ۲۴/۷ در معاملات فعال",
-    standard: false,
-    vip: true,
-  },
-  {
-    feature: "تضمین قرارداد بدون ریسک بندهای مبهم",
-    standard: false,
-    vip: true,
-  },
-  {
-    feature: "لانژ خصوصی برای امضا و انتقال",
-    standard: false,
-    vip: true,
-  },
-  {
-    feature: "گزارش کارشناسی ظرف ۴۸ ساعت",
-    standard: "محدود",
-    vip: true,
-  },
-  {
-    feature: "مدیر اختصاصی پرونده تا پایان معامله",
-    standard: false,
-    vip: true,
-  },
-  {
-    feature: "بازدید عمومی در ساعات اداری",
-    standard: true,
-    vip: true,
-  },
-] as const;
-
-const CALCULATOR_SERVICES = [
-  { id: "sales", label: "خرید / فروش", rate: 0.015 },
-  { id: "lease", label: "رهن و اجاره VIP", rate: 0.01 },
-  { id: "appraisal", label: "کارشناسی قیمت", rate: 0.004 },
-  { id: "legal", label: "مشاوره حقوقی", rate: 0.006 },
-  { id: "invest", label: "سرمایه‌گذاری / تهاتر", rate: 0.012 },
-  { id: "design", label: "بازسازی لوکس", rate: 0.08 },
-] as const;
-
-const TESTIMONIALS = [
-  {
-    quote:
-      "از نیازسنجی تا انتقال سند، همه چیز مثل یک پروتکل خصوصی پیش رفت؛ بدون هیاهوی بازار و با دقت حقوقی کامل.",
-    name: "آریا ک.",
-    role: "سرمایه‌گذار · مشکین دشت",
-  },
-  {
-    quote:
-      "برای اجاره دیپلماتیک به قرارداد دو زبانه و غربالگری اعتبار نیاز داشتیم. تیم درخشان دقیق و محرمانه عمل کرد.",
-    name: "سارا م.",
-    role: "مدیر روابط بین‌الملل",
-  },
-  {
-    quote:
-      "گزارش کارشناسی‌شان مبنای مذاکره ما شد؛ اختلاف قیمت را با داده بستیم، نه حدس.",
-    name: "نیما ر.",
-    role: "خانواده مالک · مشکین دشت",
-  },
-] as const;
-
-const FAQS = [
-  {
-    q: "ضمانت خدمات و پیگیری پس از معامله چگونه است؟",
-    a: "تا تحویل نهایی و رفع نواقص قراردادی همراه شما می‌مانیم. برای پرونده‌های VIP پشتیبانی حقوقی پس از امضا نیز فعال می‌ماند.",
-  },
-  {
-    q: "مسئولیت حقوقی قراردادها با چه کسی است؟",
-    a: "تیم حقوقی داخلی پیش‌نویس و بندها را بررسی می‌کند؛ مسئولیت امضا با طرفین است، اما هیچ بندی بدون تأیید شفافیت حقوقی پیش نمی‌رود.",
-  },
-  {
-    q: "پروتکل محرمانگی اطلاعات چگونه اجرا می‌شود؟",
-    a: "پرونده‌ها فقط در دسترس تیم اختصاصی معامله است. هویت، آدرس و جزئیات مالی بدون مجوز کتبی شما منتشر نمی‌شود.",
-  },
-  {
-    q: "آیا امکان دریافت چند خدمت به‌صورت یکپارچه وجود دارد؟",
-    a: "بله. خرید، کارشناسی، حقوقی و بازسازی می‌توانند در یک پرونده واحد با مدیر اختصاصی هماهنگ شوند.",
-  },
-] as const;
+const page = siteConfig.servicesPage;
+const SERVICES = siteConfig.services.map((service) => ({
+  ...service,
+  icon: SERVICE_ICONS[service.icon] ?? Building2,
+}));
+const STEPS = page.steps.map((step) => ({
+  ...step,
+  icon: SERVICE_ICONS[step.icon] ?? Sparkles,
+}));
+const COMPARISON = page.comparison;
+const CALCULATOR_SERVICES = page.calculatorServices;
+const TESTIMONIALS = page.testimonials;
+const FAQS = page.faqs;
 
 function AmbientOrbs({ reduceMotion }: { reduceMotion: boolean | null }) {
   return (
@@ -303,8 +134,8 @@ export function LuxuryServicesView() {
       <section className="relative isolate overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=80"
-            alt="معماری لوکس خدمات درخشان"
+            src={page.hero.image}
+            alt={page.heroImageAlt}
             fill
             priority
             className="object-cover scale-105"
@@ -332,7 +163,7 @@ export function LuxuryServicesView() {
               className="mb-7 inline-flex items-center gap-2 rounded-full border border-sky-300/30 bg-white/10 px-4 py-2 text-sm text-sky-100 backdrop-blur-2xl"
             >
               <BadgeCheck className="h-4 w-4 text-[#00F0FF]" />
-              ارائه‌دهنده خدمات سطح الف (Class-A Standards)
+              {page.hero.badge}
             </motion.div>
 
             <motion.h1
@@ -340,7 +171,7 @@ export function LuxuryServicesView() {
               transition={spring}
               className="text-4xl font-black leading-[1.15] tracking-tight text-white md:text-6xl lg:text-7xl"
             >
-              خدمات جامع و متمایز در والاترین سطح املاک کشور
+              {page.hero.title}
             </motion.h1>
 
             <motion.p
@@ -348,8 +179,7 @@ export function LuxuryServicesView() {
               transition={spring}
               className="mt-6 max-w-2xl text-base leading-8 tracking-wide text-sky-50/85 md:text-lg"
             >
-              مدیریت VIP املاک، ایمنی سرمایه‌گذاری و تعالی معماری — از اولین
-              مشاوره تا انتقال سند، در یک مسیر یکپارچه و محرمانه.
+              {page.hero.subtitle}
             </motion.p>
 
             <motion.div
@@ -365,14 +195,14 @@ export function LuxuryServicesView() {
                 className="inline-flex items-center gap-2 rounded-full bg-gradient-to-l from-sky-500 to-[#00F0FF] px-7 py-3.5 text-sm font-bold text-[#0B132B] shadow-[0_20px_50px_-20px_rgba(0,240,255,0.75)]"
               >
                 <Sparkles className="h-4 w-4" />
-                مشاهده خدمات
+                {page.hero.primaryCta}
               </motion.a>
               <Link
                 href="/contact"
                 className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-2xl transition hover:bg-white/20"
               >
                 <Phone className="h-4 w-4" />
-                درخواست مشاوره VIP
+                {page.hero.secondaryCta}
               </Link>
             </motion.div>
           </motion.div>
@@ -399,10 +229,10 @@ export function LuxuryServicesView() {
             className="mb-12 max-w-2xl"
           >
             <p className="text-sm font-semibold tracking-[0.2em] text-sky-500">
-              شش ستون خدمات
+              {page.gridSection.eyebrow}
             </p>
             <h2 className="mt-3 text-3xl font-black tracking-tight text-[#0B132B] md:text-5xl">
-              خدمات تخصصی برای معاملات و دارایی‌های خاص
+              {page.gridSection.title}
             </h2>
           </motion.div>
 
@@ -539,7 +369,7 @@ export function LuxuryServicesView() {
               مقایسه خدمات
             </p>
             <h2 className="mt-3 text-3xl font-black text-white md:text-5xl">
-              استاندارد بازار در برابر خدمات VIP درخشان
+              {page.comparisonSection.title}
             </h2>
           </motion.div>
 
@@ -552,8 +382,8 @@ export function LuxuryServicesView() {
           >
             <div className="grid grid-cols-[1.4fr_0.8fr_0.8fr] border-b border-sky-400/20 bg-white/5 px-5 py-4 text-sm font-bold text-sky-100 md:px-8">
               <span>ویژگی</span>
-              <span className="text-center">بازار استاندارد</span>
-              <span className="text-center text-[#00F0FF]">درخشان VIP</span>
+              <span className="text-center">{page.comparisonSection.standardColumn}</span>
+              <span className="text-center text-[#00F0FF]">{page.comparisonSection.vipColumn}</span>
             </div>
             {COMPARISON.map((row) => (
               <div

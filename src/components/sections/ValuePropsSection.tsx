@@ -1,18 +1,21 @@
 import { VALUE_PROPS } from "@/config/home";
+import { siteConfig } from "@/config/siteConfig";
 
 export default function ValuePropsSection() {
+  const section = siteConfig.home.valuePropsSection;
+
   return (
     <section className="bg-slate-50 py-section-md text-slate-900">
       <div className="rio-container">
         <div className="mb-12 max-w-3xl">
           <p className="font-vazirmatn text-xs font-semibold tracking-[0.08em] text-sky-500">
-            چرا درخشان پرو
+            {section.eyebrow}
           </p>
           <h2 className="mt-3 font-vazirmatn text-2xl font-semibold leading-relaxed md:text-4xl">
-            چهار ستون یک تجربه ملکی فاخر
+            {section.title}
           </h2>
           <p className="mt-4 font-vazirmatn text-sm leading-relaxed text-slate-600 md:text-base">
-            از دسترسی آف‌مارکت تا انضباط حقوقی و استراتژی سرمایه؛ هر بخش برای تصمیم‌های جدی طراحی شده است.
+            {section.subtitle}
           </p>
         </div>
 

@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/siteConfig";
 import type { Metadata } from "next";
 import { Vazirmatn } from "next/font/google";
 import AgentShell from "@/components/agent/AgentShell";
@@ -9,7 +10,7 @@ const vazirmatn = Vazirmatn({
 });
 
 export const metadata: Metadata = {
-  title: "پنل مشاور | درخشان پرو",
+  title: `${siteConfig.panels.agentTitle} | ${siteConfig.brand.productNameFa}`,
   description: "CRM اختصاصی مشاور — املاک، مشتریان و بازدیدهای شخصی",
 };
 

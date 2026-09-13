@@ -6,8 +6,9 @@ import {
   type AuthUser,
   type UserRole,
 } from "@/config/auth";
+import { siteConfig } from "@/config/siteConfig";
 
-export const AUTH_COOKIE = "derakhshan_auth";
+export const AUTH_COOKIE = "agency_auth";
 
 export type DealIntent = "buy" | "rent" | "invest";
 
@@ -43,10 +44,7 @@ export const DEAL_INTENT_LABELS: Record<DealIntent, string> = {
   invest: "سرمایه‌گذاری",
 };
 
-export const NEIGHBORHOOD_OPTIONS = [
-  "مشکین دشت",
-  "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
-] as const;
+export const NEIGHBORHOOD_OPTIONS = siteConfig.panels.neighborhoods;
 
 export const BUDGET_PRESETS = [
   { label: "تا ۱۰ میلیارد", min: 0, max: 10_000_000_000 },

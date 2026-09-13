@@ -19,6 +19,7 @@ import {
 import { clearClientSession, readClientSession } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import AuthToast from "@/components/auth/AuthToast";
+import { siteConfig } from "@/config/siteConfig";
 
 const NAV_ITEMS = [
   { href: "/admin/dashboard", label: "خانه" },
@@ -52,7 +53,7 @@ export default function AdminHeader({
             </svg>
           </span>
           <div className="hidden sm:block">
-            <p className="text-sm font-semibold text-admin-navy">درخشان پرو</p>
+            <p className="text-sm font-semibold text-admin-navy">{siteConfig.brand.productNameFa}</p>
             <p className="text-[11px] text-slate-500">سامانه مدیریت آگهی</p>
           </div>
         </Link>

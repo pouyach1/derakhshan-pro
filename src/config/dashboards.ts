@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/siteConfig";
 import { ADMIN_AGENTS } from "@/config/admin";
 
 export type AgentStatus = "active" | "away" | "inactive";
@@ -60,8 +61,8 @@ const AGENT_DASHBOARD: Record<string, AgentDashboardData> = {
     listings: [
       {
         id: "al1",
-        title: "دپارتمان درخشان",
-        location: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
+        title: siteConfig.brand.nameFa,
+        location: siteConfig.contact.address.line1,
         price: "۴۸ میلیارد",
         views: 2140,
         status: "published",
@@ -69,8 +70,8 @@ const AGENT_DASHBOARD: Record<string, AgentDashboardData> = {
       },
       {
         id: "al2",
-        title: "دپارتمان درخشان",
-        location: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
+        title: siteConfig.brand.nameFa,
+        location: siteConfig.contact.address.line1,
         price: "۳۲ میلیارد",
         views: 1680,
         status: "negotiation",
@@ -78,8 +79,8 @@ const AGENT_DASHBOARD: Record<string, AgentDashboardData> = {
       },
       {
         id: "al3",
-        title: "دپارتمان درخشان",
-        location: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
+        title: siteConfig.brand.nameFa,
+        location: siteConfig.contact.address.line1,
         price: "۱۸ میلیارد",
         views: 980,
         status: "published",
@@ -87,8 +88,8 @@ const AGENT_DASHBOARD: Record<string, AgentDashboardData> = {
       },
       {
         id: "al4",
-        title: "دپارتمان درخشان",
-        location: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
+        title: siteConfig.brand.nameFa,
+        location: siteConfig.contact.address.line1,
         price: "۱۲ میلیارد",
         views: 640,
         status: "draft",

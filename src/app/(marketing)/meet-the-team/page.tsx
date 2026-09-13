@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { LuxuryMeetTeamView } from "@/components/team/LuxuryMeetTeamView";
-import { SITE } from "@/config/site";
+import { siteConfig } from "@/config/siteConfig";
 
 export const metadata: Metadata = {
-  title: `تیم مشاوران | ${SITE.nameFa}`,
-  description:
-    "آشنایی با نخبگان درخشان پرو — مدیریت ارشد، مشاوران پنت‌هاوس، کارشناسان ویلا و دپارتمان حقوقی با استاندارد VIP.",
+  title: `${siteConfig.teamPage.seoTitle} | ${siteConfig.brand.nameFa}`,
+  description: siteConfig.teamPage.seoDescription,
 };
 
 export default function MeetTheTeamPage() {
