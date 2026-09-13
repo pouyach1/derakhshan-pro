@@ -8,12 +8,12 @@ import {
   useTransform,
 } from "framer-motion";
 import { Play } from "lucide-react";
-
-const VIDEO_SRC = "/videos/hero-video.mp4";
+import { siteConfig } from "@/config/siteConfig";
 
 export default function VideoTourSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
+  const tour = siteConfig.videoTour;
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -42,13 +42,13 @@ export default function VideoTourSection() {
         <div className="mb-8 flex flex-col items-center text-center md:mb-10">
           <span className="inline-flex items-center gap-2 rounded-full border border-sky-200/70 bg-white/70 px-4 py-2 font-vazirmatn text-sm text-slate-800 shadow-sm backdrop-blur-xl">
             <span className="h-2 w-2 rounded-full bg-[#00F0FF]" />
-            تور سینمایی املاک درخشان
+            {tour.badge}
           </span>
           <h2
             id="video-tour-heading"
             className="mt-4 max-w-2xl font-vazirmatn text-3xl font-black tracking-tight text-[#0B132B] md:text-4xl"
           >
-            تجربه بصری ملک، هم‌زمان با حرکت شما
+            {tour.title}
           </h2>
         </div>
 
@@ -58,13 +58,13 @@ export default function VideoTourSection() {
         >
           <video
             className="absolute inset-0 h-full w-full object-cover"
-            src={VIDEO_SRC}
+            src={tour.videoSrc}
             autoPlay
             loop
             muted
             playsInline
             preload="metadata"
-            poster="/assets/images/hero-mobile.webp"
+            poster={tour.poster}
           />
 
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0B132B]/75 via-transparent to-[#0B132B]/20" />
@@ -72,10 +72,10 @@ export default function VideoTourSection() {
           <div className="absolute inset-x-0 bottom-0 p-5 md:p-7">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-bold text-[#00F0FF] backdrop-blur-md">
               <Play className="h-3.5 w-3.5 fill-current" />
-              پخش زنده تور اختصاصی
+              {tour.liveBadge}
             </div>
             <p className="mt-3 max-w-md font-vazirmatn text-base font-semibold text-white md:text-lg">
-              از نقطه کوچک تا قاب کامل — فقط با اسکرول.
+              {tour.caption}
             </p>
           </div>
         </motion.div>

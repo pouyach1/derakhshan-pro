@@ -33,6 +33,8 @@ import {
   Trophy,
 } from "lucide-react";
 import { SITE } from "@/config/site";
+import { siteConfig } from "@/config/siteConfig";
+import type { LucideIcon } from "lucide-react";
 
 type DealCategory =
   | "all"
@@ -51,132 +53,22 @@ const fadeUp = {
 const glass =
   "rounded-[2rem] border border-sky-100/60 bg-white/60 shadow-2xl shadow-sky-500/5 backdrop-blur-2xl";
 
-const FILTERS: { id: DealCategory; label: string }[] = [
-  { id: "all", label: "همه معاملات" },
-  { id: "penthouse", label: "پنت‌هاوس و برج‌ها" },
-  { id: "villa", label: "ویلایی و مستغلات" },
-  { id: "commercial", label: "املاک اداری/تجاری" },
-  { id: "diplomatic", label: "معاملات دیپلماتیک" },
-];
+const METRIC_ICONS: Record<string, LucideIcon> = {
+  clock: Clock3,
+  "file-check": FileCheck2,
+  trophy: Trophy,
+  scale: Scale,
+};
 
-const DEALS = [
-  {
-    id: "fershteh-duplex",
-    category: "penthouse" as DealCategory,
-    title: "دپارتمان درخشان",
-    image:
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1600&q=80",
-    details: ["۶ خواب", "استخر اختصاصی", "معامله‌شده در ۱۴۰۲"],
-    location: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
-    valueLabel: "Luxury Penthouse",
-  },
-  {
-    id: "niavaran-tower",
-    category: "penthouse" as DealCategory,
-    title: "دپارتمان درخشان",
-    image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
-    details: ["۳۵۰ متر", "تراس گاردن", "معامله‌شده در ۱۴۰۲"],
-    location: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
-    valueLabel: "Modern Glass Tower",
-  },
-  {
-    id: "lavasan-villa",
-    category: "villa" as DealCategory,
-    title: "دپارتمان درخشان",
-    image:
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=80",
-    details: ["فرنیش کامل", "دید ۳۶۰ درجه", "معامله‌شده در ۱۴۰۳"],
-    location: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
-    valueLabel: "Forest Villa Architecture",
-  },
-  {
-    id: "elahieh-commercial",
-    category: "commercial" as DealCategory,
-    title: "دپارتمان درخشان",
-    image:
-      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80",
-    details: ["۲۰ واحد تجاری", "معامله یکجا", "معامله‌شده در ۱۴۰۳"],
-    location: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
-    valueLabel: "Executive Commercial Complex",
-  },
-  {
-    id: "zaferanieh-minimal",
-    category: "penthouse" as DealCategory,
-    title: "دپارتمان درخشان",
-    image:
-      "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1600&q=80",
-    details: ["پاگرد اختصاصی", "۴ پارکینگ", "معامله‌شده در ۱۴۰۳"],
-    location: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
-    valueLabel: "Minimalist Interior Lounge",
-  },
-  {
-    id: "mahmoudieh-mansion",
-    category: "diplomatic" as DealCategory,
-    title: "دپارتمان درخشان",
-    image:
-      "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1600&q=80",
-    details: ["معماری اصیل", "حیاط مشجر", "معامله‌شده در ۱۴۰۳"],
-    location: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
-    valueLabel: "Classical Estate",
-  },
-] as const;
-
-const TIMELINE = [
-  {
-    year: "۱۴۰۱",
-    title: "افتتاح مسیر معاملات محرمانه VIP",
-    body: "راه‌اندازی پروتکل انتقال خصوصی برای پرونده‌های بالای سقف عمومی بازار.",
-  },
-  {
-    year: "۱۴۰۲",
-    title: "دپارتمان درخشان",
-    body: "بستن معامله دوبلکس ۸۰۰ متری با کارشناسی کامل سند و تحویل بدون حاشیه.",
-  },
-  {
-    year: "۱۴۰۲",
-    title: "دپارتمان درخشان",
-    body: "انتقال مالکیت واحدهای منتخب برج‌باغ با ساختار حقوقی چندلایه.",
-  },
-  {
-    year: "۱۴۰۳",
-    title: "دپارتمان درخشان",
-    body: "خرید یکجای ۲۰ واحد تجاری برای سرمایه‌گذار نهادی در کمتر از سه هفته.",
-  },
-  {
-    year: "۱۴۰۳",
-    title: "دپارتمان درخشان",
-    body: "تکمیل عمارت کلاسیک با قرارداد دوزبانه و محرمانگی کامل هویت طرفین.",
-  },
-] as const;
-
-const METRICS = [
-  { icon: Clock3, value: "۱۴ روز", label: "میانگین زمان فروش" },
-  { icon: FileCheck2, value: "۱۰۰٪", label: "اصالت سند و کارشناسی" },
-  { icon: Trophy, value: "۸۵۰+", label: "معامله موفق" },
-  { icon: Scale, value: "۰٪", label: "پرونده حقوقی / مناقشه" },
-] as const;
-
-const TESTIMONIALS = [
-  {
-    quote:
-      "سرعت بستن معامله شگفت‌انگیز بود؛ بدون افشای هویت و با دقت حقوقی کامل.",
-    name: "مالک دپارتمان درخشان",
-    role: "فروشنده · پرونده ۱۴۰۲",
-  },
-  {
-    quote:
-      "برای خرید دپارتمان درخشان همه چیز محرمانه و حرفه‌ای پیش رفت؛ از کارشناسی تا انتقال سند.",
-    name: "خریدار بین‌المللی",
-    role: "خریدار · پرونده ۱۴۰۳",
-  },
-  {
-    quote:
-      "معامله یکجای مجتمع اداری را در زمانی بستیم که بازار هنوز در حال مذاکره بود.",
-    name: "مدیر سرمایه‌گذاری",
-    role: "خریدار نهادی · مشکین دشت",
-  },
-] as const;
+const page = siteConfig.doneDealsPage;
+const FILTERS = page.filters;
+const DEALS = siteConfig.properties;
+const TIMELINE = page.timeline;
+const METRICS = page.metrics.map((metric) => ({
+  ...metric,
+  icon: METRIC_ICONS[metric.icon] ?? Trophy,
+}));
+const TESTIMONIALS = siteConfig.testimonials;
 
 function AmbientLights({ reduceMotion }: { reduceMotion: boolean | null }) {
   return (
@@ -237,7 +129,7 @@ function ParallaxHero({ reduceMotion }: { reduceMotion: boolean | null }) {
     <section ref={ref} className="relative isolate min-h-[92vh] overflow-hidden">
       <motion.div style={{ y: bgY }} className="absolute inset-0 scale-110">
         <Image
-          src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2200&q=80"
+          src={page.hero.image}
           alt="پوشش معماری معاملات موفق"
           fill
           priority
@@ -281,7 +173,7 @@ function ParallaxHero({ reduceMotion }: { reduceMotion: boolean | null }) {
             className="mb-7 inline-flex items-center gap-2 rounded-full border border-sky-300/30 bg-white/10 px-4 py-2 text-sm text-sky-100 backdrop-blur-2xl"
           >
             <Trophy className="h-4 w-4 text-[#00F0FF]" />
-            ثبت رکورد گران‌ترین پنت‌هاوس معامله‌شده سال
+            {page.hero.badge}
           </motion.div>
 
           <motion.h1
@@ -289,7 +181,7 @@ function ParallaxHero({ reduceMotion }: { reduceMotion: boolean | null }) {
             transition={spring}
             className="text-4xl font-black leading-[1.12] tracking-tight text-white md:text-6xl lg:text-7xl"
           >
-            کارنامه درخشان؛ گزیده‌ای از برترین معاملات انجام‌شده
+            {page.hero.title}
           </motion.h1>
 
           <motion.p
@@ -297,8 +189,7 @@ function ParallaxHero({ reduceMotion }: { reduceMotion: boolean | null }) {
             transition={spring}
             className="mt-6 max-w-2xl text-base leading-8 tracking-wide text-sky-50/85 md:text-lg"
           >
-            تجربه‌ای سینمایی از پرونده‌های بسته‌شده؛ با عمق بصری پارالاکس،
-            محرمانگی کامل و استاندارد حقوقی سخت‌گیرانه.
+            {page.hero.subtitle}
           </motion.p>
 
           <motion.div
@@ -312,13 +203,13 @@ function ParallaxHero({ reduceMotion }: { reduceMotion: boolean | null }) {
               className="inline-flex items-center gap-2 rounded-full bg-gradient-to-l from-sky-500 to-[#00F0FF] px-7 py-3.5 text-sm font-bold text-[#0B132B] shadow-[0_20px_50px_-18px_rgba(0,240,255,0.8)]"
             >
               <Sparkles className="h-4 w-4" />
-              مشاهده پرونده‌ها
+              {page.hero.primaryCta}
             </motion.a>
             <Link
               href="/contact"
               className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-2xl transition hover:bg-white/20"
             >
-              مشاوره فروش محرمانه
+              {page.hero.secondaryCta}
             </Link>
           </motion.div>
         </motion.div>

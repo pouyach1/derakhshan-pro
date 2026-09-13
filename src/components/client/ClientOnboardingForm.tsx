@@ -15,6 +15,7 @@ import {
   type DealIntent,
 } from "@/lib/auth";
 import { cn } from "@/lib/utils";
+import { siteConfig } from "@/config/siteConfig";
 
 const STEPS = [
   { id: "name", title: "نام و نام خانوادگی" },
@@ -119,7 +120,7 @@ export default function ClientOnboardingForm() {
       className="mx-auto w-full max-w-xl rounded-[1.75rem] border border-slate-200/60 bg-white/85 p-5 shadow-xl shadow-slate-900/5 backdrop-blur-md sm:p-7"
     >
       <div className="mb-6">
-        <p className="font-vazirmatn text-xs text-slate-500">پروفایل مشتری · درخشان پرو</p>
+        <p className="font-vazirmatn text-xs text-slate-500">{`پروفایل مشتری · ${siteConfig.brand.productNameFa}`}</p>
         <h1 className="mt-1 font-vazirmatn text-xl font-semibold text-slate-900 sm:text-2xl">
           تکمیل پروفایل ملکی
         </h1>

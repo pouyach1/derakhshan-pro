@@ -17,6 +17,7 @@ import {
   verifyCredentials,
 } from "@/lib/auth";
 import { cn } from "@/lib/utils";
+import { siteConfig } from "@/config/siteConfig";
 
 const item = {
   hidden: { opacity: 0, y: 14 },
@@ -90,7 +91,7 @@ export default function LoginForm() {
             <BrandMark />
           </span>
           <span className="text-lg font-bold tracking-tight text-slate-900">
-            درخشان<span className="text-blue-600">پرو</span>
+            {siteConfig.brand.shortNameFa}
           </span>
         </div>
         <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
@@ -123,7 +124,7 @@ export default function LoginForm() {
           label="ایمیل / موبایل"
           value={identifier}
           onChange={setIdentifier}
-          placeholder="۰۹۱۲۱۲۳۴۵۶۷ یا admin@derakhshan.pro"
+          placeholder={`۰۹۱۲۱۲۳۴۵۶۷ یا ${siteConfig.panels.demoAdminEmail}`}
           autoComplete="username"
           dir="rtl"
           error={Boolean(error)}
@@ -208,7 +209,7 @@ export default function LoginForm() {
       </motion.p>
 
       <motion.p variants={item} className="mt-4 text-center text-[11px] leading-relaxed text-slate-400">
-        نسخه آزمایشی: admin@derakhshan.pro / agent@derakhshan.pro (۱۲۳۴۵۶) · سایر کاربران کد
+        نسخه آزمایشی: {siteConfig.panels.demoAdminEmail} / {siteConfig.panels.demoAgentEmail} (۱۲۳۴۵۶) · سایر کاربران کد
         یک‌بارمصرف ۱۲۳۴
       </motion.p>
     </motion.div>

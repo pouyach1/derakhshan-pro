@@ -3,6 +3,7 @@
 import { motion, useMotionTemplate, useMotionValue, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
 import { useRef } from "react";
+import { siteConfig } from "@/config/siteConfig";
 
 export default function LoginHero() {
   const ref = useRef<HTMLDivElement>(null);
@@ -46,7 +47,7 @@ export default function LoginHero() {
         <motion.div style={{ x: shiftX, y: shiftY }} className="absolute -inset-8">
           <Image
             src="/images/landing/hero/banner.jpg"
-            alt="نمای معماری لوکس املاک درخشان"
+            alt={siteConfig.panels.loginHeroAlt}
             fill
             priority
             className="object-cover"
@@ -67,7 +68,7 @@ export default function LoginHero() {
             className="max-w-[17rem] space-y-3"
           >
             <span className="inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white/90 ring-1 ring-white/20 backdrop-blur-md">
-              املاک منتخب درخشان
+              {siteConfig.brand.shortNameFa}
             </span>
             <p className="text-lg font-semibold leading-snug text-white drop-shadow-[0_10px_28px_rgba(0,0,0,0.45)] xl:text-xl">
               هزاران ملک برای خرید، فروش یا اجاره را با مشاوران معتمد مرور کنید.

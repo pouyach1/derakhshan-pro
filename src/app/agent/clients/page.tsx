@@ -19,6 +19,7 @@ import {
 } from "@/config/agent-crm";
 import { useAgentScope } from "@/hooks/useAgentScope";
 import { cn } from "@/lib/utils";
+import { siteConfig } from "@/config/siteConfig";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -228,7 +229,7 @@ export default function AgentClientsPage() {
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                   rows={3}
-                  placeholder="بازدید از دپارتمان درخشان انجام شد — خریدار از نقشه راضی بود ولی تخفیف می‌خواهد"
+                  placeholder={`بازدید از ${siteConfig.brand.nameFa} انجام شد — خریدار از نقشه راضی بود ولی تخفیف می‌خواهد`}
                   className="w-full resize-none rounded-2xl border border-slate-200 bg-[#F1EFEA]/50 px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
                 />
                 <button

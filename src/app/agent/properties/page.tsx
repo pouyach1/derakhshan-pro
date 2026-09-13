@@ -21,6 +21,7 @@ import {
 } from "@/config/agent-crm";
 import { useAgentScope } from "@/hooks/useAgentScope";
 import { cn } from "@/lib/utils";
+import { siteConfig } from "@/config/siteConfig";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -359,7 +360,7 @@ export default function AgentPropertiesPage() {
                             value={draft.title}
                             onChange={(e) => setDraft((d) => ({ ...d, title: e.target.value }))}
                             className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
-                            placeholder="مثلاً دپارتمان درخشان"
+                            placeholder={`مثلاً ${siteConfig.brand.nameFa}`}
                           />
                         </label>
                         <label className="block text-sm text-slate-600">

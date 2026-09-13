@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/siteConfig";
 import type { Metadata } from "next";
 import { Vazirmatn } from "next/font/google";
 
@@ -9,7 +10,7 @@ const vazirmatn = Vazirmatn({
 });
 
 export const metadata: Metadata = {
-  title: "تکمیل پروفایل مشتری | درخشان پرو",
+  title: `${siteConfig.panels.clientTitle} | ${siteConfig.brand.productNameFa}`,
   description: "تنظیم پروفایل ملکی برای پیشنهادهای دقیق‌تر",
 };
 

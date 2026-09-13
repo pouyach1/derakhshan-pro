@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { LuxuryContactView } from "@/components/contact/LuxuryContactView";
-import { SITE } from "@/config/site";
+import { siteConfig } from "@/config/siteConfig";
 
 export const metadata: Metadata = {
-  title: `ارتباط VIP | ${SITE.nameFa}`,
-  description:
-    "صفحه ارتباط لوکس درخشان پرو — پشتیبانی VIP، جلسه حضوری، کارشناسی ملک و مشاوره حقوقی با زیبایی‌شناسی آیس‌اسکای.",
+  title: `${siteConfig.contactPage.seoTitle} | ${siteConfig.brand.nameFa}`,
+  description: siteConfig.contactPage.seoDescription,
 };
 
 export default function ContactPage() {

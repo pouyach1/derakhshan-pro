@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/siteConfig";
 import type { Metadata } from "next";
 import { Vazirmatn } from "next/font/google";
 import AdminShell from "@/components/admin/AdminShell";
@@ -9,7 +10,7 @@ const vazirmatn = Vazirmatn({
 });
 
 export const metadata: Metadata = {
-  title: "پنل مدیریت | درخشان پرو",
+  title: `${siteConfig.panels.adminTitle} | ${siteConfig.brand.productNameFa}`,
   description: "مدیریت آگهی‌ها، پیگیری مشتریان، مشاوران و تنظیمات دفتر املاک",
 };
 

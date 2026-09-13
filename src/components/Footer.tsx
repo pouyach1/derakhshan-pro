@@ -15,54 +15,28 @@ import {
   Send,
   ShieldCheck,
   Sparkles,
+  type LucideIcon,
 } from "lucide-react";
 import { NAV, SITE } from "@/config/site";
+import { siteConfig, type SiteIconKey } from "@/config/siteConfig";
 
 const spring = { type: "spring" as const, stiffness: 90, damping: 18 };
 
-const PROPERTY_LINKS = [
-  { href: "/", label: "صفحه اصلی" },
-  { href: "/contact", label: "درباره ما / مشاوره" },
-  { href: "/meet-the-team", label: "تیم مشاوران" },
-  { href: "/done-deals", label: "معاملات انجام‌شده" },
-];
+const FOOTER_ICONS: Record<string, LucideIcon> = {
+  instagram: Instagram,
+  send: Send,
+  "message-circle": MessageCircle,
+  linkedin: Linkedin,
+};
 
-const SERVICE_LINKS = [
-  { href: "/services", label: "خرید و فروش پنت‌هاوس" },
-  { href: "/services", label: "رهن دیپلماتیک" },
-  { href: "/services", label: "مشاوره حقوقی" },
-  { href: "/services", label: "ارزیابی هوشمند" },
-];
+const PROPERTY_LINKS = siteConfig.footer.columns.brand.links;
+const SERVICE_LINKS = siteConfig.footer.columns.services.links;
+const PANEL_LINKS = siteConfig.footer.columns.panels.links;
 
-const PANEL_LINKS = [
-  { href: "/login", label: "ورود مشاوران" },
-  { href: "/admin/dashboard", label: "ورود مدیر" },
-  { href: "/admin/properties/new", label: "ثبت ملک جدید" },
-  { href: "/contact", label: "قوانین محرمانگی" },
-];
-
-const SOCIAL_LINKS = [
-  {
-    href: "https://instagram.com/derakhshan.pro",
-    label: "اینستاگرام لوکس",
-    icon: Instagram,
-  },
-  {
-    href: "https://t.me/derakhshanpro",
-    label: "تلگرام فایل‌های VIP",
-    icon: Send,
-  },
-  {
-    href: `https://wa.me/989121000000`,
-    label: "واتس‌اپ",
-    icon: MessageCircle,
-  },
-  {
-    href: SITE.social.linkedin,
-    label: "لینکدین",
-    icon: Linkedin,
-  },
-];
+const SOCIAL_LINKS = siteConfig.footer.socialLinks.map((item) => ({
+  ...item,
+  icon: FOOTER_ICONS[item.icon as SiteIconKey] ?? MessageCircle,
+}));
 
 function formatTehranTime(date: Date) {
   return new Intl.DateTimeFormat("fa-IR", {
@@ -119,6 +93,7 @@ export default function Footer() {
   const [contact, setContact] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
   const [showTop, setShowTop] = useState(false);
+  const footer = siteConfig.footer;
 
   useEffect(() => {
     const id = window.setInterval(() => {
@@ -168,24 +143,24 @@ export default function Footer() {
               backgroundClip: "text",
             }}
           >
-            DERAKHSHAN
+            {siteConfig.brand.watermark}
           </p>
 
           <div className="relative z-10 mx-auto max-w-3xl pt-10 text-center md:pt-16">
             <p className="text-sm font-semibold tracking-[0.28em] text-sky-400">
-              املاک درخشان
+              {siteConfig.brand.shortNameFa}
             </p>
             <h2 className="mt-4 text-3xl font-black leading-tight tracking-tight md:text-5xl">
-              آماده آغاز یک تجربه متفاوت در معاملات املاک لوکس هستید؟
+              {footer.ctaTitle}
             </h2>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <motion.div whileHover={{ y: -3, scale: 1.03 }} transition={spring}>
                 <Link
-                  href="/contact"
+                  href={footer.ctaPrimary.href}
                   className="inline-flex items-center gap-2 rounded-full bg-gradient-to-l from-sky-500 to-[#00F0FF] px-6 py-3.5 text-sm font-bold text-[#070C18] shadow-[0_20px_50px_-18px_rgba(0,240,255,0.75)]"
                 >
                   <Sparkles className="h-4 w-4" />
-                  رزرو جلسه مشاوره VIP
+                  {footer.ctaPrimary.label}
                 </Link>
               </motion.div>
               <motion.div whileHover={{ y: -3, scale: 1.03 }} transition={spring}>
@@ -194,7 +169,7 @@ export default function Footer() {
                   className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-6 py-3.5 text-sm font-bold text-white backdrop-blur-2xl transition hover:border-sky-400/50 hover:text-sky-300"
                 >
                   <Building2 className="h-4 w-4" />
-                  ارتباط مستقیم با مدیریت
+                  {footer.ctaSecondaryLabel}
                 </a>
               </motion.div>
             </div>
@@ -206,7 +181,7 @@ export default function Footer() {
           <div className="inline-flex items-center gap-3 rounded-2xl border border-white/10 bg-black/20 px-4 py-3">
             <Clock3 className="h-4 w-4 text-[#00F0FF]" />
             <div>
-              <p className="text-[11px] text-slate-400">ساعت تهران</p>
+              <p className="text-[11px] text-slate-400">{footer.clockLabel}</p>
               <p className="font-mono text-lg tracking-wider text-[#00F0FF]">
                 {time}
               </p>
@@ -219,10 +194,10 @@ export default function Footer() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#00F0FF] opacity-70" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-[#00F0FF]" />
               </span>
-              دفتر مرکزی مشکین دشت • آماده پاسخگویی به متقاضیان VIP
+              {footer.statusBadge}
             </div>
             <p className="text-sm leading-7 text-slate-300">
-              مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش
+              {SITE.address.line1}
             </p>
             <p className="text-xs text-slate-500">
               {SITE.address.line1} · {SITE.phone} · {SITE.email}
@@ -235,27 +210,26 @@ export default function Footer() {
           <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
             <div>
               <p className="text-sm font-semibold tracking-[0.18em] text-sky-400">
-                خبرنامه فایل‌های محرمانه
+                {footer.newsletterEyebrow}
               </p>
               <h3 className="mt-3 text-2xl font-black md:text-3xl">
-                دریافت فایل‌های اختصاصی و محرمانه (Off-Market)
+                {footer.newsletterTitle}
               </h3>
               <p className="mt-3 max-w-xl text-sm leading-7 text-slate-400">
-                فقط برای موکلان تاییدشده؛ اعلان پروژه‌های آف‌مارکت، پنت‌هاوس‌های
-                محدود و فرصت‌های سرمایه‌گذاری خصوصی.
+                {footer.newsletterBody}
               </p>
             </div>
 
             <form onSubmit={onNewsletter} className="space-y-3">
               <label className="block text-xs font-semibold text-slate-400">
-                ایمیل یا شماره موبایل
+                {footer.newsletterLabel}
               </label>
               <div className="flex gap-2">
                 <input
                   required
                   value={contact}
                   onChange={(e) => setContact(e.target.value)}
-                  placeholder="hello@... یا ۰۹۱۲..."
+                  placeholder={footer.newsletterPlaceholder}
                   className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-[#00F0FF] focus:shadow-[0_0_0_4px_rgba(0,240,255,0.15)]"
                 />
                 <motion.button
@@ -278,7 +252,7 @@ export default function Footer() {
                     exit={{ opacity: 0 }}
                     className="text-xs font-semibold text-[#00F0FF]"
                   >
-                    درخواست شما ثبت شد. فایل‌های محرمانه به‌زودی ارسال می‌شود.
+                    {footer.newsletterSuccess}
                   </motion.p>
                 )}
               </AnimatePresence>
@@ -290,7 +264,7 @@ export default function Footer() {
         <section className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <p className="mb-4 text-sm font-bold tracking-wide text-sky-300">
-              دپارتمان درخشان
+              {footer.columns.brand.title}
             </p>
             <ul className="space-y-3">
               {PROPERTY_LINKS.map((item) => (
@@ -303,7 +277,7 @@ export default function Footer() {
 
           <div>
             <p className="mb-4 text-sm font-bold tracking-wide text-sky-300">
-              خدمات اختصاصی
+              {footer.columns.services.title}
             </p>
             <ul className="space-y-3">
               {SERVICE_LINKS.map((item) => (
@@ -316,7 +290,7 @@ export default function Footer() {
 
           <div>
             <p className="mb-4 text-sm font-bold tracking-wide text-sky-300">
-              دسترسی سریع و پنل‌ها
+              {footer.columns.panels.title}
             </p>
             <ul className="space-y-3">
               {PANEL_LINKS.map((item) => (
@@ -329,7 +303,7 @@ export default function Footer() {
 
           <div>
             <p className="mb-4 text-sm font-bold tracking-wide text-sky-300">
-              شبکه‌ها و ارتباطات
+              {footer.columns.socialTitle}
             </p>
             <ul className="space-y-3">
               {SOCIAL_LINKS.map((item) => {
@@ -369,11 +343,11 @@ export default function Footer() {
         <section className="flex flex-col gap-4 border-t border-white/10 pt-8 md:flex-row md:items-center md:justify-between">
           <div className="space-y-2">
             <p className="text-xs leading-6 text-slate-400 md:text-sm">
-              تمامی حقوق مادی و معنوی متعلق به دپارتمان درخشان است © ۲۰۲۶
+              {footer.copyright}
             </p>
             <p className="inline-flex items-center gap-2 text-[11px] text-slate-500">
               <ShieldCheck className="h-3.5 w-3.5 text-sky-400" />
-              پروتکل محرمانگی VIP برای تمام پرونده‌ها فعال است
+              {footer.privacyNote}
             </p>
           </div>
 
@@ -395,7 +369,7 @@ export default function Footer() {
         {showTop && (
           <motion.button
             type="button"
-            aria-label="بازگشت به بالا"
+            aria-label={footer.backToTop}
             onClick={scrollTop}
             initial={{ opacity: 0, y: 16, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -405,7 +379,7 @@ export default function Footer() {
             className="fixed bottom-6 left-6 z-50 inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-[#070C18]/80 px-4 py-3 text-xs font-bold text-sky-200 shadow-[0_0_40px_-12px_#00F0FF] backdrop-blur-2xl md:bottom-8 md:left-8"
           >
             <ArrowUp className="h-4 w-4 text-[#00F0FF]" />
-            بازگشت به بالا
+            {footer.backToTop}
           </motion.button>
         )}
       </AnimatePresence>

@@ -35,6 +35,8 @@ import {
   X,
 } from "lucide-react";
 import { SITE } from "@/config/site";
+import { siteConfig } from "@/config/siteConfig";
+import type { LucideIcon } from "lucide-react";
 
 type Dept =
   | "all"
@@ -67,148 +69,31 @@ const fadeUp = {
 const glass =
   "rounded-[2rem] border border-sky-100/60 bg-white/50 shadow-2xl shadow-sky-500/10 backdrop-blur-2xl";
 
-const FILTERS: { id: Dept; label: string }[] = [
-  { id: "all", label: "همه اعضا" },
-  { id: "leadership", label: "مدیریت ارشد" },
-  { id: "penthouse", label: "مشاوران پنت‌هاوس و برج" },
-  { id: "villa", label: "کارشناسان ویلا و مستغلات" },
-  { id: "legal", label: "امور حقوقی و ثبتی" },
-];
+const STANDARD_ICONS: Record<string, LucideIcon> = {
+  "badge-check": BadgeCheck,
+  "shield-check": ShieldCheck,
+  briefcase: BriefcaseBusiness,
+};
 
-const AGENTS: Agent[] = [
-  {
-    id: "arsham",
-    name: "دکتر آرشام درخشان",
-    role: "مدیریت ارشد و استراتژیست کلان املاک",
-    department: "leadership",
-    image:
-      "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=1200&q=80",
-    badge: "۲ میلیارد دلار حجم مدیریت سرمایه • ۱۵ سال سابقه",
-    bio: "معمار استراتژی معاملات فوق‌سنگین در نوار شمالی تهران؛ با تمرکز بر ساختاردهی پورتفوی‌های خصوصی و مذاکرات سطح هیئت‌مدیره.",
-    philosophy:
-      "هر معامله باید مثل یک اثر معماری دقیق باشد: شفاف در سازه حقوقی، محرمانه در هویت، و بی‌نقص در اجرا.",
-    stats: [
-      { label: "حجم معاملات هدایت‌شده", value: "$۲B+" },
-      { label: "میانگین زمان جمع‌بندی", value: "۱۲ روز" },
-      { label: "رضایت موکلان VIP", value: "۹۹٪" },
-    ],
-    phone: SITE.phone,
-    whatsapp: "989121000000",
-  },
-  {
-    id: "sara",
-    name: "مهندس سارا رادمن",
-    role: "سرپرست مشاوران پنت‌هاوس و برج‌های الهیه",
-    department: "penthouse",
-    image:
-      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80",
-    badge: "مشاور برتر سال ۱۴۰۲ • متخصص منطقه فرشته",
-    bio: "متخصص اسکای‌لاین الهیه و فرشته؛ از کشف فایل‌های آف‌مارکت تا بستن پنت‌هاوس‌های دوبلکس با استاندارد بازدید خصوصی.",
-    philosophy:
-      "پنت‌هاوس فقط متراژ نیست؛ ترکیب نور، حریم و نقدشوندگی است که باید دقیق قیمت‌گذاری شود.",
-    stats: [
-      { label: "پنت‌هاوس بسته‌شده", value: "۱۲۰+" },
-      { label: "میانگین کلوزینگ", value: "۱۰ روز" },
-      { label: "فایل‌های آف‌مارکت", value: "۶۵٪" },
-    ],
-    phone: SITE.phone,
-    whatsapp: "989121000001",
-  },
-  {
-    id: "kamran",
-    name: "کامران شریفی",
-    role: "متخصص ویلاهای فاخر لواسان و شمال",
-    department: "villa",
-    image:
-      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=1200&q=80",
-    badge: "رکورددار فروش ۵ ویلای سوپرلوکس",
-    bio: "کارشناس ویلاهای مشرف و مستغلات خاص در لواسان و نوار ساحلی؛ با شبکه مالکین خصوصی و مسیر فروش محرمانه.",
-    philosophy:
-      "ویلای فاخر را باید با داستان مکان فروخت؛ نه فقط با لیست امکانات.",
-    stats: [
-      { label: "ویلای سوپرلوکس", value: "۵ رکورد" },
-      { label: "میانگین بازدید تا پیشنهاد", value: "۴۸ ساعت" },
-      { label: "نرخ بستن معامله", value: "۹۲٪" },
-    ],
-    phone: SITE.phone,
-    whatsapp: "989121000002",
-  },
-  {
-    id: "niloufar",
-    name: "دکتر نیلوفر سپهری",
-    role: "رئیس دپارتمان حقوقی و استعلامات ثبتی",
-    department: "legal",
-    image:
-      "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=1200&q=80",
-    badge: "وکیل پایه یک دادگستری • ۰٪ ریسک حقوقی",
-    bio: "مسئول پالایش حقوقی پرونده‌ها پیش از هر تعهد مالی؛ از استعلام ثبت تا بازبینی بندهای قرارداد و همراهی تا سند رسمی.",
-    philosophy:
-      "زیباترین معامله، معامله‌ای است که هیچ سایه حقوقی باقی نگذارد.",
-    stats: [
-      { label: "پرونده بدون مناقشه", value: "۰٪ ریسک" },
-      { label: "استعلام تا تأیید", value: "۲۴ ساعت" },
-      { label: "قراردادهای دوزبانه", value: "۸۰+" },
-    ],
-    phone: SITE.phone,
-    whatsapp: "989121000003",
-  },
-  {
-    id: "reza",
-    name: "رضا محمدی",
-    role: "مشاور ارشد آپارتمان‌های VIP نیاوران",
-    department: "penthouse",
-    image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=80",
-    badge: "نرخ رضایت ۹۹٪ مشتریان",
-    bio: "تمرکز روی واحدهای VIP نیاوران و پاسداران با رویکرد خدمات پس از معامله و هماهنگی کامل تحویل.",
-    philosophy:
-      "اعتماد مشتری در جزئیات ساخته می‌شود؛ از اولین تماس تا کلیدسپاری.",
-    stats: [
-      { label: "رضایت مشتری", value: "۹۹٪" },
-      { label: "معاملات سال جاری", value: "۴۵+" },
-      { label: "میانگین کلوزینگ", value: "۹ روز" },
-    ],
-    phone: SITE.phone,
-    whatsapp: "989121000004",
-  },
-  {
-    id: "maryam",
-    name: "مریم کاظمی",
-    role: "استراتژیست تهاتر و معاملات دیپلماتیک",
-    department: "leadership",
-    image:
-      "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1200&q=80",
-    badge: "متخصص مذاکرات بین‌المللی",
-    bio: "طراح ساختار تهاتر و معاملات چندطرفه برای موکلان دیپلماتیک و سرمایه‌گذاران بین‌المللی با پروتکل محرمانگی سخت.",
-    philosophy:
-      "در معاملات پیچیده، زبان مشترک همان شفافیت حقوقی و احترام به حریم طرفین است.",
-    stats: [
-      { label: "معاملات دیپلماتیک", value: "۳۰+" },
-      { label: "تهاترهای ساختاریافته", value: "۱۸" },
-      { label: "محرمانگی پرونده", value: "۱۰۰٪" },
-    ],
-    phone: SITE.phone,
-    whatsapp: "989121000005",
-  },
-];
-
-const STANDARDS = [
-  {
-    icon: BadgeCheck,
-    title: "۱۰۰٪ اصالت و احراز هویت مشاوران",
-    body: "هر عضو تیم با مدارک حرفه‌ای و سابقه قابل‌استعلام وارد پرونده موکل می‌شود.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "تعهد به محرمانگی خریدار و فروشنده",
-    body: "هویت، بودجه و جزئیات مذاکره فقط در حلقه اختصاصی پرونده در گردش است.",
-  },
-  {
-    icon: BriefcaseBusiness,
-    title: "داده‌های هوشمند بازار",
-    body: "تصمیم‌ها بر پایه معاملات اخیر، نقدشوندگی محله و ظرفیت سرمایه‌ای ملک گرفته می‌شود.",
-  },
-];
+const page = siteConfig.teamPage;
+const FILTERS = page.filters;
+const AGENTS: Agent[] = siteConfig.agents.map((agent) => ({
+  id: agent.id,
+  name: agent.name,
+  role: agent.role,
+  department: agent.department,
+  image: agent.image,
+  badge: agent.badge,
+  bio: agent.bio,
+  philosophy: agent.philosophy,
+  stats: agent.stats.map((s) => ({ label: s.label, value: s.value })),
+  phone: agent.phone,
+  whatsapp: agent.whatsapp,
+}));
+const STANDARDS = page.standards.map((item) => ({
+  ...item,
+  icon: STANDARD_ICONS[item.icon] ?? BadgeCheck,
+}));
 
 function AmbientOrbs({ reduceMotion }: { reduceMotion: boolean | null }) {
   return (
@@ -481,8 +366,8 @@ export function LuxuryMeetTeamView() {
       <section className="relative isolate overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2200&q=80"
-            alt="تیم نخبگان درخشان"
+            src={page.hero.image}
+            alt={page.heroImageAlt}
             fill
             priority
             className="object-cover scale-105"
@@ -510,7 +395,7 @@ export function LuxuryMeetTeamView() {
               className="mb-7 inline-flex items-center gap-2 rounded-full border border-sky-300/30 bg-white/10 px-4 py-2 text-sm text-sky-100 backdrop-blur-2xl"
             >
               <Trophy className="h-4 w-4 text-[#00F0FF]" />
-              اعضای تاییدشده انجمن بین‌المللی مشاوران VIP
+              {page.hero.badge}
             </motion.div>
 
             <motion.h1
@@ -518,7 +403,7 @@ export function LuxuryMeetTeamView() {
               transition={spring}
               className="text-4xl font-black leading-[1.15] tracking-tight text-white md:text-6xl lg:text-7xl"
             >
-              معماران اعتماد؛ زبده‌ترین نخبگان صنعت املاک کشور
+              {page.hero.title}
             </motion.h1>
 
             <motion.p
@@ -526,8 +411,7 @@ export function LuxuryMeetTeamView() {
               transition={spring}
               className="mt-6 max-w-2xl text-base leading-8 tracking-wide text-sky-50/85 md:text-lg"
             >
-              تیمی از استراتژیست‌ها، مشاوران پنت‌هاوس و حقوقدانان ثبتی که مذاکره
-              سخت، حریم خصوصی و تسلط معماری را در یک استاندارد واحد جمع کرده‌اند.
+              {page.hero.subtitle}
             </motion.p>
           </motion.div>
         </div>
@@ -538,10 +422,10 @@ export function LuxuryMeetTeamView() {
         <section>
           <div className="mb-8 max-w-2xl">
             <p className="text-sm font-semibold tracking-[0.2em] text-sky-500">
-              دپارتمان‌ها
+              {page.filtersSection.eyebrow}
             </p>
             <h2 className="mt-3 text-3xl font-black text-[#0B132B] md:text-4xl">
-              فیلتر اعضای تیم
+              {page.filtersSection.title}
             </h2>
           </div>
 
@@ -728,10 +612,10 @@ export function LuxuryMeetTeamView() {
           <div className="relative z-10 mx-auto max-w-3xl">
             <p className="inline-flex items-center gap-2 rounded-full border border-[#00F0FF]/30 bg-white/5 px-4 py-2 text-sm text-[#00F0FF] backdrop-blur-xl">
               <Building2 className="h-4 w-4" />
-              دعوت به همکاری از نخبگان
+              {page.career.badge}
             </p>
             <h2 className="mt-6 text-3xl font-black text-white md:text-5xl">
-              آیا شما هم یک مشاور تراز اول هستید؟ به تیم نخبگان درخشان بپیوندید.
+              {page.career.title}
             </h2>
             <p className="mt-4 text-sm leading-8 text-sky-100/80 md:text-base">
               اگر در مذاکره، تحلیل بازار یا ساختار حقوقی معاملات لوکس تراز اول
@@ -742,7 +626,7 @@ export function LuxuryMeetTeamView() {
                 href="/contact"
                 className="inline-flex items-center gap-2 rounded-full bg-gradient-to-l from-sky-400 to-[#00F0FF] px-7 py-3.5 text-sm font-bold text-[#0B132B] shadow-[0_20px_50px_-18px_rgba(0,240,255,0.85)]"
               >
-                ارسال درخواست همکاری
+                {page.career.primaryCta}
                 <ArrowLeft className="h-4 w-4" />
               </Link>
               <a
@@ -750,7 +634,7 @@ export function LuxuryMeetTeamView() {
                 className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-xl"
               >
                 <Scale className="h-4 w-4" />
-                ایمیل جذب استعداد: {SITE.email}
+                {page.career.secondaryCtaPrefix} {SITE.email}
               </a>
             </div>
           </div>

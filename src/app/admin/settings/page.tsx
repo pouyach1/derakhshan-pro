@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { siteConfig } from "@/config/siteConfig";
 
 const TABS = [
   { id: "profile", label: "پروفایل ادمین" },
@@ -53,13 +54,13 @@ export default function SettingsPage() {
             {tab === "profile" ? (
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="نام نمایشی">
-                  <input className={inputClass} defaultValue="مدیر دفتر درخشان" />
+                  <input className={inputClass} defaultValue={siteConfig.brand.managerNameFa} />
                 </Field>
                 <Field label="ایمیل">
-                  <input className={inputClass} type="email" defaultValue="manager@derakhshan.ir" />
+                  <input className={inputClass} type="email" defaultValue={siteConfig.contact.email} />
                 </Field>
                 <Field label="شماره تماس">
-                  <input className={inputClass} defaultValue="۰۲۱-۹۱۰۰۰۰۰۰" />
+                  <input className={inputClass} defaultValue={siteConfig.contact.phone} />
                 </Field>
                 <Field label="نقش">
                   <input className={inputClass} defaultValue="مدیر ارشد" readOnly />
@@ -76,10 +77,10 @@ export default function SettingsPage() {
             {tab === "site" ? (
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="نام برند">
-                  <input className={inputClass} defaultValue="دپارتمان درخشان" />
+                  <input className={inputClass} defaultValue={siteConfig.brand.nameFa} />
                 </Field>
                 <Field label="دامنه عمومی">
-                  <input className={inputClass} defaultValue="https://derakhshan.ir" />
+                  <input className={inputClass} defaultValue={siteConfig.panels.publicDomain} />
                 </Field>
                 <Field label="واحد پول پیش‌فرض">
                   <select className={inputClass} defaultValue="irr">
@@ -95,7 +96,7 @@ export default function SettingsPage() {
                   </select>
                 </Field>
                 <Field label="آدرس دفتر" className="sm:col-span-2">
-                  <input className={inputClass} defaultValue="مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش" />
+                  <input className={inputClass} defaultValue={siteConfig.contact.address.line1} />
                 </Field>
               </div>
             ) : null}
@@ -115,7 +116,7 @@ export default function SettingsPage() {
                   onChange={setSmsAlerts}
                 />
                 <Field label="ایمیل اعلان‌ها">
-                  <input className={inputClass} type="email" defaultValue="office@derakhshan.ir" />
+                  <input className={inputClass} type="email" defaultValue={siteConfig.contact.email} />
                 </Field>
               </div>
             ) : null}

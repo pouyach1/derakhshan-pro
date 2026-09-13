@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { LuxuryDoneDealsView } from "@/components/done-deals/LuxuryDoneDealsView";
-import { SITE } from "@/config/site";
+import { siteConfig } from "@/config/siteConfig";
 
 export const metadata: Metadata = {
-  title: `معاملات موفق | ${SITE.nameFa}`,
-  description:
-    "کارنامه درخشان معاملات موفق درخشان پرو — پنت‌هاوس، ویلا، اداری و پرونده‌های دیپلماتیک با محرمانگی کامل.",
+  title: `${siteConfig.doneDealsPage.seoTitle} | ${siteConfig.brand.nameFa}`,
+  description: siteConfig.doneDealsPage.seoDescription,
 };
 
 export default function DoneDealsPage() {

@@ -21,6 +21,7 @@ import {
   type AuthSession,
 } from "@/lib/auth";
 import { cn } from "@/lib/utils";
+import { siteConfig } from "@/config/siteConfig";
 
 const nav = [
   { href: "/agent/dashboard", label: "داشبورد", icon: LayoutDashboard },
@@ -63,7 +64,9 @@ export default function AgentShell({ children }: { children: React.ReactNode }) 
             <div>
               <p className="text-sm font-semibold text-slate-900">پنل مشاور</p>
               <p className="text-xs text-slate-500">
-                {session ? `${displayNameForSession(session)} · مشاور` : "CRM اختصاصی · درخشان پرو"}
+                {session
+                  ? `${displayNameForSession(session)} · مشاور`
+                  : `${siteConfig.panels.agentShellFallback} · ${siteConfig.brand.productNameFa}`}
               </p>
             </div>
           </div>

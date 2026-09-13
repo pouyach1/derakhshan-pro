@@ -13,6 +13,7 @@ import {
   getAgentTasks,
 } from "@/config/agent-crm";
 import { useAgentScope } from "@/hooks/useAgentScope";
+import { siteConfig } from "@/config/siteConfig";
 
 export default function AgentDashboardPage() {
   const agentId = useAgentScope();
@@ -67,7 +68,7 @@ export default function AgentDashboardPage() {
       >
         <p className="text-xs font-medium text-amber-800">نکته VIP دفتر</p>
         <h2 className="mt-1 text-lg font-semibold text-slate-900 sm:text-xl">
-          تمرکز این هفته: بستن مذاکره‌های دپارتمان درخشان
+          {`تمرکز این هفته: بستن مذاکره‌های ${siteConfig.brand.nameFa}`}
         </h2>
         <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">
           دو فایل در وضعیت مذاکره ظرفیت کمیسیون قابل‌توجهی دارند. پیشنهاد می‌شود قبل از پایان هفته،

@@ -29,6 +29,7 @@ import {
 } from "@/config/agent-crm";
 import { EASE, glass } from "@/components/agent/dashboard/shared";
 import { cn } from "@/lib/utils";
+import { siteConfig } from "@/config/siteConfig";
 
 type TabId = "today" | "properties" | "crm" | "toolkit";
 
@@ -122,7 +123,7 @@ function TodayPanel({ tasks }: { tasks: AgentTask[] }) {
     {
       id: "seed-note",
       at: "امروز · ۰۹:۱۵",
-      text: "تماس صبحگاهی با مالک دپارتمان درخشان — آمادگی بازدید ساعت ۱۰:۳۰ تأیید شد.",
+      text: `تماس صبحگاهی با مالک ${siteConfig.brand.nameFa} — آمادگی بازدید ساعت ۱۰:۳۰ تأیید شد.`,
     },
   ]);
   const [draft, setDraft] = useState("");
@@ -227,7 +228,7 @@ function TodayPanel({ tasks }: { tasks: AgentTask[] }) {
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           rows={4}
-          placeholder="مثلاً: تماس با خریدار دپارتمان درخشان — درخواست تخفیف ۳٪ و بازدید مجدد..."
+          placeholder={`مثلاً: تماس با خریدار ${siteConfig.brand.nameFa} — درخواست تخفیف ۳٪ و بازدید مجدد...`}
           className="w-full resize-none rounded-2xl border border-slate-200 bg-[#F1EFEA]/60 px-3.5 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
         />
         <button
@@ -475,7 +476,7 @@ function ClientsPanel({
 
 function ToolsPanel({ commissionRate }: { commissionRate: number }) {
   const [priceInput, setPriceInput] = useState("18000000000");
-  const [dealTitle, setDealTitle] = useState("دپارتمان درخشان");
+  const [dealTitle, setDealTitle] = useState<string>(siteConfig.brand.nameFa);
   const [buyer, setBuyer] = useState("علی رضایی");
   const [seller, setSeller] = useState("مالک محترم");
   const [generated, setGenerated] = useState("");
@@ -485,7 +486,7 @@ function ToolsPanel({ commissionRate }: { commissionRate: number }) {
 
   function generateNote() {
     setGenerated(
-      `پیش‌نویس یادداشت پیش‌قرارداد\n\nموضوع: ${dealTitle}\nخریدار: ${buyer}\nفروشنده: ${seller}\nقیمت توافقی: ${formatBillion(price)}\nحق‌الزحمه تخمینی مشاور (${commissionRate.toLocaleString("fa-IR")}٪): ${formatBillion(commission)}\n\nشرایط: بازدید انجام شده، تمایل طرفین به ادامه مذاکره، نیاز به استعلام مدارک مالکیت و هماهنگی زمان تنظیم مبایعه‌نامه.\n\nتهیه‌کننده: پنل مشاور درخشان پرو`,
+      `پیش‌نویس یادداشت پیش‌قرارداد\n\nموضوع: ${dealTitle}\nخریدار: ${buyer}\nفروشنده: ${seller}\nقیمت توافقی: ${formatBillion(price)}\nحق‌الزحمه تخمینی مشاور (${commissionRate.toLocaleString("fa-IR")}٪): ${formatBillion(commission)}\n\nشرایط: بازدید انجام شده، تمایل طرفین به ادامه مذاکره، نیاز به استعلام مدارک مالکیت و هماهنگی زمان تنظیم مبایعه‌نامه.\n\nتهیه‌کننده: پنل مشاور ${siteConfig.brand.productNameFa}`,
     );
   }
 

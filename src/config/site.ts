@@ -1,31 +1,27 @@
+import { siteConfig } from "@/config/siteConfig";
+
+/** شکل قبلی SITE برای سازگاری با importهای موجود — مقادیر از siteConfig می‌آیند */
 export const SITE = {
-  name: "Derakhshan Properties",
-  nameFa: "دپارتمان درخشان",
-  brandEn: "Derakhshan Properties",
-  tagline: "Luxury Residences & Investment",
-  taglineFa: "مرجع تخصصی املاک و پنت‌هاوس‌های لوکس",
-  description:
-    "دسترسی اختصاصی به برترین آرشیو پنت‌هاوس‌ها، برج‌های مدرن و ویلاهای VIP همراه با مشاوره تخصصی حقوقی و سرمایه‌گذاری.",
-  url: "https://www.derakhshan.pro",
-  email: "hello@derakhshan.pro",
-  phone: "۰۲۱-۹۱۰۰۰۰۰۰",
+  name: siteConfig.brand.name,
+  nameFa: siteConfig.brand.nameFa,
+  brandEn: siteConfig.brand.brandEn,
+  tagline: siteConfig.brand.tagline,
+  taglineFa: siteConfig.brand.taglineFa,
+  description: siteConfig.brand.description,
+  url: siteConfig.seo.url,
+  email: siteConfig.contact.email,
+  phone: siteConfig.contact.phone,
   address: {
-    line1: "مشکین دشت خیابان هدایتکار جنب فروشگاه افق کوروش",
-    line2: "مشکین دشت",
-    region: "البرز",
-    city: "مشکین دشت",
-    postal: "۳۱۷۷۶",
+    line1: siteConfig.contact.address.line1,
+    line2: siteConfig.contact.address.line2,
+    region: siteConfig.contact.address.region,
+    city: siteConfig.contact.address.city,
+    postal: siteConfig.contact.address.postal,
   },
   social: {
-    linkedin: "https://www.linkedin.com/company/derakhshan-properties",
+    linkedin: siteConfig.social.linkedin,
   },
-  ogImage: "/images/landing/hero/banner.jpg",
+  ogImage: siteConfig.seo.ogImage,
 } as const;
 
-export const NAV = [
-  { href: "/", label: "خانه" },
-  { href: "/meet-the-team", label: "تیم مشاوران" },
-  { href: "/done-deals", label: "معاملات موفق" },
-  { href: "/services", label: "خدمات" },
-  { href: "/contact", label: "مشاوره اختصاصی" },
-] as const;
+export const NAV = siteConfig.nav;
