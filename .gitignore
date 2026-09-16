@@ -15,3 +15,7 @@ cloudflare-env.d.ts
 bun.lock
 bun.lockb
 tsconfig.tsbuildinfo
+data/*.db
+data/*.db-*
+.env
+.env.local

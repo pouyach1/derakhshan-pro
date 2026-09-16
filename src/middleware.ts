@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   AUTH_COOKIE,
-  decodeSession,
   homeForRole,
   needsClientOnboarding,
   postAuthPath,
 } from "@/lib/auth";
+import { verifySessionToken } from "@/server/auth/session";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const raw = request.cookies.get(AUTH_COOKIE)?.value;
-  const session = decodeSession(raw ? decodeURIComponent(raw) : null);
+  const session = await verifySessionToken(raw ? decodeURIComponent(raw) : null);
 
   const isAdminRoute = pathname.startsWith("/admin");
   const isAgentRoute = pathname.startsWith("/agent");

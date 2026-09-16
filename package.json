@@ -15,26 +15,38 @@
     "upload": "npx @opennextjs/cloudflare build && npx @opennextjs/cloudflare upload",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "cf:build": "npx @opennextjs/cloudflare build",
-    "pages:build": "npx @opennextjs/cloudflare build"
+    "pages:build": "npx @opennextjs/cloudflare build",
+    "db:seed": "tsx src/scripts/seed.ts",
+    "db:studio": "drizzle-kit studio",
+    "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
+    "@libsql/client": "^0.18.0",
+    "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
+    "drizzle-orm": "^0.45.2",
     "framer-motion": "^13.2.0",
+    "jose": "^6.2.12",
     "lucide-react": "^0.544.0",
+    "nanoid": "^6.0.1",
     "next": "15.5.25",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@opennextjs/cloudflare": "^1.20.6",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^22.18.1",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
     "autoprefixer": "^10.4.21",
+    "drizzle-kit": "^0.31.10",
     "playwright": "^1.63.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
+    "tsx": "^4.23.13",
     "typescript": "^5.9.2",
     "wrangler": "^4.131.1"
   },

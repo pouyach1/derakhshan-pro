@@ -71,9 +71,31 @@ export default function ContactFormSection() {
     event.preventDefault();
     if (loading) return;
     setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 900));
+    try {
+      const form = new FormData(event.currentTarget);
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: String(form.get("name") || ""),
+          email: String(form.get("email") || ""),
+          phone: String(form.get("phone") || ""),
+          interest: String(form.get("interest") || ""),
+          category: categories.join("، "),
+          message: String(form.get("message") || ""),
+          tab: "home",
+        }),
+      });
+      const payload = await res.json();
+      if (!res.ok || !payload.ok) {
+        throw new Error(payload?.error?.message || "ارسال ناموفق بود");
+      }
+      setSubmitted(true);
+    } catch {
+      setLoading(false);
+      return;
+    }
     setLoading(false);
-    setSubmitted(true);
   }
 
   function toggleCategory(value: string) {

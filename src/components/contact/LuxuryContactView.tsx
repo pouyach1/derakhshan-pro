@@ -180,16 +180,36 @@ export function LuxuryContactView() {
     event.preventDefault();
     if (status === "loading") return;
     setStatus("loading");
-    await new Promise((resolve) => setTimeout(resolve, 1100));
-    setStatus("success");
-    setForm({
-      name: "",
-      phone: "",
-      budget: BUDGET_OPTIONS[1],
-      datetime: "",
-      message: "",
-    });
-    window.setTimeout(() => setStatus("idle"), 3200);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          phone: form.phone,
+          interest: activeTab,
+          message: form.message || form.datetime || "درخواست مشاوره",
+          budget: form.budget,
+          tab: activeTab,
+        }),
+      });
+      const payload = await res.json();
+      if (!res.ok || !payload.ok) {
+        setStatus("idle");
+        return;
+      }
+      setStatus("success");
+      setForm({
+        name: "",
+        phone: "",
+        budget: BUDGET_OPTIONS[1],
+        datetime: "",
+        message: "",
+      });
+      window.setTimeout(() => setStatus("idle"), 3200);
+    } catch {
+      setStatus("idle");
+    }
   }
 
   return (
