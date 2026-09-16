@@ -8,7 +8,7 @@ Production rebuild of [RIO Property](https://www.rioproperty.co.za/) from forens
 - React 19
 - Tailwind CSS 3
 - TypeScript
-- **Backend:** Drizzle ORM + LibSQL/SQLite, Zod, Jose JWT, bcrypt
+- **Backend:** Jose JWT + Zod + edge-safe JSON Agency store
 
 ## Commands
 

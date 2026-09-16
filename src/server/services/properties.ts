@@ -1,22 +1,23 @@
-import { and, count, desc, eq, gte, like, lte, or, sql } from "drizzle-orm";
-import { nanoid } from "nanoid";
-import { getDb } from "@/server/db/client";
-import { activityLog, properties, type PropertyRow } from "@/server/db/schema";
-import { ensureSchema } from "@/server/db/migrate";
-import { ApiError } from "@/server/http/response";
 import type { z } from "zod";
-import type { propertyCreateSchema, propertyQuerySchema, propertyUpdateSchema } from "@/server/validation/schemas";
-
-let booted = false;
+import { ApiError } from "@/server/http/response";
+import {
+  getStore,
+  newId,
+  nowIso,
+  saveStore,
+  type PropertyRecord,
+} from "@/server/db/store";
+import type {
+  propertyCreateSchema,
+  propertyQuerySchema,
+  propertyUpdateSchema,
+} from "@/server/validation/schemas";
 
 export async function bootDb() {
-  if (booted) return getDb();
-  await ensureSchema();
-  booted = true;
-  return getDb();
+  return getStore();
 }
 
-async function logActivity(input: {
+function logActivity(input: {
   actorId?: string;
   actorRole?: string;
   action: string;
@@ -26,100 +27,75 @@ async function logActivity(input: {
   ip?: string;
   requestId?: string;
 }) {
-  const db = await bootDb();
-  await db.insert(activityLog).values({
-    id: nanoid(),
-    actorId: input.actorId,
-    actorRole: input.actorRole,
+  const store = getStore();
+  store.activity.unshift({
+    id: newId(),
+    actorId: input.actorId ?? null,
+    actorRole: input.actorRole ?? null,
     action: input.action,
     entityType: input.entityType,
-    entityId: input.entityId,
-    detailJson: JSON.stringify(input.detail ?? {}),
-    ip: input.ip,
-    requestId: input.requestId,
+    entityId: input.entityId ?? null,
+    detail: (input.detail as Record<string, unknown>) ?? {},
+    ip: input.ip ?? null,
+    requestId: input.requestId ?? null,
+    createdAt: nowIso(),
   });
-}
-
-function serializeProperty(row: PropertyRow) {
-  return {
-    ...row,
-    features: JSON.parse(row.featuresJson || "[]") as string[],
-    gallery: JSON.parse(row.galleryJson || "[]") as string[],
-  };
+  store.activity = store.activity.slice(0, 500);
+  saveStore();
 }
 
 export async function listProperties(
   query: z.infer<typeof propertyQuerySchema>,
   scope?: { agentId?: string; roles?: string[] },
 ) {
-  const db = await bootDb();
-  const filters = [eq(properties.softDeleted, false)];
+  const store = getStore();
+  let rows = store.properties.filter((p) => !p.softDeleted);
 
-  if (query.status) filters.push(eq(properties.status, query.status as PropertyRow["status"]));
-  if (query.listingType)
-    filters.push(eq(properties.listingType, query.listingType as PropertyRow["listingType"]));
-  if (query.agentId) filters.push(eq(properties.agentId, query.agentId));
+  if (query.status) rows = rows.filter((p) => p.status === query.status);
+  if (query.listingType) rows = rows.filter((p) => p.listingType === query.listingType);
+  if (query.agentId) rows = rows.filter((p) => p.agentId === query.agentId);
   if (scope?.agentId && scope.roles?.includes("agent") && !scope.roles.includes("admin")) {
-    filters.push(eq(properties.agentId, scope.agentId));
+    rows = rows.filter((p) => p.agentId === scope.agentId);
   }
-  if (query.minPrice != null) filters.push(gte(properties.price, query.minPrice));
-  if (query.maxPrice != null) filters.push(lte(properties.price, query.maxPrice));
-  if (query.featured != null) filters.push(eq(properties.isFeatured, query.featured));
+  if (query.minPrice != null) rows = rows.filter((p) => p.price >= query.minPrice!);
+  if (query.maxPrice != null) rows = rows.filter((p) => p.price <= query.maxPrice!);
+  if (query.featured != null) rows = rows.filter((p) => p.isFeatured === query.featured);
   if (query.q) {
-    const q = `%${query.q}%`;
-    filters.push(
-      or(
-        like(properties.title, q),
-        like(properties.location, q),
-        like(properties.neighborhood, q),
-        like(properties.code, q),
-      )!,
+    const q = query.q.toLowerCase();
+    rows = rows.filter(
+      (p) =>
+        p.title.toLowerCase().includes(q) ||
+        p.location.toLowerCase().includes(q) ||
+        p.neighborhood.toLowerCase().includes(q) ||
+        p.code.toLowerCase().includes(q),
     );
   }
 
-  const where = and(...filters);
-  const offset = (query.page - 1) * query.pageSize;
+  rows = rows.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  const total = rows.length;
+  const start = (query.page - 1) * query.pageSize;
+  const items = rows.slice(start, start + query.pageSize);
 
-  const [rows, totalRow] = await Promise.all([
-    db
-      .select()
-      .from(properties)
-      .where(where)
-      .orderBy(desc(properties.updatedAt))
-      .limit(query.pageSize)
-      .offset(offset),
-    db.select({ value: count() }).from(properties).where(where),
-  ]);
-
-  return {
-    items: rows.map(serializeProperty),
-    page: query.page,
-    pageSize: query.pageSize,
-    total: totalRow[0]?.value ?? 0,
-  };
+  return { items, page: query.page, pageSize: query.pageSize, total };
 }
 
 export async function getProperty(id: string) {
-  const db = await bootDb();
-  const row = await db.query.properties.findFirst({
-    where: and(eq(properties.id, id), eq(properties.softDeleted, false)),
-  });
+  const store = getStore();
+  const row = store.properties.find((p) => p.id === id && !p.softDeleted);
   if (!row) throw new ApiError(404, "NOT_FOUND", "ملک یافت نشد");
-  await db
-    .update(properties)
-    .set({ views: sql`${properties.views} + 1` })
-    .where(eq(properties.id, id));
-  return serializeProperty({ ...row, views: row.views + 1 });
+  row.views += 1;
+  saveStore();
+  return row;
 }
 
 export async function createProperty(
   input: z.infer<typeof propertyCreateSchema>,
   actor?: { id?: string; role?: string },
 ) {
-  const db = await bootDb();
-  const id = nanoid();
+  const store = getStore();
+  const id = newId();
   const code = input.code || `PR-${Date.now().toString().slice(-6)}`;
-  await db.insert(properties).values({
+  const row: PropertyRecord = {
     id,
     code,
     title: input.title,
@@ -127,19 +103,27 @@ export async function createProperty(
     neighborhood: input.neighborhood || input.location,
     description: input.description || "",
     price: input.price,
+    currency: "IRR",
     listingType: input.listingType,
     category: input.category,
     status: input.status,
     bedrooms: input.bedrooms,
     bathrooms: input.bathrooms,
     areaSqm: input.areaSqm,
-    featuresJson: JSON.stringify(input.features),
+    features: input.features,
     imageUrl: input.imageUrl || "",
-    galleryJson: JSON.stringify(input.gallery),
-    agentId: input.agentId,
+    gallery: input.gallery,
+    agentId: input.agentId ?? null,
+    views: 0,
     isFeatured: input.isFeatured ?? false,
-  });
-  await logActivity({
+    softDeleted: false,
+    version: 1,
+    createdAt: nowIso(),
+    updatedAt: nowIso(),
+  };
+  store.properties.unshift(row);
+  saveStore();
+  logActivity({
     actorId: actor?.id,
     actorRole: actor?.role,
     action: "property.create",
@@ -147,7 +131,7 @@ export async function createProperty(
     entityId: id,
     detail: { title: input.title, code },
   });
-  return getProperty(id);
+  return row;
 }
 
 export async function updateProperty(
@@ -155,41 +139,35 @@ export async function updateProperty(
   input: z.infer<typeof propertyUpdateSchema>,
   actor?: { id?: string; role?: string },
 ) {
-  const db = await bootDb();
-  const existing = await db.query.properties.findFirst({
-    where: and(eq(properties.id, id), eq(properties.softDeleted, false)),
-  });
+  const store = getStore();
+  const existing = store.properties.find((p) => p.id === id && !p.softDeleted);
   if (!existing) throw new ApiError(404, "NOT_FOUND", "ملک یافت نشد");
   if (input.version != null && input.version !== existing.version) {
     throw new ApiError(409, "VERSION_CONFLICT", "نسخه ملک تغییر کرده است؛ دوباره تلاش کنید");
   }
 
-  await db
-    .update(properties)
-    .set({
-      title: input.title ?? existing.title,
-      location: input.location ?? existing.location,
-      neighborhood: input.neighborhood ?? existing.neighborhood,
-      description: input.description ?? existing.description,
-      price: input.price ?? existing.price,
-      listingType: input.listingType ?? existing.listingType,
-      category: input.category ?? existing.category,
-      status: input.status ?? existing.status,
-      bedrooms: input.bedrooms ?? existing.bedrooms,
-      bathrooms: input.bathrooms ?? existing.bathrooms,
-      areaSqm: input.areaSqm ?? existing.areaSqm,
-      featuresJson:
-        input.features != null ? JSON.stringify(input.features) : existing.featuresJson,
-      imageUrl: input.imageUrl ?? existing.imageUrl,
-      galleryJson: input.gallery != null ? JSON.stringify(input.gallery) : existing.galleryJson,
-      agentId: input.agentId ?? existing.agentId,
-      isFeatured: input.isFeatured ?? existing.isFeatured,
-      version: existing.version + 1,
-      updatedAt: new Date().toISOString(),
-    })
-    .where(eq(properties.id, id));
-
-  await logActivity({
+  Object.assign(existing, {
+    title: input.title ?? existing.title,
+    location: input.location ?? existing.location,
+    neighborhood: input.neighborhood ?? existing.neighborhood,
+    description: input.description ?? existing.description,
+    price: input.price ?? existing.price,
+    listingType: input.listingType ?? existing.listingType,
+    category: input.category ?? existing.category,
+    status: input.status ?? existing.status,
+    bedrooms: input.bedrooms ?? existing.bedrooms,
+    bathrooms: input.bathrooms ?? existing.bathrooms,
+    areaSqm: input.areaSqm ?? existing.areaSqm,
+    features: input.features ?? existing.features,
+    imageUrl: input.imageUrl ?? existing.imageUrl,
+    gallery: input.gallery ?? existing.gallery,
+    agentId: input.agentId ?? existing.agentId,
+    isFeatured: input.isFeatured ?? existing.isFeatured,
+    version: existing.version + 1,
+    updatedAt: nowIso(),
+  });
+  saveStore();
+  logActivity({
     actorId: actor?.id,
     actorRole: actor?.role,
     action: "property.update",
@@ -197,18 +175,18 @@ export async function updateProperty(
     entityId: id,
     detail: input,
   });
-  return getProperty(id);
+  return existing;
 }
 
 export async function deleteProperty(id: string, actor?: { id?: string; role?: string }) {
-  const db = await bootDb();
-  const existing = await db.query.properties.findFirst({ where: eq(properties.id, id) });
+  const store = getStore();
+  const existing = store.properties.find((p) => p.id === id);
   if (!existing || existing.softDeleted) throw new ApiError(404, "NOT_FOUND", "ملک یافت نشد");
-  await db
-    .update(properties)
-    .set({ softDeleted: true, status: "archived", updatedAt: new Date().toISOString() })
-    .where(eq(properties.id, id));
-  await logActivity({
+  existing.softDeleted = true;
+  existing.status = "archived";
+  existing.updatedAt = nowIso();
+  saveStore();
+  logActivity({
     actorId: actor?.id,
     actorRole: actor?.role,
     action: "property.delete",
