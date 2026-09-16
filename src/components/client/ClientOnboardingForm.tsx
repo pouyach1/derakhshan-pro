@@ -85,13 +85,7 @@ export default function ClientOnboardingForm() {
     setStep((value) => Math.max(0, value - 1));
   }
 
-  function finish() {
-    const session = readClientSession();
-    if (!session || session.role !== "client") {
-      router.replace("/login");
-      return;
-    }
-
+  async function finish() {
     const budget = BUDGET_PRESETS[budgetIndex] ?? BUDGET_PRESETS[1];
     const profile: ClientProfile = {
       fullName: fullName.trim(),
@@ -107,11 +101,27 @@ export default function ClientOnboardingForm() {
     };
 
     setSaving(true);
-    setClientSession(completeClientOnboarding(session, profile));
-    window.setTimeout(() => {
+    try {
+      const res = await fetch("/api/auth/onboarding", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(profile),
+      });
+      const payload = await res.json();
+      if (!res.ok || !payload.ok) {
+        setError(payload?.error?.message || "ذخیره پروفایل ناموفق بود.");
+        setSaving(false);
+        return;
+      }
+      // Keep local mirror for client-side helpers during transition
+      const session = readClientSession();
+      if (session) setClientSession(completeClientOnboarding(session, profile));
       router.replace("/");
       router.refresh();
-    }, 450);
+    } catch {
+      setError("ارتباط با سرور برقرار نشد.");
+      setSaving(false);
+    }
   }
 
   return (

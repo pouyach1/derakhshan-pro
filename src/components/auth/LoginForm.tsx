@@ -12,9 +12,6 @@ import {
   isValidIdentifier,
   lookupRole,
   postAuthPath,
-  setClientSession,
-  toSession,
-  verifyCredentials,
 } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/siteConfig";
@@ -56,22 +53,32 @@ export default function LoginForm() {
     }
 
     setLoading(true);
-    window.setTimeout(() => {
-      const user = verifyCredentials(identifier, password);
-      if (!user) {
-        fail(
-          detectedRole === "client"
-            ? "کد یک‌بارمصرف نادرست است. کد آزمایشی: ۱۲۳۴"
-            : "اطلاعات ورود نادرست است. رمز آزمایشی: ۱۲۳۴۵۶",
-        );
-        return;
+    void (async () => {
+      try {
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ identifier, secret: password }),
+        });
+        const payload = await res.json();
+        if (!res.ok || !payload.ok) {
+          fail(
+            payload?.error?.message ||
+              (detectedRole === "client"
+                ? "کد یک‌بارمصرف نادرست است. کد آزمایشی: ۱۲۳۴"
+                : "اطلاعات ورود نادرست است. رمز آزمایشی: ۱۲۳۴۵۶"),
+          );
+          return;
+        }
+        void remember;
+        router.replace(payload.data.redirectTo || postAuthPath(payload.data.session));
+        router.refresh();
+      } catch {
+        fail("ارتباط با سرور برقرار نشد. دوباره تلاش کنید.");
+      } finally {
+        setLoading(false);
       }
-      const session = toSession(user);
-      setClientSession(session);
-      void remember;
-      router.replace(postAuthPath(session));
-      router.refresh();
-    }, 700);
+    })();
   }
 
   return (
