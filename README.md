@@ -8,15 +8,24 @@ Production rebuild of [RIO Property](https://www.rioproperty.co.za/) from forens
 - React 19
 - Tailwind CSS 3
 - TypeScript
+- **Backend:** Drizzle ORM + LibSQL/SQLite, Zod, Jose JWT, bcrypt
 
 ## Commands
 
 ```bash
 npm install
+cp .env.example .env.local
+npm run db:seed
 npm run dev
 npm run build
 ```
 
+## Backend
+
+See [`docs/BACKEND.md`](docs/BACKEND.md) for the Agency API (auth, properties, leads, CRM, contact, stats).
+
+Quick health check: `GET /api/health`
+
 ## Source of truth
 
-All visual tokens, copy, layout, and assets are derived from `website-forensics/rioproperty/` (priority-1 → priority-4 + animations). Do not invent brand colors or section copy.
+Brand copy lives in `src/config/siteConfig.ts`. Visual tokens and layout are derived from `website-forensics/rioproperty/`.
