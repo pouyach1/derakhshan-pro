@@ -1,15 +1,4 @@
-import { and, count, desc, eq, sql } from "drizzle-orm";
-import { nanoid } from "nanoid";
-import { bootDb } from "@/server/services/properties";
-import {
-  activityLog,
-  clients,
-  contactMessages,
-  leads,
-  properties,
-  tours,
-  users,
-} from "@/server/db/schema";
+import type { z } from "zod";
 import { ApiError } from "@/server/http/response";
 import { hashPassword, verifyPassword } from "@/server/auth/password";
 import {
@@ -17,9 +6,19 @@ import {
   normalizePhone,
   type AuthSession,
   type ClientProfile,
+  type UserRole,
 } from "@/lib/auth";
 import { siteConfig } from "@/config/siteConfig";
-import type { z } from "zod";
+import {
+  getStore,
+  newId,
+  nowIso,
+  saveStore,
+  type ContactRecord,
+  type LeadRecord,
+  type TourRecord,
+  type UserRecord,
+} from "@/server/db/store";
 import type {
   clientCreateSchema,
   contactSchema,
@@ -34,41 +33,86 @@ import type {
 const DEMO_OTP = process.env.DEMO_OTP || "1234";
 
 export async function authenticate(input: z.infer<typeof loginSchema>): Promise<AuthSession> {
-  const db = await bootDb();
+  const store = getStore();
+  if (store.users.length === 0) {
+    // Cold start bootstrap (Workers / fresh env)
+    const adminHash = await hashPassword("123456");
+    const agentHash = await hashPassword("123456");
+    store.users.push(
+      {
+        id: "admin-1",
+        phone: "09121111111",
+        email: siteConfig.panels.demoAdminEmail,
+        name: "مدیر سیستم",
+        role: "admin",
+        passwordHash: adminHash,
+        agentId: null,
+        onboardingComplete: true,
+        clientProfile: null,
+        avatarUrl: null,
+        isActive: true,
+        createdAt: nowIso(),
+        updatedAt: nowIso(),
+      },
+      {
+        id: "agent-1",
+        phone: "09122222222",
+        email: siteConfig.panels.demoAgentEmail,
+        name: "آرش شایگان",
+        role: "agent",
+        passwordHash: agentHash,
+        agentId: "a1",
+        onboardingComplete: true,
+        clientProfile: null,
+        avatarUrl: null,
+        isActive: true,
+        createdAt: nowIso(),
+        updatedAt: nowIso(),
+      },
+    );
+    saveStore();
+  }
+
   const identifier = normalizeIdentifier(input.identifier);
   const isEmail = identifier.includes("@");
 
-  const user = await db.query.users.findFirst({
-    where: isEmail ? eq(users.email, identifier) : eq(users.phone, identifier),
-  });
+  const user = store.users.find((u) =>
+    isEmail ? u.email?.toLowerCase() === identifier : u.phone === identifier,
+  );
 
   if (!user || !user.isActive) {
-    // Guest client path with OTP (demo / VIP soft-onboard)
     if (input.secret.trim() !== DEMO_OTP) {
       throw new ApiError(401, "INVALID_CREDENTIALS", "اطلاعات ورود نادرست است");
     }
     const phone = isEmail ? "09000000000" : identifier;
     const id = `client-${identifier}`;
-    const existingGuest = await db.query.users.findFirst({ where: eq(users.id, id) });
-    if (!existingGuest) {
-      await db.insert(users).values({
+    let guest = store.users.find((u) => u.id === id);
+    if (!guest) {
+      guest = {
         id,
         phone,
         email: isEmail ? identifier : null,
         name: "کاربر مهمان",
         role: "client",
+        passwordHash: null,
+        agentId: null,
         onboardingComplete: false,
-      });
+        clientProfile: null,
+        avatarUrl: null,
+        isActive: true,
+        createdAt: nowIso(),
+        updatedAt: nowIso(),
+      };
+      store.users.push(guest);
+      saveStore();
     }
     return {
-      id,
-      phone,
-      name: existingGuest?.name || "کاربر مهمان",
+      id: guest.id,
+      phone: guest.phone,
+      name: guest.name,
       role: "client",
-      onboardingComplete: existingGuest?.onboardingComplete ?? false,
-      clientProfile: existingGuest?.clientProfileJson
-        ? (JSON.parse(existingGuest.clientProfileJson) as ClientProfile)
-        : undefined,
+      onboardingComplete: guest.onboardingComplete,
+      clientProfile: guest.clientProfile ?? undefined,
     };
   }
 
@@ -88,118 +132,102 @@ export async function authenticate(input: z.infer<typeof loginSchema>): Promise<
     role: user.role,
     agentId: user.agentId ?? undefined,
     onboardingComplete: user.onboardingComplete,
-    clientProfile: user.clientProfileJson
-      ? (JSON.parse(user.clientProfileJson) as ClientProfile)
-      : undefined,
+    clientProfile: user.clientProfile ?? undefined,
   };
 }
 
 export async function completeOnboarding(userId: string, profile: z.infer<typeof onboardingSchema>) {
-  const db = await bootDb();
-  await db
-    .update(users)
-    .set({
-      name: profile.fullName,
-      onboardingComplete: true,
-      clientProfileJson: JSON.stringify(profile),
-      updatedAt: new Date().toISOString(),
-    })
-    .where(eq(users.id, userId));
+  const store = getStore();
+  const user = store.users.find((u) => u.id === userId);
+  if (!user) throw new ApiError(404, "NOT_FOUND", "کاربر یافت نشد");
+  user.name = profile.fullName;
+  user.onboardingComplete = true;
+  user.clientProfile = profile as ClientProfile;
+  user.updatedAt = nowIso();
+  saveStore();
   return profile;
 }
 
 export async function listLeads(opts?: { agentId?: string; status?: string }) {
-  const db = await bootDb();
-  const filters = [];
-  if (opts?.agentId) filters.push(eq(leads.assignedAgentId, opts.agentId));
-  if (opts?.status) filters.push(eq(leads.status, opts.status as typeof leads.$inferSelect.status));
-  const rows = await db
-    .select()
-    .from(leads)
-    .where(filters.length ? and(...filters) : undefined)
-    .orderBy(desc(leads.createdAt));
-  return rows;
+  const store = getStore();
+  let rows = [...store.leads];
+  if (opts?.agentId) rows = rows.filter((l) => l.assignedAgentId === opts.agentId);
+  if (opts?.status) rows = rows.filter((l) => l.status === opts.status);
+  return rows.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
 export async function createLead(input: z.infer<typeof leadCreateSchema>) {
-  const db = await bootDb();
-  const id = nanoid();
-  await db.insert(leads).values({
-    id,
+  const store = getStore();
+  const row: LeadRecord = {
+    id: newId(),
     clientName: input.clientName,
     phone: normalizePhone(input.phone),
     email: input.email || null,
-    propertyId: input.propertyId,
+    propertyId: input.propertyId ?? null,
     propertyTitle: input.propertyTitle || "",
     source: input.source || "manual",
+    status: "new",
     notes: input.notes || "",
-    assignedAgentId: input.assignedAgentId,
-  });
-  return (await db.query.leads.findFirst({ where: eq(leads.id, id) }))!;
+    assignedAgentId: input.assignedAgentId ?? null,
+    createdAt: nowIso(),
+    updatedAt: nowIso(),
+  };
+  store.leads.unshift(row);
+  saveStore();
+  return row;
 }
 
 export async function updateLead(id: string, input: z.infer<typeof leadUpdateSchema>) {
-  const db = await bootDb();
-  const existing = await db.query.leads.findFirst({ where: eq(leads.id, id) });
+  const store = getStore();
+  const existing = store.leads.find((l) => l.id === id);
   if (!existing) throw new ApiError(404, "NOT_FOUND", "لید یافت نشد");
-  await db
-    .update(leads)
-    .set({
-      status: input.status ?? existing.status,
-      notes: input.notes ?? existing.notes,
-      assignedAgentId: input.assignedAgentId ?? existing.assignedAgentId,
-      propertyTitle: input.propertyTitle ?? existing.propertyTitle,
-      updatedAt: new Date().toISOString(),
-    })
-    .where(eq(leads.id, id));
-  return (await db.query.leads.findFirst({ where: eq(leads.id, id) }))!;
+  Object.assign(existing, {
+    status: input.status ?? existing.status,
+    notes: input.notes ?? existing.notes,
+    assignedAgentId: input.assignedAgentId ?? existing.assignedAgentId,
+    propertyTitle: input.propertyTitle ?? existing.propertyTitle,
+    updatedAt: nowIso(),
+  });
+  saveStore();
+  return existing;
 }
 
 export async function listAgents() {
-  const db = await bootDb();
-  const agentUsers = await db.select().from(users).where(eq(users.role, "agent"));
-  const result = [];
-  for (const agent of agentUsers) {
-    const listed = await db
-      .select({ value: count() })
-      .from(properties)
-      .where(and(eq(properties.agentId, agent.agentId || agent.id), eq(properties.softDeleted, false)));
-    const closed = await db
-      .select({ value: count() })
-      .from(properties)
-      .where(and(eq(properties.agentId, agent.agentId || agent.id), eq(properties.status, "sold")));
-    result.push({
-      id: agent.agentId || agent.id,
-      userId: agent.id,
-      name: agent.name,
-      phone: agent.phone,
-      email: agent.email,
-      avatarUrl: agent.avatarUrl,
-      listedProperties: listed[0]?.value ?? 0,
-      dealsClosed: closed[0]?.value ?? 0,
+  const store = getStore();
+  return store.users
+    .filter((u) => u.role === "agent")
+    .map((agent) => {
+      const agentKey = agent.agentId || agent.id;
+      const listed = store.properties.filter(
+        (p) => p.agentId === agentKey && !p.softDeleted,
+      ).length;
+      const closed = store.properties.filter(
+        (p) => p.agentId === agentKey && p.status === "sold",
+      ).length;
+      return {
+        id: agentKey,
+        userId: agent.id,
+        name: agent.name,
+        phone: agent.phone,
+        email: agent.email,
+        avatarUrl: agent.avatarUrl,
+        listedProperties: listed,
+        dealsClosed: closed,
+      };
     });
-  }
-  return result;
 }
 
 export async function listClients(agentId: string) {
-  const db = await bootDb();
-  const rows = await db
-    .select()
-    .from(clients)
-    .where(eq(clients.agentId, agentId))
-    .orderBy(desc(clients.updatedAt));
-  return rows.map((r) => ({
-    ...r,
-    notes: JSON.parse(r.notesJson || "[]") as Array<{ text: string; at?: string }>,
-  }));
+  const store = getStore();
+  return store.clients
+    .filter((c) => c.agentId === agentId)
+    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
 export async function createClient(agentId: string, input: z.infer<typeof clientCreateSchema>) {
-  const db = await bootDb();
-  const id = nanoid();
-  await db.insert(clients).values({
-    id,
+  const store = getStore();
+  const row = {
+    id: newId(),
     agentId,
     name: input.name,
     phone: normalizePhone(input.phone),
@@ -209,79 +237,91 @@ export async function createClient(agentId: string, input: z.infer<typeof client
     budgetMax: input.budgetMax,
     urgency: input.urgency,
     intent: input.intent,
-    notesJson: JSON.stringify(input.notes ?? []),
-  });
-  return (await listClients(agentId)).find((c) => c.id === id)!;
+    notes: input.notes ?? [],
+    createdAt: nowIso(),
+    updatedAt: nowIso(),
+  };
+  store.clients.unshift(row);
+  saveStore();
+  return row;
 }
 
 export async function listTours(agentId: string) {
-  const db = await bootDb();
-  return db
-    .select()
-    .from(tours)
-    .where(eq(tours.agentId, agentId))
-    .orderBy(desc(tours.scheduledAt));
+  const store = getStore();
+  return store.tours
+    .filter((t) => t.agentId === agentId)
+    .sort((a, b) => b.scheduledAt.localeCompare(a.scheduledAt));
 }
 
 export async function createTour(agentId: string, input: z.infer<typeof tourCreateSchema>) {
-  const db = await bootDb();
-  const id = nanoid();
-  await db.insert(tours).values({
-    id,
+  const store = getStore();
+  const row: TourRecord = {
+    id: newId(),
     agentId,
     propertyId: input.propertyId,
     clientName: input.clientName,
-    clientPhone: input.clientPhone,
+    clientPhone: input.clientPhone ?? null,
     scheduledAt: input.scheduledAt,
     dayLabel: input.dayLabel || "",
     timeLabel: input.timeLabel || "",
+    status: "upcoming",
     notes: input.notes || "",
-  });
-  return (await db.query.tours.findFirst({ where: eq(tours.id, id) }))!;
+    createdAt: nowIso(),
+    updatedAt: nowIso(),
+  };
+  store.tours.unshift(row);
+  saveStore();
+  return row;
 }
 
-export async function updateTour(id: string, agentId: string, input: z.infer<typeof tourUpdateSchema>) {
-  const db = await bootDb();
-  const existing = await db.query.tours.findFirst({
-    where: and(eq(tours.id, id), eq(tours.agentId, agentId)),
-  });
+export async function updateTour(
+  id: string,
+  agentId: string,
+  input: z.infer<typeof tourUpdateSchema>,
+) {
+  const store = getStore();
+  const existing = store.tours.find((t) => t.id === id && t.agentId === agentId);
   if (!existing) throw new ApiError(404, "NOT_FOUND", "بازدید یافت نشد");
-  await db
-    .update(tours)
-    .set({
-      status: input.status ?? existing.status,
-      notes: input.notes ?? existing.notes,
-      scheduledAt: input.scheduledAt ?? existing.scheduledAt,
-      updatedAt: new Date().toISOString(),
-    })
-    .where(eq(tours.id, id));
-  return (await db.query.tours.findFirst({ where: eq(tours.id, id) }))!;
+  Object.assign(existing, {
+    status: input.status ?? existing.status,
+    notes: input.notes ?? existing.notes,
+    scheduledAt: input.scheduledAt ?? existing.scheduledAt,
+    updatedAt: nowIso(),
+  });
+  saveStore();
+  return existing;
 }
 
 export async function createContactMessage(input: z.infer<typeof contactSchema>, ip?: string) {
-  const db = await bootDb();
-  const id = nanoid();
-  await db.insert(contactMessages).values({
-    id,
+  const store = getStore();
+  const row: ContactRecord = {
+    id: newId(),
     name: input.name,
     email: input.email || "noreply@local",
-    phone: input.phone,
+    phone: input.phone ?? null,
     interest: input.interest || "",
     category: input.category || "general",
     message: input.message,
-    budget: input.budget,
+    budget: input.budget ?? null,
     tab: input.tab,
-    metaJson: JSON.stringify({ ip, brand: siteConfig.brand.nameFa }),
-  });
-  await db.insert(activityLog).values({
-    id: nanoid(),
+    status: "new",
+    meta: { ip, brand: siteConfig.brand.nameFa },
+    createdAt: nowIso(),
+  };
+  store.contacts.unshift(row);
+  store.activity.unshift({
+    id: newId(),
+    actorId: null,
+    actorRole: null,
     action: "contact.create",
     entityType: "contact_message",
-    entityId: id,
-    detailJson: JSON.stringify({ email: input.email, tab: input.tab }),
-    ip,
+    entityId: row.id,
+    detail: { email: input.email, tab: input.tab },
+    ip: ip ?? null,
+    requestId: null,
+    createdAt: nowIso(),
   });
-  // Also create a lead for CRM visibility
+  saveStore();
   await createLead({
     clientName: input.name,
     phone: input.phone || "09000000000",
@@ -290,37 +330,19 @@ export async function createContactMessage(input: z.infer<typeof contactSchema>,
     source: `contact:${input.tab}`,
     notes: input.message,
   });
-  return { id, received: true };
+  return { id: row.id, received: true };
 }
 
 export async function getPlatformStats() {
-  const db = await bootDb();
-  const [published, negotiation, leadsNew, messages, agentsCount] = await Promise.all([
-    db
-      .select({ value: count() })
-      .from(properties)
-      .where(and(eq(properties.status, "published"), eq(properties.softDeleted, false))),
-    db
-      .select({ value: count() })
-      .from(properties)
-      .where(and(eq(properties.status, "negotiation"), eq(properties.softDeleted, false))),
-    db.select({ value: count() }).from(leads).where(eq(leads.status, "new")),
-    db.select({ value: count() }).from(contactMessages).where(eq(contactMessages.status, "new")),
-    db.select({ value: count() }).from(users).where(eq(users.role, "agent")),
-  ]);
-
-  const views = await db
-    .select({ value: sql<number>`coalesce(sum(${properties.views}), 0)` })
-    .from(properties)
-    .where(eq(properties.softDeleted, false));
-
+  const store = getStore();
+  const live = store.properties.filter((p) => !p.softDeleted);
   return {
-    publishedProperties: published[0]?.value ?? 0,
-    negotiationProperties: negotiation[0]?.value ?? 0,
-    newLeads: leadsNew[0]?.value ?? 0,
-    unreadMessages: messages[0]?.value ?? 0,
-    agents: agentsCount[0]?.value ?? 0,
-    totalViews: Number(views[0]?.value ?? 0),
+    publishedProperties: live.filter((p) => p.status === "published").length,
+    negotiationProperties: live.filter((p) => p.status === "negotiation").length,
+    newLeads: store.leads.filter((l) => l.status === "new").length,
+    unreadMessages: store.contacts.filter((c) => c.status === "new").length,
+    agents: store.users.filter((u) => u.role === "agent").length,
+    totalViews: live.reduce((sum, p) => sum + p.views, 0),
     brand: siteConfig.brand.nameFa,
   };
 }
@@ -330,22 +352,29 @@ export async function ensureSeedUser(input: {
   phone: string;
   email?: string;
   name: string;
-  role: "admin" | "agent" | "client";
+  role: UserRole;
   password?: string;
   agentId?: string;
 }) {
-  const db = await bootDb();
-  const existing = await db.query.users.findFirst({ where: eq(users.id, input.id) });
+  const store = getStore();
+  const existing = store.users.find((u) => u.id === input.id);
   if (existing) return existing;
-  await db.insert(users).values({
+  const row: UserRecord = {
     id: input.id,
     phone: input.phone,
-    email: input.email,
+    email: input.email ?? null,
     name: input.name,
     role: input.role,
     passwordHash: input.password ? await hashPassword(input.password) : null,
-    agentId: input.agentId,
+    agentId: input.agentId ?? null,
     onboardingComplete: input.role !== "client",
-  });
-  return (await db.query.users.findFirst({ where: eq(users.id, input.id) }))!;
+    clientProfile: null,
+    avatarUrl: null,
+    isActive: true,
+    createdAt: nowIso(),
+    updatedAt: nowIso(),
+  };
+  store.users.push(row);
+  saveStore();
+  return row;
 }

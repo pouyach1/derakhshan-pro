@@ -1,13 +1,13 @@
 # Backend (Agency API)
 
-Production-grade App Router backend for the luxury real estate platform.
+Production-minded App Router backend for the luxury real estate platform.
 
 ## Stack
 - Next.js Route Handlers (`src/app/api/**`)
-- Drizzle ORM + LibSQL/SQLite (`data/agency.db`)
+- Edge-safe JSON store (`data/agency.json` on Node; in-memory on Workers)
 - Zod validation
 - Jose HS256 HttpOnly JWT sessions
-- bcrypt password hashing
+- bcryptjs password hashing
 - Rate limiting + activity audit log
 - Soft-delete + optimistic locking on properties
 
@@ -51,16 +51,14 @@ Cookie: `agency_auth` (HttpOnly, signed JWT)
 ## Layout
 ```
 src/server/
-  db/          schema, client, migrate
-  auth/        session, password, rate-limit
-  services/    properties, crm
-  http/        guard, response
-  validation/  zod schemas
-src/app/api/   route handlers
-src/scripts/   seed.ts
+  db/store.ts     edge-safe persistence
+  auth/           session, password, rate-limit
+  services/       properties, crm
+  http/           guard, response
+  validation/     zod schemas
+src/app/api/      route handlers
+src/scripts/      seed.ts
 ```
 
-## Production notes
-- Set a strong `AUTH_SECRET`
-- Point `DATABASE_URL` to Turso/LibSQL (or migrate to Cloudflare D1)
-- Replace demo OTP with an SMS provider in `/api/auth/otp`
+## Cloudflare note
+Native SQLite/libSQL clients break Workers bundling. This backend uses a pure TypeScript JSON store so OpenNext Cloudflare builds succeed. For multi-isolate durable storage later, swap the store adapter to D1/KV/Turso without changing route contracts.
