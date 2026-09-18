@@ -2,6 +2,7 @@ import { Vazirmatn } from "next/font/google";
 import Navbar from "@/components/navigation/Navbar";
 import Footer from "@/components/Footer";
 import IntroShell from "@/components/providers/IntroShell";
+import MobileMotionRoot from "@/components/mobile/MobileMotionRoot";
 
 const vazirmatn = Vazirmatn({
   subsets: ["arabic", "latin"],
@@ -18,9 +19,11 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
       className={`${vazirmatn.variable} ${vazirmatn.className} font-vazirmatn antialiased`}
     >
       <IntroShell>
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
+        <MobileMotionRoot>
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+        </MobileMotionRoot>
       </IntroShell>
     </div>
   );

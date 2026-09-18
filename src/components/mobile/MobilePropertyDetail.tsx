@@ -5,6 +5,7 @@ import { FormEvent, useMemo, useState } from "react";
 import { Bath, BedDouble, MapPin, Ruler, ShieldCheck } from "lucide-react";
 import PropertyGallery from "@/components/mobile/PropertyGallery";
 import IosTap from "@/components/mobile/IosTap";
+import { SharedPropertyTitle } from "@/components/mobile/SharedPropertyHero";
 import PublicLoadError from "@/components/listings/PublicLoadError";
 import { siteConfig } from "@/config/siteConfig";
 import { useHaptic } from "@/hooks/useHaptic";
@@ -91,14 +92,19 @@ export default function MobilePropertyDetail({ item, failed, onRetry }: MobilePr
   return (
     <div className="bg-[#070C18] pb-24 text-white lg:hidden">
       <div className="px-4 pt-24">
-        <PropertyGallery images={gallery} alt={item.title} />
+        <PropertyGallery images={gallery} alt={item.title} propertyId={item.id} />
       </div>
 
       <section className="space-y-4 px-4 pt-5">
         <p className="text-[11px] tracking-[0.16em] text-cyan-300">
           {item.code} · {listingTypeLabel(item.listingType)} · {propertyStatusLabel(item.status)}
         </p>
-        <h1 className="font-vazirmatn text-2xl font-black leading-9">{item.title}</h1>
+        <SharedPropertyTitle
+          id={item.id}
+          title={item.title}
+          as="h1"
+          className="text-2xl font-black leading-9"
+        />
         <p className="inline-flex items-center gap-2 text-sm text-slate-400">
           <MapPin className="h-4 w-4 text-cyan-300" />
           {item.location}
