@@ -10,34 +10,50 @@ import {
   formatBillion,
   getAgentProfile,
   type AgentClient,
+  type AgentCrmProfile,
   type AgentProperty,
   type AgentTask,
 } from "@/config/agent-crm";
 import { useAgentScope } from "@/hooks/useAgentScope";
 import { siteConfig } from "@/config/siteConfig";
 import { api } from "@/lib/api";
+import { fallbackImage } from "@/lib/money";
 import { mapClientToAgent, mapPropertyToAgent } from "@/lib/mappers";
 import type { ClientRecord, PropertyRecord, TourRecord } from "@/server/db/store";
 
 export default function AgentDashboardPage() {
   const agentId = useAgentScope();
-  const profile = getAgentProfile(agentId);
+  const fallbackProfile = getAgentProfile(agentId);
+  const [profile, setProfile] = useState<AgentCrmProfile>(fallbackProfile);
   const [properties, setProperties] = useState<AgentProperty[]>([]);
   const [clients, setClients] = useState<AgentClient[]>([]);
   const [tours, setTours] = useState<TourRecord[]>([]);
 
   useEffect(() => {
     void (async () => {
-      const [propRes, clientRes, tourRes] = await Promise.all([
+      const [propRes, clientRes, tourRes, agentsRes] = await Promise.all([
         api<{ items: PropertyRecord[] }>("/api/properties?pageSize=50"),
         api<{ items: ClientRecord[] }>("/api/clients"),
         api<{ items: TourRecord[] }>("/api/tours"),
+        api<{ items: Array<{ id: string; name: string; avatarUrl: string | null; dealsClosed: number }> }>("/api/agents"),
       ]);
       if (propRes.ok) setProperties(propRes.data.items.map(mapPropertyToAgent));
       if (clientRes.ok) setClients(clientRes.data.items.map(mapClientToAgent));
       if (tourRes.ok) setTours(tourRes.data.items);
+      if (agentsRes.ok) {
+        const me = agentsRes.data.items.find((item) => item.id === agentId) || agentsRes.data.items[0];
+        if (me) {
+          setProfile({
+            ...fallbackProfile,
+            id: me.id,
+            name: me.name,
+            avatar: fallbackImage(me.avatarUrl),
+            monthlyClosed: me.dealsClosed * 1_000_000_000 || fallbackProfile.monthlyClosed,
+          });
+        }
+      }
     })();
-  }, []);
+  }, [agentId]);
 
   const metrics = useMemo(() => {
     const activeProperties = properties.filter((p) => p.status === "active").length;
@@ -48,6 +64,7 @@ export default function AgentDashboardPage() {
       .filter((p) => p.status === "negotiation")
       .reduce((sum, p) => sum + p.price, 0);
     const estimatedCommission = Math.round((negotiationValue * profile.commissionRate) / 100);
+    const soldCount = properties.filter((p) => p.status === "sold").length;
     return {
       activeProperties,
       negotiationCount,
@@ -58,7 +75,7 @@ export default function AgentDashboardPage() {
       estimatedCommission,
       estimatedCommissionLabel: formatBillion(estimatedCommission),
       commissionRate: profile.commissionRate,
-      targetProgress: Math.min(100, properties.filter((p) => p.status === "sold").length * 25 + 40),
+      targetProgress: Math.min(100, soldCount * 25 + (activeProperties > 0 ? 20 : 0)),
       monthlyClosedLabel: formatBillion(profile.monthlyClosed),
       monthlyTargetLabel: formatBillion(profile.monthlyTarget),
     };
@@ -99,10 +116,10 @@ export default function AgentDashboardPage() {
       >
         <p className="text-xs font-medium text-amber-800">نکته دفتر</p>
         <h2 className="mt-1 text-lg font-semibold text-slate-900">
-          فایل‌های {siteConfig.brand.nameFa} از پنل زنده خوانده می‌شوند
+          فایل‌ها و مشتریان {siteConfig.brand.nameFa} از داده زنده خوانده می‌شوند
         </h2>
         <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">
-          آگهی، مشتری و بازدید دیگر دموی ثابت نیستند. با ثبت ملک جدید در همین پنل، روی سایت عمومی هم دیده می‌شود.
+          ثبت ملک، لید و بازدید در پنل ذخیره می‌شود و روی داشبورد و سایت عمومی دیده می‌شود.
         </p>
       </motion.section>
     </div>

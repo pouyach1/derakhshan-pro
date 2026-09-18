@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { clearClientSession, readClientSession } from "@/lib/auth";
 import { cn } from "@/lib/utils";
+import { api } from "@/lib/api";
 import AuthToast from "@/components/auth/AuthToast";
 import { siteConfig } from "@/config/siteConfig";
 
@@ -25,6 +26,8 @@ const NAV_ITEMS = [
   { href: "/admin/dashboard", label: "خانه" },
   { href: "/admin/properties", label: "آگهی‌ها" },
   { href: "/admin/leads", label: "پیگیری‌ها" },
+  { href: "/admin/clients", label: "مشتریان" },
+  { href: "/admin/tours", label: "بازدیدها" },
   { href: "/admin/agents", label: "مشاوران" },
   { href: "/admin/settings", label: "تنظیمات" },
 ] as const;
@@ -41,6 +44,14 @@ export default function AdminHeader({
   showViewToggle = false,
 }: AdminHeaderProps) {
   const pathname = usePathname();
+  const [alertCount, setAlertCount] = useState(0);
+
+  useEffect(() => {
+    void (async () => {
+      const res = await api<{ newLeads: number; unreadMessages: number }>("/api/stats");
+      if (res.ok) setAlertCount((res.data.newLeads || 0) + (res.data.unreadMessages || 0));
+    })();
+  }, []);
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-admin-canvas/90 font-vazir backdrop-blur-md">
@@ -59,8 +70,8 @@ export default function AdminHeader({
         </Link>
 
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
-          <FilterChip label="تهران" />
-          <FilterChip label="منطقه ۱" />
+          <FilterChip label={siteConfig.contact.address.city} />
+          <FilterChip label={siteConfig.contact.address.region} />
           <LuxurySearch />
         </div>
 
@@ -91,7 +102,9 @@ export default function AdminHeader({
             className="relative inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-600 shadow-sm ring-1 ring-slate-200"
           >
             <Bell className="h-5 w-5" strokeWidth={1.8} />
-            <span className="absolute left-2 top-2 h-2 w-2 rounded-full bg-admin-sky" />
+            {alertCount > 0 ? (
+              <span className="absolute left-2 top-2 h-2 w-2 rounded-full bg-admin-sky" />
+            ) : null}
           </button>
           <AdminAccountMenu />
           {showViewToggle && onViewModeChange ? (
