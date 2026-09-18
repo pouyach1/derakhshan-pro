@@ -125,6 +125,10 @@
   .animate-marquee {
     animation: none !important;
   }
+
+  .animate-marquee-reverse {
+    animation: none !important;
+  }
 }
 
 @keyframes marquee {
@@ -136,8 +140,21 @@
   }
 }
 
+@keyframes marquee-reverse {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
 .animate-marquee {
   animation: marquee 36s linear infinite;
+}
+
+.animate-marquee-reverse {
+  animation: marquee-reverse 42s linear infinite;
 }
 
 /* —— موبایل: عملکرد قبل از زیبایی (فقط transform/opacity) —— */
