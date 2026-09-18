@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -9,33 +9,47 @@ import { api } from "@/lib/api";
 import { fallbackImage, formatToman, listingTypeLabel } from "@/lib/money";
 import { siteConfig } from "@/config/siteConfig";
 import type { PropertyRecord } from "@/server/db/store";
+import PublicLoadError from "@/components/listings/PublicLoadError";
 
 type Filter = "all" | "sale" | "rent";
+
+function logListingsError(error: unknown) {
+  if (process.env.NODE_ENV === "development") {
+    console.error("[listings]", error);
+  }
+}
 
 export default function ListingsView() {
   const [items, setItems] = useState<PropertyRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
-  const [error, setError] = useState("");
+  const [failed, setFailed] = useState(false);
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
+  const load = useCallback(async () => {
+    setLoading(true);
+    setFailed(false);
+    try {
       const res = await api<{ items: PropertyRecord[] }>("/api/properties?pageSize=50");
-      if (cancelled) return;
       if (!res.ok) {
-        setError(res.error.message);
-        setLoading(false);
+        logListingsError(res.error);
+        setItems([]);
+        setFailed(true);
         return;
       }
       setItems(res.data.items);
+    } catch (error) {
+      logListingsError(error);
+      setItems([]);
+      setFailed(true);
+    } finally {
       setLoading(false);
-    })();
-    return () => {
-      cancelled = true;
-    };
+    }
   }, []);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
 
   const filtered = useMemo(() => {
     return items.filter((item) => {
@@ -102,8 +116,8 @@ export default function ListingsView() {
         <div className="mx-auto grid max-w-6xl gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {loading ? (
             <p className="text-sm text-slate-400">در حال بارگذاری فایل‌ها...</p>
-          ) : error ? (
-            <p className="text-sm text-rose-300">{error}</p>
+          ) : failed ? (
+            <PublicLoadError onRetry={() => void load()} />
           ) : filtered.length === 0 ? (
             <p className="text-sm text-slate-400">فایل منتشرشده‌ای مطابق جستجو نیست.</p>
           ) : (

@@ -89,16 +89,17 @@ function FooterLink({ href, label }: { href: string; label: string }) {
 
 export default function Footer() {
   const reduceMotion = useReducedMotion();
-  const [time, setTime] = useState(() => formatTehranTime(new Date()));
+  // Avoid SSR/client clock mismatch — hydrate after mount only.
+  const [time, setTime] = useState("");
   const [contact, setContact] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
   const [showTop, setShowTop] = useState(false);
   const footer = siteConfig.footer;
 
   useEffect(() => {
-    const id = window.setInterval(() => {
-      setTime(formatTehranTime(new Date()));
-    }, 1000);
+    const tick = () => setTime(formatTehranTime(new Date()));
+    tick();
+    const id = window.setInterval(tick, 1000);
     return () => window.clearInterval(id);
   }, []);
 
@@ -196,7 +197,7 @@ export default function Footer() {
             <div>
               <p className="text-[11px] text-slate-400">{footer.clockLabel}</p>
               <p className="font-mono text-lg tracking-wider text-[#00F0FF]">
-                {time}
+                {time || "\u00a0\u00a0:\u00a0\u00a0:\u00a0\u00a0"}
               </p>
             </div>
           </div>
