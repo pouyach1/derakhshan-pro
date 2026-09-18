@@ -1,6 +1,6 @@
 /**
  * Logical schema: closed deals / transactions.
- * Phase A: documented only. Marketing “done deals” still live in siteConfig.
+ * Public marketing cards are served from `/api/deals` (closed deals + property join).
  */
 
 export type DealStatus = "pending" | "closed" | "canceled";

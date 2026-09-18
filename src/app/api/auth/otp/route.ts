@@ -22,13 +22,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Production: integrate SMS provider here.
-    // Demo mode returns masked confirmation only.
+    // Demo mode returns masked confirmation only — never invent a default OTP.
+    const demoOtp = process.env.DEMO_OTP?.trim();
     return jsonOk(
       {
         sent: true,
         phone: phone.replace(/(\d{4})\d{3}(\d{4})/, "$1***$2"),
         expiresInSec: 120,
-        demoHint: process.env.NODE_ENV === "production" ? undefined : process.env.DEMO_OTP || "1234",
+        demoHint:
+          process.env.NODE_ENV === "production" || !demoOtp ? undefined : "کد تأیید دمو از DEMO_OTP خوانده می‌شود",
       },
       { requestId },
     );

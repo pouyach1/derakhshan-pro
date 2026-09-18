@@ -315,6 +315,76 @@ export async function listDeals() {
   return [...(store.deals ?? [])].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
+export type PublicDealCard = {
+  id: string;
+  title: string;
+  image: string;
+  location: string;
+  valueLabel: string;
+  details: string[];
+  category: "penthouse" | "villa" | "commercial" | "diplomatic" | "other";
+  dealType: DealRecord["dealType"];
+  price: number;
+  closedAt: string | null;
+};
+
+function mapDealCategory(raw?: string | null): PublicDealCard["category"] {
+  const value = (raw || "").toLowerCase();
+  if (value.includes("villa") || value.includes("ویلا")) return "villa";
+  if (value.includes("commercial") || value.includes("office") || value.includes("تجار") || value.includes("ادار")) {
+    return "commercial";
+  }
+  if (value.includes("diplomat") || value.includes("دیپلمات")) return "diplomatic";
+  if (value.includes("penthouse") || value.includes("tower") || value.includes("پنت")) return "penthouse";
+  if (value.includes("residential") || value.includes("مسکون")) return "penthouse";
+  return "other";
+}
+
+function formatDealValue(price: number, dealType: DealRecord["dealType"]) {
+  if (!Number.isFinite(price) || price <= 0) return "قیمت توافقی";
+  if (dealType === "rent") return `${price.toLocaleString("fa-IR")} تومان / ماه`;
+  if (price >= 1_000_000_000) {
+    return `${(price / 1_000_000_000).toLocaleString("fa-IR", { maximumFractionDigits: 1 })} میلیارد تومان`;
+  }
+  return `${price.toLocaleString("fa-IR")} تومان`;
+}
+
+export async function listPublicClosedDeals(): Promise<PublicDealCard[]> {
+  await ensureBootstrapped();
+  const store = getStore();
+  const deals = [...(store.deals ?? [])]
+    .filter((deal) => deal.status === "closed")
+    .sort((a, b) => (b.closedAt || b.updatedAt).localeCompare(a.closedAt || a.updatedAt));
+
+  return deals.map((deal) => {
+    const property = deal.propertyId
+      ? store.properties.find((item) => item.id === deal.propertyId && !item.softDeleted)
+      : undefined;
+    const closedLabel = deal.closedAt
+      ? new Date(deal.closedAt).toLocaleDateString("fa-IR")
+      : "تکمیل‌شده";
+    const details = [
+      deal.dealType === "rent" ? "اجاره" : "فروش",
+      property?.neighborhood || property?.location || null,
+      property?.areaSqm ? `${property.areaSqm.toLocaleString("fa-IR")} متر` : null,
+      `معامله‌شده ${closedLabel}`,
+    ].filter(Boolean) as string[];
+
+    return {
+      id: deal.id,
+      title: deal.title,
+      image: property?.imageUrl || "/images/landing/hero/banner.jpg",
+      location: property?.location || property?.neighborhood || "معامله موفق",
+      valueLabel: formatDealValue(deal.price, deal.dealType),
+      details,
+      category: mapDealCategory(property?.category),
+      dealType: deal.dealType,
+      price: deal.price,
+      closedAt: deal.closedAt,
+    };
+  });
+}
+
 export async function createDeal(input: {
   propertyId?: string;
   title: string;

@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
 import { nanoid } from "nanoid";
 import { z } from "zod";
-import { createDeal, listDeals } from "@/server/services/properties";
-import { requireSession } from "@/server/http/guard";
+import { createDeal, listDeals, listPublicClosedDeals } from "@/server/services/properties";
+import { getSessionFromRequest, requireSession } from "@/server/http/guard";
 import { jsonError, jsonOk } from "@/server/http/response";
 
 const dealCreateSchema = z.object({
@@ -20,8 +20,14 @@ const dealCreateSchema = z.object({
 export async function GET(request: NextRequest) {
   const requestId = nanoid(10);
   try {
-    await requireSession(request, ["admin", "agent"]);
-    const items = await listDeals();
+    const session = await getSessionFromRequest(request);
+    if (session && (session.role === "admin" || session.role === "agent")) {
+      const items = await listDeals();
+      return jsonOk({ items }, { requestId });
+    }
+
+    // Public marketing page: closed deals only, safe fields.
+    const items = await listPublicClosedDeals();
     return jsonOk({ items }, { requestId });
   } catch (error) {
     return jsonError(error, requestId);

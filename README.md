@@ -16,13 +16,13 @@
 ```bash
 npm install
 cp .env.example .env.local
+# set AUTH_SECRET, SEED_ADMIN_PASSWORD, and optional DEMO_OTP in .env.local
 npm run db:seed
 npm run dev
 ```
 
-ورود آزمایشی: `admin@derakhshan.pro` / `123456`  
-مشاور: `agent@derakhshan.pro` / `123456`  
-مشتری: هر موبایل + OTP `1234`
+ورود ادمین/مشاور با ایمیل‌های `siteConfig.panels` و رمزی که در `SEED_ADMIN_PASSWORD` هنگام seed گذاشته‌اید.  
+ورود مشتری فقط وقتی `DEMO_OTP` تنظیم شده باشد (تا اتصال SMS واقعی).
 
 سلامت: `GET /api/health`
 

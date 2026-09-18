@@ -1,6 +1,5 @@
 import {
   AUTH_USERS,
-  DEMO_OTP,
   ROLE_HOME,
   ROLE_LABELS,
   type AuthUser,
@@ -107,14 +106,6 @@ export function resolveUser(identifier: string): AuthUser {
     name: "کاربر مهمان",
     role: "client",
   };
-}
-
-export function verifyCredentials(identifier: string, secret: string): AuthUser | null {
-  const user = resolveUser(identifier);
-  if (user.role === "client") {
-    return secret.trim() === DEMO_OTP ? user : null;
-  }
-  return user.password === secret ? user : null;
 }
 
 export function toSession(user: AuthUser): AuthSession {

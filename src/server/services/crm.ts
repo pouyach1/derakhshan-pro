@@ -35,7 +35,24 @@ import {
   type UserRecord,
 } from "@/server/db/store";
 
-const DEMO_OTP = process.env.DEMO_OTP || "1234";
+function configuredClientOtp(): string | null {
+  const otp = process.env.DEMO_OTP?.trim();
+  return otp ? otp : null;
+}
+
+function assertClientOtp(secret: string) {
+  const otp = configuredClientOtp();
+  if (!otp) {
+    throw new ApiError(
+      503,
+      "OTP_UNAVAILABLE",
+      "ورود با کد تأیید پیکربندی نشده است. DEMO_OTP را تنظیم کنید یا ارائه‌دهنده پیامک را وصل کنید.",
+    );
+  }
+  if (secret.trim() !== otp) {
+    throw new ApiError(401, "INVALID_CREDENTIALS", "کد تأیید نادرست است");
+  }
+}
 
 export async function authenticate(input: z.infer<typeof loginSchema>): Promise<AuthSession> {
   await ensureBootstrapped();
@@ -49,9 +66,7 @@ export async function authenticate(input: z.infer<typeof loginSchema>): Promise<
   );
 
   if (!user || !user.isActive) {
-    if (input.secret.trim() !== DEMO_OTP) {
-      throw new ApiError(401, "INVALID_CREDENTIALS", "اطلاعات ورود نادرست است");
-    }
+    assertClientOtp(input.secret);
     const phone = isEmail ? "09000000000" : identifier;
     const id = `client-${identifier}`;
     let guest = store.users.find((u) => u.id === id);
@@ -85,10 +100,11 @@ export async function authenticate(input: z.infer<typeof loginSchema>): Promise<
   }
 
   if (user.role === "client") {
-    if (input.secret.trim() !== DEMO_OTP) {
-      throw new ApiError(401, "INVALID_CREDENTIALS", "کد تأیید نادرست است");
-    }
+    assertClientOtp(input.secret);
   } else {
+    if (!user.passwordHash) {
+      throw new ApiError(401, "INVALID_CREDENTIALS", "رمز عبور برای این حساب تنظیم نشده است");
+    }
     const ok = await verifyPassword(input.secret, user.passwordHash);
     if (!ok) throw new ApiError(401, "INVALID_CREDENTIALS", "رمز عبور نادرست است");
   }
@@ -256,6 +272,8 @@ export async function listAgents() {
         avatarUrl: agent.avatarUrl,
         listedProperties: listed,
         dealsClosed: closed,
+        isActive: agent.isActive,
+        status: agent.isActive ? ("active" as const) : ("inactive" as const),
       };
     });
 }

@@ -7,11 +7,13 @@ export type AuthUser = {
   email?: string;
   name: string;
   role: UserRole;
-  /** Demo password for admin/agent. Clients authenticate with OTP. */
-  password?: string;
   agentId?: string;
 };
 
+/**
+ * Public role hints for the login UI only.
+ * Passwords/OTP live in the server store + env — never in client bundles.
+ */
 export const AUTH_USERS: AuthUser[] = [
   {
     id: "admin-1",
@@ -19,7 +21,6 @@ export const AUTH_USERS: AuthUser[] = [
     email: siteConfig.panels.demoAdminEmail,
     name: "مدیر سیستم",
     role: "admin",
-    password: "123456",
   },
   {
     id: "agent-1",
@@ -27,12 +28,9 @@ export const AUTH_USERS: AuthUser[] = [
     email: siteConfig.panels.demoAgentEmail,
     name: "آرش شایگان",
     role: "agent",
-    password: "123456",
     agentId: "a1",
   },
 ];
-
-export const DEMO_OTP = "1234";
 
 export const ROLE_LABELS: Record<UserRole, string> = {
   admin: "مدیر",
