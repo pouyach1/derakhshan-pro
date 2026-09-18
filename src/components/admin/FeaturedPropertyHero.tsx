@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Bookmark, ChevronLeft, ChevronRight, Share2 } from "lucide-react";
-import { FEATURED_PROPERTIES, type FeaturedProperty } from "@/config/admin";
+import { type FeaturedProperty } from "@/config/admin";
 
 const AUTO_MS = 5000;
 const SPRING = { stiffness: 150, damping: 15 };
@@ -26,7 +26,7 @@ const textItem = {
 };
 
 export default function FeaturedPropertyHero({ items }: { items?: FeaturedProperty[] }) {
-  const list = items && items.length > 0 ? items : FEATURED_PROPERTIES;
+  const list = items ?? [];
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [progressKey, setProgressKey] = useState(0);

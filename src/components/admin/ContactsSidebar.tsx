@@ -1,10 +1,22 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ADMIN_CONTACTS, type ContactRole } from "@/config/admin";
+import { api } from "@/lib/api";
+import { fallbackImage } from "@/lib/money";
+import { siteConfig } from "@/config/siteConfig";
 import { cn } from "@/lib/utils";
+
+type ContactRole = "Realtor" | "Builder" | "Client";
+
+type Contact = {
+  id: string;
+  name: string;
+  role: ContactRole;
+  city: string;
+  avatar: string;
+};
 
 const CATEGORIES = [
   { id: "all", label: "همه", role: "All" as const },
@@ -21,16 +33,52 @@ function roleLabel(role: ContactRole) {
 
 export default function ContactsSidebar() {
   const [category, setCategory] = useState<(typeof CATEGORIES)[number]["id"]>("all");
-  const [activeId, setActiveId] = useState(ADMIN_CONTACTS[0]?.id ?? "");
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [activeId, setActiveId] = useState("");
+
+  useEffect(() => {
+    void (async () => {
+      const [agentsRes, clientsRes] = await Promise.all([
+        api<{ items: Array<{ id: string; name: string; avatarUrl: string | null }> }>("/api/agents"),
+        api<{ items: Array<{ id: string; name: string; preferredNeighborhood?: string }> }>("/api/clients"),
+      ]);
+      const next: Contact[] = [];
+      if (agentsRes.ok) {
+        for (const agent of agentsRes.data.items) {
+          next.push({
+            id: `agent-${agent.id}`,
+            name: agent.name,
+            role: "Realtor",
+            city: siteConfig.contact.address.city,
+            avatar: fallbackImage(agent.avatarUrl),
+          });
+        }
+      }
+      if (clientsRes.ok) {
+        for (const client of clientsRes.data.items) {
+          next.push({
+            id: `client-${client.id}`,
+            name: client.name,
+            role: "Client",
+            city: client.preferredNeighborhood || siteConfig.contact.address.city,
+            avatar: "/images/admin/avatars/sara-nouri.jpg",
+          });
+        }
+      }
+      setContacts(next);
+      setActiveId((current) => current || next[0]?.id || "");
+    })();
+  }, []);
 
   const activeCategory = CATEGORIES.find((item) => item.id === category) ?? CATEGORIES[0];
 
-  const contacts = useMemo(() => {
-    if (activeCategory.role === "All") return ADMIN_CONTACTS;
-    return ADMIN_CONTACTS.filter((contact) => contact.role === activeCategory.role);
-  }, [activeCategory]);
+  const filtered = useMemo(() => {
+    if (activeCategory.role === "All") return contacts;
+    return contacts.filter((contact) => contact.role === activeCategory.role);
+  }, [activeCategory, contacts]);
 
-  const cityCount = ADMIN_CONTACTS.filter((contact) => contact.city === "تهران").length;
+  const cityLabel = siteConfig.contact.address.city;
+  const cityCount = contacts.filter((contact) => contact.city.includes(cityLabel) || cityLabel.includes(contact.city)).length;
 
   return (
     <aside
@@ -77,16 +125,16 @@ export default function ContactsSidebar() {
       >
         <span className="inline-flex items-center gap-2">
           <span className="rounded-full bg-white px-2 py-0.5 text-xs font-semibold text-admin-sky ring-1 ring-sky-100">
-            {cityCount}
+            {cityCount.toLocaleString("fa-IR")}
           </span>
-          تهران
+          {cityLabel}
         </span>
         <ChevronIcon />
       </button>
 
       <div className="flex-1 space-y-2.5 pe-1">
         <AnimatePresence mode="popLayout">
-          {contacts.map((contact) => {
+          {filtered.map((contact) => {
             const active = contact.id === activeId;
             return (
               <motion.article
@@ -145,6 +193,9 @@ export default function ContactsSidebar() {
             );
           })}
         </AnimatePresence>
+        {filtered.length === 0 ? (
+          <p className="rounded-2xl bg-admin-soft px-3 py-6 text-center text-xs text-slate-400">مخاطبی نیست</p>
+        ) : null}
       </div>
     </aside>
   );

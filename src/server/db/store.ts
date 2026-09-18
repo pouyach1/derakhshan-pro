@@ -10,14 +10,17 @@
 import { nanoid } from "nanoid";
 import {
   emptyAgencyStore,
+  normalizeAgencyStore,
   type ActivityRecord,
   type AgencySettings,
   type AgencyStore,
   type ClientRecord,
   type ContactRecord,
+  type DealRecord,
   type LeadRecord,
   type LeadStatus,
   type ListingType,
+  type PropertyImageRecord,
   type PropertyRecord,
   type PropertyStatus,
   type TourRecord,
@@ -31,9 +34,11 @@ export type {
   AgencyStore,
   ClientRecord,
   ContactRecord,
+  DealRecord,
   LeadRecord,
   LeadStatus,
   ListingType,
+  PropertyImageRecord,
   PropertyRecord,
   PropertyStatus,
   TourRecord,
@@ -79,10 +84,10 @@ function writeToDisk(store: AgencyStore) {
 
 export function getStore(): AgencyStore {
   if (!globalForStore.__agencyStoreLoaded) {
-    globalForStore.__agencyStore = readFromDisk() ?? emptyAgencyStore();
+    globalForStore.__agencyStore = normalizeAgencyStore(readFromDisk() ?? emptyAgencyStore());
     globalForStore.__agencyStoreLoaded = true;
   }
-  return globalForStore.__agencyStore!;
+  return normalizeAgencyStore(globalForStore.__agencyStore!);
 }
 
 export function saveStore() {
@@ -98,7 +103,7 @@ export function newId() {
 }
 
 export function resetStore(next: AgencyStore) {
-  globalForStore.__agencyStore = next;
+  globalForStore.__agencyStore = normalizeAgencyStore(next);
   globalForStore.__agencyStoreLoaded = true;
   saveStore();
 }

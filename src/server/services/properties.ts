@@ -5,6 +5,7 @@ import {
   newId,
   nowIso,
   saveStore,
+  type DealRecord,
   type PropertyRecord,
 } from "@/server/db/store";
 import type {
@@ -44,6 +45,64 @@ function logActivity(input: {
   });
   store.activity = store.activity.slice(0, 500);
   saveStore();
+}
+
+function syncPropertyImages(property: PropertyRecord) {
+  const store = getStore();
+  const images = store.propertyImages ?? (store.propertyImages = []);
+  const kept = images.filter((row) => row.propertyId !== property.id);
+  const urls = (property.gallery?.length
+    ? property.gallery
+    : property.imageUrl
+      ? [property.imageUrl]
+      : []
+  ).filter(Boolean);
+  const next = urls.map((url, index) => ({
+    id: newId(),
+    propertyId: property.id,
+    url,
+    alt: property.title,
+    sortOrder: index,
+    isCover: index === 0 || url === property.imageUrl,
+    createdAt: nowIso(),
+  }));
+  store.propertyImages = [...next, ...kept];
+  if (urls[0]) property.imageUrl = property.imageUrl || urls[0];
+  if (!property.gallery?.length) property.gallery = urls;
+}
+
+function ensureDealForSoldProperty(property: PropertyRecord, actor?: { id?: string; role?: string }) {
+  if (property.status !== "sold") return;
+  const store = getStore();
+  const deals = store.deals ?? (store.deals = []);
+  const existing = deals.find((deal) => deal.propertyId === property.id && deal.status === "closed");
+  if (existing) return existing;
+  const deal: DealRecord = {
+    id: newId(),
+    propertyId: property.id,
+    title: property.title,
+    dealType: property.listingType === "rent" ? "rent" : "sale",
+    status: "closed",
+    price: property.price,
+    currency: property.currency || "IRR",
+    buyerName: null,
+    sellerName: null,
+    agentId: property.agentId,
+    closedAt: nowIso(),
+    notes: "ثبت خودکار پس از تغییر وضعیت به واگذار شده",
+    createdAt: nowIso(),
+    updatedAt: nowIso(),
+  };
+  deals.unshift(deal);
+  logActivity({
+    actorId: actor?.id,
+    actorRole: actor?.role,
+    action: "deal.create",
+    entityType: "deal",
+    entityId: deal.id,
+    detail: { propertyId: property.id },
+  });
+  return deal;
 }
 
 export async function listProperties(
@@ -94,6 +153,42 @@ export async function getProperty(id: string, opts?: { countView?: boolean }) {
   return row;
 }
 
+export async function listPropertyImages(propertyId: string) {
+  await ensureBootstrapped();
+  const store = getStore();
+  return (store.propertyImages ?? [])
+    .filter((row) => row.propertyId === propertyId)
+    .sort((a, b) => a.sortOrder - b.sortOrder);
+}
+
+export async function replacePropertyImages(
+  propertyId: string,
+  urls: string[],
+  actor?: { id?: string; role?: string },
+) {
+  await ensureBootstrapped();
+  const store = getStore();
+  const property = store.properties.find((p) => p.id === propertyId && !p.softDeleted);
+  if (!property) throw new ApiError(404, "NOT_FOUND", "ملک یافت نشد");
+  const clean = urls.map((url) => url.trim()).filter(Boolean);
+  if (!clean.length) throw new ApiError(400, "IMAGES_REQUIRED", "حداقل یک تصویر لازم است");
+  property.gallery = clean;
+  property.imageUrl = clean[0];
+  property.version += 1;
+  property.updatedAt = nowIso();
+  syncPropertyImages(property);
+  saveStore();
+  logActivity({
+    actorId: actor?.id,
+    actorRole: actor?.role,
+    action: "property.images.replace",
+    entityType: "property",
+    entityId: propertyId,
+    detail: { count: clean.length },
+  });
+  return listPropertyImages(propertyId);
+}
+
 export async function createProperty(
   input: z.infer<typeof propertyCreateSchema>,
   actor?: { id?: string; role?: string },
@@ -102,6 +197,8 @@ export async function createProperty(
   const store = getStore();
   const id = newId();
   const code = input.code || `PR-${Date.now().toString().slice(-6)}`;
+  const cover = input.imageUrl || input.gallery[0] || "/images/landing/hero/banner.jpg";
+  const gallery = input.gallery.length ? input.gallery : [cover];
   const row: PropertyRecord = {
     id,
     code,
@@ -118,8 +215,8 @@ export async function createProperty(
     bathrooms: input.bathrooms,
     areaSqm: input.areaSqm,
     features: input.features,
-    imageUrl: input.imageUrl || "/images/landing/hero/banner.jpg",
-    gallery: input.gallery.length ? input.gallery : [input.imageUrl || "/images/landing/hero/banner.jpg"],
+    imageUrl: cover,
+    gallery,
     agentId: input.agentId ?? null,
     views: 0,
     isFeatured: input.isFeatured ?? false,
@@ -129,6 +226,8 @@ export async function createProperty(
     updatedAt: nowIso(),
   };
   store.properties.unshift(row);
+  syncPropertyImages(row);
+  ensureDealForSoldProperty(row, actor);
   saveStore();
   logActivity({
     actorId: actor?.id,
@@ -146,6 +245,7 @@ export async function updateProperty(
   input: z.infer<typeof propertyUpdateSchema>,
   actor?: { id?: string; role?: string },
 ) {
+  await ensureBootstrapped();
   const store = getStore();
   const existing = store.properties.find((p) => p.id === id && !p.softDeleted);
   if (!existing) throw new ApiError(404, "NOT_FOUND", "ملک یافت نشد");
@@ -153,6 +253,7 @@ export async function updateProperty(
     throw new ApiError(409, "VERSION_CONFLICT", "نسخه ملک تغییر کرده است؛ دوباره تلاش کنید");
   }
 
+  const prevStatus = existing.status;
   Object.assign(existing, {
     title: input.title ?? existing.title,
     location: input.location ?? existing.location,
@@ -173,6 +274,10 @@ export async function updateProperty(
     version: existing.version + 1,
     updatedAt: nowIso(),
   });
+  if (input.gallery || input.imageUrl) syncPropertyImages(existing);
+  if (existing.status === "sold" && prevStatus !== "sold") {
+    ensureDealForSoldProperty(existing, actor);
+  }
   saveStore();
   logActivity({
     actorId: actor?.id,
@@ -186,6 +291,7 @@ export async function updateProperty(
 }
 
 export async function deleteProperty(id: string, actor?: { id?: string; role?: string }) {
+  await ensureBootstrapped();
   const store = getStore();
   const existing = store.properties.find((p) => p.id === id);
   if (!existing || existing.softDeleted) throw new ApiError(404, "NOT_FOUND", "ملک یافت نشد");
@@ -201,4 +307,45 @@ export async function deleteProperty(id: string, actor?: { id?: string; role?: s
     entityId: id,
   });
   return { id, deleted: true };
+}
+
+export async function listDeals() {
+  await ensureBootstrapped();
+  const store = getStore();
+  return [...(store.deals ?? [])].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+}
+
+export async function createDeal(input: {
+  propertyId?: string;
+  title: string;
+  dealType?: "sale" | "rent";
+  status?: DealRecord["status"];
+  price: number;
+  buyerName?: string;
+  sellerName?: string;
+  agentId?: string;
+  notes?: string;
+}) {
+  await ensureBootstrapped();
+  const store = getStore();
+  const deals = store.deals ?? (store.deals = []);
+  const row: DealRecord = {
+    id: newId(),
+    propertyId: input.propertyId ?? null,
+    title: input.title,
+    dealType: input.dealType ?? "sale",
+    status: input.status ?? "closed",
+    price: input.price,
+    currency: "IRR",
+    buyerName: input.buyerName ?? null,
+    sellerName: input.sellerName ?? null,
+    agentId: input.agentId ?? null,
+    closedAt: input.status === "pending" ? null : nowIso(),
+    notes: input.notes ?? "",
+    createdAt: nowIso(),
+    updatedAt: nowIso(),
+  };
+  deals.unshift(row);
+  saveStore();
+  return row;
 }

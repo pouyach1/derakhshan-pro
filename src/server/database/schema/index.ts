@@ -15,4 +15,4 @@ export type { AgencySettings } from "./settings";
 export type { ActivityRecord } from "./activity";
 export type { ContactRecord } from "./contacts";
 export type { AgencyStore } from "./store";
-export { emptyAgencyStore } from "./store";
+export { emptyAgencyStore, normalizeAgencyStore } from "./store";

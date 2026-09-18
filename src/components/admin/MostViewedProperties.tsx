@@ -22,7 +22,7 @@ import {
   Sparkles,
   Trash2,
 } from "lucide-react";
-import { MOST_VIEWED_PROPERTIES, type ViewedProperty } from "@/config/admin";
+import { type ViewedProperty } from "@/config/admin";
 import { cn } from "@/lib/utils";
 
 const CARD_WIDTH = 328;
@@ -32,7 +32,7 @@ const VELOCITY = 32;
 const TILT = { stiffness: 170, damping: 18, mass: 0.35 };
 
 export default function MostViewedProperties({ items }: { items?: ViewedProperty[] }) {
-  const properties = items && items.length > 0 ? items : MOST_VIEWED_PROPERTIES;
+  const properties = items ?? [];
   const [paused, setPaused] = useState(false);
   const [dragging, setDragging] = useState(false);
   const x = useMotionValue(0);
@@ -95,6 +95,8 @@ export default function MostViewedProperties({ items }: { items?: ViewedProperty
     const projected = x.get() + info.velocity.x * 0.12;
     x.set(wrapX(projected));
   };
+
+  if (properties.length === 0) return null;
 
   return (
     <section className="relative overflow-hidden rounded-[1.85rem] border border-sky-500/15 bg-admin-card/80 p-4 shadow-[0_24px_60px_-28px_rgba(0,163,255,0.28)] backdrop-blur-md sm:p-6">
