@@ -8,12 +8,14 @@ import DoneDealsSection from "@/components/sections/DoneDealsSection";
 import LawsSection from "@/components/sections/LawsSection";
 import FullImageCtaSection from "@/components/sections/FullImageCtaSection";
 import ContactFormSection from "@/components/sections/ContactFormSection";
+import MobileHomeProperties from "@/components/mobile/MobileHomeProperties";
 import { INTRO_CTA } from "@/config/home";
 
 export default function HomePage() {
   return (
     <>
       <HeroSection />
+      <MobileHomeProperties />
       <VideoTourSection />
       <CtaTextSection title={INTRO_CTA.title} body={INTRO_CTA.body} cta={INTRO_CTA.cta} />
       <ValuePropsSection />
