@@ -12,8 +12,11 @@ export async function GET(request: NextRequest) {
     const agentId =
       session.role === "agent"
         ? session.agentId || session.id
-        : request.nextUrl.searchParams.get("agentId");
-    if (!agentId) throw new ApiError(400, "AGENT_REQUIRED", "شناسه مشاور لازم است");
+        : request.nextUrl.searchParams.get("agentId") || undefined;
+    // Admin may omit agentId to list the whole office CRM.
+    if (session.role === "agent" && !agentId) {
+      throw new ApiError(400, "AGENT_REQUIRED", "شناسه مشاور لازم است");
+    }
     const items = await listClients(agentId);
     return jsonOk({ items }, { requestId });
   } catch (error) {

@@ -31,6 +31,7 @@ const emptyDraft = {
   bathrooms: "2",
   areaSqm: "120",
   imageUrl: "/images/landing/hero/banner.jpg",
+  galleryText: "/images/landing/hero/banner.jpg",
   features: [] as string[],
 };
 
@@ -82,6 +83,7 @@ function NewPropertyForm() {
         bathrooms: String(item.bathrooms),
         areaSqm: String(item.areaSqm),
         imageUrl: item.imageUrl,
+        galleryText: (item.gallery?.length ? item.gallery : [item.imageUrl]).filter(Boolean).join("\n"),
         features: item.features,
       });
       setAgentId(item.agentId || "");
@@ -100,6 +102,11 @@ function NewPropertyForm() {
   async function save() {
     setSaving(true);
     setError("");
+    const gallery = draft.galleryText
+      .split(/\n|,/)
+      .map((item) => item.trim())
+      .filter(Boolean);
+    const cover = draft.imageUrl || gallery[0] || "/images/landing/hero/banner.jpg";
     const payload = {
       title: draft.title || "ملک جدید",
       category: draft.category,
@@ -112,8 +119,8 @@ function NewPropertyForm() {
       bedrooms: Number(draft.bedrooms) || 0,
       bathrooms: Number(draft.bathrooms) || 0,
       areaSqm: Number(draft.areaSqm) || 0,
-      imageUrl: draft.imageUrl,
-      gallery: [draft.imageUrl],
+      imageUrl: cover,
+      gallery: gallery.length ? gallery : [cover],
       features: draft.features,
       agentId: agentId || undefined,
     };
@@ -235,11 +242,18 @@ function NewPropertyForm() {
 
             {step === 3 ? (
               <div className="space-y-4">
-                <Field label="آدرس تصویر (مسیر public یا لینک)">
+                <Field label="تصویر شاخص">
                   <input className={inputClass} value={draft.imageUrl} onChange={(e) => setDraft((d) => ({ ...d, imageUrl: e.target.value }))} />
                 </Field>
+                <Field label="گالری تصاویر (هر خط یک مسیر)">
+                  <textarea
+                    className={`${inputClass} min-h-28 py-3`}
+                    value={draft.galleryText}
+                    onChange={(e) => setDraft((d) => ({ ...d, galleryText: e.target.value }))}
+                  />
+                </Field>
                 <p className="text-xs text-slate-500">
-                  فایل را در `public/images` بگذارید و مسیر را اینجا وارد کنید؛ مثلاً `/images/landing/hero/banner.jpg`
+                  فایل‌ها را در `public/images` بگذارید؛ مثلاً `/images/landing/hero/banner.jpg`
                 </p>
                 <div className="relative h-48 overflow-hidden rounded-2xl bg-admin-soft">
                   <Image src={draft.imageUrl || "/images/landing/hero/banner.jpg"} alt="" fill className="object-cover" />

@@ -5,6 +5,7 @@ import {
   newId,
   nowIso,
   resetStore,
+  saveStore,
   type AgencyStore,
   type PropertyRecord,
 } from "@/server/db/store";
@@ -73,6 +74,8 @@ export async function buildSeedStore(): Promise<AgencyStore> {
     tours: [],
     contacts: [],
     activity: [],
+    propertyImages: [],
+    deals: [],
   };
 
   const samples: Array<Partial<PropertyRecord> & { imageUrl: string; price: number; code: string }> = [
@@ -255,13 +258,99 @@ export async function buildSeedStore(): Promise<AgencyStore> {
     });
   }
 
+  for (const property of store.properties) {
+    const urls = property.gallery?.length ? property.gallery : [property.imageUrl].filter(Boolean);
+    urls.forEach((url, index) => {
+      store.propertyImages!.push({
+        id: newId(),
+        propertyId: property.id,
+        url,
+        alt: property.title,
+        sortOrder: index,
+        isCover: index === 0,
+        createdAt: stamp,
+      });
+    });
+    if (property.status === "sold") {
+      store.deals!.push({
+        id: newId(),
+        propertyId: property.id,
+        title: property.title,
+        dealType: property.listingType === "rent" ? "rent" : "sale",
+        status: "closed",
+        price: property.price,
+        currency: "IRR",
+        buyerName: null,
+        sellerName: null,
+        agentId: property.agentId,
+        closedAt: stamp,
+        notes: "معامله نمونه seed",
+        createdAt: stamp,
+        updatedAt: stamp,
+      });
+    }
+  }
+
   return store;
+}
+
+function hydrateDerivedCollections() {
+  const store = getStore();
+  let changed = false;
+  if (!store.propertyImages) {
+    store.propertyImages = [];
+    changed = true;
+  }
+  if (!store.deals) {
+    store.deals = [];
+    changed = true;
+  }
+  if (store.propertyImages.length === 0 && store.properties.length > 0) {
+    for (const property of store.properties) {
+      const urls = property.gallery?.length ? property.gallery : [property.imageUrl].filter(Boolean);
+      urls.forEach((url, index) => {
+        store.propertyImages!.push({
+          id: newId(),
+          propertyId: property.id,
+          url,
+          alt: property.title,
+          sortOrder: index,
+          isCover: index === 0,
+          createdAt: property.createdAt || nowIso(),
+        });
+      });
+    }
+    changed = true;
+  }
+  if (store.deals.length === 0) {
+    for (const property of store.properties.filter((p) => p.status === "sold" && !p.softDeleted)) {
+      store.deals.push({
+        id: newId(),
+        propertyId: property.id,
+        title: property.title,
+        dealType: property.listingType === "rent" ? "rent" : "sale",
+        status: "closed",
+        price: property.price,
+        currency: property.currency || "IRR",
+        buyerName: null,
+        sellerName: null,
+        agentId: property.agentId,
+        closedAt: property.updatedAt,
+        notes: "هم‌ترازی با وضعیت واگذار شده",
+        createdAt: property.updatedAt,
+        updatedAt: property.updatedAt,
+      });
+    }
+    if (store.deals.length > 0) changed = true;
+  }
+  if (changed) saveStore();
 }
 
 let booting: Promise<void> | null = null;
 
 export async function ensureBootstrapped() {
   const current = getStore();
+  hydrateDerivedCollections();
   if (current.users.length > 0 && current.properties.length > 0) return;
   if (!booting) {
     booting = (async () => {

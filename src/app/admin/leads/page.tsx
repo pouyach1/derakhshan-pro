@@ -17,6 +17,8 @@ const COLUMNS: { id: LeadStatus; title: string }[] = [
 export default function LeadsPage() {
   const [leads, setLeads] = useState<LeadRecord[]>([]);
   const [error, setError] = useState("");
+  const [draft, setDraft] = useState({ clientName: "", phone: "", propertyTitle: "", notes: "" });
+  const [saving, setSaving] = useState(false);
 
   async function load() {
     const res = await api<{ items: LeadRecord[] }>("/api/leads");
@@ -25,6 +27,7 @@ export default function LeadsPage() {
       return;
     }
     setLeads(res.data.items);
+    setError("");
   }
 
   useEffect(() => {
@@ -42,11 +45,70 @@ export default function LeadsPage() {
     if (!res.ok) void load();
   }
 
+  async function createLead() {
+    if (!draft.clientName.trim() || !draft.phone.trim()) {
+      setError("نام و موبایل لید الزامی است");
+      return;
+    }
+    setSaving(true);
+    const res = await api<LeadRecord>("/api/leads", {
+      method: "POST",
+      body: JSON.stringify({
+        clientName: draft.clientName.trim(),
+        phone: draft.phone.trim(),
+        propertyTitle: draft.propertyTitle.trim() || "پیگیری دستی",
+        notes: draft.notes.trim(),
+        source: "admin-manual",
+      }),
+    });
+    setSaving(false);
+    if (!res.ok) {
+      setError(res.error.message);
+      return;
+    }
+    setDraft({ clientName: "", phone: "", propertyTitle: "", notes: "" });
+    await load();
+  }
+
   return (
     <div className="space-y-4">
       <div className="rounded-[1.75rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 sm:p-5">
         <h1 className="text-xl font-semibold text-admin-navy sm:text-2xl">پیگیری مشتریان</h1>
         <p className="mt-1 text-sm text-slate-500">درخواست‌های سایت و آگهی‌ها اینجا جمع می‌شود</p>
+        <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+          <input
+            className="h-11 rounded-2xl bg-admin-soft px-4 text-sm outline-none focus:ring-2 focus:ring-admin-sky/40"
+            placeholder="نام مشتری"
+            value={draft.clientName}
+            onChange={(e) => setDraft((d) => ({ ...d, clientName: e.target.value }))}
+          />
+          <input
+            className="h-11 rounded-2xl bg-admin-soft px-4 text-sm outline-none focus:ring-2 focus:ring-admin-sky/40"
+            placeholder="موبایل"
+            value={draft.phone}
+            onChange={(e) => setDraft((d) => ({ ...d, phone: e.target.value }))}
+          />
+          <input
+            className="h-11 rounded-2xl bg-admin-soft px-4 text-sm outline-none focus:ring-2 focus:ring-admin-sky/40"
+            placeholder="موضوع / ملک"
+            value={draft.propertyTitle}
+            onChange={(e) => setDraft((d) => ({ ...d, propertyTitle: e.target.value }))}
+          />
+          <input
+            className="h-11 rounded-2xl bg-admin-soft px-4 text-sm outline-none focus:ring-2 focus:ring-admin-sky/40"
+            placeholder="یادداشت"
+            value={draft.notes}
+            onChange={(e) => setDraft((d) => ({ ...d, notes: e.target.value }))}
+          />
+          <button
+            type="button"
+            disabled={saving}
+            onClick={() => void createLead()}
+            className="h-11 rounded-full bg-admin-sky text-sm font-medium text-white disabled:opacity-60"
+          >
+            {saving ? "در حال ثبت..." : "ثبت لید جدید"}
+          </button>
+        </div>
       </div>
       {error ? <p className="text-sm text-rose-500">{error}</p> : null}
       <div className="grid gap-4 xl:grid-cols-3 2xl:grid-cols-6">

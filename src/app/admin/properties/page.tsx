@@ -57,6 +57,15 @@ export default function PropertiesPage() {
     if (res.ok) setProperties((prev) => prev.filter((item) => item.id !== id));
   }
 
+  async function changeStatus(id: string, next: PropertyStatus) {
+    setProperties((prev) => prev.map((item) => (item.id === id ? { ...item, status: next } : item)));
+    const res = await api(`/api/properties/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ status: next }),
+    });
+    if (!res.ok) void load();
+  }
+
   return (
     <div className="space-y-4">
       <div className="rounded-[1.75rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 sm:p-5">
@@ -132,6 +141,20 @@ export default function PropertiesPage() {
                 </span>
               </div>
               <p className="text-sm font-semibold text-admin-sky">{formatToman(property.price, property.listingType)}</p>
+              <label className="block text-xs text-slate-500">
+                وضعیت
+                <select
+                  className="mt-1 h-9 w-full rounded-xl bg-admin-soft px-3 text-sm text-admin-navy"
+                  value={property.status}
+                  onChange={(event) => void changeStatus(property.id, event.target.value as PropertyStatus)}
+                >
+                  <option value="published">منتشرشده</option>
+                  <option value="draft">پیش‌نویس</option>
+                  <option value="negotiation">مذاکره</option>
+                  <option value="sold">واگذار شده</option>
+                  <option value="archived">بایگانی</option>
+                </select>
+              </label>
               <div className="mt-auto flex items-center gap-2">
                 <Link href={`/listings/${property.id}`} className="rounded-xl border border-slate-200 bg-white p-2" aria-label="مشاهده">
                   <Eye className="h-4 w-4 text-sky-500" />

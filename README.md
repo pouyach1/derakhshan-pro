@@ -26,6 +26,8 @@ npm run dev
 
 سلامت: `GET /api/health`
 
+معماری دیتابیس (فاز A): `src/server/database/` و `docs/database/`
+
 ## مسیرهای محصول
 
 - `/listings` آرشیو عمومی آگهی‌ها

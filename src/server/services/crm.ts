@@ -126,13 +126,38 @@ export async function listLeads(opts?: { agentId?: string; status?: string }) {
   return rows.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
+function pushActivity(input: {
+  actorId?: string | null;
+  actorRole?: string | null;
+  action: string;
+  entityType: string;
+  entityId?: string | null;
+  detail?: Record<string, unknown>;
+}) {
+  const store = getStore();
+  store.activity.unshift({
+    id: newId(),
+    actorId: input.actorId ?? null,
+    actorRole: input.actorRole ?? null,
+    action: input.action,
+    entityType: input.entityType,
+    entityId: input.entityId ?? null,
+    detail: input.detail ?? {},
+    ip: null,
+    requestId: null,
+    createdAt: nowIso(),
+  });
+  store.activity = store.activity.slice(0, 500);
+}
+
 export async function createLead(input: z.infer<typeof leadCreateSchema>) {
   await ensureBootstrapped();
   const store = getStore();
+  const phone = normalizePhone(input.phone);
   const row: LeadRecord = {
     id: newId(),
     clientName: input.clientName,
-    phone: normalizePhone(input.phone),
+    phone,
     email: input.email || null,
     propertyId: input.propertyId ?? null,
     propertyTitle: input.propertyTitle || "",
@@ -144,11 +169,45 @@ export async function createLead(input: z.infer<typeof leadCreateSchema>) {
     updatedAt: nowIso(),
   };
   store.leads.unshift(row);
+
+  // Keep CRM client roster in sync so leads stay followable as clients.
+  const agentKey = input.assignedAgentId || "a1";
+  const existingClient = store.clients.find((c) => c.phone === phone);
+  if (!existingClient) {
+    store.clients.unshift({
+      id: newId(),
+      agentId: agentKey,
+      name: input.clientName,
+      phone,
+      email: input.email || null,
+      preferredNeighborhood: "",
+      budgetMin: 0,
+      budgetMax: 0,
+      urgency: "medium",
+      intent: "buy",
+      notes: input.notes
+        ? [{ id: newId(), text: input.notes, at: nowIso() }]
+        : [],
+      createdAt: nowIso(),
+      updatedAt: nowIso(),
+    });
+  } else if (input.notes) {
+    existingClient.notes.unshift({ id: newId(), text: input.notes, at: nowIso() });
+    existingClient.updatedAt = nowIso();
+  }
+
+  pushActivity({
+    action: "lead.create",
+    entityType: "lead",
+    entityId: row.id,
+    detail: { phone, source: row.source },
+  });
   saveStore();
   return row;
 }
 
 export async function updateLead(id: string, input: z.infer<typeof leadUpdateSchema>) {
+  await ensureBootstrapped();
   const store = getStore();
   const existing = store.leads.find((l) => l.id === id);
   if (!existing) throw new ApiError(404, "NOT_FOUND", "لید یافت نشد");
@@ -159,8 +218,20 @@ export async function updateLead(id: string, input: z.infer<typeof leadUpdateSch
     propertyTitle: input.propertyTitle ?? existing.propertyTitle,
     updatedAt: nowIso(),
   });
+  pushActivity({
+    action: "lead.update",
+    entityType: "lead",
+    entityId: id,
+    detail: { status: existing.status },
+  });
   saveStore();
   return existing;
+}
+
+export async function listActivity(limit = 50) {
+  await ensureBootstrapped();
+  const store = getStore();
+  return store.activity.slice(0, Math.min(Math.max(limit, 1), 200));
 }
 
 export async function listAgents() {
@@ -189,12 +260,13 @@ export async function listAgents() {
     });
 }
 
-export async function listClients(agentId: string) {
+export async function listClients(agentId?: string) {
   await ensureBootstrapped();
   const store = getStore();
-  return store.clients
-    .filter((c) => c.agentId === agentId)
-    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  const rows = agentId
+    ? store.clients.filter((c) => c.agentId === agentId)
+    : [...store.clients];
+  return rows.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
 export async function createClient(agentId: string, input: z.infer<typeof clientCreateSchema>) {
@@ -224,12 +296,11 @@ export async function createClient(agentId: string, input: z.infer<typeof client
   return row;
 }
 
-export async function listTours(agentId: string) {
+export async function listTours(agentId?: string) {
   await ensureBootstrapped();
   const store = getStore();
-  return store.tours
-    .filter((t) => t.agentId === agentId)
-    .sort((a, b) => b.scheduledAt.localeCompare(a.scheduledAt));
+  const rows = agentId ? store.tours.filter((t) => t.agentId === agentId) : [...store.tours];
+  return rows.sort((a, b) => b.scheduledAt.localeCompare(a.scheduledAt));
 }
 
 export async function createTour(agentId: string, input: z.infer<typeof tourCreateSchema>) {
@@ -256,11 +327,14 @@ export async function createTour(agentId: string, input: z.infer<typeof tourCrea
 
 export async function updateTour(
   id: string,
-  agentId: string,
+  agentId: string | null,
   input: z.infer<typeof tourUpdateSchema>,
 ) {
+  await ensureBootstrapped();
   const store = getStore();
-  const existing = store.tours.find((t) => t.id === id && t.agentId === agentId);
+  const existing = store.tours.find(
+    (t) => t.id === id && (agentId == null || t.agentId === agentId),
+  );
   if (!existing) throw new ApiError(404, "NOT_FOUND", "بازدید یافت نشد");
   Object.assign(existing, {
     status: input.status ?? existing.status,
@@ -329,7 +403,9 @@ export async function getPlatformStats() {
     unreadMessages: store.contacts.filter((c) => c.status === "new").length,
     agents: store.users.filter((u) => u.role === "agent").length,
     registeredClients: store.clients.length + store.users.filter((u) => u.role === "client").length,
-    monthlyDeals: live.filter((p) => p.status === "sold").length,
+    monthlyDeals:
+      (store.deals ?? []).filter((d) => d.status === "closed").length ||
+      live.filter((p) => p.status === "sold").length,
     totalViews: live.reduce((sum, p) => sum + p.views, 0),
     brand: siteConfig.brand.nameFa,
   };
