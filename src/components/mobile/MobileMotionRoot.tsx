@@ -2,10 +2,15 @@
 
 import { LayoutGroup } from "framer-motion";
 import type { ReactNode } from "react";
+import MobilePageTransition from "@/components/mobile/MobilePageTransition";
 
 /**
- * ریشهٔ shared-element موبایل — LayoutGroup تا layoutId کارت و جزئیات یکی بمانند.
+ * ریشهٔ موشن موبایل: LayoutGroup برای shared-element + انتقال صفحه با spring.
  */
 export default function MobileMotionRoot({ children }: { children: ReactNode }) {
-  return <LayoutGroup id="mobile-marketing">{children}</LayoutGroup>;
+  return (
+    <LayoutGroup id="mobile-marketing">
+      <MobilePageTransition>{children}</MobilePageTransition>
+    </LayoutGroup>
+  );
 }
