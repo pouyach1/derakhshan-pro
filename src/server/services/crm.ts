@@ -222,15 +222,27 @@ export async function createLead(input: z.infer<typeof leadCreateSchema>) {
   return row;
 }
 
-export async function updateLead(id: string, input: z.infer<typeof leadUpdateSchema>) {
+export async function updateLead(
+  id: string,
+  input: z.infer<typeof leadUpdateSchema>,
+  scope?: { agentId?: string | null },
+) {
   await ensureBootstrapped();
   const store = getStore();
   const existing = store.leads.find((l) => l.id === id);
   if (!existing) throw new ApiError(404, "NOT_FOUND", "لید یافت نشد");
+  if (scope?.agentId) {
+    if (existing.assignedAgentId && existing.assignedAgentId !== scope.agentId) {
+      throw new ApiError(403, "FORBIDDEN", "این لید متعلق به مشاور دیگری است");
+    }
+  }
   Object.assign(existing, {
     status: input.status ?? existing.status,
     notes: input.notes ?? existing.notes,
-    assignedAgentId: input.assignedAgentId ?? existing.assignedAgentId,
+    assignedAgentId:
+      scope?.agentId != null
+        ? existing.assignedAgentId ?? scope.agentId
+        : (input.assignedAgentId ?? existing.assignedAgentId),
     propertyTitle: input.propertyTitle ?? existing.propertyTitle,
     updatedAt: nowIso(),
   });
@@ -462,11 +474,18 @@ export async function createInquiry(input: z.infer<typeof inquirySchema>, ip?: s
   return { id: lead.id, received: true, propertyTitle: property.title };
 }
 
-export async function updateClient(id: string, input: z.infer<typeof clientUpdateSchema>) {
+export async function updateClient(
+  id: string,
+  input: z.infer<typeof clientUpdateSchema>,
+  scope?: { agentId?: string | null },
+) {
   await ensureBootstrapped();
   const store = getStore();
   const existing = store.clients.find((c) => c.id === id);
   if (!existing) throw new ApiError(404, "NOT_FOUND", "مشتری یافت نشد");
+  if (scope?.agentId && existing.agentId !== scope.agentId) {
+    throw new ApiError(403, "FORBIDDEN", "این مشتری متعلق به مشاور دیگری است");
+  }
   if (input.urgency) existing.urgency = input.urgency;
   if (input.preferredNeighborhood != null) existing.preferredNeighborhood = input.preferredNeighborhood;
   if (input.notes) {
