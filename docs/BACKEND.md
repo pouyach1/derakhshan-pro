@@ -55,14 +55,18 @@ Cookie: `agency_auth` (HttpOnly, signed JWT)
 ## Layout
 ```
 src/server/
-  db/store.ts     edge-safe persistence
+  database/       Phase A architecture (schema, adapter, seed, queries, migrations registry)
+  db/store.ts     edge-safe JSON persistence (physical I/O)
   auth/           session, password, rate-limit
   services/       properties, crm
   http/           guard, response
   validation/     zod schemas
 src/app/api/      route handlers
 src/scripts/      seed.ts
+docs/database/    database architecture docs
 ```
+
+See also: [`docs/database/DATABASE_OVERVIEW.md`](./database/DATABASE_OVERVIEW.md).
 
 ## Cloudflare note
 Native SQLite/libSQL clients break Workers bundling. This backend uses a pure TypeScript JSON store so OpenNext Cloudflare builds succeed. For multi-isolate durable storage later, swap the store adapter to D1/KV/Turso without changing route contracts.
