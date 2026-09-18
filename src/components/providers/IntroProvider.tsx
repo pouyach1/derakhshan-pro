@@ -34,9 +34,21 @@ export function IntroProvider({ children }: { children: ReactNode }) {
   const [heroReady, setHeroReady] = useState(false);
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const forceFull = params.get("intro") === "full";
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const mobile = window.innerWidth <= 768;
-    const shown = readShown();
+    const shown = forceFull ? false : readShown();
+
+    if (forceFull) {
+      try {
+        sessionStorage.removeItem(PRELOADER_STORAGE_KEY);
+      } catch {
+        /* ignore */
+      }
+      setHeroReady(false);
+      setPhase("full");
+      return;
+    }
 
     if (reduce) {
       setPhase("done");
@@ -44,14 +56,8 @@ export function IntroProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    if (shown || mobile) {
-      if (mobile && !shown) {
-        try {
-          sessionStorage.setItem(PRELOADER_STORAGE_KEY, "1");
-        } catch {
-          /* ignore */
-        }
-      }
+    // بازدیدهای بعدی در همان session → خروج سریع؛ اولین بازدید → اینتروی کامل (موبایل و دسکتاپ)
+    if (shown) {
       setPhase("fast");
       return;
     }
