@@ -72,7 +72,7 @@ export default function ListingsView() {
         items={items}
         loading={loading}
         failed={failed}
-        onRetry={() => void load()}
+        onRetry={load}
       />
 
       <div className="hidden bg-[#070C18] text-white lg:block">

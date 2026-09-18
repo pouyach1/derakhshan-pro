@@ -7,6 +7,7 @@ import { Bath, BedDouble, MapPin, Ruler, SlidersHorizontal } from "lucide-react"
 import { useMemo, useRef, useState } from "react";
 import BottomSheet from "@/components/mobile/BottomSheet";
 import IosTap from "@/components/mobile/IosTap";
+import PullToRefresh from "@/components/mobile/PullToRefresh";
 import { SharedPropertyImage, SharedPropertyTitle } from "@/components/mobile/SharedPropertyHero";
 import PublicLoadError from "@/components/listings/PublicLoadError";
 import { siteConfig } from "@/config/siteConfig";
@@ -22,7 +23,7 @@ type MobileListingsViewProps = {
   items: PropertyRecord[];
   loading: boolean;
   failed: boolean;
-  onRetry: () => void;
+  onRetry: () => void | Promise<void>;
 };
 
 /**
@@ -85,13 +86,15 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
         </div>
       </section>
 
-      <div
+      <PullToRefresh
         ref={parentRef}
-        className="ios-scroll-y h-[calc(100dvh-11.5rem)] overflow-y-auto px-4 pb-10"
+        className="h-[calc(100dvh-11.5rem)]"
+        scrollerClassName="h-full px-4 pb-10"
+        onRefresh={onRetry}
       >
-        {loading ? (
+        {loading && items.length === 0 ? (
           <p className="py-10 text-sm text-slate-400">در حال بارگذاری فایل‌ها...</p>
-        ) : failed ? (
+        ) : failed && items.length === 0 ? (
           <PublicLoadError onRetry={onRetry} />
         ) : filtered.length === 0 ? (
           <p className="py-10 text-sm text-slate-400">فایل منطبقی پیدا نشد.</p>
@@ -117,7 +120,7 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
             })}
           </div>
         )}
-      </div>
+      </PullToRefresh>
 
       <BottomSheet open={sheetOpen} onClose={() => setSheetOpen(false)} title="فیلتر فایل‌ها">
         <p className="mb-3 text-xs text-slate-400">نوع معامله</p>
