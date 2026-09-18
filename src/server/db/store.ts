@@ -81,7 +81,7 @@ export type ClientRecord = {
   budgetMax: number;
   urgency: "low" | "medium" | "high";
   intent: "buy" | "rent" | "invest";
-  notes: Array<{ text: string; at?: string }>;
+  notes: Array<{ id?: string; text: string; at?: string }>;
   createdAt: string;
   updatedAt: string;
 };
@@ -129,6 +129,16 @@ export type ActivityRecord = {
   createdAt: string;
 };
 
+export type AgencySettings = {
+  managerNameFa: string;
+  notifyEmail: string;
+  emailAlerts: boolean;
+  smsAlerts: boolean;
+  phone: string;
+  address: string;
+  publicDomain: string;
+};
+
 export type AgencyStore = {
   users: UserRecord[];
   properties: PropertyRecord[];
@@ -137,6 +147,7 @@ export type AgencyStore = {
   tours: TourRecord[];
   contacts: ContactRecord[];
   activity: ActivityRecord[];
+  settings?: AgencySettings;
 };
 
 function emptyStore(): AgencyStore {
@@ -148,6 +159,7 @@ function emptyStore(): AgencyStore {
     tours: [],
     contacts: [],
     activity: [],
+    settings: undefined,
   };
 }
 

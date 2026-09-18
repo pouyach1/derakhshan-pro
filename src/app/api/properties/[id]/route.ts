@@ -6,7 +6,7 @@ import {
   getProperty,
   updateProperty,
 } from "@/server/services/properties";
-import { requireSession } from "@/server/http/guard";
+import { requireSession, getSessionFromRequest } from "@/server/http/guard";
 import { jsonError, jsonOk, ApiError } from "@/server/http/response";
 
 type Ctx = { params: Promise<{ id: string }> };
@@ -15,7 +15,13 @@ export async function GET(_request: NextRequest, ctx: Ctx) {
   const requestId = nanoid(10);
   try {
     const { id } = await ctx.params;
-    const item = await getProperty(id);
+    const session = await getSessionFromRequest(_request);
+    const countView = _request.nextUrl.searchParams.get("view") === "1";
+    const item = await getProperty(id, { countView });
+    const staff = session?.role === "admin" || session?.role === "agent";
+    if (!staff && item.status !== "published" && item.status !== "sold") {
+      throw new ApiError(404, "NOT_FOUND", "ملک یافت نشد");
+    }
     return jsonOk(item, { requestId });
   } catch (error) {
     return jsonError(error, requestId);

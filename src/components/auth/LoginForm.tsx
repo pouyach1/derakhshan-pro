@@ -215,10 +215,12 @@ export default function LoginForm() {
         </Link>
       </motion.p>
 
-      <motion.p variants={item} className="mt-4 text-center text-[11px] leading-relaxed text-slate-400">
-        نسخه آزمایشی: {siteConfig.panels.demoAdminEmail} / {siteConfig.panels.demoAgentEmail} (۱۲۳۴۵۶) · سایر کاربران کد
-        یک‌بارمصرف ۱۲۳۴
-      </motion.p>
+      {process.env.NODE_ENV !== "production" ? (
+        <motion.p variants={item} className="mt-4 text-center text-[11px] leading-relaxed text-slate-400">
+          نسخه آزمایشی: {siteConfig.panels.demoAdminEmail} / {siteConfig.panels.demoAgentEmail} (۱۲۳۴۵۶) · سایر کاربران کد
+          یک‌بارمصرف ۱۲۳۴
+        </motion.p>
+      ) : null}
     </motion.div>
   );
 }

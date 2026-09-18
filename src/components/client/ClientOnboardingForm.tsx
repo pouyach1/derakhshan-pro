@@ -116,7 +116,7 @@ export default function ClientOnboardingForm() {
       // Keep local mirror for client-side helpers during transition
       const session = readClientSession();
       if (session) setClientSession(completeClientOnboarding(session, profile));
-      router.replace("/");
+      router.replace("/client/dashboard");
       router.refresh();
     } catch {
       setError("ارتباط با سرور برقرار نشد.");

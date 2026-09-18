@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
     const body = loginSchema.parse(await request.json());
     const session = await authenticate(body);
     const token = await signSession(session);
+    const clientHome = session.onboardingComplete ? "/client/dashboard" : "/client/onboarding";
 
     const response = jsonOk(
       {
@@ -32,9 +33,7 @@ export async function POST(request: NextRequest) {
             ? "/admin/dashboard"
             : session.role === "agent"
               ? "/agent/dashboard"
-              : session.onboardingComplete
-                ? "/"
-                : "/client/onboarding",
+              : clientHome,
       },
       { requestId },
     );

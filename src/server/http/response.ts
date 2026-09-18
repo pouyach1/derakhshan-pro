@@ -47,6 +47,22 @@ export function jsonError(error: unknown, requestId = nanoid(10)) {
     );
   }
 
+  if (error && typeof error === "object" && "issues" in error && Array.isArray((error as { issues: unknown }).issues)) {
+    const issues = (error as { issues: Array<{ message: string; path: Array<string | number> }> }).issues;
+    return NextResponse.json(
+      {
+        ok: false,
+        error: {
+          code: "VALIDATION",
+          message: issues[0]?.message || "اطلاعات نامعتبر است",
+          details: issues,
+        },
+        meta: { requestId, ts: new Date().toISOString() },
+      },
+      { status: 400, headers: { "x-request-id": requestId } },
+    );
+  }
+
   console.error("[api]", requestId, error);
   return NextResponse.json(
     {

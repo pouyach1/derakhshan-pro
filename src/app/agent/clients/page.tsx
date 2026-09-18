@@ -14,12 +14,13 @@ import {
   URGENCY_LABEL,
   type AgentClient,
   type ClientUrgency,
-  getAgentClients,
-  matchPropertiesForClient,
 } from "@/config/agent-crm";
 import { useAgentScope } from "@/hooks/useAgentScope";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/siteConfig";
+import { api } from "@/lib/api";
+import { mapClientToAgent } from "@/lib/mappers";
+import type { ClientRecord } from "@/server/db/store";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -41,7 +42,7 @@ function nowLabel() {
 
 export default function AgentClientsPage() {
   const agentId = useAgentScope();
-  const [clients, setClients] = useState(() => getAgentClients(agentId));
+  const [clients, setClients] = useState<AgentClient[]>([]);
   const [active, setActive] = useState<AgentClient | null>(null);
   const [note, setNote] = useState("");
   const [addOpen, setAddOpen] = useState(false);
@@ -54,6 +55,13 @@ export default function AgentClientsPage() {
   });
 
   useEffect(() => {
+    void (async () => {
+      const res = await api<{ items: ClientRecord[] }>("/api/clients");
+      if (res.ok) setClients(res.data.items.map(mapClientToAgent));
+    })();
+  }, [agentId]);
+
+  useEffect(() => {
     if (new URLSearchParams(window.location.search).get("add") === "1") {
       setAddOpen(true);
     }
@@ -62,37 +70,38 @@ export default function AgentClientsPage() {
   const matchCounts = useMemo(() => {
     const map = new Map<string, number>();
     for (const client of clients) {
-      map.set(client.id, matchPropertiesForClient(agentId, client).length);
+      map.set(client.id, client.preferredNeighborhood ? 1 : 0);
     }
     return map;
-  }, [agentId, clients]);
+  }, [clients]);
 
-  function addNote() {
+  async function addNote() {
     if (!active || !note.trim()) return;
     const entry = { id: `n-${Date.now()}`, at: nowLabel(), text: note.trim() };
-    setClients((prev) =>
-      prev.map((c) =>
-        c.id === active.id ? { ...c, notes: [entry, ...c.notes] } : c,
-      ),
-    );
-    setActive((prev) => (prev ? { ...prev, notes: [entry, ...prev.notes] } : prev));
+    const notes = [entry, ...active.notes];
+    setClients((prev) => prev.map((c) => (c.id === active.id ? { ...c, notes } : c)));
+    setActive((prev) => (prev ? { ...prev, notes } : prev));
     setNote("");
+    await api(`/api/clients/${active.id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ notes: notes.map((item) => ({ id: item.id, text: item.text, at: item.at })) }),
+    });
   }
 
-  function addClient() {
-    const next: AgentClient = {
-      id: `ac-${Date.now()}`,
-      agentId,
-      name: draft.name || "مشتری جدید",
-      phone: draft.phone || "—",
-      budgetMin: 10_000_000_000,
-      budgetMax: 20_000_000_000,
-      budgetLabel: draft.budgetLabel || "۱۰–۲۰ میلیارد",
-      preferredNeighborhood: draft.preferredNeighborhood || "تهران",
-      urgency: draft.urgency,
-      notes: [],
-    };
-    setClients((prev) => [next, ...prev]);
+  async function addClient() {
+    const res = await api<ClientRecord>("/api/clients", {
+      method: "POST",
+      body: JSON.stringify({
+        name: draft.name || "مشتری جدید",
+        phone: draft.phone || "09000000000",
+        preferredNeighborhood: draft.preferredNeighborhood || siteConfig.contact.address.city,
+        budgetMin: 10_000_000_000,
+        budgetMax: 20_000_000_000,
+        urgency: draft.urgency,
+        intent: "buy",
+      }),
+    });
+    if (res.ok) setClients((prev) => [mapClientToAgent(res.data), ...prev]);
     setDraft({
       name: "",
       phone: "",

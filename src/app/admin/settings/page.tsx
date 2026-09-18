@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { api } from "@/lib/api";
 import { siteConfig } from "@/config/siteConfig";
 
 const TABS = [
@@ -11,17 +12,48 @@ const TABS = [
   { id: "notifications", label: "اعلان‌ها" },
 ] as const;
 
+type Settings = {
+  managerNameFa: string;
+  notifyEmail: string;
+  emailAlerts: boolean;
+  smsAlerts: boolean;
+  phone: string;
+  address: string;
+  publicDomain: string;
+};
+
 export default function SettingsPage() {
   const [tab, setTab] = useState<(typeof TABS)[number]["id"]>("profile");
-  const [emailAlerts, setEmailAlerts] = useState(true);
-  const [smsAlerts, setSmsAlerts] = useState(false);
+  const [form, setForm] = useState<Settings>({
+    managerNameFa: siteConfig.brand.managerNameFa,
+    notifyEmail: siteConfig.contact.email,
+    emailAlerts: true,
+    smsAlerts: false,
+    phone: siteConfig.contact.phone,
+    address: siteConfig.contact.address.line1,
+    publicDomain: siteConfig.panels.publicDomain,
+  });
+  const [status, setStatus] = useState("");
+
+  useEffect(() => {
+    void (async () => {
+      const res = await api<Settings>("/api/settings");
+      if (res.ok) setForm(res.data);
+    })();
+  }, []);
+
+  async function save() {
+    const res = await api("/api/settings", { method: "PATCH", body: JSON.stringify(form) });
+    setStatus(res.ok ? "ذخیره شد. هویت عمومی سایت را در siteConfig.ts عوض کنید." : res.error.message);
+  }
 
   return (
     <div className="space-y-4">
       <div className="rounded-[1.75rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 sm:p-5">
         <h1 className="text-xl font-semibold text-admin-navy sm:text-2xl">تنظیمات و پروفایل</h1>
-        <p className="mt-1 text-sm text-slate-500">مدیریت حساب، ظاهر سایت و کانال‌های اطلاع‌رسانی</p>
-
+        <p className="mt-1 text-sm text-slate-500">
+          تنظیمات عملیاتی دفتر. نام برند و شبکه‌های اجتماعی همچنان از فایل OWNER_FILL می‌آید.
+        </p>
         <div className="mt-4 flex flex-wrap gap-1.5 rounded-full bg-admin-soft p-1">
           {TABS.map((item) => (
             <button
@@ -29,10 +61,8 @@ export default function SettingsPage() {
               type="button"
               onClick={() => setTab(item.id)}
               className={cn(
-                "rounded-full px-4 py-2 text-sm font-medium transition",
-                tab === item.id
-                  ? "bg-admin-navy text-white shadow-sm"
-                  : "text-slate-600 hover:text-admin-navy",
+                "rounded-full px-4 py-2 text-sm font-medium",
+                tab === item.id ? "bg-admin-navy text-white" : "text-slate-600",
               )}
             >
               {item.label}
@@ -43,92 +73,46 @@ export default function SettingsPage() {
 
       <div className="rounded-[1.75rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 sm:p-6">
         <AnimatePresence mode="wait">
-          <motion.div
-            key={tab}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.22 }}
-            className="space-y-4"
-          >
+          <motion.div key={tab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
             {tab === "profile" ? (
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="نام نمایشی">
-                  <input className={inputClass} defaultValue={siteConfig.brand.managerNameFa} />
+                  <input className={inputClass} value={form.managerNameFa} onChange={(e) => setForm((f) => ({ ...f, managerNameFa: e.target.value }))} />
                 </Field>
-                <Field label="ایمیل">
-                  <input className={inputClass} type="email" defaultValue={siteConfig.contact.email} />
+                <Field label="ایمیل اعلان">
+                  <input className={inputClass} value={form.notifyEmail} onChange={(e) => setForm((f) => ({ ...f, notifyEmail: e.target.value }))} />
                 </Field>
                 <Field label="شماره تماس">
-                  <input className={inputClass} defaultValue={siteConfig.contact.phone} />
-                </Field>
-                <Field label="نقش">
-                  <input className={inputClass} defaultValue="مدیر ارشد" readOnly />
-                </Field>
-                <Field label="بیوگرافی کوتاه" className="sm:col-span-2">
-                  <textarea
-                    className={`${inputClass} min-h-28 resize-y py-3`}
-                    defaultValue="مدیریت عملیات فروش و اجاره املاک تجاری و مسکونی."
-                  />
-                </Field>
-              </div>
-            ) : null}
-
-            {tab === "site" ? (
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="نام برند">
-                  <input className={inputClass} defaultValue={siteConfig.brand.nameFa} />
-                </Field>
-                <Field label="دامنه عمومی">
-                  <input className={inputClass} defaultValue={siteConfig.panels.publicDomain} />
-                </Field>
-                <Field label="واحد پول پیش‌فرض">
-                  <select className={inputClass} defaultValue="irr">
-                    <option value="irr">تومان</option>
-                    <option value="usd">دلار</option>
-                    <option value="eur">یورو</option>
-                  </select>
-                </Field>
-                <Field label="زبان پنل">
-                  <select className={inputClass} defaultValue="fa">
-                    <option value="fa">فارسی</option>
-                    <option value="en">انگلیسی</option>
-                  </select>
+                  <input className={inputClass} value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} />
                 </Field>
                 <Field label="آدرس دفتر" className="sm:col-span-2">
-                  <input className={inputClass} defaultValue={siteConfig.contact.address.line1} />
+                  <input className={inputClass} value={form.address} onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))} />
                 </Field>
               </div>
             ) : null}
-
+            {tab === "site" ? (
+              <Field label="دامنه عمومی">
+                <input className={inputClass} value={form.publicDomain} onChange={(e) => setForm((f) => ({ ...f, publicDomain: e.target.value }))} />
+              </Field>
+            ) : null}
             {tab === "notifications" ? (
               <div className="space-y-3">
-                <ToggleRow
-                  title="ایمیل برای مشتری تازه"
-                  description="هر درخواست جدید همان لحظه به ایمیل دفتر برود"
-                  checked={emailAlerts}
-                  onChange={setEmailAlerts}
-                />
-                <ToggleRow
-                  title="پیامک تغییر وضعیت"
-                  description="وقتی نوبت بازدید یا معامله جابه‌جا شد، پیامک بفرست"
-                  checked={smsAlerts}
-                  onChange={setSmsAlerts}
-                />
-                <Field label="ایمیل اعلان‌ها">
-                  <input className={inputClass} type="email" defaultValue={siteConfig.contact.email} />
-                </Field>
+                <label className="flex items-center justify-between rounded-2xl bg-admin-soft px-4 py-3 text-sm">
+                  ایمیل برای مشتری تازه
+                  <input type="checkbox" checked={form.emailAlerts} onChange={(e) => setForm((f) => ({ ...f, emailAlerts: e.target.checked }))} />
+                </label>
+                <label className="flex items-center justify-between rounded-2xl bg-admin-soft px-4 py-3 text-sm">
+                  پیامک تغییر وضعیت
+                  <input type="checkbox" checked={form.smsAlerts} onChange={(e) => setForm((f) => ({ ...f, smsAlerts: e.target.checked }))} />
+                </label>
               </div>
             ) : null}
-
             <div className="flex justify-end pt-2">
-              <button
-                type="button"
-                className="rounded-full bg-admin-sky px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-sky-500/25"
-              >
+              <button type="button" onClick={() => void save()} className="rounded-full bg-admin-sky px-5 py-2.5 text-sm font-medium text-white">
                 ذخیره تغییرات
               </button>
             </div>
+            {status ? <p className="text-sm text-slate-500">{status}</p> : null}
           </motion.div>
         </AnimatePresence>
       </div>
@@ -137,7 +121,7 @@ export default function SettingsPage() {
 }
 
 const inputClass =
-  "h-11 w-full rounded-2xl bg-admin-soft px-4 text-sm text-admin-navy outline-none ring-1 ring-transparent transition placeholder:text-slate-400 focus:bg-white focus:ring-admin-sky/50";
+  "h-11 w-full rounded-2xl bg-admin-soft px-4 text-sm text-admin-navy outline-none focus:bg-white focus:ring-2 focus:ring-admin-sky/40";
 
 function Field({
   label,
@@ -153,43 +137,5 @@ function Field({
       <span className="text-sm font-medium text-admin-navy">{label}</span>
       {children}
     </label>
-  );
-}
-
-function ToggleRow({
-  title,
-  description,
-  checked,
-  onChange,
-}: {
-  title: string;
-  description: string;
-  checked: boolean;
-  onChange: (value: boolean) => void;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-4 rounded-2xl bg-admin-soft px-4 py-3">
-      <div>
-        <p className="text-sm font-medium text-admin-navy">{title}</p>
-        <p className="text-xs text-slate-500">{description}</p>
-      </div>
-      <button
-        type="button"
-        role="switch"
-        aria-checked={checked}
-        onClick={() => onChange(!checked)}
-        className={cn(
-          "relative h-7 w-12 rounded-full transition",
-          checked ? "bg-admin-sky" : "bg-slate-300",
-        )}
-      >
-        <span
-          className={cn(
-            "absolute top-0.5 h-6 w-6 rounded-full bg-white shadow transition",
-            checked ? "start-5" : "start-0.5",
-          )}
-        />
-      </button>
-    </div>
   );
 }

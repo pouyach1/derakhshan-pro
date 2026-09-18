@@ -17,11 +17,13 @@ import {
   PROPERTY_STATUS_LABEL,
   type AgentProperty,
   type AgentPropertyStatus,
-  getAgentProperties,
 } from "@/config/agent-crm";
 import { useAgentScope } from "@/hooks/useAgentScope";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/siteConfig";
+import { api } from "@/lib/api";
+import { agentStatusToProperty, mapPropertyToAgent } from "@/lib/mappers";
+import type { PropertyRecord } from "@/server/db/store";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -53,11 +55,18 @@ export default function AgentPropertiesPage() {
   const agentId = useAgentScope();
   const [filter, setFilter] = useState<FilterTab>("all");
   const [view, setView] = useState<ViewMode>("grid");
-  const [items, setItems] = useState(() => getAgentProperties(agentId));
+  const [items, setItems] = useState<AgentProperty[]>([]);
   const [statusTarget, setStatusTarget] = useState<AgentProperty | null>(null);
   const [addOpen, setAddOpen] = useState(false);
   const [step, setStep] = useState(0);
   const [draft, setDraft] = useState(emptyDraft);
+
+  useEffect(() => {
+    void (async () => {
+      const res = await api<{ items: PropertyRecord[] }>("/api/properties?pageSize=50");
+      if (res.ok) setItems(res.data.items.map(mapPropertyToAgent));
+    })();
+  }, [agentId]);
 
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("add") === "1") {
@@ -70,12 +79,15 @@ export default function AgentPropertiesPage() {
     [filter, items],
   );
 
-  function updateStatus(status: AgentPropertyStatus) {
+  async function updateStatus(status: AgentPropertyStatus) {
     if (!statusTarget) return;
-    setItems((prev) =>
-      prev.map((p) => (p.id === statusTarget.id ? { ...p, status } : p)),
-    );
+    const id = statusTarget.id;
+    setItems((prev) => prev.map((p) => (p.id === id ? { ...p, status } : p)));
     setStatusTarget(null);
+    await api(`/api/properties/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ status: agentStatusToProperty(status) }),
+    });
   }
 
   function toggleFeature(feature: string) {
@@ -87,27 +99,24 @@ export default function AgentPropertiesPage() {
     }));
   }
 
-  function submitProperty() {
+  async function submitProperty() {
     const priceNum = Number(draft.price) || 0;
-    const next: AgentProperty = {
-      id: `ap-${Date.now()}`,
-      agentId,
-      title: draft.title || "ملک جدید",
-      location: draft.location || "تهران",
-      neighborhood: draft.location || "تهران",
-      price: priceNum,
-      priceLabel: priceNum
-        ? `${(priceNum / 1_000_000_000).toLocaleString("fa-IR", { maximumFractionDigits: 1 })} میلیارد`
-        : "—",
-      image: "/images/admin/properties/fereshteh-apt.jpg",
-      bedrooms: 2,
-      area: 120,
-      dealType: draft.dealType,
-      status: "active",
-      features: draft.features,
-      views: 0,
-    };
-    setItems((prev) => [next, ...prev]);
+    const res = await api<PropertyRecord>("/api/properties", {
+      method: "POST",
+      body: JSON.stringify({
+        title: draft.title || "ملک جدید",
+        location: draft.location || siteConfig.contact.address.city,
+        neighborhood: draft.location || siteConfig.contact.address.city,
+        price: priceNum || 1,
+        listingType: draft.dealType,
+        status: "published",
+        features: draft.features,
+        imageUrl: "/images/admin/properties/fereshteh-apt.jpg",
+      }),
+    });
+    if (res.ok) {
+      setItems((prev) => [mapPropertyToAgent(res.data), ...prev]);
+    }
     setDraft(emptyDraft);
     setStep(0);
     setAddOpen(false);
@@ -404,8 +413,8 @@ export default function AgentPropertiesPage() {
                           />
                         </label>
                         <div className="rounded-2xl border border-dashed border-slate-300 bg-white/70 px-4 py-10 text-center text-sm text-slate-500">
-                          Photos upload placeholder
-                          <p className="mt-1 text-xs text-slate-400">آپلود تصاویر در نسخه بعدی</p>
+                          Photos
+                          <p className="mt-1 text-xs text-slate-400">مسیر تصویر را بعداً از ویرایش ادمین کامل کنید؛ الان فایل با تصویر پیش‌فرض ثبت می‌شود.</p>
                         </div>
                       </>
                     )}

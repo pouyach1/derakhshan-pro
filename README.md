@@ -1,31 +1,35 @@
-# Derakhshan Pro — RIO Property
+# Derakhshan Pro
 
-Production rebuild of [RIO Property](https://www.rioproperty.co.za/) from forensic extraction in `website-forensics/rioproperty/`.
+سایت و پنل املاک لوکس. محصول تا حدی کامل است که صاحب سایت فقط هویت دفتر را پر کند و فایل‌های نمونه را از پنل عوض کند.
 
-## Stack
+## صاحب سایت فقط این‌ها را عوض کند
 
-- Next.js 15 (App Router)
-- React 19
-- Tailwind CSS 3
-- TypeScript
-- **Backend:** Jose JWT + Zod + edge-safe JSON Agency store
+1. بلوک `OWNER_FILL` در `src/config/siteConfig.ts` (نام، تلفن، ایمیل، آدرس، واتساپ، سوشال، SEO)
+2. لوگو و تصاویر در `public/images`
+3. رمز ادمین/مشاور بعد از اولین ورود
+4. آگهی‌های نمونه از `/admin/properties`
 
-## Commands
+املاک، لید، مشتری، بازدید و درخواست سایت از API زنده کار می‌کنند.
+
+## اجرا
 
 ```bash
 npm install
 cp .env.example .env.local
 npm run db:seed
 npm run dev
-npm run build
 ```
 
-## Backend
+ورود آزمایشی: `admin@derakhshan.pro` / `123456`  
+مشاور: `agent@derakhshan.pro` / `123456`  
+مشتری: هر موبایل + OTP `1234`
 
-See [`docs/BACKEND.md`](docs/BACKEND.md) for the Agency API (auth, properties, leads, CRM, contact, stats).
+سلامت: `GET /api/health`
 
-Quick health check: `GET /api/health`
+## مسیرهای محصول
 
-## Source of truth
-
-Brand copy lives in `src/config/siteConfig.ts`. Visual tokens and layout are derived from `website-forensics/rioproperty/`.
+- `/listings` آرشیو عمومی آگهی‌ها
+- `/admin/dashboard` مدیریت
+- `/agent/dashboard` CRM مشاور
+- `/client/dashboard` پنل موکل
+- `/privacy` و `/terms`

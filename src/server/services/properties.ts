@@ -12,8 +12,10 @@ import type {
   propertyQuerySchema,
   propertyUpdateSchema,
 } from "@/server/validation/schemas";
+import { ensureBootstrapped } from "@/server/db/bootstrap";
 
 export async function bootDb() {
+  await ensureBootstrapped();
   return getStore();
 }
 
@@ -48,6 +50,7 @@ export async function listProperties(
   query: z.infer<typeof propertyQuerySchema>,
   scope?: { agentId?: string; roles?: string[] },
 ) {
+  await ensureBootstrapped();
   const store = getStore();
   let rows = store.properties.filter((p) => !p.softDeleted);
 
@@ -79,12 +82,15 @@ export async function listProperties(
   return { items, page: query.page, pageSize: query.pageSize, total };
 }
 
-export async function getProperty(id: string) {
+export async function getProperty(id: string, opts?: { countView?: boolean }) {
+  await ensureBootstrapped();
   const store = getStore();
   const row = store.properties.find((p) => p.id === id && !p.softDeleted);
   if (!row) throw new ApiError(404, "NOT_FOUND", "ملک یافت نشد");
-  row.views += 1;
-  saveStore();
+  if (opts?.countView) {
+    row.views += 1;
+    saveStore();
+  }
   return row;
 }
 
@@ -92,6 +98,7 @@ export async function createProperty(
   input: z.infer<typeof propertyCreateSchema>,
   actor?: { id?: string; role?: string },
 ) {
+  await ensureBootstrapped();
   const store = getStore();
   const id = newId();
   const code = input.code || `PR-${Date.now().toString().slice(-6)}`;
@@ -111,8 +118,8 @@ export async function createProperty(
     bathrooms: input.bathrooms,
     areaSqm: input.areaSqm,
     features: input.features,
-    imageUrl: input.imageUrl || "",
-    gallery: input.gallery,
+    imageUrl: input.imageUrl || "/images/landing/hero/banner.jpg",
+    gallery: input.gallery.length ? input.gallery : [input.imageUrl || "/images/landing/hero/banner.jpg"],
     agentId: input.agentId ?? null,
     views: 0,
     isFeatured: input.isFeatured ?? false,

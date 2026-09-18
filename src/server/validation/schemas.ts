@@ -27,7 +27,7 @@ export const propertyCreateSchema = z.object({
   location: z.string().min(2),
   neighborhood: z.string().optional(),
   description: z.string().optional(),
-  price: z.number().positive(),
+  price: z.number().nonnegative(),
   listingType: z.enum(["sale", "rent"]).default("sale"),
   category: z.string().default("residential"),
   status: z
@@ -117,4 +117,30 @@ export const contactSchema = z.object({
   message: z.string().min(2),
   budget: z.string().optional(),
   tab: z.enum(["vip", "appraisal", "legal", "home", "newsletter"]).default("home"),
+});
+
+export const inquirySchema = z.object({
+  name: z.string().min(2),
+  phone: z.string().min(8),
+  email: z.string().email().optional().or(z.literal("")),
+  propertyId: z.string().min(1),
+  message: z.string().min(2).default("درخواست بازدید و مشاوره برای این فایل"),
+});
+
+export const clientUpdateSchema = z.object({
+  urgency: z.enum(["low", "medium", "high"]).optional(),
+  notes: z
+    .array(z.object({ id: z.string().optional(), text: z.string().min(1), at: z.string().optional() }))
+    .optional(),
+  preferredNeighborhood: z.string().optional(),
+});
+
+export const settingsUpdateSchema = z.object({
+  managerNameFa: z.string().min(2).optional(),
+  notifyEmail: z.string().email().optional(),
+  emailAlerts: z.boolean().optional(),
+  smsAlerts: z.boolean().optional(),
+  phone: z.string().optional(),
+  address: z.string().optional(),
+  publicDomain: z.string().optional(),
 });

@@ -1,18 +1,26 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { readClientSession } from "@/lib/auth";
+import { api } from "@/lib/api";
 
 /**
- * Resolve the signed-in agent's id for strict CRM isolation.
- * Falls back to demo agent `a1` when no session is present (local preview).
+ * Resolve the signed-in agent's id for CRM isolation.
  */
 export function useAgentScope(): string {
-  return useMemo(() => {
-    const session = readClientSession();
-    if (session?.role === "agent" && session.agentId) {
-      return session.agentId;
-    }
-    return "a1";
+  const [agentId, setAgentId] = useState(() => readClientSession()?.agentId || "a1");
+
+  useEffect(() => {
+    void (async () => {
+      const res = await api<{ session: { agentId?: string } }>("/api/auth/me");
+      if (res.ok && res.data.session.agentId) {
+        setAgentId(res.data.session.agentId);
+        return;
+      }
+      const local = readClientSession();
+      if (local?.agentId) setAgentId(local.agentId);
+    })();
   }, []);
+
+  return agentId;
 }

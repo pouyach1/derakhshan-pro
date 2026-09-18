@@ -2,16 +2,24 @@ import { NextRequest } from "next/server";
 import { nanoid } from "nanoid";
 import { propertyCreateSchema, propertyQuerySchema } from "@/server/validation/schemas";
 import { createProperty, listProperties } from "@/server/services/properties";
-import { requireSession, clientIp } from "@/server/http/guard";
+import { getSessionFromRequest, requireSession } from "@/server/http/guard";
 import { jsonError, jsonOk } from "@/server/http/response";
 
 export async function GET(request: NextRequest) {
   const requestId = nanoid(10);
   try {
-    const session = await requireSession(request, ["admin", "agent"]);
+    const session = await getSessionFromRequest(request);
     const query = propertyQuerySchema.parse(
       Object.fromEntries(request.nextUrl.searchParams.entries()),
     );
+
+    if (!session || session.role === "client") {
+      const status = query.status === "sold" ? "sold" : "published";
+      const data = await listProperties({ ...query, status });
+      return jsonOk(data, { requestId });
+    }
+
+    await requireSession(request, ["admin", "agent"]);
     const data = await listProperties(query, {
       agentId: session.agentId,
       roles: [session.role],

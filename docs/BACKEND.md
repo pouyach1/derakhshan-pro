@@ -37,12 +37,16 @@ Cookie: `agency_auth` (HttpOnly, signed JWT)
 | GET | `/api/auth/me` | session |
 | POST | `/api/auth/otp` | public |
 | POST | `/api/auth/onboarding` | client |
-| GET/POST | `/api/properties` | admin/agent |
-| GET/PATCH/DELETE | `/api/properties/:id` | admin/agent (+ public GET) |
+| GET | `/api/properties` | public (منتشرشده) / admin/agent |
+| POST | `/api/properties` | admin/agent |
+| GET | `/api/properties/:id` | public (منتشر/واگذار) / staff |
+| POST | `/api/inquiries` | public |
+| GET/PATCH | `/api/settings` | admin |
 | GET/POST | `/api/leads` | admin/agent |
 | PATCH | `/api/leads/:id` | admin/agent |
 | GET | `/api/agents` | admin/agent |
 | GET/POST | `/api/clients` | admin/agent |
+| PATCH | `/api/clients/:id` | admin/agent |
 | GET/POST/PATCH | `/api/tours` | admin/agent |
 | POST | `/api/contact` | public |
 | GET | `/api/stats` | admin/agent |

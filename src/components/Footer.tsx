@@ -113,10 +113,23 @@ export default function Footer() {
     event.preventDefault();
     if (!contact.trim() || status === "loading") return;
     setStatus("loading");
-    await new Promise((resolve) => setTimeout(resolve, 900));
-    setStatus("success");
-    setContact("");
-    window.setTimeout(() => setStatus("idle"), 2800);
+    const looksEmail = contact.includes("@");
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: "عضویت خبرنامه",
+        email: looksEmail ? contact.trim() : "",
+        phone: looksEmail ? "" : contact.trim(),
+        message: "درخواست عضویت در خبرنامه فایل‌های محرمانه",
+        tab: "newsletter",
+      }),
+    });
+    setStatus(res.ok ? "success" : "idle");
+    if (res.ok) {
+      setContact("");
+      window.setTimeout(() => setStatus("idle"), 2800);
+    }
   }
 
   function scrollTop() {
