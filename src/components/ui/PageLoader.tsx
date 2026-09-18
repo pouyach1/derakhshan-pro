@@ -229,7 +229,7 @@ export default function PageLoader() {
                   className="inline-block whitespace-nowrap font-vazirmatn text-[clamp(2.15rem,7.4vw,4rem)] font-semibold leading-none tracking-normal text-[#FFFEFC] will-change-transform"
                   style={{
                     textShadow: "0 0 40px rgba(0,163,255,0.18)",
-                    wordSpacing: "-0.05em",
+                    wordSpacing: "-0.22em",
                   }}
                   initial={{ y: "115%", opacity: 0 }}
                   animate={{
@@ -242,7 +242,7 @@ export default function PageLoader() {
                       : { duration: 1.45, ease: EASE.expoOut, delay: 0.08 }
                   }
                 >
-                  {BRAND_FA}
+                  {BRAND_FA.replace(" ", "\u2009")}
                 </motion.span>
               </motion.div>
 
