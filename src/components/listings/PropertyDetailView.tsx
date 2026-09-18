@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Bath, BedDouble, MapPin, Ruler, ShieldCheck } from "lucide-react";
@@ -8,63 +8,90 @@ import { api } from "@/lib/api";
 import { fallbackImage, formatToman, listingTypeLabel, propertyStatusLabel } from "@/lib/money";
 import { siteConfig } from "@/config/siteConfig";
 import type { PropertyRecord } from "@/server/db/store";
+import PublicLoadError from "@/components/listings/PublicLoadError";
+
+function logDetailError(error: unknown) {
+  if (process.env.NODE_ENV === "development") {
+    console.error("[listings/detail]", error);
+  }
+}
 
 export default function PropertyDetailView({ id }: { id: string }) {
   const [item, setItem] = useState<PropertyRecord | null>(null);
-  const [error, setError] = useState("");
+  const [failed, setFailed] = useState(false);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("مایل به بازدید و مشاوره برای این فایل هستم.");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [formError, setFormError] = useState("");
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
+  const load = useCallback(async () => {
+    setFailed(false);
+    setItem(null);
+    try {
       const res = await api<PropertyRecord>(`/api/properties/${id}?view=1`);
-      if (cancelled) return;
       if (!res.ok) {
-        setError(res.error.message);
+        logDetailError(res.error);
+        setFailed(true);
         return;
       }
       setItem(res.data);
-    })();
-    return () => {
-      cancelled = true;
-    };
+    } catch (error) {
+      logDetailError(error);
+      setFailed(true);
+    }
   }, [id]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
     if (!item) return;
     setStatus("loading");
     setFormError("");
-    const res = await api("/api/inquiries", {
-      method: "POST",
-      body: JSON.stringify({
-        name,
-        phone,
-        propertyId: item.id,
-        message,
-      }),
-    });
-    if (!res.ok) {
+    try {
+      const res = await api("/api/inquiries", {
+        method: "POST",
+        body: JSON.stringify({
+          name,
+          phone,
+          propertyId: item.id,
+          message,
+        }),
+      });
+      if (!res.ok) {
+        logDetailError(res.error);
+        setStatus("error");
+        setFormError("ثبت درخواست انجام نشد. لطفاً دوباره تلاش کنید.");
+        return;
+      }
+      setStatus("success");
+      setName("");
+      setPhone("");
+    } catch (error) {
+      logDetailError(error);
       setStatus("error");
-      setFormError(res.error.message);
-      return;
+      setFormError("ارتباط با سرور برقرار نشد. لطفاً دوباره تلاش کنید.");
     }
-    setStatus("success");
-    setName("");
-    setPhone("");
   }
 
-  if (error) {
+  if (failed) {
     return (
-      <div className="bg-[#070C18] px-4 py-32 text-center text-slate-300">
-        <p>{error}</p>
-        <Link href="/listings" className="mt-4 inline-block text-cyan-300">
-          بازگشت به آرشیو
-        </Link>
+      <div className="bg-[#070C18] px-4 py-28 text-white sm:px-6">
+        <div className="mx-auto max-w-xl">
+          <PublicLoadError
+            onRetry={() => void load()}
+            title="این فایل در حال حاضر در دسترس نیست"
+            message="ممکن است موقتاً حذف شده یا ارتباط قطع شده باشد. دوباره تلاش کنید یا به آرشیو برگردید."
+          />
+          <div className="mt-4 text-center">
+            <Link href="/listings" className="text-sm text-cyan-300 hover:text-cyan-200">
+              بازگشت به آرشیو
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }

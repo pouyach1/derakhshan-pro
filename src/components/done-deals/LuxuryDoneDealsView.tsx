@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   MouseEvent,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -368,14 +369,32 @@ export function LuxuryDoneDealsView() {
   const [filter, setFilter] = useState<DealCategory>("all");
   const [deals, setDeals] = useState<DoneDealCard[]>([]);
   const [loading, setLoading] = useState(true);
+  const [failed, setFailed] = useState(false);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    setFailed(false);
+    try {
+      const res = await api<{ items: DoneDealCard[] }>("/api/deals");
+      if (!res.ok) {
+        if (process.env.NODE_ENV === "development") console.error("[done-deals]", res.error);
+        setDeals([]);
+        setFailed(true);
+        return;
+      }
+      setDeals(res.data.items);
+    } catch (error) {
+      if (process.env.NODE_ENV === "development") console.error("[done-deals]", error);
+      setDeals([]);
+      setFailed(true);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    void (async () => {
-      const res = await api<{ items: DoneDealCard[] }>("/api/deals");
-      if (res.ok) setDeals(res.data.items);
-      setLoading(false);
-    })();
-  }, []);
+    void load();
+  }, [load]);
 
   const filteredDeals = useMemo(() => {
     if (filter === "all") return deals;
@@ -462,7 +481,20 @@ export function LuxuryDoneDealsView() {
               ))}
             </AnimatePresence>
           </motion.div>
-          {!loading && filteredDeals.length === 0 ? (
+          {!loading && failed ? (
+            <div className="rounded-[1.75rem] border border-sky-100/60 bg-white/60 p-8 text-center shadow-sm backdrop-blur-2xl">
+              <p className="text-base font-semibold text-[#0B132B]">بارگذاری معاملات ممکن نشد</p>
+              <p className="mt-2 text-sm text-slate-500">لطفاً دوباره تلاش کنید.</p>
+              <button
+                type="button"
+                onClick={() => void load()}
+                className="mt-5 inline-flex rounded-full bg-sky-500 px-5 py-2.5 text-sm font-semibold text-white"
+              >
+                تلاش مجدد
+              </button>
+            </div>
+          ) : null}
+          {!loading && !failed && filteredDeals.length === 0 ? (
             <p className="mt-8 text-center text-sm text-slate-500">
               هنوز معامله موفقی برای نمایش ثبت نشده است.
             </p>
@@ -489,7 +521,7 @@ export function LuxuryDoneDealsView() {
           <div className="relative space-y-6 border-r-2 border-sky-200 pr-6 md:pr-10">
             {TIMELINE.map((item, index) => (
               <motion.div
-                key={`${item.year}-${item.title}`}
+                key={`${item.year}-${item.title}-${index}`}
                 initial={{ opacity: 0, x: 28 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: false, amount: 0.3 }}
