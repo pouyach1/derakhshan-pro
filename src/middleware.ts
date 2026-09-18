@@ -25,6 +25,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  if (isClientRoute && session && session.role === "client" && !isOnboarding && needsClientOnboarding(session)) {
+    return NextResponse.redirect(new URL("/client/onboarding", request.url));
+  }
+
   if (isAdminRoute && session && session.role !== "admin") {
     return NextResponse.redirect(new URL(postAuthPath(session), request.url));
   }
@@ -38,7 +42,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (isOnboarding && session && session.role === "client" && !needsClientOnboarding(session)) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/client/dashboard", request.url));
   }
 
   if (isLogin && session) {

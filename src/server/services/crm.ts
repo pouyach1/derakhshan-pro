@@ -8,70 +8,38 @@ import {
   type ClientProfile,
   type UserRole,
 } from "@/lib/auth";
+import type {
+  clientCreateSchema,
+  clientUpdateSchema,
+  contactSchema,
+  inquirySchema,
+  leadCreateSchema,
+  leadUpdateSchema,
+  loginSchema,
+  onboardingSchema,
+  settingsUpdateSchema,
+  tourCreateSchema,
+  tourUpdateSchema,
+} from "@/server/validation/schemas";
+import { ensureBootstrapped } from "@/server/db/bootstrap";
 import { siteConfig } from "@/config/siteConfig";
 import {
   getStore,
   newId,
   nowIso,
   saveStore,
+  type AgencySettings,
   type ContactRecord,
   type LeadRecord,
   type TourRecord,
   type UserRecord,
 } from "@/server/db/store";
-import type {
-  clientCreateSchema,
-  contactSchema,
-  leadCreateSchema,
-  leadUpdateSchema,
-  loginSchema,
-  onboardingSchema,
-  tourCreateSchema,
-  tourUpdateSchema,
-} from "@/server/validation/schemas";
 
 const DEMO_OTP = process.env.DEMO_OTP || "1234";
 
 export async function authenticate(input: z.infer<typeof loginSchema>): Promise<AuthSession> {
+  await ensureBootstrapped();
   const store = getStore();
-  if (store.users.length === 0) {
-    // Cold start bootstrap (Workers / fresh env)
-    const adminHash = await hashPassword("123456");
-    const agentHash = await hashPassword("123456");
-    store.users.push(
-      {
-        id: "admin-1",
-        phone: "09121111111",
-        email: siteConfig.panels.demoAdminEmail,
-        name: "مدیر سیستم",
-        role: "admin",
-        passwordHash: adminHash,
-        agentId: null,
-        onboardingComplete: true,
-        clientProfile: null,
-        avatarUrl: null,
-        isActive: true,
-        createdAt: nowIso(),
-        updatedAt: nowIso(),
-      },
-      {
-        id: "agent-1",
-        phone: "09122222222",
-        email: siteConfig.panels.demoAgentEmail,
-        name: "آرش شایگان",
-        role: "agent",
-        passwordHash: agentHash,
-        agentId: "a1",
-        onboardingComplete: true,
-        clientProfile: null,
-        avatarUrl: null,
-        isActive: true,
-        createdAt: nowIso(),
-        updatedAt: nowIso(),
-      },
-    );
-    saveStore();
-  }
 
   const identifier = normalizeIdentifier(input.identifier);
   const isEmail = identifier.includes("@");
@@ -137,6 +105,7 @@ export async function authenticate(input: z.infer<typeof loginSchema>): Promise<
 }
 
 export async function completeOnboarding(userId: string, profile: z.infer<typeof onboardingSchema>) {
+  await ensureBootstrapped();
   const store = getStore();
   const user = store.users.find((u) => u.id === userId);
   if (!user) throw new ApiError(404, "NOT_FOUND", "کاربر یافت نشد");
@@ -149,6 +118,7 @@ export async function completeOnboarding(userId: string, profile: z.infer<typeof
 }
 
 export async function listLeads(opts?: { agentId?: string; status?: string }) {
+  await ensureBootstrapped();
   const store = getStore();
   let rows = [...store.leads];
   if (opts?.agentId) rows = rows.filter((l) => l.assignedAgentId === opts.agentId);
@@ -157,6 +127,7 @@ export async function listLeads(opts?: { agentId?: string; status?: string }) {
 }
 
 export async function createLead(input: z.infer<typeof leadCreateSchema>) {
+  await ensureBootstrapped();
   const store = getStore();
   const row: LeadRecord = {
     id: newId(),
@@ -193,6 +164,7 @@ export async function updateLead(id: string, input: z.infer<typeof leadUpdateSch
 }
 
 export async function listAgents() {
+  await ensureBootstrapped();
   const store = getStore();
   return store.users
     .filter((u) => u.role === "agent")
@@ -218,6 +190,7 @@ export async function listAgents() {
 }
 
 export async function listClients(agentId: string) {
+  await ensureBootstrapped();
   const store = getStore();
   return store.clients
     .filter((c) => c.agentId === agentId)
@@ -225,6 +198,7 @@ export async function listClients(agentId: string) {
 }
 
 export async function createClient(agentId: string, input: z.infer<typeof clientCreateSchema>) {
+  await ensureBootstrapped();
   const store = getStore();
   const row = {
     id: newId(),
@@ -237,7 +211,11 @@ export async function createClient(agentId: string, input: z.infer<typeof client
     budgetMax: input.budgetMax,
     urgency: input.urgency,
     intent: input.intent,
-    notes: input.notes ?? [],
+    notes: (input.notes ?? []).map((note) => ({
+      id: newId(),
+      text: note.text,
+      at: note.at || nowIso(),
+    })),
     createdAt: nowIso(),
     updatedAt: nowIso(),
   };
@@ -247,6 +225,7 @@ export async function createClient(agentId: string, input: z.infer<typeof client
 }
 
 export async function listTours(agentId: string) {
+  await ensureBootstrapped();
   const store = getStore();
   return store.tours
     .filter((t) => t.agentId === agentId)
@@ -254,6 +233,7 @@ export async function listTours(agentId: string) {
 }
 
 export async function createTour(agentId: string, input: z.infer<typeof tourCreateSchema>) {
+  await ensureBootstrapped();
   const store = getStore();
   const row: TourRecord = {
     id: newId(),
@@ -293,6 +273,7 @@ export async function updateTour(
 }
 
 export async function createContactMessage(input: z.infer<typeof contactSchema>, ip?: string) {
+  await ensureBootstrapped();
   const store = getStore();
   const row: ContactRecord = {
     id: newId(),
@@ -322,29 +303,114 @@ export async function createContactMessage(input: z.infer<typeof contactSchema>,
     createdAt: nowIso(),
   });
   saveStore();
-  await createLead({
-    clientName: input.name,
-    phone: input.phone || "09000000000",
-    email: input.email || undefined,
-    propertyTitle: input.interest || "درخواست تماس VIP",
-    source: `contact:${input.tab}`,
-    notes: input.message,
-  });
+  if (input.tab !== "newsletter") {
+    await createLead({
+      clientName: input.name,
+      phone: input.phone || "09000000000",
+      email: input.email || undefined,
+      propertyTitle: input.interest || "درخواست تماس VIP",
+      source: `contact:${input.tab}`,
+      notes: input.message,
+    });
+  }
   return { id: row.id, received: true };
 }
 
 export async function getPlatformStats() {
+  await ensureBootstrapped();
   const store = getStore();
   const live = store.properties.filter((p) => !p.softDeleted);
   return {
+    totalProperties: live.length,
     publishedProperties: live.filter((p) => p.status === "published").length,
     negotiationProperties: live.filter((p) => p.status === "negotiation").length,
+    soldProperties: live.filter((p) => p.status === "sold").length,
     newLeads: store.leads.filter((l) => l.status === "new").length,
     unreadMessages: store.contacts.filter((c) => c.status === "new").length,
     agents: store.users.filter((u) => u.role === "agent").length,
+    registeredClients: store.clients.length + store.users.filter((u) => u.role === "client").length,
+    monthlyDeals: live.filter((p) => p.status === "sold").length,
     totalViews: live.reduce((sum, p) => sum + p.views, 0),
     brand: siteConfig.brand.nameFa,
   };
+}
+
+export async function createInquiry(input: z.infer<typeof inquirySchema>, ip?: string) {
+  await ensureBootstrapped();
+  const store = getStore();
+  const property = store.properties.find((p) => p.id === input.propertyId && !p.softDeleted);
+  if (!property) throw new ApiError(404, "NOT_FOUND", "ملک یافت نشد");
+
+  const lead = await createLead({
+    clientName: input.name,
+    phone: input.phone,
+    email: input.email || undefined,
+    propertyId: property.id,
+    propertyTitle: property.title,
+    source: "listing-inquiry",
+    notes: input.message,
+    assignedAgentId: property.agentId || undefined,
+  });
+
+  store.activity.unshift({
+    id: newId(),
+    actorId: null,
+    actorRole: "client",
+    action: "inquiry.create",
+    entityType: "property",
+    entityId: property.id,
+    detail: { leadId: lead.id, ip },
+    ip: ip ?? null,
+    requestId: null,
+    createdAt: nowIso(),
+  });
+  saveStore();
+  return { id: lead.id, received: true, propertyTitle: property.title };
+}
+
+export async function updateClient(id: string, input: z.infer<typeof clientUpdateSchema>) {
+  await ensureBootstrapped();
+  const store = getStore();
+  const existing = store.clients.find((c) => c.id === id);
+  if (!existing) throw new ApiError(404, "NOT_FOUND", "مشتری یافت نشد");
+  if (input.urgency) existing.urgency = input.urgency;
+  if (input.preferredNeighborhood != null) existing.preferredNeighborhood = input.preferredNeighborhood;
+  if (input.notes) {
+    existing.notes = input.notes.map((note) => ({
+      id: note.id || newId(),
+      text: note.text,
+      at: note.at || nowIso(),
+    }));
+  }
+  existing.updatedAt = nowIso();
+  saveStore();
+  return existing;
+}
+
+function defaultSettings(): AgencySettings {
+  return {
+    managerNameFa: siteConfig.brand.managerNameFa,
+    notifyEmail: siteConfig.contact.email,
+    emailAlerts: true,
+    smsAlerts: false,
+    phone: siteConfig.contact.phone,
+    address: siteConfig.contact.address.line1,
+    publicDomain: siteConfig.panels.publicDomain,
+  };
+}
+
+export async function getSettings() {
+  await ensureBootstrapped();
+  const store = getStore();
+  return { ...defaultSettings(), ...(store.settings ?? {}) };
+}
+
+export async function updateSettings(input: z.infer<typeof settingsUpdateSchema>) {
+  await ensureBootstrapped();
+  const store = getStore();
+  store.settings = { ...defaultSettings(), ...(store.settings ?? {}), ...input };
+  saveStore();
+  return store.settings;
 }
 
 export async function ensureSeedUser(input: {

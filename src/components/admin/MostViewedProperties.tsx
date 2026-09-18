@@ -31,14 +31,14 @@ const STEP = CARD_WIDTH + GAP;
 const VELOCITY = 32;
 const TILT = { stiffness: 170, damping: 18, mass: 0.35 };
 
-export default function MostViewedProperties() {
+export default function MostViewedProperties({ items }: { items?: ViewedProperty[] }) {
+  const properties = items && items.length > 0 ? items : MOST_VIEWED_PROPERTIES;
   const [paused, setPaused] = useState(false);
   const [dragging, setDragging] = useState(false);
   const x = useMotionValue(0);
   const trackRef = useRef<HTMLDivElement>(null);
-  const loopWidthRef = useRef(MOST_VIEWED_PROPERTIES.length * STEP);
+  const loopWidthRef = useRef(properties.length * STEP);
 
-  const properties = MOST_VIEWED_PROPERTIES;
   // Triple the list so one full set can slide off while an identical set fills the viewport.
   const duplicatedProperties = useMemo(
     () => [...properties, ...properties, ...properties],

@@ -3,12 +3,13 @@
  * siteConfig.ts — تنها فایل تنظیمات برند برای تحویل به آژانس‌های مختلف
  * ============================================================================
  *
- * چطور سریع سفارشی‌سازی کنید؟
- * 1) بخش brand را با نام آژانس جدید عوض کنید
- * 2) بخش contact و social را با تلفن/آدرس/لینک‌های واقعی پر کنید
- * 3) hero و about و services را با متن‌های همان آژانس بازنویسی کنید
- * 4) properties / agents / testimonials را با دادهٔ دمو یا واقعی جایگزین کنید
- * 5) seo را برای عنوان و توضیح گوگل تنظیم کنید
+ * چطور سریع سفارشی‌سازی کنید؟ فقط اطلاعات صاحب سایت:
+ * 1) ثابت‌های OWNER_FILL پایین را با نام، تلفن، ایمیل، آدرس و واتساپ واقعی عوض کنید
+ * 2) بخش social و seo را با لینک و دامنهٔ واقعی پر کنید
+ * 3) لوگو و تصاویر را در public/images جایگزین کنید
+ * 4) فایل‌های نمونه را از پنل ادمین /admin/properties حذف یا ویرایش کنید
+ *
+ * املاک، لید، مشتری و بازدید از پنل کار می‌کنند؛ لازم نیست در این فایل آگهی بسازید.
  *
  * قوانین مهم:
  * - فقط متن داخل "..." یا '...' را عوض کنید
@@ -45,7 +46,7 @@ export type SiteIconKey =
   | "trophy";
 
 /* -------------------------------------------------------------------------- */
-/* مقادیر پایهٔ تماس — یک‌بار تعریف می‌شوند تا در کل فایل یکسان بمانند          */
+/* OWNER_FILL — تنها بلوکی که صاحب سایت باید قبل از تحویل پر کند              */
 /* -------------------------------------------------------------------------- */
 
 const PHONE = "۰۲۱-۹۱۰۰۰۰۰۰";
@@ -96,7 +97,7 @@ export const siteConfig = {
     subtitle:
       "دسترسی اختصاصی به برترین آرشیو پنت‌هاوس‌ها، برج‌های مدرن و ویلاهای VIP همراه با مشاوره تخصصی حقوقی.",
     /** دکمهٔ اصلی */
-    primaryCta: { href: "/done-deals", label: "مشاهده آرشیو املاک VIP" },
+    primaryCta: { href: "/listings", label: "مشاهده آرشیو املاک VIP" },
     /** دکمهٔ ثانویه */
     secondaryCta: { href: "/contact", label: "درخواست مشاوره اختصاصی" },
     /** مسیر تصویر هیرو (نسبت به پوشه public) */
@@ -109,7 +110,7 @@ export const siteConfig = {
   about: {
     title: "اینجا برای دیدن عمق واقعی خدمات ما هستید.",
     body: "درخشان پرو روی املاک فاخر تهران و حومه متمرکز است؛ از پنت‌هاوس و برج‌های لوکس تا ویلاهای VIP و مستغلات تجاری. فروش، اجاره و ارزش‌گذاری را با نگاه سرمایه‌گذاری و انضباط حقوقی پیش می‌بریم.",
-    cta: { href: "/done-deals", label: "مرور معاملات شاخص" },
+    cta: { href: "/listings", label: "مرور فایل‌های فعال" },
   },
 
   /* ======================================================================== */
@@ -117,6 +118,7 @@ export const siteConfig = {
   /* ======================================================================== */
   nav: [
     { href: "/", label: "خانه" },
+    { href: "/listings", label: "آرشیو املاک" },
     { href: "/meet-the-team", label: "تیم مشاوران" },
     { href: "/done-deals", label: "معاملات موفق" },
     { href: "/services", label: "خدمات" },
@@ -149,10 +151,9 @@ export const siteConfig = {
     },
     /** لینک‌های مسیریابی */
     maps: {
-      google:
-        "https://www.google.com/maps/search/?api=1&query=%D9%86%DB%8C%D8%A7%D9%88%D8%B1%D8%A7%D9%86%20%D8%AE%DB%8C%D8%A7%D8%A8%D8%A7%D9%86%20%DB%8C%D8%A7%D8%B3%D8%B1",
-      waze: "https://waze.com/ul?q=%D9%86%DB%8C%D8%A7%D9%88%D8%B1%D8%A7%D9%86%20%DB%8C%D8%A7%D8%B3%D8%B1&navigate=yes",
-      neshan: "https://neshan.org/maps/@35.8048,51.4321,16.0z",
+      google: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${ADDRESS_LINE1} ${CITY}`)}`,
+      waze: `https://waze.com/ul?q=${encodeURIComponent(`${ADDRESS_LINE1} ${CITY}`)}&navigate=yes`,
+      neshan: "https://neshan.org/maps/@35.7500,50.9600,16.0z",
     },
   },
 
@@ -559,21 +560,21 @@ export const siteConfig = {
         title: "پنت‌هاوس و برج‌های لوکس",
         locations: ADDRESS_LINE1,
         image: "/images/landing/categories/penthouse.jpg",
-        href: "/done-deals",
+        href: "/listings",
       },
       {
         id: "villa",
         title: "ویلاهای مدرن و خاص",
         locations: ADDRESS_LINE1,
         image: "/images/landing/categories/villa.jpg",
-        href: "/done-deals",
+        href: "/listings",
       },
       {
         id: "commercial",
         title: "مستغلات و پروژه‌های تجاری",
         locations: ADDRESS_LINE1,
         image: "/images/landing/categories/commercial.jpg",
-        href: "/services",
+        href: "/listings",
       },
     ],
     clientLogos: [
@@ -756,6 +757,7 @@ export const siteConfig = {
           { href: "/", label: "صفحه اصلی" },
           { href: "/contact", label: "درباره ما / مشاوره" },
           { href: "/meet-the-team", label: "تیم مشاوران" },
+          { href: "/listings", label: "آرشیو املاک فعال" },
           { href: "/done-deals", label: "معاملات انجام‌شده" },
         ],
       },
@@ -774,7 +776,8 @@ export const siteConfig = {
           { href: "/login", label: "ورود مشاوران" },
           { href: "/admin/dashboard", label: "ورود مدیر" },
           { href: "/admin/properties/new", label: "ثبت ملک جدید" },
-          { href: "/contact", label: "قوانین محرمانگی" },
+          { href: "/privacy", label: "قوانین محرمانگی" },
+          { href: "/terms", label: "شرایط استفاده" },
         ],
       },
       socialTitle: "شبکه‌ها و ارتباطات",

@@ -43,5 +43,5 @@ export const ROLE_LABELS: Record<UserRole, string> = {
 export const ROLE_HOME: Record<UserRole, string> = {
   admin: "/admin/dashboard",
   agent: "/agent/dashboard",
-  client: "/",
+  client: "/client/dashboard",
 };

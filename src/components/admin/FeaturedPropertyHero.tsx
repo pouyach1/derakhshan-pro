@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Bookmark, ChevronLeft, ChevronRight, Share2 } from "lucide-react";
-import { FEATURED_PROPERTIES } from "@/config/admin";
+import { FEATURED_PROPERTIES, type FeaturedProperty } from "@/config/admin";
 
 const AUTO_MS = 5000;
 const SPRING = { stiffness: 150, damping: 15 };
@@ -25,7 +25,8 @@ const textItem = {
   exit: { opacity: 0, y: -12, filter: "blur(4px)", transition: { duration: 0.25 } },
 };
 
-export default function FeaturedPropertyHero() {
+export default function FeaturedPropertyHero({ items }: { items?: FeaturedProperty[] }) {
+  const list = items && items.length > 0 ? items : FEATURED_PROPERTIES;
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [progressKey, setProgressKey] = useState(0);
@@ -39,8 +40,8 @@ export default function FeaturedPropertyHero() {
   const parallaxX = useTransform(springY, [-3, 3], [-10, 10]);
   const parallaxY = useTransform(springX, [-3, 3], [-8, 8]);
 
-  const property = FEATURED_PROPERTIES[index];
-  const count = FEATURED_PROPERTIES.length;
+  const property = list[index];
+  const count = list.length;
 
   const goTo = useCallback(
     (next: number) => {
@@ -70,6 +71,8 @@ export default function FeaturedPropertyHero() {
     rotateY.set(0);
     setPaused(false);
   };
+
+  if (!property || count === 0) return null;
 
   return (
     <motion.section

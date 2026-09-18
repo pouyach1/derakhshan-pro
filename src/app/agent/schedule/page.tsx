@@ -1,15 +1,18 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CalendarDays, CheckCircle2, Clock3, XCircle } from "lucide-react";
 import {
   TOUR_STATUS_LABEL,
+  type AgentTour,
   type TourStatus,
-  getAgentTours,
 } from "@/config/agent-crm";
 import { useAgentScope } from "@/hooks/useAgentScope";
 import { cn } from "@/lib/utils";
+import { api } from "@/lib/api";
+import { mapTourToAgent } from "@/lib/mappers";
+import type { PropertyRecord, TourRecord } from "@/server/db/store";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -36,8 +39,19 @@ const STATUS_META: Record<
 
 export default function AgentSchedulePage() {
   const agentId = useAgentScope();
-  const tours = useMemo(() => getAgentTours(agentId), [agentId]);
+  const [tours, setTours] = useState<AgentTour[]>([]);
   const [filter, setFilter] = useState<TourStatus | "all">("all");
+
+  useEffect(() => {
+    void (async () => {
+      const [tourRes, propRes] = await Promise.all([
+        api<{ items: TourRecord[] }>("/api/tours"),
+        api<{ items: PropertyRecord[] }>("/api/properties?pageSize=50"),
+      ]);
+      const properties = propRes.ok ? propRes.data.items : [];
+      if (tourRes.ok) setTours(tourRes.data.items.map((item) => mapTourToAgent(item, properties)));
+    })();
+  }, [agentId]);
 
   const grouped = useMemo(() => {
     const list = filter === "all" ? tours : tours.filter((t) => t.status === filter);
