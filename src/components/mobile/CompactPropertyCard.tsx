@@ -16,8 +16,6 @@ type CompactPropertyCardProps = {
   variant?: CompactPropertyCardVariant;
   className?: string;
   priority?: boolean;
-  /** layoutId مشترک اختیاری — فقط وقتی یک نمونه در صفحه است */
-  enableSharedLayout?: boolean;
 };
 
 const VARIANT_STYLES: Record<
@@ -55,7 +53,6 @@ export default function CompactPropertyCard({
   variant = "grid",
   className,
   priority = false,
-  enableSharedLayout = false,
 }: CompactPropertyCardProps) {
   const [pressed, setPressed] = useState(false);
   const styles = VARIANT_STYLES[variant];
@@ -84,7 +81,6 @@ export default function CompactPropertyCard({
             priority={priority}
             sizes={styles.sizes}
             className="object-cover"
-            {...(enableSharedLayout ? {} : {})}
           />
           <span className="absolute start-2 top-2 rounded-full bg-black/55 px-2 py-0.5 text-[10px] text-cyan-200 backdrop-blur">
             {listingTypeLabel(item.listingType)}
