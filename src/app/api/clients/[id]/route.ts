@@ -10,10 +10,12 @@ type Ctx = { params: Promise<{ id: string }> };
 export async function PATCH(request: NextRequest, ctx: Ctx) {
   const requestId = nanoid(10);
   try {
-    await requireSession(request, ["admin", "agent"]);
+    const session = await requireSession(request, ["admin", "agent"]);
     const { id } = await ctx.params;
     const body = clientUpdateSchema.parse(await request.json());
-    const item = await updateClient(id, body);
+    const scope =
+      session.role === "agent" ? { agentId: session.agentId || session.id } : undefined;
+    const item = await updateClient(id, body, scope);
     return jsonOk(item, { requestId });
   } catch (error) {
     return jsonError(error, requestId);
