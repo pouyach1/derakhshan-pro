@@ -34,6 +34,8 @@ type Stats = {
   agents: number;
   registeredClients: number;
   monthlyDeals: number;
+  newLeads: number;
+  negotiationProperties: number;
 };
 
 type AgentRow = {
@@ -44,28 +46,49 @@ type AgentRow = {
   dealsClosed: number;
 };
 
+type DealRow = {
+  id: string;
+  title: string;
+  price: number;
+  status: string;
+  dealType: string;
+};
+
+type ActivityRow = {
+  id: string;
+  action: string;
+  entityType: string;
+  createdAt: string;
+};
+
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [agents, setAgents] = useState<AgentRow[]>([]);
   const [properties, setProperties] = useState<PropertyRecord[]>([]);
+  const [deals, setDeals] = useState<DealRow[]>([]);
+  const [activity, setActivity] = useState<ActivityRow[]>([]);
 
   useEffect(() => {
     void (async () => {
-      const [statsRes, agentsRes, propertiesRes] = await Promise.all([
+      const [statsRes, agentsRes, propertiesRes, dealsRes, activityRes] = await Promise.all([
         api<Stats>("/api/stats"),
         api<{ items: AgentRow[] }>("/api/agents"),
         api<{ items: PropertyRecord[] }>("/api/properties?pageSize=12"),
+        api<{ items: DealRow[] }>("/api/deals"),
+        api<{ items: ActivityRow[] }>("/api/activity?limit=8"),
       ]);
       if (statsRes.ok) setStats(statsRes.data);
       if (agentsRes.ok) setAgents(agentsRes.data.items);
       if (propertiesRes.ok) setProperties(propertiesRes.data.items);
+      if (dealsRes.ok) setDeals(dealsRes.data.items.slice(0, 5));
+      if (activityRes.ok) setActivity(activityRes.data.items);
     })();
   }, []);
 
   const cards = [
     { label: "کل املاک", value: (stats?.totalProperties ?? 0).toLocaleString("fa-IR"), icon: Building2, tone: "bg-sky-50 text-sky-700" },
     { label: "مشاوران فعال", value: (stats?.agents ?? 0).toLocaleString("fa-IR"), icon: BriefcaseBusiness, tone: "bg-violet-50 text-violet-700" },
-    { label: "کاربران ثبت‌شده", value: (stats?.registeredClients ?? 0).toLocaleString("fa-IR"), icon: Users, tone: "bg-amber-50 text-amber-800" },
+    { label: "لیدهای تازه", value: (stats?.newLeads ?? 0).toLocaleString("fa-IR"), icon: Users, tone: "bg-amber-50 text-amber-800" },
     { label: "معاملات بسته‌شده", value: (stats?.monthlyDeals ?? 0).toLocaleString("fa-IR"), icon: Handshake, tone: "bg-emerald-50 text-emerald-700" },
   ];
 
@@ -198,6 +221,37 @@ export default function AdminDashboardPage() {
       <FeaturedPropertyHero items={featured} />
       <div className="relative z-0">
         <MostViewedProperties items={viewed} />
+      </div>
+
+      <div className="grid gap-4 xl:grid-cols-2">
+        <section className="rounded-[1.75rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 sm:p-5">
+          <h2 className="text-base font-semibold text-admin-navy">معاملات اخیر</h2>
+          <div className="mt-3 space-y-2">
+            {deals.map((deal) => (
+              <div key={deal.id} className="rounded-2xl bg-admin-soft px-3 py-3">
+                <p className="text-sm font-medium text-admin-navy">{deal.title}</p>
+                <p className="mt-1 text-xs text-slate-500">
+                  {deal.dealType === "rent" ? "اجاره" : "فروش"} · {formatToman(deal.price)} · {deal.status}
+                </p>
+              </div>
+            ))}
+            {deals.length === 0 ? <p className="text-sm text-slate-400">هنوز معامله‌ای ثبت نشده</p> : null}
+          </div>
+        </section>
+        <section className="rounded-[1.75rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 sm:p-5">
+          <h2 className="text-base font-semibold text-admin-navy">فعالیت اخیر</h2>
+          <div className="mt-3 space-y-2">
+            {activity.map((item) => (
+              <div key={item.id} className="rounded-2xl bg-admin-soft px-3 py-3">
+                <p className="text-sm font-medium text-admin-navy">{item.action}</p>
+                <p className="mt-1 text-xs text-slate-500">
+                  {item.entityType} · {new Date(item.createdAt).toLocaleString("fa-IR")}
+                </p>
+              </div>
+            ))}
+            {activity.length === 0 ? <p className="text-sm text-slate-400">فعالیتی ثبت نشده</p> : null}
+          </div>
+        </section>
       </div>
     </div>
   );
