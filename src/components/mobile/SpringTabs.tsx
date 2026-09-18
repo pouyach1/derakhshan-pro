@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useLayoutEffect, useRef, useState } from "react";
 import { IOS_PAGE_SPRING } from "@/lib/motion/ios";
 import { useHaptic } from "@/hooks/useHaptic";
 import { cn } from "@/lib/utils";
@@ -16,37 +15,24 @@ type SpringTabsProps<T extends string> = {
   value: T;
   onChange: (id: T) => void;
   className?: string;
+  /** جدا کردن layoutId وقتی چند گروه تب در صفحه هست */
+  layoutGroupId?: string;
 };
 
 /**
- * تب‌ها با underline/indicator که با spring بین تب‌ها اسلاید می‌کند.
+ * تب‌ها با indicator که با spring (layoutId) بین تب‌ها اسلاید می‌کند.
  */
 export default function SpringTabs<T extends string>({
   items,
   value,
   onChange,
   className,
+  layoutGroupId = "spring-tabs",
 }: SpringTabsProps<T>) {
-  const listRef = useRef<HTMLDivElement>(null);
-  const btnRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
-  const [indicator, setIndicator] = useState({ left: 0, width: 0 });
   const vibrate = useHaptic();
-
-  useLayoutEffect(() => {
-    const btn = btnRefs.current.get(value);
-    const list = listRef.current;
-    if (!btn || !list) return;
-    const listRect = list.getBoundingClientRect();
-    const btnRect = btn.getBoundingClientRect();
-    setIndicator({
-      left: btnRect.left - listRect.left + list.scrollLeft,
-      width: btnRect.width,
-    });
-  }, [value, items]);
 
   return (
     <div
-      ref={listRef}
       role="tablist"
       className={cn("relative flex gap-1 rounded-full bg-white/[0.04] p-1 ring-1 ring-white/10", className)}
     >
@@ -55,10 +41,6 @@ export default function SpringTabs<T extends string>({
         return (
           <button
             key={item.id}
-            ref={(node) => {
-              if (node) btnRefs.current.set(item.id, node);
-              else btnRefs.current.delete(item.id);
-            }}
             type="button"
             role="tab"
             aria-selected={active}
@@ -72,18 +54,18 @@ export default function SpringTabs<T extends string>({
               onChange(item.id);
             }}
           >
+            {active ? (
+              <motion.span
+                layoutId={`${layoutGroupId}-indicator`}
+                className="absolute inset-0 -z-10 rounded-full bg-cyan-400"
+                transition={IOS_PAGE_SPRING}
+                style={{ willChange: "transform" }}
+              />
+            ) : null}
             {item.label}
           </button>
         );
       })}
-      <motion.div
-        aria-hidden
-        className="absolute inset-y-1 z-0 rounded-full bg-cyan-400"
-        initial={false}
-        animate={{ x: indicator.left, width: indicator.width }}
-        transition={IOS_PAGE_SPRING}
-        style={{ left: 0, willChange: "transform, width" }}
-      />
     </div>
   );
 }

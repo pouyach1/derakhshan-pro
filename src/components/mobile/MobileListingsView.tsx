@@ -93,7 +93,13 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
           </IosTap>
         </div>
 
-        <SpringTabs className="mt-3" items={FILTER_TABS} value={filter} onChange={setFilter} />
+        <SpringTabs
+          className="mt-3"
+          layoutGroupId="listing-filter-header"
+          items={FILTER_TABS}
+          value={filter}
+          onChange={setFilter}
+        />
       </section>
 
       <PullToRefresh
@@ -133,6 +139,7 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
         <p className="mb-3 text-xs text-slate-400">نوع معامله</p>
         <SpringTabs
           items={FILTER_TABS}
+          layoutGroupId="listing-filter-sheet"
           value={filter}
           onChange={(id) => {
             setFilter(id);

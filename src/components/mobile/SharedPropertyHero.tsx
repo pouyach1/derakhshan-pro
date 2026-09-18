@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { fallbackImage } from "@/lib/money";
 import { IOS_PAGE_SPRING } from "@/lib/motion/ios";
 import { cn } from "@/lib/utils";
@@ -33,6 +34,8 @@ export function SharedPropertyImage({
   priority,
   sizes = "(max-width: 428px) 100vw, 390px",
 }: SharedPropertyImageProps) {
+  const [loaded, setLoaded] = useState(false);
+
   return (
     <motion.div
       layoutId={propertyImageLayoutId(id)}
@@ -40,13 +43,22 @@ export function SharedPropertyImage({
       transition={IOS_PAGE_SPRING}
       style={{ borderRadius: 24, willChange: "transform" }}
     >
+      {!loaded ? (
+        <motion.div
+          aria-hidden
+          className="absolute inset-0 bg-white/[0.08]"
+          animate={{ opacity: [0.4, 0.75, 0.4] }}
+          transition={{ duration: 1.35, repeat: Infinity, ease: "easeInOut" }}
+        />
+      ) : null}
       <Image
         src={fallbackImage(src)}
         alt={alt}
         fill
-        className="object-cover"
+        className={cn("object-cover transition-opacity duration-300", loaded ? "opacity-100" : "opacity-0")}
         sizes={sizes}
         priority={priority}
+        onLoad={() => setLoaded(true)}
       />
     </motion.div>
   );
