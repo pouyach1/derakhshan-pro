@@ -7,8 +7,9 @@ import { Bath, BedDouble, MapPin, Ruler, ShieldCheck } from "lucide-react";
 import { api } from "@/lib/api";
 import { fallbackImage, formatToman, listingTypeLabel, propertyStatusLabel } from "@/lib/money";
 import { siteConfig } from "@/config/siteConfig";
-import type { PropertyRecord } from "@/server/db/store";
 import PublicLoadError from "@/components/listings/PublicLoadError";
+import MobilePropertyDetail from "@/components/mobile/MobilePropertyDetail";
+import type { PropertyRecord } from "@/server/db/store";
 
 function logDetailError(error: unknown) {
   if (process.env.NODE_ENV === "development") {
@@ -79,29 +80,41 @@ export default function PropertyDetailView({ id }: { id: string }) {
 
   if (failed) {
     return (
-      <div className="bg-[#070C18] px-4 py-28 text-white sm:px-6">
-        <div className="mx-auto max-w-xl">
-          <PublicLoadError
-            onRetry={() => void load()}
-            title="این فایل در حال حاضر در دسترس نیست"
-            message="ممکن است موقتاً حذف شده یا ارتباط قطع شده باشد. دوباره تلاش کنید یا به آرشیو برگردید."
-          />
-          <div className="mt-4 text-center">
-            <Link href="/listings" className="text-sm text-cyan-300 hover:text-cyan-200">
-              بازگشت به آرشیو
-            </Link>
+      <>
+        <MobilePropertyDetail item={null} failed onRetry={() => void load()} />
+        <div className="hidden bg-[#070C18] px-4 py-28 text-white sm:px-6 lg:block">
+          <div className="mx-auto max-w-xl">
+            <PublicLoadError
+              onRetry={() => void load()}
+              title="این فایل در حال حاضر در دسترس نیست"
+              message="ممکن است موقتاً حذف شده یا ارتباط قطع شده باشد. دوباره تلاش کنید یا به آرشیو برگردید."
+            />
+            <div className="mt-4 text-center">
+              <Link href="/listings" className="text-sm text-cyan-300 hover:text-cyan-200">
+                بازگشت به آرشیو
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 
   if (!item) {
-    return <div className="bg-[#070C18] px-4 py-32 text-center text-slate-400">در حال بارگذاری فایل...</div>;
+    return (
+      <>
+        <MobilePropertyDetail item={null} failed={false} onRetry={() => void load()} />
+        <div className="hidden bg-[#070C18] px-4 py-32 text-center text-slate-400 lg:block">
+          در حال بارگذاری فایل...
+        </div>
+      </>
+    );
   }
 
   return (
-    <div className="bg-[#070C18] text-white">
+    <>
+      <MobilePropertyDetail item={item} failed={false} onRetry={() => void load()} />
+      <div className="hidden bg-[#070C18] text-white lg:block">
       <div className="relative h-[52vh] min-h-[320px]">
         <Image src={fallbackImage(item.imageUrl)} alt={item.title} fill className="object-cover" priority />
         <div className="absolute inset-0 bg-gradient-to-t from-[#070C18] via-[#070C18]/30 to-black/20" />
@@ -192,7 +205,8 @@ export default function PropertyDetailView({ id }: { id: string }) {
           </p>
         </form>
       </section>
-    </div>
+      </div>
+    </>
   );
 }
 
