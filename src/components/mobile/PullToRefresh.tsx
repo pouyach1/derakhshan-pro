@@ -5,7 +5,6 @@ import {
   forwardRef,
   useCallback,
   useEffect,
-  useImperativeHandle,
   useRef,
   useState,
   type ReactNode,
@@ -40,9 +39,6 @@ const PullToRefresh = forwardRef<HTMLDivElement, PullToRefreshProps>(function Pu
   const [refreshing, setRefreshing] = useState(false);
   const vibrate = useHaptic();
 
-  useImperativeHandle(ref, () => scrollerRef.current as HTMLDivElement, []);
-
-  // Keep parent virtualizer in sync when the scroller mounts
   const setScrollerRef = useCallback(
     (node: HTMLDivElement | null) => {
       scrollerRef.current = node;
@@ -155,7 +151,7 @@ const PullToRefresh = forwardRef<HTMLDivElement, PullToRefreshProps>(function Pu
       </motion.div>
 
       <motion.div
-        ref={scrollerRef}
+        ref={setScrollerRef}
         className={cn("ios-scroll-y overflow-y-auto overscroll-y-contain", scrollerClassName)}
         style={{ y }}
         onTouchStart={onTouchStart}
