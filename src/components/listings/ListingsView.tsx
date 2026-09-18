@@ -8,8 +8,9 @@ import { Bath, BedDouble, MapPin, Ruler, Search } from "lucide-react";
 import { api } from "@/lib/api";
 import { fallbackImage, formatToman, listingTypeLabel } from "@/lib/money";
 import { siteConfig } from "@/config/siteConfig";
-import type { PropertyRecord } from "@/server/db/store";
 import PublicLoadError from "@/components/listings/PublicLoadError";
+import MobileListingsView from "@/components/mobile/MobileListingsView";
+import type { PropertyRecord } from "@/server/db/store";
 
 type Filter = "all" | "sale" | "rent";
 
@@ -66,7 +67,15 @@ export default function ListingsView() {
   }, [items, filter, query]);
 
   return (
-    <div className="bg-[#070C18] text-white">
+    <>
+      <MobileListingsView
+        items={items}
+        loading={loading}
+        failed={failed}
+        onRetry={() => void load()}
+      />
+
+      <div className="hidden bg-[#070C18] text-white lg:block">
       <section className="relative overflow-hidden px-4 pb-10 pt-28 sm:px-6 lg:pt-32">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(0,240,255,0.16),_transparent_55%)]" />
         <div className="relative mx-auto max-w-6xl">
@@ -171,6 +180,7 @@ export default function ListingsView() {
           )}
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 }

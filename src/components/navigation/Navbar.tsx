@@ -5,6 +5,7 @@ import Link from "next/link";
 import { LogIn } from "lucide-react";
 import UserAccountMenu from "@/components/auth/UserAccountMenu";
 import Logo from "@/components/ui/Logo";
+import MobileNavDrawer from "@/components/mobile/MobileNavDrawer";
 import { NAV } from "@/config/site";
 import { readClientSession, type AuthSession } from "@/lib/auth";
 import { cn } from "@/lib/utils";
@@ -28,6 +29,7 @@ function LoginButton({
         "ring-1 ring-white/25 transition duration-300",
         "hover:-translate-y-0.5 hover:shadow-[0_16px_36px_-12px_rgba(56,189,248,0.95)]",
         "active:translate-y-0",
+        "ios-tap-target",
         className,
       )}
     >
@@ -62,8 +64,10 @@ export default function Navbar() {
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
+    document.documentElement.classList.toggle("ios-nav-open", open);
     return () => {
       document.body.style.overflow = "";
+      document.documentElement.classList.remove("ios-nav-open");
     };
   }, [open]);
 
@@ -103,7 +107,7 @@ export default function Navbar() {
             )}
             <button
               type="button"
-              className="relative z-50 flex h-10 w-10 flex-col items-center justify-center gap-1.5"
+              className="ios-tap-target relative z-50 flex h-10 w-10 flex-col items-center justify-center gap-1.5"
               aria-expanded={open}
               aria-controls="mobile-nav"
               aria-label={open ? "بستن منو" : "باز کردن منو"}
@@ -132,36 +136,19 @@ export default function Navbar() {
         </div>
       </header>
 
-      <div
-        id="mobile-nav"
-        className={cn(
-          "fixed inset-0 z-40 bg-slate-950 transition-transform duration-700 ease-rio lg:hidden",
-          open ? "translate-y-0" : "-translate-y-full",
-        )}
-      >
-        <nav
-          className="rio-container flex h-full flex-col justify-center gap-6 pt-20"
-          aria-label="موبایل"
-        >
-          {NAV.map((item, index) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setOpen(false)}
-              className="font-vazirmatn text-3xl text-beige transition-colors duration-300 hover:text-sky-400"
-              style={{ transitionDelay: open ? `${index * 60}ms` : "0ms" }}
-            >
-              {item.label}
-            </Link>
-          ))}
-          {!session ? (
+      <MobileNavDrawer
+        open={open}
+        onClose={() => setOpen(false)}
+        items={NAV}
+        footer={
+          !session ? (
             <LoginButton
               className="mt-4 w-full max-w-xs py-3.5 text-base"
               onClick={() => setOpen(false)}
             />
-          ) : null}
-        </nav>
-      </div>
+          ) : null
+        }
+      />
     </>
   );
 }
