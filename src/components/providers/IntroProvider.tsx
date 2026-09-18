@@ -35,7 +35,6 @@ export function IntroProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const mobile = window.innerWidth <= 768;
     const shown = readShown();
 
     if (reduce) {
@@ -44,14 +43,8 @@ export function IntroProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    if (shown || mobile) {
-      if (mobile && !shown) {
-        try {
-          sessionStorage.setItem(PRELOADER_STORAGE_KEY, "1");
-        } catch {
-          /* ignore */
-        }
-      }
+    // بازدیدهای بعدی در همان session → خروج سریع؛ اولین بازدید → اینتروی کامل (موبایل و دسکتاپ)
+    if (shown) {
       setPhase("fast");
       return;
     }

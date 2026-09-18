@@ -6,13 +6,25 @@ import { useIntro } from "@/components/providers/IntroProvider";
 import { EASE } from "@/lib/motion";
 import { siteConfig } from "@/config/siteConfig";
 
-const LETTERS = ["D", "E", "R", "A", "K", "H", "S", "H", "A", "N", " ", "P", "R", "O"] as const;
+const BRAND_FA = siteConfig.brand.nameFa; // دپارتمان درخشان
+const TAGLINE_FA = siteConfig.brand.taglineFa;
 
-type Stage = "idle" | "brand" | "progress" | "exit" | "wipe" | "gone";
+type Stage =
+  | "idle"
+  | "ambient"
+  | "line"
+  | "brand"
+  | "tagline"
+  | "progress"
+  | "exit"
+  | "wipe"
+  | "gone";
+
+const CHARACTERS = Array.from(BRAND_FA);
 
 /**
- * Forensic recreation of RIO Property preloader.
- * Timeline translated from GSAP in animations/downloaded-assets/main.js.
+ * اینتروی سینمایی برند — طولانی‌تر و فارسی:
+ * درخشش محیط → خط طلایی → «دپارتمان درخشان» حرف‌به‌حرف → شعار → نوار → پردهٔ خروج
  */
 export default function PageLoader() {
   const { phase, markDone, beginHeroReveal } = useIntro();
@@ -25,15 +37,17 @@ export default function PageLoader() {
     const id = ++runId.current;
     const timers: number[] = [];
     const after = (ms: number, fn: () => void) => {
-      timers.push(window.setTimeout(() => {
-        if (runId.current === id) fn();
-      }, ms));
+      timers.push(
+        window.setTimeout(() => {
+          if (runId.current === id) fn();
+        }, ms),
+      );
     };
 
     if (phase === "fast") {
       setStage("wipe");
       beginHeroReveal();
-      after(1100, () => {
+      after(1200, () => {
         setStage("gone");
         markDone();
       });
@@ -43,19 +57,18 @@ export default function PageLoader() {
       };
     }
 
-    // Full intro — forensic delay 0.5s then staged timeline
-    after(500, () => setStage("brand"));
-    // Stage 1 settles ~2.5s (logo scale + letter stagger)
-    after(500 + 2500, () => setStage("progress"));
-    // Stage 2 progress bar ~2.5s (overlap with settle)
-    after(500 + 2500 + 2500, () => {
+    // Full cinematic timeline (~14s)
+    after(400, () => setStage("ambient"));
+    after(400 + 1100, () => setStage("line"));
+    after(400 + 1100 + 1400, () => setStage("brand"));
+    after(400 + 1100 + 1400 + 3200, () => setStage("tagline"));
+    after(400 + 1100 + 1400 + 3200 + 1800, () => setStage("progress"));
+    after(400 + 1100 + 1400 + 3200 + 1800 + 2800, () => {
       setStage("exit");
       beginHeroReveal();
     });
-    // Stage 3 logo exit starts; curtain wipe delayed ~1.25s (forensic at≈4 relative to exit cluster)
-    after(500 + 2500 + 2500 + 1250, () => setStage("wipe"));
-    // Wipe duration 1.75s
-    after(500 + 2500 + 2500 + 1250 + 1750, () => {
+    after(400 + 1100 + 1400 + 3200 + 1800 + 2800 + 1600, () => setStage("wipe"));
+    after(400 + 1100 + 1400 + 3200 + 1800 + 2800 + 1600 + 2000, () => {
       setStage("gone");
       markDone();
     });
@@ -81,12 +94,23 @@ export default function PageLoader() {
   const showFullChrome = phase === "full";
   const inExit = stage === "exit" || stage === "wipe";
   const wiping = stage === "wipe";
+  const brandVisible =
+    stage === "brand" || stage === "tagline" || stage === "progress" || inExit;
+  const taglineVisible = stage === "tagline" || stage === "progress" || inExit;
+  const lineVisible =
+    stage === "line" ||
+    stage === "brand" ||
+    stage === "tagline" ||
+    stage === "progress" ||
+    inExit;
+  const progressVisible = stage === "progress" || inExit;
+  const ambientOn = stage !== "idle";
 
   return (
     <AnimatePresence>
       <motion.div
-        key="rio-page-loader"
-        className="preloader_wrap pointer-events-auto fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-brand-800 text-beige"
+        key="derakhshan-page-loader"
+        className="preloader_wrap pointer-events-auto fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-[#061A2E] text-beige"
         data-preloader-wrap
         style={{ willChange: "transform, opacity, clip-path" }}
         initial={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
@@ -95,88 +119,192 @@ export default function PageLoader() {
             ? "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)"
             : "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
         }}
-        transition={{ duration: phase === "fast" ? 1.1 : 1.75, ease: EASE.expoInOut }}
+        transition={{ duration: phase === "fast" ? 1.2 : 2, ease: EASE.expoInOut }}
         role="status"
         aria-live="polite"
-        aria-label={`در حال بارگذاری ${siteConfig.brand.name}`}
+        aria-label={`در حال بارگذاری ${BRAND_FA}`}
       >
-        <div className="absolute inset-0 bg-brand-800" data-preloader-bg />
+        {/* Deep navy field */}
+        <div className="absolute inset-0 bg-[#061A2E]" data-preloader-bg />
 
-        <div className="relative z-10 flex flex-col items-center gap-8">
-          {showFullChrome ? (
+        {/* Soft aurora / atmospheric light */}
+        {showFullChrome ? (
+          <>
             <motion.div
-              className="flex origin-center items-center will-change-transform"
-              data-preloader-logo
-              initial={{ x: 0, scale: 2 }}
+              aria-hidden
+              className="pointer-events-none absolute inset-0"
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: ambientOn && !inExit ? 1 : inExit ? 0 : 0,
+              }}
+              transition={{ duration: 1.4, ease: EASE.expoOut }}
+              style={{
+                background:
+                  "radial-gradient(ellipse 70% 55% at 50% 42%, rgba(0,163,255,0.22), transparent 62%)",
+              }}
+            />
+            <motion.div
+              aria-hidden
+              className="pointer-events-none absolute inset-0"
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: ambientOn && !inExit ? [0.35, 0.55, 0.4] : 0,
+              }}
+              transition={{
+                duration: ambientOn && !inExit ? 5.5 : 1.2,
+                repeat: ambientOn && !inExit ? Infinity : 0,
+                ease: "easeInOut",
+              }}
+              style={{
+                background:
+                  "radial-gradient(circle at 28% 30%, rgba(0,240,255,0.12), transparent 38%), radial-gradient(circle at 72% 68%, rgba(0,163,255,0.1), transparent 42%)",
+              }}
+            />
+            {/* Slow sheen sweep */}
+            <motion.div
+              aria-hidden
+              className="pointer-events-none absolute inset-y-0 w-1/3 bg-gradient-to-l from-transparent via-white/[0.06] to-transparent"
+              initial={{ x: "120%", opacity: 0 }}
               animate={
-                stage === "idle"
-                  ? { x: 0, scale: 2 }
-                  : stage === "brand"
-                    ? { x: "6vw", scale: 1 }
-                    : stage === "progress"
-                      ? { x: 0, scale: 1 }
-                      : { x: "-300%", scale: 1 }
+                ambientOn && !inExit
+                  ? { x: ["120%", "-140%"], opacity: [0, 0.7, 0] }
+                  : { opacity: 0 }
               }
-              transition={
-                inExit
-                  ? { duration: 2.5, ease: EASE.expoIn }
-                  : stage === "progress"
-                    ? { duration: 2, ease: EASE.expoInOut }
-                    : { duration: 2.5, ease: EASE.expoOut }
-              }
-            >
-              <div className="flex overflow-hidden">
-                {LETTERS.map((letter, index) =>
-                  letter === " " ? (
-                    <span key={`space-${index}`} className="inline-block w-[0.35em]">
-                      {" "}
-                    </span>
+              transition={{ duration: 4.2, delay: 0.6, ease: EASE.expoInOut }}
+            />
+          </>
+        ) : null}
+
+        <div className="relative z-10 flex w-full max-w-3xl flex-col items-center px-6">
+          {showFullChrome ? (
+            <>
+              {/* Hairline draw */}
+              <motion.div
+                className="mb-10 h-px w-[min(42vw,14rem)] origin-center overflow-hidden bg-beige/20"
+                initial={{ scaleX: 0, opacity: 0 }}
+                animate={
+                  inExit
+                    ? { scaleX: 0, opacity: 0 }
+                    : lineVisible
+                      ? { scaleX: 1, opacity: 1 }
+                      : { scaleX: 0, opacity: 0 }
+                }
+                transition={{ duration: 1.35, ease: EASE.expoInOut }}
+              >
+                <motion.div
+                  className="h-px w-full origin-center bg-gradient-to-l from-transparent via-sky-300 to-transparent"
+                  animate={
+                    lineVisible && !inExit
+                      ? { opacity: [0.55, 1, 0.55] }
+                      : { opacity: 0 }
+                  }
+                  transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+                />
+              </motion.div>
+
+              {/* Brand — دپارتمان درخشان */}
+              <motion.div
+                className="flex flex-wrap items-center justify-center gap-x-[0.12em] overflow-hidden"
+                dir="rtl"
+                data-preloader-logo
+                initial={{ opacity: 0, y: 18, filter: "blur(10px)" }}
+                animate={
+                  inExit
+                    ? { opacity: 0, y: -36, filter: "blur(12px)", scale: 0.96 }
+                    : brandVisible
+                      ? { opacity: 1, y: 0, filter: "blur(0px)", scale: 1 }
+                      : { opacity: 0, y: 18, filter: "blur(10px)", scale: 1.02 }
+                }
+                transition={
+                  inExit
+                    ? { duration: 1.5, ease: EASE.expoIn }
+                    : { duration: 1.6, ease: EASE.expoOut }
+                }
+              >
+                {CHARACTERS.map((char, index) =>
+                  char === " " ? (
+                    <span
+                      key={`space-${index}`}
+                      className="inline-block w-[0.45em]"
+                      aria-hidden
+                    />
                   ) : (
                     <motion.span
-                      key={`${letter}-${index}`}
-                      className="inline-block font-display text-[clamp(1.75rem,4vw,2.75rem)] uppercase tracking-[0.08em] will-change-transform"
-                      initial={{ x: "125%" }}
-                      animate={{ x: inExit ? "-125%" : stage === "idle" ? "125%" : "0%" }}
+                      key={`${char}-${index}`}
+                      className="inline-block font-vazirmatn text-[clamp(2rem,7vw,3.75rem)] font-semibold leading-none tracking-tight text-[#FFFEFC] will-change-transform"
+                      initial={{ y: "110%", opacity: 0 }}
+                      animate={{
+                        y: inExit ? "-120%" : brandVisible ? "0%" : "110%",
+                        opacity: inExit ? 0 : brandVisible ? 1 : 0,
+                      }}
                       transition={
                         inExit
-                          ? { duration: 1.5, ease: EASE.expoIn, delay: index * 0.05 }
-                          : { duration: 1.5, ease: EASE.expoOut, delay: index * 0.1 }
+                          ? {
+                              duration: 1.15,
+                              ease: EASE.expoIn,
+                              delay: (CHARACTERS.length - index) * 0.045,
+                            }
+                          : {
+                              duration: 1.25,
+                              ease: EASE.expoOut,
+                              delay: index * 0.09,
+                            }
                       }
                     >
-                      {letter}
+                      {char}
                     </motion.span>
                   ),
                 )}
-              </div>
-            </motion.div>
-          ) : null}
+              </motion.div>
 
-          {showFullChrome ? (
-            <motion.div
-              className="h-px w-[33vw] origin-left overflow-hidden bg-beige/25 will-change-transform md:w-[12vw]"
-              data-preloader-bar-wrap
-              initial={{ scaleX: 0 }}
-              animate={
-                inExit
-                  ? { scaleX: 0, x: "-300%" }
-                  : stage === "progress" || stage === "brand"
-                    ? { scaleX: stage === "progress" ? 1 : 0, x: 0 }
-                    : { scaleX: 0, x: 0 }
-              }
-              transition={
-                inExit
-                  ? { duration: 2.5, ease: EASE.expoIn }
-                  : { duration: 2, ease: EASE.expoInOut }
-              }
-            >
+              {/* Tagline */}
+              <motion.p
+                dir="rtl"
+                className="mt-6 max-w-md text-center font-vazirmatn text-sm tracking-[0.08em] text-sky-100/75 md:text-base"
+                initial={{ opacity: 0, y: 12 }}
+                animate={
+                  inExit
+                    ? { opacity: 0, y: -16 }
+                    : taglineVisible
+                      ? { opacity: 1, y: 0 }
+                      : { opacity: 0, y: 12 }
+                }
+                transition={{ duration: 1.1, ease: EASE.expoOut }}
+              >
+                {TAGLINE_FA}
+              </motion.p>
+
+              {/* Progress bar */}
               <motion.div
-                className="h-px w-full origin-left bg-beige will-change-transform"
-                data-preloader-bar
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: stage === "progress" || inExit ? 1 : 0 }}
-                transition={{ duration: 2.5, ease: EASE.site, delay: stage === "progress" ? 0.15 : 0 }}
-              />
-            </motion.div>
+                className="mt-12 h-px w-[min(48vw,16rem)] origin-center overflow-hidden bg-beige/20 will-change-transform"
+                data-preloader-bar-wrap
+                initial={{ scaleX: 0, opacity: 0 }}
+                animate={
+                  inExit
+                    ? { scaleX: 0, opacity: 0 }
+                    : progressVisible || stage === "tagline"
+                      ? { scaleX: 1, opacity: 1 }
+                      : { scaleX: 0, opacity: 0 }
+                }
+                transition={
+                  inExit
+                    ? { duration: 1.2, ease: EASE.expoIn }
+                    : { duration: 1.1, ease: EASE.expoInOut }
+                }
+              >
+                <motion.div
+                  className="h-px w-full origin-right bg-gradient-to-l from-sky-300 via-beige to-beige will-change-transform"
+                  data-preloader-bar
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: progressVisible || inExit ? 1 : 0 }}
+                  transition={{
+                    duration: 2.6,
+                    ease: EASE.site,
+                    delay: stage === "progress" ? 0.1 : 0,
+                  }}
+                />
+              </motion.div>
+            </>
           ) : null}
         </div>
       </motion.div>
