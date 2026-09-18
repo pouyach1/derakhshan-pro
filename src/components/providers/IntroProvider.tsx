@@ -34,8 +34,21 @@ export function IntroProvider({ children }: { children: ReactNode }) {
   const [heroReady, setHeroReady] = useState(false);
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const forceFull = params.get("intro") === "full";
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const shown = readShown();
+    const shown = forceFull ? false : readShown();
+
+    if (forceFull) {
+      try {
+        sessionStorage.removeItem(PRELOADER_STORAGE_KEY);
+      } catch {
+        /* ignore */
+      }
+      setHeroReady(false);
+      setPhase("full");
+      return;
+    }
 
     if (reduce) {
       setPhase("done");
