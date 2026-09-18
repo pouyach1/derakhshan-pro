@@ -8,8 +8,6 @@ import { siteConfig } from "@/config/siteConfig";
 
 const BRAND_FA = siteConfig.brand.nameFa; // دپارتمان درخشان
 const TAGLINE_FA = siteConfig.brand.taglineFa;
-/** دو کلمه جدا — حروف داخل هر کلمه باید به‌هم‌چسبیده بمانند (رسم‌الخط فارسی) */
-const BRAND_WORDS = BRAND_FA.split(/\s+/).filter(Boolean);
 
 type Stage =
   | "idle"
@@ -205,7 +203,7 @@ export default function PageLoader() {
               </motion.div>
 
               <motion.div
-                className="flex items-center justify-center overflow-hidden"
+                className="overflow-hidden"
                 dir="rtl"
                 data-preloader-logo
                 initial={{ opacity: 0, y: 22, filter: "blur(12px)", scale: 1.04 }}
@@ -227,39 +225,25 @@ export default function PageLoader() {
                     : { duration: 1.85, ease: EASE.expoOut }
                 }
               >
-                {BRAND_WORDS.map((word, index) => (
-                  <motion.span
-                    key={`${word}-${index}`}
-                    className="inline-block overflow-hidden"
-                  >
-                    <motion.span
-                      className={`inline-block font-vazirmatn text-[clamp(2.15rem,7.4vw,4rem)] font-semibold leading-none tracking-normal text-[#FFFEFC] will-change-transform${
-                        index < BRAND_WORDS.length - 1 ? " ml-[0.28em]" : ""
-                      }`}
-                      style={{ textShadow: "0 0 40px rgba(0,163,255,0.18)" }}
-                      initial={{ y: "115%", opacity: 0 }}
-                      animate={{
-                        y: inExit ? "-125%" : brandVisible ? "0%" : "115%",
-                        opacity: inExit ? 0 : brandVisible ? 1 : 0,
-                      }}
-                      transition={
-                        inExit
-                          ? {
-                              duration: 1.25,
-                              ease: EASE.expoIn,
-                              delay: (BRAND_WORDS.length - 1 - index) * 0.08,
-                            }
-                          : {
-                              duration: 1.35,
-                              ease: EASE.expoOut,
-                              delay: index * 0.18,
-                            }
-                      }
-                    >
-                      {word}
-                    </motion.span>
-                  </motion.span>
-                ))}
+                <motion.span
+                  className="inline-block whitespace-nowrap font-vazirmatn text-[clamp(2.15rem,7.4vw,4rem)] font-semibold leading-none tracking-normal text-[#FFFEFC] will-change-transform"
+                  style={{
+                    textShadow: "0 0 40px rgba(0,163,255,0.18)",
+                    wordSpacing: "-0.05em",
+                  }}
+                  initial={{ y: "115%", opacity: 0 }}
+                  animate={{
+                    y: inExit ? "-125%" : brandVisible ? "0%" : "115%",
+                    opacity: inExit ? 0 : brandVisible ? 1 : 0,
+                  }}
+                  transition={
+                    inExit
+                      ? { duration: 1.25, ease: EASE.expoIn }
+                      : { duration: 1.45, ease: EASE.expoOut, delay: 0.08 }
+                  }
+                >
+                  {BRAND_FA}
+                </motion.span>
               </motion.div>
 
               <motion.p
