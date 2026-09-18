@@ -5,6 +5,8 @@ import { FormEvent, useMemo, useState } from "react";
 import { Bath, BedDouble, MapPin, Ruler, ShieldCheck } from "lucide-react";
 import PropertyGallery from "@/components/mobile/PropertyGallery";
 import IosTap from "@/components/mobile/IosTap";
+import LikeButton from "@/components/mobile/LikeButton";
+import { PropertyDetailSkeleton } from "@/components/mobile/PropertySkeletons";
 import { SharedPropertyTitle } from "@/components/mobile/SharedPropertyHero";
 import PublicLoadError from "@/components/listings/PublicLoadError";
 import { siteConfig } from "@/config/siteConfig";
@@ -54,7 +56,7 @@ export default function MobilePropertyDetail({ item, failed, onRetry }: MobilePr
   }
 
   if (!item) {
-    return <div className="bg-[#070C18] px-4 py-32 text-center text-slate-400 lg:hidden">در حال بارگذاری فایل...</div>;
+    return <PropertyDetailSkeleton />;
   }
 
   async function onSubmit(event: FormEvent) {
@@ -91,8 +93,9 @@ export default function MobilePropertyDetail({ item, failed, onRetry }: MobilePr
 
   return (
     <div className="bg-[#070C18] pb-24 text-white lg:hidden">
-      <div className="px-4 pt-24">
+      <div className="relative px-4 pt-24">
         <PropertyGallery images={gallery} alt={item.title} propertyId={item.id} />
+        <LikeButton propertyId={item.id} className="absolute end-7 top-28 z-10" />
       </div>
 
       <section className="space-y-4 px-4 pt-5">
