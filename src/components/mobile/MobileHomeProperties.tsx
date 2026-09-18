@@ -4,12 +4,13 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import CompactPropertyCard from "@/components/mobile/CompactPropertyCard";
 import FreeScrollCarousel from "@/components/mobile/carousel/FreeScrollCarousel";
+import PagingCarousel from "@/components/mobile/carousel/PagingCarousel";
 import { PropertyCardSkeletonList } from "@/components/mobile/PropertySkeletons";
 import { api } from "@/lib/api";
 import type { PropertyRecord } from "@/server/db/store";
 
 /**
- * بخش موبایل Home: ویژه (کاروسل آزاد) + گرید همه ملک‌ها.
+ * بخش موبایل Home: ویژه (آزاد) + جدیدترین (پیجینگ) + گرید همه.
  * دسکتاپ: مخفی (lg:hidden).
  */
 export default function MobileHomeProperties() {
@@ -36,6 +37,12 @@ export default function MobileHomeProperties() {
   const featured = useMemo(() => {
     const flagged = items.filter((p) => p.isFeatured);
     return (flagged.length ? flagged : items).slice(0, 8);
+  }, [items]);
+
+  const newest = useMemo(() => {
+    return [...items]
+      .sort((a, b) => (b.createdAt ?? "").localeCompare(a.createdAt ?? ""))
+      .slice(0, 8);
   }, [items]);
 
   const all = useMemo(() => items.slice(0, 8), [items]);
@@ -71,6 +78,34 @@ export default function MobileHomeProperties() {
                 />
               ))}
             </FreeScrollCarousel>
+          )}
+        </div>
+
+        <div>
+          <div className="mb-4 flex items-end justify-between gap-3 px-4">
+            <div>
+              <p className="text-[11px] font-semibold tracking-[0.18em] text-cyan-300">تازه</p>
+              <h2 className="mt-1 font-vazirmatn text-xl font-black">جدیدترین‌ها</h2>
+            </div>
+          </div>
+
+          {loading ? (
+            <div className="px-4">
+              <PropertyCardSkeletonList count={1} />
+            </div>
+          ) : newest.length === 0 ? (
+            <p className="px-4 py-6 text-sm text-slate-400">فایل جدیدی نیست.</p>
+          ) : (
+            <PagingCarousel slideWidthRatio={0.88} gapPx={12}>
+              {newest.map((item, index) => (
+                <CompactPropertyCard
+                  key={item.id}
+                  item={item}
+                  variant="paging"
+                  priority={index === 0}
+                />
+              ))}
+            </PagingCarousel>
           )}
         </div>
 
