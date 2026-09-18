@@ -11,12 +11,13 @@ import {
 import { useGesture } from "@use-gesture/react";
 import { IOS_PAGE_SPRING } from "@/lib/motion/ios";
 import { cn } from "@/lib/utils";
+import { resolveSlideWidthRatio, type SlideWidthRatio } from "@/components/mobile/carousel/slideWidth";
 
 type PagingCarouselProps = {
   children: ReactNode[];
   className?: string;
   /** نسبت عرض اسلاید به viewport — نزدیک به تمام‌عرض برای حس «یکی‌یکی» */
-  slideWidthRatio?: number;
+  slideWidthRatio?: SlideWidthRatio;
   gapPx?: number;
   showCounter?: boolean;
   showDots?: boolean;
@@ -25,12 +26,11 @@ type PagingCarouselProps = {
 
 /**
  * کاروسل با پیجینگ اجباری: هر سوایپ دقیقاً یک کارت جلو/عقب.
- * اگر نصفه رها شود، با spring به کامل قبلی/بعدی می‌چسبد — نه حالت میانی.
  */
 export default function PagingCarousel({
   children,
   className,
-  slideWidthRatio = 0.88,
+  slideWidthRatio = { mobile: 0.88, desktop: 0.52 },
   gapPx = 12,
   showCounter = true,
   showDots = true,
@@ -45,7 +45,8 @@ export default function PagingCarousel({
   const indexRef = useRef(0);
   const startXRef = useRef(0);
 
-  const slideW = viewportW > 0 ? viewportW * slideWidthRatio : 0;
+  const ratio = resolveSlideWidthRatio(slideWidthRatio, viewportW);
+  const slideW = viewportW > 0 ? viewportW * ratio : 0;
   const step = slideW + gapPx;
   const sidePad = viewportW > 0 ? (viewportW - slideW) / 2 : 0;
 

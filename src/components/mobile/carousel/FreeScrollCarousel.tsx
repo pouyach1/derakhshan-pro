@@ -11,12 +11,13 @@ import {
 import { useGesture } from "@use-gesture/react";
 import { IOS_PAGE_SPRING } from "@/lib/motion/ios";
 import { cn } from "@/lib/utils";
+import { resolveSlideWidthRatio, type SlideWidthRatio } from "@/components/mobile/carousel/slideWidth";
 
 type FreeScrollCarouselProps = {
   children: ReactNode[];
   className?: string;
-  /** عرض هر اسلاید به‌صورت کسری از عرض کانتینر (مثلاً 0.78 برای کارت ویژه) */
-  slideWidthRatio?: number;
+  /** عرض هر اسلاید به‌صورت کسری از عرض کانتینر */
+  slideWidthRatio?: SlideWidthRatio;
   gapPx?: number;
   showDots?: boolean;
   onIndexChange?: (index: number) => void;
@@ -24,12 +25,11 @@ type FreeScrollCarouselProps = {
 
 /**
  * کاروسل افقی آزاد با اسنپ spring به نزدیک‌ترین کارت هنگام رها کردن.
- * اسکرول خام مرورگر نیست — drag آزاد + قفل نرم با framer-motion.
  */
 export default function FreeScrollCarousel({
   children,
   className,
-  slideWidthRatio = 0.78,
+  slideWidthRatio = { mobile: 0.78, desktop: 0.36 },
   gapPx = 14,
   showDots = true,
   onIndexChange,
@@ -43,7 +43,8 @@ export default function FreeScrollCarousel({
   const indexRef = useRef(0);
   const startXRef = useRef(0);
 
-  const slideW = viewportW > 0 ? viewportW * slideWidthRatio : 0;
+  const ratio = resolveSlideWidthRatio(slideWidthRatio, viewportW);
+  const slideW = viewportW > 0 ? viewportW * ratio : 0;
   const step = slideW + gapPx;
   const sidePad = viewportW > 0 ? (viewportW - slideW) / 2 : 0;
 

@@ -25,28 +25,28 @@ const VARIANT_STYLES: Record<
   grid: {
     wrap: "rounded-2xl",
     media: "aspect-[4/3]",
-    title: "text-xs leading-5",
-    sizes: "(max-width: 428px) 45vw, 180px",
+    title: "text-xs leading-5 lg:text-sm lg:leading-6",
+    sizes: "(max-width: 1023px) 45vw, 280px",
     radius: "rounded-2xl",
   },
   featured: {
     wrap: "rounded-[1.35rem]",
     media: "aspect-[5/4]",
-    title: "text-sm leading-6",
-    sizes: "(max-width: 428px) 78vw, 300px",
+    title: "text-sm leading-6 lg:text-base lg:leading-7",
+    sizes: "(max-width: 1023px) 78vw, 420px",
     radius: "rounded-[1.35rem]",
   },
   paging: {
     wrap: "rounded-[1.5rem]",
-    media: "aspect-[4/3]",
-    title: "text-base leading-7",
-    sizes: "(max-width: 428px) 88vw, 360px",
+    media: "aspect-[4/3] lg:aspect-[16/10]",
+    title: "text-base leading-7 lg:text-lg",
+    sizes: "(max-width: 1023px) 88vw, 560px",
     radius: "rounded-[1.5rem]",
   },
 };
 
 /**
- * کارت فشرده موبایل — گرید ۲ستونه / ویژه / جدیدترین.
+ * کارت فشرده ملک — گرید / ویژه / جدیدترین (موبایل و دسکتاپ).
  */
 export default function CompactPropertyCard({
   item,

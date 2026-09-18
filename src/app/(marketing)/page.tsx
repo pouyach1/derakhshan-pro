@@ -2,23 +2,24 @@ import HeroSection from "@/components/sections/HeroSection";
 import VideoTourSection from "@/components/sections/VideoTourSection";
 import CtaTextSection from "@/components/sections/CtaTextSection";
 import ValuePropsSection from "@/components/sections/ValuePropsSection";
+import HomePropertiesSection from "@/components/sections/HomePropertiesSection";
 import FeaturedCategoriesSection from "@/components/sections/FeaturedCategoriesSection";
 import ClientLogoMarquee from "@/components/sections/ClientLogoMarquee";
 import DoneDealsSection from "@/components/sections/DoneDealsSection";
 import LawsSection from "@/components/sections/LawsSection";
 import FullImageCtaSection from "@/components/sections/FullImageCtaSection";
 import ContactFormSection from "@/components/sections/ContactFormSection";
-import MobileHomeProperties from "@/components/mobile/MobileHomeProperties";
 import { INTRO_CTA } from "@/config/home";
 
 export default function HomePage() {
   return (
     <>
       <HeroSection />
-      <MobileHomeProperties />
       <VideoTourSection />
       <CtaTextSection title={INTRO_CTA.title} body={INTRO_CTA.body} cta={INTRO_CTA.cta} />
       <ValuePropsSection />
+      {/* فایل‌های زنده — جدا از Hero، برای موبایل و دسکتاپ */}
+      <HomePropertiesSection />
       <FeaturedCategoriesSection />
       <ClientLogoMarquee />
       <DoneDealsSection />
