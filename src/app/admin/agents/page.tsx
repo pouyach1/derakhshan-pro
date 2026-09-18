@@ -14,6 +14,8 @@ type AgentRow = {
   avatarUrl: string | null;
   listedProperties: number;
   dealsClosed: number;
+  status: "active" | "inactive";
+  isActive: boolean;
 };
 
 export default function AgentsPage() {
@@ -56,7 +58,18 @@ export default function AgentsPage() {
                 className="h-16 w-16 rounded-full object-cover"
               />
               <div className="min-w-0 flex-1">
-                <h2 className="text-base font-semibold text-admin-navy">{agent.name}</h2>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="text-base font-semibold text-admin-navy">{agent.name}</h2>
+                  <span
+                    className={`inline-flex rounded-full px-2.5 py-0.5 text-[11px] font-medium ring-1 ${
+                      agent.status === "active"
+                        ? "bg-emerald-50 text-emerald-700 ring-emerald-200"
+                        : "bg-slate-100 text-slate-500 ring-slate-200"
+                    }`}
+                  >
+                    {agent.status === "active" ? "فعال" : "غیرفعال"}
+                  </span>
+                </div>
                 <p className="text-xs text-slate-500" dir="ltr">{agent.phone}</p>
                 <div className="mt-4 grid grid-cols-2 gap-2">
                   <Stat label="آگهی فعال" value={String(agent.listedProperties)} />

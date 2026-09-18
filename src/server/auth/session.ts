@@ -3,13 +3,40 @@ import type { AuthSession, UserRole } from "@/lib/auth";
 
 const COOKIE = "agency_auth";
 const DEFAULT_TTL = 60 * 60 * 24 * 7; // 7 days
+const DEV_FALLBACK_SECRET = "dev-only-change-me-derakhshan-agency-secret-key-32b";
+
+function isWeakSecret(secret: string) {
+  const normalized = secret.trim().toLowerCase();
+  return (
+    secret.trim().length < 32 ||
+    normalized.startsWith("change-me") ||
+    normalized === DEV_FALLBACK_SECRET
+  );
+}
 
 function secretKey() {
-  const secret =
-    process.env.AUTH_SECRET ||
-    process.env.NEXTAUTH_SECRET ||
-    "dev-only-change-me-derakhshan-agency-secret-key-32b";
-  return new TextEncoder().encode(secret);
+  const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "";
+  if (secret && !isWeakSecret(secret)) {
+    return new TextEncoder().encode(secret);
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    throw new Error(
+      "AUTH_SECRET must be set to a strong random value (min 32 chars) in production",
+    );
+  }
+
+  if (!secret) {
+    console.warn(
+      "[auth] AUTH_SECRET is missing — using a development-only fallback. Set AUTH_SECRET before deploy.",
+    );
+  } else {
+    console.warn(
+      "[auth] AUTH_SECRET looks weak — using it only in development. Use a strong secret before deploy.",
+    );
+  }
+
+  return new TextEncoder().encode(secret || DEV_FALLBACK_SECRET);
 }
 
 export function authCookieName() {

@@ -12,12 +12,23 @@ import {
 
 const SAMPLE_FEATURES = ["لابی مجلل", "پارکینگ", "نگهبانی", "آسانسور"];
 
+function requireSeedPassword() {
+  const password = process.env.SEED_ADMIN_PASSWORD?.trim();
+  if (!password || password.length < 8) {
+    throw new Error(
+      "SEED_ADMIN_PASSWORD is required for seeding (min 8 characters). Set it in the environment — no default password is shipped in code.",
+    );
+  }
+  return password;
+}
+
 export async function buildSeedStore(): Promise<AgencyStore> {
   const brand = siteConfig.brand.nameFa;
   const address = siteConfig.contact.address.line1;
   const city = siteConfig.contact.address.city;
-  const adminHash = await hashPassword("123456");
-  const agentHash = await hashPassword("123456");
+  const seedPassword = requireSeedPassword();
+  const adminHash = await hashPassword(seedPassword);
+  const agentHash = await hashPassword(seedPassword);
   const stamp = nowIso();
 
   const store: AgencyStore = {

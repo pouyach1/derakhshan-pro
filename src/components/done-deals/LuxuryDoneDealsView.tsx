@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   MouseEvent,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -34,6 +35,7 @@ import {
 } from "lucide-react";
 import { SITE } from "@/config/site";
 import { siteConfig } from "@/config/siteConfig";
+import { api } from "@/lib/api";
 import type { LucideIcon } from "lucide-react";
 
 type DealCategory =
@@ -42,6 +44,16 @@ type DealCategory =
   | "villa"
   | "commercial"
   | "diplomatic";
+
+type DoneDealCard = {
+  id: string;
+  title: string;
+  image: string;
+  location: string;
+  valueLabel: string;
+  details: string[];
+  category: Exclude<DealCategory, "all"> | "other";
+};
 
 const spring = { type: "spring" as const, stiffness: 80, damping: 18 };
 
@@ -62,7 +74,6 @@ const METRIC_ICONS: Record<string, LucideIcon> = {
 
 const page = siteConfig.doneDealsPage;
 const FILTERS = page.filters;
-const DEALS = siteConfig.properties;
 const TIMELINE = page.timeline;
 const METRICS = page.metrics.map((metric) => ({
   ...metric,
@@ -223,7 +234,7 @@ function TiltDealCard({
   index,
   reduceMotion,
 }: {
-  deal: (typeof DEALS)[number];
+  deal: DoneDealCard;
   index: number;
   reduceMotion: boolean | null;
 }) {
@@ -355,11 +366,21 @@ function TiltDealCard({
 export function LuxuryDoneDealsView() {
   const reduceMotion = useReducedMotion();
   const [filter, setFilter] = useState<DealCategory>("all");
+  const [deals, setDeals] = useState<DoneDealCard[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    void (async () => {
+      const res = await api<{ items: DoneDealCard[] }>("/api/deals");
+      if (res.ok) setDeals(res.data.items);
+      setLoading(false);
+    })();
+  }, []);
 
   const filteredDeals = useMemo(() => {
-    if (filter === "all") return DEALS;
-    return DEALS.filter((deal) => deal.category === filter);
-  }, [filter]);
+    if (filter === "all") return deals;
+    return deals.filter((deal) => deal.category === filter);
+  }, [filter, deals]);
 
   return (
     <div
@@ -441,6 +462,11 @@ export function LuxuryDoneDealsView() {
               ))}
             </AnimatePresence>
           </motion.div>
+          {!loading && filteredDeals.length === 0 ? (
+            <p className="mt-8 text-center text-sm text-slate-500">
+              هنوز معامله موفقی برای نمایش ثبت نشده است.
+            </p>
+          ) : null}
         </section>
 
         {/* Timeline */}

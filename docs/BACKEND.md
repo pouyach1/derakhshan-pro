@@ -14,6 +14,7 @@ Production-minded App Router backend for the luxury real estate platform.
 ## Quick start
 ```bash
 cp .env.example .env.local
+# AUTH_SECRET (required in production), SEED_ADMIN_PASSWORD (for seed), optional DEMO_OTP
 npm run db:seed
 npm run dev
 ```
@@ -23,11 +24,11 @@ Health: `GET /api/health`
 ## Auth
 | Role | Identifier | Secret |
 |------|------------|--------|
-| Admin | `admin@derakhshan.pro` | `123456` |
-| Agent | `agent@derakhshan.pro` | `123456` |
-| Client | any mobile | OTP `1234` |
+| Admin | `siteConfig.panels.demoAdminEmail` | `SEED_ADMIN_PASSWORD` (from seed) |
+| Agent | `siteConfig.panels.demoAgentEmail` | same seed password |
+| Client | any mobile | `DEMO_OTP` when configured |
 
-Cookie: `agency_auth` (HttpOnly, signed JWT)
+Cookie: `agency_auth` (HttpOnly, signed JWT). Production rejects weak/missing `AUTH_SECRET`.
 
 ## API map
 | Method | Path | Access |
@@ -50,6 +51,8 @@ Cookie: `agency_auth` (HttpOnly, signed JWT)
 | GET/POST/PATCH | `/api/tours` | admin/agent |
 | POST | `/api/contact` | public |
 | GET | `/api/stats` | admin/agent |
+| GET | `/api/deals` | public (closed cards) / admin/agent (full) |
+| POST | `/api/deals` | admin/agent |
 | GET | `/api/health` | public |
 
 ## Layout

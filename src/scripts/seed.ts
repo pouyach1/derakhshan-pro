@@ -1,6 +1,6 @@
 /**
  * Seed luxury demo data into the Agency JSON store.
- * Run: npm run db:seed
+ * Run: SEED_ADMIN_PASSWORD='…' npm run db:seed
  */
 
 import { buildSeedStore } from "../server/db/bootstrap";
@@ -12,9 +12,14 @@ async function main() {
   const store = await buildSeedStore();
   resetStore(store);
   console.log("✓ seed complete → data/agency.json");
-  console.log(`  admin: ${siteConfig.panels.demoAdminEmail} / 123456`);
-  console.log(`  agent: ${siteConfig.panels.demoAgentEmail} / 123456`);
-  console.log(`  client OTP: ${process.env.DEMO_OTP || "1234"}`);
+  console.log(`  admin: ${siteConfig.panels.demoAdminEmail}`);
+  console.log(`  agent: ${siteConfig.panels.demoAgentEmail}`);
+  console.log("  password: value from SEED_ADMIN_PASSWORD (not printed)");
+  if (process.env.DEMO_OTP) {
+    console.log("  client OTP: configured via DEMO_OTP");
+  } else {
+    console.log("  client OTP: not configured (set DEMO_OTP for demo client login)");
+  }
 }
 
 main().catch((err) => {

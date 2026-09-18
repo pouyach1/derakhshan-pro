@@ -44,6 +44,7 @@ type AgentRow = {
   avatarUrl: string | null;
   listedProperties: number;
   dealsClosed: number;
+  status: AgentStatus;
 };
 
 type DealRow = {
@@ -207,8 +208,8 @@ export default function AdminDashboardPage() {
                   <td className="px-4 py-3.5 tabular-nums">{agent.listedProperties.toLocaleString("fa-IR")}</td>
                   <td className="px-4 py-3.5 tabular-nums">{agent.dealsClosed.toLocaleString("fa-IR")}</td>
                   <td className="px-4 py-3.5">
-                    <span className={cn("inline-flex rounded-full px-2.5 py-1 text-xs font-medium ring-1", statusStyle.active)}>
-                      {AGENT_STATUS_LABEL.active}
+                    <span className={cn("inline-flex rounded-full px-2.5 py-1 text-xs font-medium ring-1", statusStyle[agent.status] ?? statusStyle.inactive)}>
+                      {AGENT_STATUS_LABEL[agent.status] ?? AGENT_STATUS_LABEL.inactive}
                     </span>
                   </td>
                 </motion.tr>
