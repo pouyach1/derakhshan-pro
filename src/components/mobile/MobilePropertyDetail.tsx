@@ -5,6 +5,9 @@ import { FormEvent, useMemo, useState } from "react";
 import { Bath, BedDouble, MapPin, Ruler, ShieldCheck } from "lucide-react";
 import PropertyGallery from "@/components/mobile/PropertyGallery";
 import IosTap from "@/components/mobile/IosTap";
+import LikeButton from "@/components/mobile/LikeButton";
+import { PropertyDetailSkeleton } from "@/components/mobile/PropertySkeletons";
+import { SharedPropertyTitle } from "@/components/mobile/SharedPropertyHero";
 import PublicLoadError from "@/components/listings/PublicLoadError";
 import { siteConfig } from "@/config/siteConfig";
 import { useHaptic } from "@/hooks/useHaptic";
@@ -53,7 +56,7 @@ export default function MobilePropertyDetail({ item, failed, onRetry }: MobilePr
   }
 
   if (!item) {
-    return <div className="bg-[#070C18] px-4 py-32 text-center text-slate-400 lg:hidden">در حال بارگذاری فایل...</div>;
+    return <PropertyDetailSkeleton />;
   }
 
   async function onSubmit(event: FormEvent) {
@@ -90,15 +93,21 @@ export default function MobilePropertyDetail({ item, failed, onRetry }: MobilePr
 
   return (
     <div className="bg-[#070C18] pb-24 text-white lg:hidden">
-      <div className="px-4 pt-24">
-        <PropertyGallery images={gallery} alt={item.title} />
+      <div className="relative px-4 pt-24">
+        <PropertyGallery images={gallery} alt={item.title} propertyId={item.id} />
+        <LikeButton propertyId={item.id} className="absolute end-7 top-28 z-10" />
       </div>
 
       <section className="space-y-4 px-4 pt-5">
         <p className="text-[11px] tracking-[0.16em] text-cyan-300">
           {item.code} · {listingTypeLabel(item.listingType)} · {propertyStatusLabel(item.status)}
         </p>
-        <h1 className="font-vazirmatn text-2xl font-black leading-9">{item.title}</h1>
+        <SharedPropertyTitle
+          id={item.id}
+          title={item.title}
+          as="h1"
+          className="text-2xl font-black leading-9"
+        />
         <p className="inline-flex items-center gap-2 text-sm text-slate-400">
           <MapPin className="h-4 w-4 text-cyan-300" />
           {item.location}

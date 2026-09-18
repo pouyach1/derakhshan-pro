@@ -4,6 +4,7 @@ import Image from "next/image";
 import { AnimatePresence, motion, useMotionValue, useTransform } from "framer-motion";
 import { useGesture } from "@use-gesture/react";
 import { useCallback, useRef, useState } from "react";
+import { SharedPropertyImage } from "@/components/mobile/SharedPropertyHero";
 import { fallbackImage } from "@/lib/money";
 import { IOS_PAGE_SPRING } from "@/lib/motion/ios";
 import { cn } from "@/lib/utils";
@@ -12,12 +13,15 @@ type PropertyGalleryProps = {
   images: string[];
   alt: string;
   className?: string;
+  /** برای shared-element با کارت لیست — فقط روی اسلاید اول */
+  propertyId?: string;
 };
 
 /**
  * گالری افقی با paging + rubber-band؛ pinch-to-zoom با محدودیت نرم.
+ * اسلاید اول در صورت وجود propertyId با layoutId مشترک کارت morph می‌شود.
  */
-export default function PropertyGallery({ images, alt, className }: PropertyGalleryProps) {
+export default function PropertyGallery({ images, alt, className, propertyId }: PropertyGalleryProps) {
   const slides = images.length ? images : [fallbackImage(null)];
   const [index, setIndex] = useState(0);
   const [zooming, setZooming] = useState(false);
@@ -90,6 +94,8 @@ export default function PropertyGallery({ images, alt, className }: PropertyGall
     },
   );
 
+  const showSharedHero = Boolean(propertyId) && index === 0;
+
   return (
     <div className={cn("relative ios-contain", className)}>
       <div
@@ -97,26 +103,39 @@ export default function PropertyGallery({ images, alt, className }: PropertyGall
         className="ios-media-frame relative w-full touch-none overflow-hidden rounded-[1.5rem] bg-slate-950"
         style={{ touchAction: "none" }}
       >
-        <AnimatePresence mode="popLayout" initial={false}>
-          <motion.div
-            key={slides[index]}
-            className="absolute inset-0"
-            initial={{ opacity: 0.6, scale: 1.02 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0.5, scale: 0.985 }}
-            transition={IOS_PAGE_SPRING}
-            style={{ x, y, scale, willChange: "transform" }}
-          >
-            <Image
-              src={fallbackImage(slides[index])}
-              alt={`${alt} — تصویر ${(index + 1).toLocaleString("fa-IR")}`}
-              fill
-              className="object-cover"
+        {showSharedHero && propertyId ? (
+          <motion.div className="absolute inset-0" style={{ x, y, scale, willChange: "transform" }}>
+            <SharedPropertyImage
+              id={propertyId}
+              src={slides[0]}
+              alt={alt}
+              className="absolute inset-0 h-full w-full !rounded-[1.5rem]"
+              priority
               sizes="(max-width: 428px) 100vw, 428px"
-              priority={index === 0}
             />
           </motion.div>
-        </AnimatePresence>
+        ) : (
+          <AnimatePresence mode="popLayout" initial={false}>
+            <motion.div
+              key={slides[index]}
+              className="absolute inset-0"
+              initial={{ opacity: 0.6, scale: 1.02 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0.5, scale: 0.985 }}
+              transition={IOS_PAGE_SPRING}
+              style={{ x, y, scale, willChange: "transform" }}
+            >
+              <Image
+                src={fallbackImage(slides[index])}
+                alt={`${alt} — تصویر ${(index + 1).toLocaleString("fa-IR")}`}
+                fill
+                className="object-cover"
+                sizes="(max-width: 428px) 100vw, 428px"
+                priority={index === 0}
+              />
+            </motion.div>
+          </AnimatePresence>
+        )}
 
         <motion.div
           aria-hidden

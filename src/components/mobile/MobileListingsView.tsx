@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { motion } from "framer-motion";
@@ -8,25 +7,35 @@ import { Bath, BedDouble, MapPin, Ruler, SlidersHorizontal } from "lucide-react"
 import { useMemo, useRef, useState } from "react";
 import BottomSheet from "@/components/mobile/BottomSheet";
 import IosTap from "@/components/mobile/IosTap";
+import LikeButton from "@/components/mobile/LikeButton";
+import PullToRefresh from "@/components/mobile/PullToRefresh";
+import { PropertyCardSkeletonList } from "@/components/mobile/PropertySkeletons";
+import { SharedPropertyImage, SharedPropertyTitle } from "@/components/mobile/SharedPropertyHero";
+import SpringTabs from "@/components/mobile/SpringTabs";
 import PublicLoadError from "@/components/listings/PublicLoadError";
 import { siteConfig } from "@/config/siteConfig";
 import { useHaptic } from "@/hooks/useHaptic";
-import { fallbackImage, formatToman, listingTypeLabel } from "@/lib/money";
+import { formatToman, listingTypeLabel } from "@/lib/money";
 import { IOS_PAGE_SPRING, IOS_TAP_SPRING } from "@/lib/motion/ios";
-import { cn } from "@/lib/utils";
 import type { PropertyRecord } from "@/server/db/store";
 
 type Filter = "all" | "sale" | "rent";
+
+const FILTER_TABS = [
+  { id: "all" as const, label: "همه" },
+  { id: "sale" as const, label: "فروش" },
+  { id: "rent" as const, label: "اجاره" },
+];
 
 type MobileListingsViewProps = {
   items: PropertyRecord[];
   loading: boolean;
   failed: boolean;
-  onRetry: () => void;
+  onRetry: () => void | Promise<void>;
 };
 
 /**
- * آرشیو موبایل: لیست مجازی + فیلتر bottom-sheet + تپ iOS روی کارت.
+ * آرشیو موبایل: لیست مجازی + تب فیلتر spring + اسکلتون + لایک bounce.
  */
 export default function MobileListingsView({ items, loading, failed, onRetry }: MobileListingsViewProps) {
   const [query, setQuery] = useState("");
@@ -83,23 +92,30 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
             <SlidersHorizontal className="h-4 w-4 text-cyan-300" />
           </IosTap>
         </div>
+
+        <SpringTabs
+          className="mt-3"
+          layoutGroupId="listing-filter-header"
+          items={FILTER_TABS}
+          value={filter}
+          onChange={setFilter}
+        />
       </section>
 
-      <div
+      <PullToRefresh
         ref={parentRef}
-        className="ios-scroll-y h-[calc(100dvh-11.5rem)] overflow-y-auto px-4 pb-10"
+        className="h-[calc(100dvh-15rem)]"
+        scrollerClassName="h-full px-4 pb-10"
+        onRefresh={onRetry}
       >
-        {loading ? (
-          <p className="py-10 text-sm text-slate-400">در حال بارگذاری فایل‌ها...</p>
-        ) : failed ? (
+        {loading && items.length === 0 ? (
+          <PropertyCardSkeletonList count={3} />
+        ) : failed && items.length === 0 ? (
           <PublicLoadError onRetry={onRetry} />
         ) : filtered.length === 0 ? (
           <p className="py-10 text-sm text-slate-400">فایل منطبقی پیدا نشد.</p>
         ) : (
-          <div
-            className="relative w-full"
-            style={{ height: `${virtualizer.getTotalSize()}px` }}
-          >
+          <div className="relative w-full" style={{ height: `${virtualizer.getTotalSize()}px` }}>
             {virtualizer.getVirtualItems().map((row) => {
               const item = filtered[row.index];
               return (
@@ -117,34 +133,19 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
             })}
           </div>
         )}
-      </div>
+      </PullToRefresh>
 
       <BottomSheet open={sheetOpen} onClose={() => setSheetOpen(false)} title="فیلتر فایل‌ها">
         <p className="mb-3 text-xs text-slate-400">نوع معامله</p>
-        <div className="flex flex-wrap gap-2">
-          {(
-            [
-              ["all", "همه"],
-              ["sale", "فروش"],
-              ["rent", "اجاره"],
-            ] as const
-          ).map(([id, label]) => (
-            <IosTap
-              key={id}
-              haptic
-              className={cn(
-                "rounded-full px-4 py-2 text-sm",
-                filter === id ? "bg-cyan-400 text-slate-950" : "bg-white/5 text-slate-300 ring-1 ring-white/10",
-              )}
-              onClick={() => {
-                setFilter(id);
-                setSheetOpen(false);
-              }}
-            >
-              {label}
-            </IosTap>
-          ))}
-        </div>
+        <SpringTabs
+          items={FILTER_TABS}
+          layoutGroupId="listing-filter-sheet"
+          value={filter}
+          onChange={(id) => {
+            setFilter(id);
+            setSheetOpen(false);
+          }}
+        />
       </BottomSheet>
     </div>
   );
@@ -166,23 +167,28 @@ function MobilePropertyCard({ item, index }: { item: PropertyRecord; index: numb
       onPointerLeave={() => setPressed(false)}
     >
       <span className="ios-glow-layer" />
-      <Link href={`/listings/${item.id}`} className="ios-tap-target block" scroll>
+      <Link href={`/listings/${item.id}`} className="ios-tap-target block" scroll={false}>
         <div className="ios-media-frame relative">
-          <Image
-            src={fallbackImage(item.imageUrl)}
+          <SharedPropertyImage
+            id={item.id}
+            src={item.imageUrl}
             alt={item.title}
-            fill
-            className="object-cover"
+            className="absolute inset-0 h-full w-full"
+            priority={index < 2}
             sizes="(max-width: 428px) 100vw, 390px"
-            loading={index < 2 ? "eager" : "lazy"}
           />
           <span className="absolute start-3 top-3 rounded-full bg-black/55 px-3 py-1 text-[11px] text-cyan-200 backdrop-blur">
             {listingTypeLabel(item.listingType)}
           </span>
+          <LikeButton propertyId={item.id} className="absolute end-3 top-3" />
         </div>
         <div className="space-y-2 p-4">
           <p className="text-[11px] text-slate-500">{item.code}</p>
-          <h2 className="line-clamp-2 text-base font-semibold leading-7">{item.title}</h2>
+          <SharedPropertyTitle
+            id={item.id}
+            title={item.title}
+            className="line-clamp-2 text-base font-semibold leading-7"
+          />
           <p className="inline-flex items-center gap-1.5 text-sm text-slate-400">
             <MapPin className="h-3.5 w-3.5 text-cyan-300" />
             <span className="line-clamp-1">{item.location}</span>
