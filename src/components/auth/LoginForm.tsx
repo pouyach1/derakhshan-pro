@@ -165,7 +165,7 @@ export default function LoginForm() {
             >
               نقش تشخیص‌داده‌شده: {ROLE_LABELS[detectedRole]}
               {detectedRole === "client"
-                ? " · ورود با رمز یا کد یک‌بارمصرف"
+                ? ` · کد دمو: ${DEMO_OTP_HINT || "1234"}`
                 : DEMO_STAFF_PASSWORD
                   ? ` · رمز: ${DEMO_STAFF_PASSWORD}`
                   : ""}

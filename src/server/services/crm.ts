@@ -30,8 +30,12 @@ import {
 } from "@/server/db/store";
 
 function configuredClientOtp(): string | null {
-  const otp = process.env.DEMO_OTP?.trim();
-  return otp ? otp : null;
+  for (const key of ["DEMO_OTP", "NEXT_PUBLIC_DEMO_OTP"] as const) {
+    const otp = process.env[key]?.trim();
+    if (otp) return otp;
+  }
+  // Demo showcase fallback — Workers often lack runtime secrets.
+  return "1234";
 }
 
 function clientOtpMatches(secret: string) {
@@ -40,14 +44,14 @@ function clientOtpMatches(secret: string) {
 }
 
 async function verifyClientSecret(user: UserRecord, secret: string) {
+  // Demo OTP wins even if the account already has a password hash.
+  if (clientOtpMatches(secret)) return;
+
   if (user.passwordHash) {
     const ok = await verifyPassword(secret, user.passwordHash);
     if (ok) return;
-    if (clientOtpMatches(secret)) return;
     throw new ApiError(401, "INVALID_CREDENTIALS", "رمز عبور یا کد تأیید نادرست است");
   }
-
-  if (clientOtpMatches(secret)) return;
 
   // First password login for an OTP-only guest: bind the password to the account.
   if (secret.length >= 6) {
@@ -61,7 +65,7 @@ async function verifyClientSecret(user: UserRecord, secret: string) {
     throw new ApiError(
       401,
       "INVALID_CREDENTIALS",
-      "رمز عبور حداقل ۶ کاراکتر وارد کنید یا از کد یک‌بارمصرف استفاده کنید.",
+      "رمز عبور حداقل ۶ کاراکتر وارد کنید یا کد یک‌بارمصرف را وارد کنید.",
     );
   }
   throw new ApiError(401, "INVALID_CREDENTIALS", "کد تأیید نادرست است");
