@@ -13,6 +13,7 @@ import {
 /**
  * Staff seed password — prefer private env, fall back to public demo hint
  * (Workers often only have NEXT_PUBLIC_* available from the client build).
+ * Showcase last resort: 123456 (same idea as DEMO_OTP=1234).
  */
 export function resolveSeedPassword(): string | null {
   for (const key of [
@@ -21,24 +22,19 @@ export function resolveSeedPassword(): string | null {
     "NEXT_PUBLIC_DEMO_STAFF_PASSWORD",
   ] as const) {
     const value = process.env[key]?.trim();
-    if (value && value.length >= 8) return value;
+    if (value && value.length >= 6) return value;
   }
-  return null;
+  return "123456";
 }
 
 function requireSeedPassword() {
-  const password = resolveSeedPassword();
-  if (!password) {
-    throw new Error(
-      "SEED_ADMIN_PASSWORD is required for seeding (min 8 characters). Set SEED_ADMIN_PASSWORD or NEXT_PUBLIC_DEMO_STAFF_PASSWORD in the server environment.",
-    );
-  }
-  return password;
+  return resolveSeedPassword() || "123456";
 }
 
 /**
  * Keep staff hashes aligned with the resolved seed/demo password so login
  * matches the env after reseed / password rotation without a manual wipe.
+ * Only fills missing hashes — never overwrites a password the user already set.
  */
 async function syncStaffPasswordsFromEnv() {
   const password = resolveSeedPassword();
@@ -48,14 +44,12 @@ async function syncStaffPasswordsFromEnv() {
   const staff = store.users.filter((u) => u.role === "admin" || u.role === "agent");
   if (staff.length === 0) return;
 
-  const sample = staff.find((u) => u.passwordHash);
-  if (sample?.passwordHash && (await verifyPassword(password, sample.passwordHash))) {
-    return;
-  }
+  const missing = staff.filter((u) => !u.passwordHash);
+  if (missing.length === 0) return;
 
   const hash = await hashPassword(password);
   const stamp = nowIso();
-  for (const user of staff) {
+  for (const user of missing) {
     user.passwordHash = hash;
     user.updatedAt = stamp;
   }

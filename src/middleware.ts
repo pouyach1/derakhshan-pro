@@ -31,15 +31,15 @@ export async function middleware(request: NextRequest) {
 
   // Strict role homes — never let staff land on the client portal.
   if (isAdminRoute && session && session.role !== "admin") {
-    return NextResponse.redirect(new URL(homeForRole(session.role), request.url));
+    return NextResponse.redirect(new URL(postAuthPath(session), request.url));
   }
 
   if (isAgentRoute && session && session.role !== "agent") {
-    return NextResponse.redirect(new URL(homeForRole(session.role), request.url));
+    return NextResponse.redirect(new URL(postAuthPath(session), request.url));
   }
 
   if (isClientRoute && session && session.role !== "client") {
-    return NextResponse.redirect(new URL(homeForRole(session.role), request.url));
+    return NextResponse.redirect(new URL(postAuthPath(session), request.url));
   }
 
   if (isOnboarding && session && session.role === "client" && !needsClientOnboarding(session)) {

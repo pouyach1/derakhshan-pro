@@ -25,8 +25,8 @@ const item = {
 };
 
 /** فقط اگر صریحاً برای دمو پابلیک شده باشد روی فرم نشان داده می‌شود */
-const DEMO_STAFF_PASSWORD = process.env.NEXT_PUBLIC_DEMO_STAFF_PASSWORD?.trim() || "";
-const DEMO_OTP_HINT = process.env.NEXT_PUBLIC_DEMO_OTP?.trim() || "";
+const DEMO_STAFF_PASSWORD = process.env.NEXT_PUBLIC_DEMO_STAFF_PASSWORD?.trim() || "123456";
+const DEMO_OTP_HINT = process.env.NEXT_PUBLIC_DEMO_OTP?.trim() || "1234";
 
 export default function LoginForm() {
   const router = useRouter();
