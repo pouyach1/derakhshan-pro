@@ -10,6 +10,7 @@ import {
   sessionCookieOptions,
   signSession,
 } from "@/server/auth/session";
+import { postAuthPath } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   const requestId = nanoid(10);
@@ -30,17 +31,12 @@ export async function POST(request: NextRequest) {
     const body = loginSchema.parse(raw);
     const session = await authenticate(body);
     const token = await signSession(session);
-    const clientHome = session.onboardingComplete ? "/client/dashboard" : "/client/onboarding";
+    const redirectTo = postAuthPath(session);
 
     const response = jsonOk(
       {
         session,
-        redirectTo:
-          session.role === "admin"
-            ? "/admin/dashboard"
-            : session.role === "agent"
-              ? "/agent/dashboard"
-              : clientHome,
+        redirectTo,
       },
       { requestId },
     );

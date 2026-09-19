@@ -29,12 +29,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/client/onboarding", request.url));
   }
 
+  // Strict role homes — never let staff land on the client portal.
   if (isAdminRoute && session && session.role !== "admin") {
-    return NextResponse.redirect(new URL(postAuthPath(session), request.url));
+    return NextResponse.redirect(new URL(homeForRole(session.role), request.url));
   }
 
-  if (isAgentRoute && session && session.role !== "agent" && session.role !== "admin") {
-    return NextResponse.redirect(new URL(postAuthPath(session), request.url));
+  if (isAgentRoute && session && session.role !== "agent") {
+    return NextResponse.redirect(new URL(homeForRole(session.role), request.url));
   }
 
   if (isClientRoute && session && session.role !== "client") {
@@ -46,7 +47,12 @@ export async function middleware(request: NextRequest) {
   }
 
   if (isLogin && session) {
-    return NextResponse.redirect(new URL(postAuthPath(session), request.url));
+    const next = request.nextUrl.searchParams.get("next");
+    const home = postAuthPath(session);
+    if (next && next.startsWith(homeForRole(session.role))) {
+      return NextResponse.redirect(new URL(next, request.url));
+    }
+    return NextResponse.redirect(new URL(home, request.url));
   }
 
   return NextResponse.next();

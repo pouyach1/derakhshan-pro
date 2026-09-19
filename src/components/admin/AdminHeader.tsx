@@ -149,6 +149,16 @@ function AdminAccountMenu() {
   useEffect(() => {
     const session = readClientSession();
     if (session?.name) setName(session.name);
+    void fetch("/api/auth/me")
+      .then((r) => r.json())
+      .then((payload) => {
+        if (payload?.ok && payload.data?.session?.name) {
+          setName(payload.data.session.name);
+        }
+      })
+      .catch(() => {
+        /* ignore */
+      });
   }, []);
 
   useEffect(() => {
@@ -171,10 +181,12 @@ function AdminAccountMenu() {
     clearClientSession();
     setOpen(false);
     setToast(true);
-    window.setTimeout(() => {
-      router.replace("/login");
-      router.refresh();
-    }, 900);
+    void fetch("/api/auth/logout", { method: "POST" }).finally(() => {
+      window.setTimeout(() => {
+        router.replace("/login");
+        router.refresh();
+      }, 500);
+    });
   }
 
   return (
