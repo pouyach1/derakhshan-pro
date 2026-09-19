@@ -52,10 +52,10 @@ export async function authenticate(input: z.infer<typeof loginSchema>): Promise<
   try {
     await ensureBootstrapped();
   } catch (error) {
-    const message =
-      error instanceof Error && error.message.includes("SEED_ADMIN_PASSWORD")
-        ? "پیکربندی ورود ناقص است. SEED_ADMIN_PASSWORD را در محیط سرور تنظیم کنید."
-        : "سرویس ورود موقتاً در دسترس نیست";
+    const raw = error instanceof Error ? error.message : "";
+    const message = raw.includes("SEED_ADMIN_PASSWORD")
+      ? "پیکربندی ورود ناقص است. در محیط سرور SEED_ADMIN_PASSWORD یا NEXT_PUBLIC_DEMO_STAFF_PASSWORD (حداقل ۸ کاراکتر) را تنظیم کنید."
+      : "سرویس ورود موقتاً در دسترس نیست";
     throw new ApiError(503, "AUTH_BOOTSTRAP_FAILED", message);
   }
   const store = getStore();
