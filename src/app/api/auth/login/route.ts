@@ -29,7 +29,20 @@ export async function POST(request: NextRequest) {
 
     const body = loginSchema.parse(raw);
     const session = await authenticate(body);
-    const token = await signSession(session);
+    let token: string;
+    try {
+      token = await signSession(session);
+    } catch (error) {
+      const rawMessage = error instanceof Error ? error.message : "";
+      if (rawMessage.includes("AUTH_SECRET")) {
+        throw new ApiError(
+          503,
+          "AUTH_SECRET_MISSING",
+          "پیکربندی ورود ناقص است. AUTH_SECRET را در محیط سرور تنظیم کنید (حداقل ۳۲ کاراکتر).",
+        );
+      }
+      throw error;
+    }
     const clientHome = session.onboardingComplete ? "/client/dashboard" : "/client/onboarding";
 
     const response = jsonOk(
