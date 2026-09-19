@@ -72,8 +72,7 @@ type SeedProperty = Partial<PropertyRecord> & {
 export async function buildSeedStore(): Promise<AgencyStore> {
   const brand = siteConfig.brand.nameFa;
   const seedPassword = requireSeedPassword();
-  const adminHash = await hashPassword(seedPassword);
-  const agentHash = await hashPassword(seedPassword);
+  const staffHash = await hashPassword(seedPassword);
   const stamp = nowIso();
   const daysAgo = (n: number) => new Date(Date.now() - n * 86400000).toISOString();
   const daysAhead = (n: number) => new Date(Date.now() + n * 86400000).toISOString();
@@ -86,7 +85,7 @@ export async function buildSeedStore(): Promise<AgencyStore> {
         email: siteConfig.panels.demoAdminEmail,
         name: siteConfig.brand.managerNameFa,
         role: "admin",
-        passwordHash: adminHash,
+        passwordHash: staffHash,
         agentId: null,
         onboardingComplete: true,
         clientProfile: null,
@@ -101,7 +100,7 @@ export async function buildSeedStore(): Promise<AgencyStore> {
         email: siteConfig.panels.demoAgentEmail,
         name: "آرش شایگان",
         role: "agent",
-        passwordHash: agentHash,
+        passwordHash: staffHash,
         agentId: "a1",
         onboardingComplete: true,
         clientProfile: null,
@@ -116,7 +115,7 @@ export async function buildSeedStore(): Promise<AgencyStore> {
         email: "maryam@derakhshan.pro",
         name: "مریم فرهادی",
         role: "agent",
-        passwordHash: agentHash,
+        passwordHash: staffHash,
         agentId: "a2",
         onboardingComplete: true,
         clientProfile: null,
@@ -131,7 +130,7 @@ export async function buildSeedStore(): Promise<AgencyStore> {
         email: "kaveh@derakhshan.pro",
         name: "کاوه مرادی",
         role: "agent",
-        passwordHash: agentHash,
+        passwordHash: staffHash,
         agentId: "a3",
         onboardingComplete: true,
         clientProfile: null,
@@ -736,15 +735,24 @@ let booting: Promise<void> | null = null;
 
 export async function ensureBootstrapped() {
   const current = getStore();
-  hydrateDerivedCollections();
 
-  const needsData = current.users.length === 0 || current.properties.length === 0;
+  const hasData = current.users.length > 0 && current.properties.length > 0;
   const hasUsableStaff = current.users.some(
     (u) =>
       (u.role === "admin" || u.role === "agent") &&
       Boolean(u.passwordHash) &&
       u.isActive !== false,
   );
+
+  // Fast path for warm isolates — avoid any hashing work.
+  if (hasData && hasUsableStaff) {
+    hydrateDerivedCollections();
+    return;
+  }
+
+  hydrateDerivedCollections();
+
+  const needsData = !hasData;
   const seedPassword = resolveSeedPassword();
 
   // Repair: properties may exist while staff rows were wiped or never seeded.
@@ -756,7 +764,6 @@ export async function ensureBootstrapped() {
     if (!seedPassword) {
       // Empty Workers isolate without seed env: do NOT block client self-login.
       // Staff demo data simply won't exist until a seed password is configured.
-      if (hasUsableStaff) return;
       return;
     }
 
