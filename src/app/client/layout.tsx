@@ -10,8 +10,8 @@ const vazirmatn = Vazirmatn({
 });
 
 export const metadata: Metadata = {
-  title: `${siteConfig.panels.clientTitle} | ${siteConfig.brand.productNameFa}`,
-  description: "تنظیم پروفایل ملکی برای پیشنهادهای دقیق‌تر",
+  title: `پنل مشتری | ${siteConfig.brand.productNameFa}`,
+  description: "داشبورد اختصاصی موکل برای پیشنهاد فایل، مشاوره و پیگیری بازدید",
 };
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
@@ -19,7 +19,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     <div
       dir="rtl"
       lang="fa"
-      className={`${vazirmatn.variable} ${vazirmatn.className} min-h-dvh bg-[#F1EFEA] font-vazirmatn text-slate-900 antialiased`}
+      className={`${vazirmatn.variable} ${vazirmatn.className} min-h-dvh bg-[#F3F7FB] font-vazirmatn text-[#0B3A5C] antialiased`}
     >
       {children}
     </div>
