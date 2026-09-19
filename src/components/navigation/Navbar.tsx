@@ -116,13 +116,16 @@ function MenuToggle({ open, onToggle }: { open: boolean; onToggle: () => void })
 export default function Navbar() {
   const pathname = usePathname();
   const reduceMotion = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [session, setSession] = useState<AuthSession | null>(null);
   const { scrollYProgress, scrollY } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 28, mass: 0.35 });
+  const motionReady = mounted && !reduceMotion;
 
   useEffect(() => {
+    setMounted(true);
     setSession(readClientSession());
   }, []);
 
@@ -146,8 +149,8 @@ export default function Navbar() {
   return (
     <>
       <motion.header
-        initial={reduceMotion ? false : { y: -28, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
+        initial={false}
+        animate={motionReady ? { y: 0, opacity: 1 } : { y: 0, opacity: 1 }}
         transition={IOS_PAGE_SPRING}
         className={cn(
           "fixed inset-x-0 top-0 z-50",
@@ -159,11 +162,11 @@ export default function Navbar() {
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-l from-transparent via-cyan-300/70 to-transparent"
           animate={
-            reduceMotion
-              ? undefined
-              : { opacity: [0.35, 0.85, 0.35], backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"] }
+            motionReady
+              ? { opacity: [0.35, 0.85, 0.35] }
+              : { opacity: 0.55 }
           }
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          transition={motionReady ? { duration: 6, repeat: Infinity, ease: "easeInOut" } : undefined}
         />
         <div
           aria-hidden
@@ -186,14 +189,9 @@ export default function Navbar() {
         />
 
         <div className="rio-container relative flex h-[4.25rem] items-center justify-between gap-4 md:h-[5.25rem]">
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, x: 12 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ ...IOS_PAGE_SPRING, delay: 0.05 }}
-            className="relative"
-          >
+          <div className="relative">
             <Logo />
-            {!reduceMotion ? (
+            {motionReady ? (
               <motion.span
                 aria-hidden
                 className="pointer-events-none absolute -inset-3 -z-10 rounded-full bg-cyan-400/10 blur-xl"
@@ -201,37 +199,27 @@ export default function Navbar() {
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
               />
             ) : null}
-          </motion.div>
+          </div>
 
           <nav className="hidden items-center gap-6 xl:gap-9 lg:flex" aria-label="اصلی">
-            {NAV.map((item, index) => {
+            {NAV.map((item) => {
               const active =
                 item.href === "/"
                   ? pathname === "/"
                   : pathname === item.href || pathname.startsWith(`${item.href}/`);
               return (
-                <motion.div
-                  key={item.href}
-                  initial={reduceMotion ? false : { opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ ...IOS_PAGE_SPRING, delay: 0.08 + index * 0.04 }}
-                >
+                <div key={item.href}>
                   <DesktopNavLink href={item.href} label={item.label} active={active} />
-                </motion.div>
+                </div>
               );
             })}
-            <motion.div
-              initial={reduceMotion ? false : { opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ ...IOS_PAGE_SPRING, delay: 0.35 }}
-              className="ms-1 flex items-center gap-3"
-            >
+            <div className="ms-1 flex items-center gap-3">
               <span className="hidden items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-semibold tracking-[0.16em] text-cyan-200/90 xl:inline-flex">
                 <Sparkles className="h-3 w-3" />
                 VIP
               </span>
               {session ? <UserAccountMenu tone="dark" /> : <LoginButton />}
-            </motion.div>
+            </div>
           </nav>
 
           <div className="flex items-center gap-2 lg:hidden">
