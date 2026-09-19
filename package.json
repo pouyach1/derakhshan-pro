@@ -8,7 +8,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "npx @opennextjs/cloudflare build",
+    "build:node": "NEXT_OUTPUT_STANDALONE=1 next build",
     "start": "next start",
+    "start:node": "node server.cjs",
     "lint": "next lint",
     "preview": "npx @opennextjs/cloudflare build && npx @opennextjs/cloudflare preview",
     "deploy": "npx @opennextjs/cloudflare build && npx @opennextjs/cloudflare deploy",
@@ -16,7 +18,8 @@
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "cf:build": "npx @opennextjs/cloudflare build",
     "pages:build": "npx @opennextjs/cloudflare build",
-    "db:seed": "tsx src/scripts/seed.ts"
+    "db:seed": "tsx src/scripts/seed.ts",
+    "healthcheck": "node scripts/healthcheck.cjs"
   },
   "dependencies": {
     "@tanstack/react-virtual": "^3.14.13",

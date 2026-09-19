@@ -1,14 +1,14 @@
 import bcrypt from "bcryptjs";
 
 /**
- * Cost 8 is Workers-safe. Cost 12 (previous) burns ~250ms+ pure CPU per
- * hash/compare and routinely trips Cloudflare Error 1102 on cold isolates.
+ * Cost 8 keeps hashing cheap on constrained hosts (and Workers).
+ * Cost 12 burns ~250ms+ pure CPU per hash/compare.
  */
 const ROUNDS = 8;
 
 /**
- * Precomputed bcrypt (cost 8) for the showcase demo password so cold starts
- * never pay for hashing when SEED falls back to 123456.
+ * Optional precomputed bcrypt (cost 8) for the local-dev demo password only.
+ * Production must never auto-login with this value — see resolveSeedPassword().
  * Generate: `await bcrypt.hash("123456", 8)`
  */
 const PRECOMPUTED_HASHES: Record<string, string> = {

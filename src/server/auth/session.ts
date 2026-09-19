@@ -1,43 +1,25 @@
 import { SignJWT, jwtVerify } from "jose";
 import type { AuthSession, UserRole } from "@/lib/auth";
+import {
+  DEV_FALLBACK_SECRET,
+  isProductionRuntime,
+  isWeakAuthSecret,
+  readAuthSecretRaw,
+} from "@/server/env";
 
 const COOKIE = "agency_auth";
 const DEFAULT_TTL = 60 * 60 * 24 * 7; // 7 days
-const DEV_FALLBACK_SECRET = "dev-only-change-me-derakhshan-agency-secret-key-32b";
-/** Last-resort showcase key so Workers login never dies when secrets were not set. */
-const SHOWCASE_FALLBACK_SECRET =
-  "derakhshan-showcase-jwt-fallback-v1-replace-with-AUTH_SECRET-in-real-deploys";
-
-function isWeakSecret(secret: string) {
-  const normalized = secret.trim().toLowerCase();
-  return (
-    secret.trim().length < 32 ||
-    normalized.startsWith("change-me") ||
-    normalized === DEV_FALLBACK_SECRET ||
-    normalized === SHOWCASE_FALLBACK_SECRET
-  );
-}
 
 function secretKey() {
-  const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "";
-  if (secret && !isWeakSecret(secret)) {
+  const secret = readAuthSecretRaw();
+  if (secret && !isWeakAuthSecret(secret)) {
     return new TextEncoder().encode(secret);
   }
 
-  // Showcase / Workers demos often bake NEXT_PUBLIC_DEMO_STAFF_PASSWORD at build
-  // time but forget AUTH_SECRET. Derive a stable JWT key so login does not 500.
-  const demoStaff = process.env.NEXT_PUBLIC_DEMO_STAFF_PASSWORD?.trim() || "";
-  if (demoStaff.length >= 8) {
-    const derived = `derakhshan-demo-jwt-v1:${demoStaff}:pad-to-32-chars-minimum`;
-    return new TextEncoder().encode(derived);
-  }
-
-  // Never throw on missing AUTH_SECRET — demo login must keep working.
-  if (process.env.NODE_ENV === "production") {
-    console.warn(
-      "[auth] AUTH_SECRET missing in production — using showcase JWT fallback. Set a strong AUTH_SECRET for real customer deploys.",
+  if (isProductionRuntime()) {
+    throw new Error(
+      "[auth] AUTH_SECRET is missing or weak in production. Set a strong AUTH_SECRET (min 32 characters) before starting the app.",
     );
-    return new TextEncoder().encode(SHOWCASE_FALLBACK_SECRET);
   }
 
   if (!secret) {

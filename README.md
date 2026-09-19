@@ -29,6 +29,14 @@ npm run dev
 
 معماری دیتابیس (فاز A): `src/server/database/` و `docs/database/`
 
+### Deploy
+
+| مسیر | دستور | راهنما |
+|------|--------|--------|
+| Node / cPanel (`vorqen.ir`) | `npm run build:node` → Startup File `server.cjs` | [`CPANEL_DEPLOY.md`](./CPANEL_DEPLOY.md) · [`CPANEL_DEPLOY_CHECKLIST.md`](./CPANEL_DEPLOY_CHECKLIST.md) |
+| Cloudflare / OpenNext | `npm run build` / `npm run deploy` | بدون تغییر؛ `wrangler.jsonc` حفظ شده |
+
+در production مقدارهای `AUTH_SECRET` و `SEED_ADMIN_PASSWORD` الزامی‌اند؛ fallbackهای دمو (`123456` / `1234`) فقط در development فعال‌اند.
 ## مسیرهای محصول
 
 - `/listings` آرشیو عمومی آگهی‌ها

@@ -11,9 +11,9 @@ import {
 } from "@/server/db/store";
 
 /**
- * Staff seed password — prefer private env, fall back to public demo hint
- * (Workers often only have NEXT_PUBLIC_* available from the client build).
- * Showcase last resort: 123456 (same idea as DEMO_OTP=1234).
+ * Staff seed password — prefer private env, then optional public demo hint.
+ * Production: no hardcoded fallback (must set SEED_ADMIN_PASSWORD).
+ * Development only: falls back to 123456 for local demos.
  */
 export function resolveSeedPassword(): string | null {
   for (const key of [
@@ -24,11 +24,18 @@ export function resolveSeedPassword(): string | null {
     const value = process.env[key]?.trim();
     if (value && value.length >= 6) return value;
   }
+  if (process.env.NODE_ENV === "production") return null;
   return "123456";
 }
 
 function requireSeedPassword() {
-  return resolveSeedPassword() || "123456";
+  const password = resolveSeedPassword();
+  if (!password) {
+    throw new Error(
+      "SEED_ADMIN_PASSWORD is required to seed staff accounts (min 8 characters in production).",
+    );
+  }
+  return password;
 }
 
 /**
@@ -112,7 +119,7 @@ export async function buildSeedStore(): Promise<AgencyStore> {
       {
         id: "agent-2",
         phone: "09123334567",
-        email: "maryam@derakhshan.pro",
+        email: "maryam@vorqen.ir",
         name: "مریم فرهادی",
         role: "agent",
         passwordHash: staffHash,
@@ -127,7 +134,7 @@ export async function buildSeedStore(): Promise<AgencyStore> {
       {
         id: "agent-3",
         phone: "09124445678",
-        email: "kaveh@derakhshan.pro",
+        email: "kaveh@vorqen.ir",
         name: "کاوه مرادی",
         role: "agent",
         passwordHash: staffHash,
@@ -559,7 +566,7 @@ export async function buildSeedStore(): Promise<AgencyStore> {
     {
       id: newId(),
       name: "عضویت خبرنامه",
-      email: "vip@derakhshan.pro",
+      email: "vip@vorqen.ir",
       phone: null,
       interest: "",
       category: "general",

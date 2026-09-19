@@ -50,7 +50,7 @@ export type SiteIconKey =
 /* -------------------------------------------------------------------------- */
 
 const PHONE = "۰۲۱-۹۱۰۲۲۰۲۰";
-const EMAIL = "info@derakhshan.pro";
+const EMAIL = "info@vorqen.ir";
 const ADDRESS_LINE1 = "تهران، الهیه، خیابان فرشته، پلاک ۱۲";
 const CITY = "تهران";
 const REGION = "منطقه ۱";
@@ -173,7 +173,7 @@ export const siteConfig = {
   /* ======================================================================== */
   seo: {
     /** آدرس کامل سایت */
-    url: "https://www.derakhshan.pro",
+    url: "https://vorqen.ir",
     /** تصویر پیش‌فرض Open Graph */
     ogImage: "/images/landing/hero/banner.jpg",
     /** عنوان پیش‌فرض صفحات عمومی */
@@ -1238,10 +1238,10 @@ export const siteConfig = {
     /** alt تصویر هیرو لاگین */
     loginHeroAlt: "نمای معماری لوکس املاک",
     /** دامنهٔ عمومی پیش‌فرض فرم تنظیمات */
-    publicDomain: "https://derakhshan.pro",
+    publicDomain: "https://vorqen.ir",
     /** ایمیل‌های دمو ورود (فقط آزمایشی) */
-    demoAdminEmail: "admin@derakhshan.pro",
-    demoAgentEmail: "agent@derakhshan.pro",
+    demoAdminEmail: "admin@vorqen.ir",
+    demoAgentEmail: "agent@vorqen.ir",
     /** محله‌های پیشنهادی فرم آنبوردینگ مشتری */
     neighborhoods: [
       "زعفرانیه",

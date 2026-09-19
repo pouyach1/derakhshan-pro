@@ -34,7 +34,8 @@ function configuredClientOtp(): string | null {
     const otp = process.env[key]?.trim();
     if (otp) return otp;
   }
-  // Demo showcase fallback — Workers often lack runtime secrets.
+  // Development-only demo OTP. Production must set DEMO_OTP explicitly (or use real SMS later).
+  if (process.env.NODE_ENV === "production") return null;
   return "1234";
 }
 
@@ -207,7 +208,10 @@ export async function authenticate(input: z.infer<typeof loginSchema>): Promise<
     } else {
       const ok = await verifyPassword(secret, user.passwordHash);
       if (!ok) {
-        // Showcase heal: accept demo staff fallbacks and update hash.
+        // Development showcase heal only — never accept hardcoded demo passwords in production.
+        if (process.env.NODE_ENV === "production") {
+          throw new ApiError(401, "INVALID_CREDENTIALS", "رمز عبور نادرست است");
+        }
         const demo = resolveSeedPassword() || "123456";
         const allowed = new Set([demo, "123456"].filter((v) => v.length >= 6));
         if (!allowed.has(secret)) {
