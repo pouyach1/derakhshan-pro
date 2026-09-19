@@ -1,4 +1,4 @@
-import { hashPassword, verifyPassword } from "@/server/auth/password";
+import { hashPassword } from "@/server/auth/password";
 import { siteConfig } from "@/config/siteConfig";
 import {
   getStore,
