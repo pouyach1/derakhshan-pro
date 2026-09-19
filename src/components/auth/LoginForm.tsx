@@ -72,9 +72,7 @@ export default function LoginForm() {
         if (!res.ok || !payload.ok) {
           const fallback =
             detectedRole === "client"
-              ? DEMO_OTP_HINT
-                ? `کد یک‌بارمصرف نادرست است. کد آزمایشی: ${DEMO_OTP_HINT}`
-                : "کد یک‌بارمصرف نادرست است."
+              ? "ایمیل/موبایل یا رمز عبور نادرست است."
               : DEMO_STAFF_PASSWORD
                 ? `اطلاعات ورود نادرست است. رمز آزمایشی: ${DEMO_STAFF_PASSWORD}`
                 : "اطلاعات ورود نادرست است.";
@@ -167,9 +165,7 @@ export default function LoginForm() {
             >
               نقش تشخیص‌داده‌شده: {ROLE_LABELS[detectedRole]}
               {detectedRole === "client"
-                ? DEMO_OTP_HINT
-                  ? ` · کد: ${DEMO_OTP_HINT}`
-                  : ""
+                ? " · ورود با رمز یا کد یک‌بارمصرف"
                 : DEMO_STAFF_PASSWORD
                   ? ` · رمز: ${DEMO_STAFF_PASSWORD}`
                   : ""}
