@@ -243,7 +243,7 @@ export default function PageLoader() {
                       : { duration: 1.45, ease: EASE.expoOut, delay: 0.08 }
                   }
                 >
-                  {"دپارتمان\u200Aدرخشان"}
+                  {"دپارتمان\u200Cدرخشان"}
                 </motion.span>
               </motion.div>
 
