@@ -65,6 +65,16 @@ export function normalizePhone(raw: string): string {
   return value;
 }
 
+/** رقم‌های فارسی/عربی رمز یا OTP را به لاتین تبدیل می‌کند */
+export function normalizeSecret(raw: string): string {
+  const persian = "۰۱۲۳۴۵۶۷۸۹";
+  const arabic = "٠١٢٣٤٥٦٧٨٩";
+  return raw
+    .trim()
+    .replace(/[۰-۹]/g, (d) => String(persian.indexOf(d)))
+    .replace(/[٠-٩]/g, (d) => String(arabic.indexOf(d)));
+}
+
 export function isValidIranMobile(phone: string): boolean {
   return /^09\d{9}$/.test(normalizePhone(phone));
 }

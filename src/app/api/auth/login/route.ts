@@ -20,7 +20,14 @@ export async function POST(request: NextRequest) {
       throw new ApiError(429, "RATE_LIMITED", "تعداد تلاش‌ها بیش از حد مجاز است");
     }
 
-    const body = loginSchema.parse(await request.json());
+    let raw: unknown;
+    try {
+      raw = await request.json();
+    } catch {
+      throw new ApiError(400, "INVALID_JSON", "بدنه درخواست نامعتبر است");
+    }
+
+    const body = loginSchema.parse(raw);
     const session = await authenticate(body);
     const token = await signSession(session);
     const clientHome = session.onboardingComplete ? "/client/dashboard" : "/client/onboarding";

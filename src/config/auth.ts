@@ -24,7 +24,7 @@ export const AUTH_USERS: AuthUser[] = [
   },
   {
     id: "agent-1",
-    phone: "09122222222",
+    phone: "09122113456",
     email: siteConfig.panels.demoAgentEmail,
     name: "آرش شایگان",
     role: "agent",
