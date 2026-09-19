@@ -10,23 +10,39 @@ import {
   type PropertyRecord,
 } from "@/server/db/store";
 
+/**
+ * Staff seed password — prefer private env, fall back to public demo hint
+ * (Workers often only have NEXT_PUBLIC_* available from the client build).
+ */
+export function resolveSeedPassword(): string | null {
+  for (const key of [
+    "SEED_ADMIN_PASSWORD",
+    "DEMO_STAFF_PASSWORD",
+    "NEXT_PUBLIC_DEMO_STAFF_PASSWORD",
+  ] as const) {
+    const value = process.env[key]?.trim();
+    if (value && value.length >= 8) return value;
+  }
+  return null;
+}
+
 function requireSeedPassword() {
-  const password = process.env.SEED_ADMIN_PASSWORD?.trim();
-  if (!password || password.length < 8) {
+  const password = resolveSeedPassword();
+  if (!password) {
     throw new Error(
-      "SEED_ADMIN_PASSWORD is required for seeding (min 8 characters). Set it in the environment — no default password is shipped in code.",
+      "SEED_ADMIN_PASSWORD is required for seeding (min 8 characters). Set SEED_ADMIN_PASSWORD or NEXT_PUBLIC_DEMO_STAFF_PASSWORD in the server environment.",
     );
   }
   return password;
 }
 
 /**
- * Keep staff hashes aligned with SEED_ADMIN_PASSWORD so login matches the
- * env after reseed / password rotation without a manual wipe.
+ * Keep staff hashes aligned with the resolved seed/demo password so login
+ * matches the env after reseed / password rotation without a manual wipe.
  */
 async function syncStaffPasswordsFromEnv() {
-  const password = process.env.SEED_ADMIN_PASSWORD?.trim();
-  if (!password || password.length < 8) return;
+  const password = resolveSeedPassword();
+  if (!password) return;
 
   const store = getStore();
   const staff = store.users.filter((u) => u.role === "admin" || u.role === "agent");
@@ -727,7 +743,27 @@ let booting: Promise<void> | null = null;
 export async function ensureBootstrapped() {
   const current = getStore();
   hydrateDerivedCollections();
-  if (current.users.length === 0 || current.properties.length === 0) {
+
+  const needsData = current.users.length === 0 || current.properties.length === 0;
+  const hasUsableStaff = current.users.some(
+    (u) =>
+      (u.role === "admin" || u.role === "agent") &&
+      Boolean(u.passwordHash) &&
+      u.isActive !== false,
+  );
+  const seedPassword = resolveSeedPassword();
+
+  if (needsData) {
+    if (!seedPassword) {
+      // Workers/cold isolates with no seed env: still allow login if staff hashes exist.
+      if (hasUsableStaff) {
+        return;
+      }
+      throw new Error(
+        "SEED_ADMIN_PASSWORD is required for seeding (min 8 characters). Set SEED_ADMIN_PASSWORD or NEXT_PUBLIC_DEMO_STAFF_PASSWORD in the server environment.",
+      );
+    }
+
     if (!booting) {
       booting = (async () => {
         const seeded = await buildSeedStore();
@@ -740,5 +776,6 @@ export async function ensureBootstrapped() {
     }
     await booting;
   }
+
   await syncStaffPasswordsFromEnv();
 }
