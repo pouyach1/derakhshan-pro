@@ -52,11 +52,19 @@ node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 
 ## دستورات نصب / build / start
 
+> **Parspack / PaaS:** برای نصب استاندارد Node **هرگز** به Wrangler نیاز نیست.
+> دستور نصب پیشنهادی:
+> ```bash
+> npm ci --omit=optional
+> # یا: npm run ci:node
+> ```
+> پکیج‌های Cloudflare (`wrangler`, `@opennextjs/cloudflare`) در `optionalDependencies` هستند و با `--omit=optional` اصلاً دانلود نمی‌شوند — پس خطای `500` روی `wrangler-*.tgz` رخ نمی‌دهد.
+
 ### گزینه A — build روی سرور (اگر RAM کافی است)
 
 ```bash
 cd /home/USER/derakhshan-pro
-npm ci
+npm ci --omit=optional
 cp .env.example .env.local   # یا فقط envهای cPanel را پر کنید
 # AUTH_SECRET و SEED_ADMIN_PASSWORD را تنظیم کنید
 SEED_ADMIN_PASSWORD='...' npm run db:seed
@@ -69,7 +77,7 @@ npm run build:node
 روی ماشین build:
 
 ```bash
-npm ci
+npm ci --omit=optional
 export AUTH_SECRET='...'          # فقط برای تست لوکال
 export SEED_ADMIN_PASSWORD='...'
 SEED_ADMIN_PASSWORD="$SEED_ADMIN_PASSWORD" npm run db:seed
