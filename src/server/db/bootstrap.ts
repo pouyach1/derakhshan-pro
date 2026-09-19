@@ -1,4 +1,4 @@
-import { hashPassword } from "@/server/auth/password";
+import { hashPassword, verifyPassword } from "@/server/auth/password";
 import { siteConfig } from "@/config/siteConfig";
 import {
   getStore,
@@ -18,6 +18,32 @@ function requireSeedPassword() {
     );
   }
   return password;
+}
+
+/**
+ * Keep staff hashes aligned with SEED_ADMIN_PASSWORD so login matches the
+ * env after reseed / password rotation without a manual wipe.
+ */
+async function syncStaffPasswordsFromEnv() {
+  const password = process.env.SEED_ADMIN_PASSWORD?.trim();
+  if (!password || password.length < 8) return;
+
+  const store = getStore();
+  const staff = store.users.filter((u) => u.role === "admin" || u.role === "agent");
+  if (staff.length === 0) return;
+
+  const sample = staff.find((u) => u.passwordHash);
+  if (sample?.passwordHash && (await verifyPassword(password, sample.passwordHash))) {
+    return;
+  }
+
+  const hash = await hashPassword(password);
+  const stamp = nowIso();
+  for (const user of staff) {
+    user.passwordHash = hash;
+    user.updatedAt = stamp;
+  }
+  saveStore();
 }
 
 type SeedProperty = Partial<PropertyRecord> & {
@@ -701,16 +727,18 @@ let booting: Promise<void> | null = null;
 export async function ensureBootstrapped() {
   const current = getStore();
   hydrateDerivedCollections();
-  if (current.users.length > 0 && current.properties.length > 0) return;
-  if (!booting) {
-    booting = (async () => {
-      const seeded = await buildSeedStore();
-      const live = getStore();
-      if (live.users.length > 0 && live.properties.length > 0) return;
-      resetStore(seeded);
-    })().finally(() => {
-      booting = null;
-    });
+  if (current.users.length === 0 || current.properties.length === 0) {
+    if (!booting) {
+      booting = (async () => {
+        const seeded = await buildSeedStore();
+        const live = getStore();
+        if (live.users.length > 0 && live.properties.length > 0) return;
+        resetStore(seeded);
+      })().finally(() => {
+        booting = null;
+      });
+    }
+    await booting;
   }
-  await booting;
+  await syncStaffPasswordsFromEnv();
 }

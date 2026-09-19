@@ -11,6 +11,7 @@ import {
   ROLE_LABELS,
   isValidIdentifier,
   lookupRole,
+  normalizeSecret,
   postAuthPath,
 } from "@/lib/auth";
 import { cn } from "@/lib/utils";
@@ -20,6 +21,10 @@ const item = {
   hidden: { opacity: 0, y: 14 },
   show: { opacity: 1, y: 0 },
 };
+
+/** فقط اگر صریحاً برای دمو پابلیک شده باشد روی فرم نشان داده می‌شود */
+const DEMO_STAFF_PASSWORD = process.env.NEXT_PUBLIC_DEMO_STAFF_PASSWORD?.trim() || "";
+const DEMO_OTP_HINT = process.env.NEXT_PUBLIC_DEMO_OTP?.trim() || "";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -58,16 +63,22 @@ export default function LoginForm() {
         const res = await fetch("/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ identifier, secret: password }),
+          body: JSON.stringify({
+            identifier,
+            secret: normalizeSecret(password),
+          }),
         });
         const payload = await res.json();
         if (!res.ok || !payload.ok) {
-          fail(
-            payload?.error?.message ||
-              (detectedRole === "client"
-                ? "کد یک‌بارمصرف نادرست است. کد آزمایشی: ۱۲۳۴"
-                : "اطلاعات ورود نادرست است. رمز آزمایشی: ۱۲۳۴۵۶"),
-          );
+          const fallback =
+            detectedRole === "client"
+              ? DEMO_OTP_HINT
+                ? `کد یک‌بارمصرف نادرست است. کد آزمایشی: ${DEMO_OTP_HINT}`
+                : "کد یک‌بارمصرف نادرست است."
+              : DEMO_STAFF_PASSWORD
+                ? `اطلاعات ورود نادرست است. رمز آزمایشی: ${DEMO_STAFF_PASSWORD}`
+                : "اطلاعات ورود نادرست است.";
+          fail(payload?.error?.message || fallback);
           return;
         }
         void remember;
@@ -155,7 +166,13 @@ export default function LoginForm() {
               className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-100"
             >
               نقش تشخیص‌داده‌شده: {ROLE_LABELS[detectedRole]}
-              {detectedRole === "client" ? " · کد: ۱۲۳۴" : " · رمز: ۱۲۳۴۵۶"}
+              {detectedRole === "client"
+                ? DEMO_OTP_HINT
+                  ? ` · کد: ${DEMO_OTP_HINT}`
+                  : ""
+                : DEMO_STAFF_PASSWORD
+                  ? ` · رمز: ${DEMO_STAFF_PASSWORD}`
+                  : ""}
             </motion.div>
           ) : null}
         </AnimatePresence>
@@ -215,10 +232,11 @@ export default function LoginForm() {
         </Link>
       </motion.p>
 
-      {process.env.NODE_ENV !== "production" ? (
+      {process.env.NODE_ENV !== "production" || DEMO_STAFF_PASSWORD || DEMO_OTP_HINT ? (
         <motion.p variants={item} className="mt-4 text-center text-[11px] leading-relaxed text-slate-400">
-          نسخه آزمایشی: {siteConfig.panels.demoAdminEmail} / {siteConfig.panels.demoAgentEmail} (۱۲۳۴۵۶) · سایر کاربران کد
-          یک‌بارمصرف ۱۲۳۴
+          نسخه آزمایشی: {siteConfig.panels.demoAdminEmail} / {siteConfig.panels.demoAgentEmail}
+          {DEMO_STAFF_PASSWORD ? ` · رمز پنل: ${DEMO_STAFF_PASSWORD}` : ""}
+          {DEMO_OTP_HINT ? ` · کد مشتری: ${DEMO_OTP_HINT}` : ""}
         </motion.p>
       ) : null}
     </motion.div>

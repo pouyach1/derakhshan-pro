@@ -1,13 +1,7 @@
 import type { z } from "zod";
 import { ApiError } from "@/server/http/response";
 import { hashPassword, verifyPassword } from "@/server/auth/password";
-import {
-  normalizeIdentifier,
-  normalizePhone,
-  type AuthSession,
-  type ClientProfile,
-  type UserRole,
-} from "@/lib/auth";
+import { normalizeIdentifier, normalizePhone, normalizeSecret, type AuthSession, type ClientProfile, type UserRole } from "@/lib/auth";
 import type {
   clientCreateSchema,
   clientUpdateSchema,
@@ -55,10 +49,19 @@ function assertClientOtp(secret: string) {
 }
 
 export async function authenticate(input: z.infer<typeof loginSchema>): Promise<AuthSession> {
-  await ensureBootstrapped();
+  try {
+    await ensureBootstrapped();
+  } catch (error) {
+    const message =
+      error instanceof Error && error.message.includes("SEED_ADMIN_PASSWORD")
+        ? "پیکربندی ورود ناقص است. SEED_ADMIN_PASSWORD را در محیط سرور تنظیم کنید."
+        : "سرویس ورود موقتاً در دسترس نیست";
+    throw new ApiError(503, "AUTH_BOOTSTRAP_FAILED", message);
+  }
   const store = getStore();
 
   const identifier = normalizeIdentifier(input.identifier);
+  const secret = normalizeSecret(input.secret);
   const isEmail = identifier.includes("@");
 
   const user = store.users.find((u) =>
@@ -66,7 +69,7 @@ export async function authenticate(input: z.infer<typeof loginSchema>): Promise<
   );
 
   if (!user || !user.isActive) {
-    assertClientOtp(input.secret);
+    assertClientOtp(secret);
     const phone = isEmail ? "09000000000" : identifier;
     const id = `client-${identifier}`;
     let guest = store.users.find((u) => u.id === id);
@@ -100,12 +103,12 @@ export async function authenticate(input: z.infer<typeof loginSchema>): Promise<
   }
 
   if (user.role === "client") {
-    assertClientOtp(input.secret);
+    assertClientOtp(secret);
   } else {
     if (!user.passwordHash) {
       throw new ApiError(401, "INVALID_CREDENTIALS", "رمز عبور برای این حساب تنظیم نشده است");
     }
-    const ok = await verifyPassword(input.secret, user.passwordHash);
+    const ok = await verifyPassword(secret, user.passwordHash);
     if (!ok) throw new ApiError(401, "INVALID_CREDENTIALS", "رمز عبور نادرست است");
   }
 
