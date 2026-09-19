@@ -65,35 +65,50 @@ export default function ClientDashboardView({ name, items }: ClientDashboardView
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_100%_0%,rgba(0,163,255,0.14),transparent_55%),radial-gradient(ellipse_60%_40%_at_0%_20%,rgba(11,58,92,0.08),transparent_50%)]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-white/80 to-transparent" />
 
-      {/* Header */}
+      {/* Header — لوکس و مینیمال */}
       <motion.header
-        className="relative z-20 border-b border-[#0B3A5C]/8 bg-white/70 backdrop-blur-xl"
-        initial={{ opacity: 0, y: -12 }}
+        className="relative z-20 border-b border-[#0B3A5C]/8 bg-white/75 shadow-[0_12px_40px_-28px_rgba(11,58,92,0.35)] backdrop-blur-2xl"
+        initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={IOS_PAGE_SPRING}
       >
-        <div className="rio-container flex items-center justify-between gap-3 py-4">
-          <Link href="/" className="group min-w-0">
-            <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.22em] text-sky-600">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-l from-transparent via-sky-400/60 to-transparent"
+        />
+        <div className="rio-container flex items-center justify-between gap-3 py-4 md:py-5">
+          <Link href="/" className="group relative min-w-0">
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -inset-2 -z-10 rounded-full bg-sky-400/10 opacity-0 blur-xl transition group-hover:opacity-100"
+            />
+            <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.28em] text-sky-600 md:text-[11px]">
               {siteConfig.brand.brandEn}
             </p>
-            <p className="truncate font-vazirmatn text-sm font-bold text-[#0B3A5C] transition group-hover:text-sky-700 md:text-base">
+            <p className="truncate font-vazirmatn text-base font-bold text-[#0B3A5C] transition group-hover:text-sky-700 md:text-lg">
               {siteConfig.brand.shortNameFa}
             </p>
           </Link>
           <div className="flex items-center gap-2">
             <Link
               href="/listings"
-              className="hidden rounded-xl px-3 py-2 text-sm font-medium text-[#0B3A5C]/75 transition hover:bg-[#0B3A5C]/5 hover:text-[#0B3A5C] sm:inline-flex"
+              className="hidden items-center gap-1.5 rounded-full border border-[#0B3A5C]/10 bg-white/80 px-4 py-2 text-sm font-semibold text-[#0B3A5C]/80 shadow-sm transition hover:border-sky-300/50 hover:text-sky-800 sm:inline-flex"
             >
+              <Building2 className="h-3.5 w-3.5" />
               آرشیو
+            </Link>
+            <Link
+              href="/contact"
+              className="hidden rounded-full bg-gradient-to-l from-sky-500 to-cyan-400 px-4 py-2 text-sm font-bold text-white shadow-[0_10px_28px_-14px_rgba(0,163,255,0.9)] transition hover:brightness-105 md:inline-flex"
+            >
+              مشاوره
             </Link>
             <motion.button
               type="button"
               onClick={logout}
               whileTap={{ scale: 0.97 }}
               transition={IOS_TAP_SPRING}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[#0B3A5C]/12 bg-white px-3 py-2 text-sm font-semibold text-[#0B3A5C] shadow-sm transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-700"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#0B3A5C]/12 bg-white px-3.5 py-2 text-sm font-semibold text-[#0B3A5C] shadow-sm transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-700"
             >
               <LogOut className="h-4 w-4" />
               <span className="hidden sm:inline">خروج</span>
@@ -215,10 +230,9 @@ export default function ClientDashboardView({ name, items }: ClientDashboardView
             </Link>
           </div>
 
-          <div className="overflow-hidden rounded-[1.75rem] bg-[#07111F] py-8 text-white shadow-[0_40px_100px_-60px_rgba(7,17,31,0.85)] md:py-10">
-            <div className="pointer-events-none absolute inset-0" />
+          <div className="overflow-hidden rounded-[1.75rem] border border-[#0B3A5C]/8 bg-white py-8 shadow-[0_28px_80px_-48px_rgba(11,58,92,0.3)] md:py-10">
             {featured.length === 0 ? (
-              <p className="rio-container text-sm text-slate-400">هنوز فایلی برای نمایش نیست.</p>
+              <p className="rio-container text-sm text-[#0B3A5C]/50">هنوز فایلی برای نمایش نیست.</p>
             ) : (
               <FreeScrollCarousel slideWidthRatio={{ mobile: 0.78, desktop: 0.34 }} gapPx={16}>
                 {featured.map((item, index) => (
@@ -243,9 +257,9 @@ export default function ClientDashboardView({ name, items }: ClientDashboardView
             </h2>
           </div>
 
-          <div className="overflow-hidden rounded-[1.75rem] bg-[#0B3A5C] py-8 text-white md:py-10">
+          <div className="overflow-hidden rounded-[1.75rem] border border-[#0B3A5C]/8 bg-[#EAF3FA] py-8 md:py-10">
             {recent.length === 0 ? (
-              <p className="rio-container text-sm text-white/60">فایلی برای نمایش نیست.</p>
+              <p className="rio-container text-sm text-[#0B3A5C]/50">فایلی برای نمایش نیست.</p>
             ) : (
               <PagingCarousel slideWidthRatio={{ mobile: 0.88, desktop: 0.5 }} gapPx={16}>
                 {recent.map((item, index) => (
