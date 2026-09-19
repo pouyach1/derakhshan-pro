@@ -30,6 +30,12 @@ export default function PageLoader() {
   const [stage, setStage] = useState<Stage>("idle");
   const runId = useRef(0);
 
+  const skipIntro = () => {
+    beginHeroReveal();
+    setStage("gone");
+    markDone();
+  };
+
   useEffect(() => {
     if (phase === "booting" || phase === "done") return;
 
@@ -46,7 +52,7 @@ export default function PageLoader() {
     if (phase === "fast") {
       setStage("wipe");
       beginHeroReveal();
-      after(1200, () => {
+      after(700, () => {
         setStage("gone");
         markDone();
       });
@@ -80,14 +86,9 @@ export default function PageLoader() {
     };
   }, [phase, markDone, beginHeroReveal]);
 
+  // Booting flash only on home — other routes must stay interactive immediately.
   if (phase === "booting") {
-    return (
-      <div
-        className="pointer-events-auto fixed inset-0 z-[100] bg-[#061A2E]"
-        aria-hidden
-        style={{ willChange: "opacity" }}
-      />
-    );
+    return null;
   }
 
   if (phase === "done" || stage === "gone") return null;
@@ -175,6 +176,14 @@ export default function PageLoader() {
             />
           </>
         ) : null}
+
+        <button
+          type="button"
+          onClick={skipIntro}
+          className="absolute bottom-8 start-1/2 z-20 -translate-x-1/2 rounded-full border border-white/20 bg-white/5 px-5 py-2.5 font-vazirmatn text-sm text-beige/90 backdrop-blur-md transition hover:border-cyan-300/50 hover:bg-white/10 hover:text-white"
+        >
+          ورود به سایت
+        </button>
 
         <div className="relative z-10 flex w-full max-w-3xl flex-col items-center px-6">
           {showFullChrome ? (
