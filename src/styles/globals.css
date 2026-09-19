@@ -214,3 +214,9 @@
   }
 }
 
+/* اینترو نباید ناوبری را قفل کند — هدر بالاتر از preloader می‌ماند */
+html.show-intro header {
+  z-index: 110;
+  pointer-events: auto;
+}
+

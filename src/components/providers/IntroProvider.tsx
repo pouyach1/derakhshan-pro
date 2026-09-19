@@ -9,6 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { usePathname } from "next/navigation";
 import { PRELOADER_STORAGE_KEY, type IntroPhase } from "@/lib/motion";
 
 type IntroContextValue = {
@@ -21,6 +22,9 @@ type IntroContextValue = {
 
 const IntroContext = createContext<IntroContextValue | null>(null);
 
+/** Hard cap so a stuck timeline can never block the site forever. */
+const INTRO_SAFETY_MS = 22_000;
+
 function readShown() {
   try {
     return sessionStorage.getItem(PRELOADER_STORAGE_KEY) === "1";
@@ -30,14 +34,36 @@ function readShown() {
 }
 
 export function IntroProvider({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
   const [phase, setPhase] = useState<IntroPhase>("booting");
   const [heroReady, setHeroReady] = useState(false);
+
+  const markDone = useCallback(() => {
+    try {
+      sessionStorage.setItem(PRELOADER_STORAGE_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+    setHeroReady(true);
+    setPhase("done");
+  }, []);
+
+  const beginHeroReveal = useCallback(() => {
+    setHeroReady(true);
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const forceFull = params.get("intro") === "full";
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const shown = forceFull ? false : readShown();
+    const onHome = pathname === "/";
+
+    // Full cinematic intro only on the home page — never trap other routes.
+    if (!onHome) {
+      setPhase("done");
+      setHeroReady(true);
+      return;
+    }
 
     if (forceFull) {
       try {
@@ -56,28 +82,31 @@ export function IntroProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    // بازدیدهای بعدی در همان session → خروج سریع؛ اولین بازدید → اینتروی کامل (موبایل و دسکتاپ)
+    const shown = readShown();
+    // بازدیدهای بعدی در همان session → خروج سریع؛ اولین بازدید خانه → اینتروی کامل
     if (shown) {
       setPhase("fast");
       return;
     }
 
     setPhase("full");
-  }, []);
+  }, [pathname]);
 
-  const beginHeroReveal = useCallback(() => {
-    setHeroReady(true);
-  }, []);
-
-  const markDone = useCallback(() => {
-    try {
-      sessionStorage.setItem(PRELOADER_STORAGE_KEY, "1");
-    } catch {
-      /* ignore */
+  // If the user leaves home mid-intro (skip / deep link), release the lock.
+  useEffect(() => {
+    if (pathname !== "/" && phase !== "done" && phase !== "booting") {
+      markDone();
     }
-    setHeroReady(true);
-    setPhase("done");
-  }, []);
+  }, [pathname, phase, markDone]);
+
+  // Absolute safety net — never leave overflow:hidden + overlay stuck.
+  useEffect(() => {
+    if (phase === "done" || phase === "booting") return;
+    const timer = window.setTimeout(() => {
+      markDone();
+    }, INTRO_SAFETY_MS);
+    return () => window.clearTimeout(timer);
+  }, [phase, markDone]);
 
   useEffect(() => {
     if (phase === "done") return;
