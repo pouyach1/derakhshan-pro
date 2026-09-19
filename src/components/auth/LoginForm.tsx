@@ -24,9 +24,11 @@ const item = {
   show: { opacity: 1, y: 0 },
 };
 
-/** فقط اگر صریحاً برای دمو پابلیک شده باشد روی فرم نشان داده می‌شود */
-const DEMO_STAFF_PASSWORD = process.env.NEXT_PUBLIC_DEMO_STAFF_PASSWORD?.trim() || "123456";
-const DEMO_OTP_HINT = process.env.NEXT_PUBLIC_DEMO_OTP?.trim() || "1234";
+/** فقط اگر صریحاً در env پابلیک شده باشد روی فرم نشان داده می‌شود — هیچ fallback دمو در production */
+const DEMO_STAFF_PASSWORD = process.env.NEXT_PUBLIC_DEMO_STAFF_PASSWORD?.trim() || "";
+const DEMO_OTP_HINT = process.env.NEXT_PUBLIC_DEMO_OTP?.trim() || "";
+const SHOW_DEMO_HINTS =
+  process.env.NODE_ENV !== "production" || Boolean(DEMO_STAFF_PASSWORD || DEMO_OTP_HINT);
 
 export default function LoginForm() {
   const router = useRouter();
@@ -172,7 +174,7 @@ export default function LoginForm() {
             >
               نقش تشخیص‌داده‌شده: {ROLE_LABELS[detectedRole]}
               {detectedRole === "client"
-                ? ` · مسیر: پنل مشتری · کد دمو: ${DEMO_OTP_HINT || "1234"}`
+                ? ` · مسیر: پنل مشتری${DEMO_OTP_HINT ? ` · کد دمو: ${DEMO_OTP_HINT}` : ""}`
                 : detectedRole === "admin"
                   ? ` · مسیر: پنل مدیر${DEMO_STAFF_PASSWORD ? ` · رمز: ${DEMO_STAFF_PASSWORD}` : ""}`
                   : ` · مسیر: پنل مشاور${DEMO_STAFF_PASSWORD ? ` · رمز: ${DEMO_STAFF_PASSWORD}` : ""}`}
@@ -235,7 +237,7 @@ export default function LoginForm() {
         </Link>
       </motion.p>
 
-      {process.env.NODE_ENV !== "production" || DEMO_STAFF_PASSWORD || DEMO_OTP_HINT ? (
+      {SHOW_DEMO_HINTS ? (
         <motion.p variants={item} className="mt-4 text-center text-[11px] leading-relaxed text-slate-400">
           نسخه آزمایشی: {siteConfig.panels.demoAdminEmail} / {siteConfig.panels.demoAgentEmail}
           {DEMO_STAFF_PASSWORD ? ` · رمز پنل: ${DEMO_STAFF_PASSWORD}` : ""}
