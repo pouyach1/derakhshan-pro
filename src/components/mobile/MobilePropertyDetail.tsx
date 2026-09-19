@@ -28,7 +28,6 @@ type MobilePropertyDetailProps = {
  */
 export default function MobilePropertyDetail({ item, failed, onRetry }: MobilePropertyDetailProps) {
   const vibrate = useHaptic();
-  const reduceMotion = useReducedMotion();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("مایل به بازدید و مشاوره برای این فایل هستم.");
@@ -107,7 +106,7 @@ export default function MobilePropertyDetail({ item, failed, onRetry }: MobilePr
 
       <motion.section
         className="space-y-4 px-4 pt-5"
-        initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
         transition={IOS_PAGE_SPRING}
       >
@@ -167,7 +166,7 @@ export default function MobilePropertyDetail({ item, failed, onRetry }: MobilePr
       <motion.form
         onSubmit={onSubmit}
         className="mx-4 mt-8 rounded-[1.65rem] border border-cyan-400/25 bg-gradient-to-b from-white/[0.07] to-white/[0.02] p-5 shadow-[0_0_40px_-18px_rgba(0,163,255,0.45)]"
-        initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
         transition={{ ...IOS_PAGE_SPRING, delay: 0.1 }}
       >

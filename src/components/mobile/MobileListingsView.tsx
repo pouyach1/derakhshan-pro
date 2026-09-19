@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { SlidersHorizontal, Sparkles } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import BottomSheet from "@/components/mobile/BottomSheet";
@@ -41,7 +41,6 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
   const [sheetOpen, setSheetOpen] = useState(false);
   const parentRef = useRef<HTMLDivElement>(null);
   const vibrate = useHaptic();
-  const reduceMotion = useReducedMotion();
 
   const filtered = useMemo(() => {
     return items.filter((item) => {
@@ -72,7 +71,7 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(0,163,255,0.18),transparent_55%)]"
         />
         <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={IOS_PAGE_SPRING}
           className="relative"

@@ -11,6 +11,13 @@ import MobileListingsView from "@/components/mobile/MobileListingsView";
 import { IOS_PAGE_SPRING } from "@/lib/motion/ios";
 import type { PropertyRecord } from "@/server/db/store";
 
+function useMotionReady() {
+  const reduceMotion = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted && !reduceMotion;
+}
+
 type Filter = "all" | "sale" | "rent";
 
 function logListingsError(error: unknown) {
@@ -31,7 +38,7 @@ export default function ListingsView() {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
   const [failed, setFailed] = useState(false);
-  const reduceMotion = useReducedMotion();
+  const motionReady = useMotionReady();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -88,7 +95,7 @@ export default function ListingsView() {
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_-10%,rgba(0,163,255,0.22),transparent_60%)]" />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_40%,rgba(11,58,92,0.35),transparent_45%)]" />
             <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#050B14] to-transparent" />
-            {!reduceMotion ? (
+            {motionReady ? (
               <motion.div
                 aria-hidden
                 className="absolute -start-20 top-24 h-72 w-72 rounded-full bg-sky-500/10 blur-3xl"
@@ -100,7 +107,7 @@ export default function ListingsView() {
 
           <div className="relative mx-auto max-w-7xl">
             <motion.div
-              initial={reduceMotion ? false : { opacity: 0, y: 28 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={IOS_PAGE_SPRING}
             >
@@ -121,7 +128,7 @@ export default function ListingsView() {
 
             <motion.div
               className="mt-10 flex flex-col gap-4 xl:flex-row xl:items-center"
-              initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ ...IOS_PAGE_SPRING, delay: 0.12 }}
             >
@@ -162,7 +169,7 @@ export default function ListingsView() {
 
             <motion.p
               className="mt-6 text-xs tracking-[0.16em] text-slate-500"
-              initial={reduceMotion ? false : { opacity: 0 }}
+              initial={false}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.25 }}
             >
@@ -194,11 +201,11 @@ export default function ListingsView() {
               filtered.map((item, index) => (
                 <motion.div
                   key={item.id}
-                  initial={reduceMotion ? false : { opacity: 0, y: 32, scale: 0.97 }}
+                  initial={false}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{
                     ...IOS_PAGE_SPRING,
-                    delay: Math.min(index, 12) * 0.05,
+                    delay: motionReady ? Math.min(index, 12) * 0.05 : 0,
                   }}
                 >
                   <CompactPropertyCard

@@ -28,6 +28,9 @@ export default function PropertyDetailView({ id }: { id: string }) {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [formError, setFormError] = useState("");
   const reduceMotion = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const motionReady = mounted && !reduceMotion;
 
   const gallery = useMemo(() => {
     if (!item) return [];
@@ -129,7 +132,7 @@ export default function PropertyDetailView({ id }: { id: string }) {
         <div className="relative h-[72vh] min-h-[420px] max-h-[820px] overflow-hidden">
           <motion.div
             className="absolute inset-0"
-            initial={reduceMotion ? false : { scale: 1.12 }}
+            initial={false}
             animate={{ scale: 1 }}
             transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
           >
@@ -147,7 +150,7 @@ export default function PropertyDetailView({ id }: { id: string }) {
 
           <div className="absolute inset-x-0 bottom-0 z-10 mx-auto max-w-7xl px-6 pb-16 xl:px-10">
             <motion.div
-              initial={reduceMotion ? false : { opacity: 0, y: 36 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={IOS_PAGE_SPRING}
             >
@@ -193,7 +196,7 @@ export default function PropertyDetailView({ id }: { id: string }) {
         <section className="relative z-10 mx-auto grid max-w-7xl gap-8 px-6 pb-28 lg:grid-cols-[1.25fr_0.75fr] lg:-mt-10 xl:px-10">
           <motion.div
             className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 shadow-[0_40px_100px_-60px_rgba(0,0,0,0.85)] backdrop-blur-xl sm:p-10"
-            initial={reduceMotion ? false : { opacity: 0, y: 28 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...IOS_PAGE_SPRING, delay: 0.1 }}
           >
@@ -228,7 +231,7 @@ export default function PropertyDetailView({ id }: { id: string }) {
                   {item.features.map((feature, i) => (
                     <motion.span
                       key={feature}
-                      initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+                      initial={false}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ ...IOS_PAGE_SPRING, delay: 0.28 + i * 0.03 }}
                       className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs text-slate-200"
@@ -248,11 +251,11 @@ export default function PropertyDetailView({ id }: { id: string }) {
                     <motion.div
                       key={`${src}-${i}`}
                       className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-white/10"
-                      initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }}
+                      initial={false}
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true }}
                       transition={{ ...IOS_PAGE_SPRING, delay: i * 0.04 }}
-                      whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+                      whileHover={motionReady ? { scale: 1.02 } : undefined}
                     >
                       <Image src={src} alt="" fill className="object-cover" sizes="220px" />
                     </motion.div>
@@ -265,7 +268,7 @@ export default function PropertyDetailView({ id }: { id: string }) {
           <motion.form
             onSubmit={onSubmit}
             className="h-fit rounded-[2rem] border border-cyan-400/25 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-7 shadow-[0_0_60px_-20px_rgba(0,163,255,0.45)] backdrop-blur-xl"
-            initial={reduceMotion ? false : { opacity: 0, y: 28 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...IOS_PAGE_SPRING, delay: 0.18 }}
           >
@@ -337,10 +340,9 @@ function LuxurySpec({
   label: string;
   delay: number;
 }) {
-  const reduceMotion = useReducedMotion();
   return (
     <motion.div
-      initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ ...IOS_PAGE_SPRING, delay }}
       className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.02] px-3 py-5 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
