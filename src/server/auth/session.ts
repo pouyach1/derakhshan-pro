@@ -20,6 +20,14 @@ function secretKey() {
     return new TextEncoder().encode(secret);
   }
 
+  // Showcase / Workers demos often bake NEXT_PUBLIC_DEMO_STAFF_PASSWORD at build
+  // time but forget AUTH_SECRET. Derive a stable JWT key so login does not 500.
+  const demoStaff = process.env.NEXT_PUBLIC_DEMO_STAFF_PASSWORD?.trim() || "";
+  if (demoStaff.length >= 8) {
+    const derived = `derakhshan-demo-jwt-v1:${demoStaff}:pad-to-32-chars-minimum`;
+    return new TextEncoder().encode(derived);
+  }
+
   if (process.env.NODE_ENV === "production") {
     throw new Error(
       "AUTH_SECRET must be set to a strong random value (min 32 chars) in production",
