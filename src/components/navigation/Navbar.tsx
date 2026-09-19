@@ -10,7 +10,7 @@ import {
   useScroll,
   useSpring,
 } from "framer-motion";
-import { LogIn } from "lucide-react";
+import { LogIn, Sparkles } from "lucide-react";
 import UserAccountMenu from "@/components/auth/UserAccountMenu";
 import Logo from "@/components/ui/Logo";
 import MobileNavDrawer from "@/components/mobile/MobileNavDrawer";
@@ -33,8 +33,9 @@ function LoginButton({
         onClick={onClick}
         className={cn(
           "group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full",
-          "bg-cyan-400 px-5 py-2.5",
+          "bg-gradient-to-l from-cyan-300 via-sky-400 to-cyan-400 px-5 py-2.5",
           "font-vazirmatn text-sm font-semibold text-slate-950",
+          "shadow-[0_12px_40px_-16px_rgba(0,163,255,0.85)]",
           "ios-tap-target",
           className,
         )}
@@ -65,7 +66,7 @@ function DesktopNavLink({ href, label, active }: { href: string; label: string; 
       {active ? (
         <motion.span
           layoutId="nav-active-underline"
-          className="absolute inset-x-0 -bottom-1 h-px bg-cyan-400"
+          className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-l from-transparent via-cyan-300 to-transparent"
           transition={IOS_PAGE_SPRING}
           style={{ willChange: "transform" }}
         />
@@ -83,7 +84,7 @@ function MenuToggle({ open, onToggle }: { open: boolean; onToggle: () => void })
   return (
     <motion.button
       type="button"
-      className="ios-tap-target relative z-50 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-md"
+      className="ios-tap-target relative z-50 flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.06] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md"
       aria-expanded={open}
       aria-controls="mobile-nav"
       aria-label={open ? "بستن منو" : "باز کردن منو"}
@@ -145,7 +146,7 @@ export default function Navbar() {
   return (
     <>
       <motion.header
-        initial={reduceMotion ? false : { y: -24, opacity: 0 }}
+        initial={reduceMotion ? false : { y: -28, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={IOS_PAGE_SPRING}
         className={cn(
@@ -153,24 +154,56 @@ export default function Navbar() {
           scrolled || open ? "border-b border-white/10" : "border-b border-transparent",
         )}
       >
+        {/* Ambient luxury glow along the top edge */}
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-slate-950/80 backdrop-blur-xl"
-          initial={false}
-          animate={{ opacity: scrolled || open ? 1 : 0 }}
-          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-l from-transparent via-cyan-300/70 to-transparent"
+          animate={
+            reduceMotion
+              ? undefined
+              : { opacity: [0.35, 0.85, 0.35], backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"] }
+          }
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-[12%] top-0 h-16 bg-[radial-gradient(ellipse_at_top,rgba(0,163,255,0.22),transparent_70%)] opacity-80"
         />
 
-        <div className="rio-container relative flex h-16 items-center justify-between gap-4 md:h-20">
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-slate-950/82 backdrop-blur-2xl"
+          initial={false}
+          animate={{ opacity: scrolled || open ? 1 : 0 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        />
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-slate-950/55 via-slate-950/20 to-transparent"
+          initial={false}
+          animate={{ opacity: scrolled || open ? 0 : 1 }}
+          transition={{ duration: 0.4 }}
+        />
+
+        <div className="rio-container relative flex h-[4.25rem] items-center justify-between gap-4 md:h-[5.25rem]">
           <motion.div
             initial={reduceMotion ? false : { opacity: 0, x: 12 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ ...IOS_PAGE_SPRING, delay: 0.05 }}
+            className="relative"
           >
             <Logo />
+            {!reduceMotion ? (
+              <motion.span
+                aria-hidden
+                className="pointer-events-none absolute -inset-3 -z-10 rounded-full bg-cyan-400/10 blur-xl"
+                animate={{ opacity: [0.25, 0.55, 0.25], scale: [0.95, 1.05, 0.95] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              />
+            ) : null}
           </motion.div>
 
-          <nav className="hidden items-center gap-6 xl:gap-8 lg:flex" aria-label="اصلی">
+          <nav className="hidden items-center gap-6 xl:gap-9 lg:flex" aria-label="اصلی">
             {NAV.map((item, index) => {
               const active =
                 item.href === "/"
@@ -191,8 +224,12 @@ export default function Navbar() {
               initial={reduceMotion ? false : { opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ ...IOS_PAGE_SPRING, delay: 0.35 }}
-              className="ms-1"
+              className="ms-1 flex items-center gap-3"
             >
+              <span className="hidden items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-semibold tracking-[0.16em] text-cyan-200/90 xl:inline-flex">
+                <Sparkles className="h-3 w-3" />
+                VIP
+              </span>
               {session ? <UserAccountMenu tone="dark" /> : <LoginButton />}
             </motion.div>
           </nav>
@@ -207,10 +244,10 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* نوار پیشرفت اسکرول صفحه — مینیمال و لوکس */}
+        {/* نوار پیشرفت اسکرول — خط نورانی لوکس */}
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-px origin-right bg-cyan-400/90"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-right bg-gradient-to-l from-transparent via-cyan-300 to-sky-400/80"
           style={{ scaleX: progress, willChange: "transform" }}
         />
       </motion.header>

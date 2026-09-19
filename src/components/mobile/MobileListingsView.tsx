@@ -2,21 +2,19 @@
 
 import Link from "next/link";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { motion } from "framer-motion";
-import { Bath, BedDouble, MapPin, Ruler, SlidersHorizontal } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { SlidersHorizontal, Sparkles } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import BottomSheet from "@/components/mobile/BottomSheet";
+import CompactPropertyCard from "@/components/mobile/CompactPropertyCard";
 import IosTap from "@/components/mobile/IosTap";
-import LikeButton from "@/components/mobile/LikeButton";
 import PullToRefresh from "@/components/mobile/PullToRefresh";
 import { PropertyCardSkeletonList } from "@/components/mobile/PropertySkeletons";
-import { SharedPropertyImage, SharedPropertyTitle } from "@/components/mobile/SharedPropertyHero";
 import SpringTabs from "@/components/mobile/SpringTabs";
 import PublicLoadError from "@/components/listings/PublicLoadError";
 import { siteConfig } from "@/config/siteConfig";
 import { useHaptic } from "@/hooks/useHaptic";
-import { formatToman, listingTypeLabel } from "@/lib/money";
-import { IOS_PAGE_SPRING, IOS_TAP_SPRING } from "@/lib/motion/ios";
+import { IOS_PAGE_SPRING } from "@/lib/motion/ios";
 import type { PropertyRecord } from "@/server/db/store";
 
 type Filter = "all" | "sale" | "rent";
@@ -35,7 +33,7 @@ type MobileListingsViewProps = {
 };
 
 /**
- * آرشیو موبایل: لیست مجازی + تب فیلتر spring + اسکلتون + لایک bounce.
+ * آرشیو موبایل لوکس: لیست مجازی + کارت‌های سینمایی + فیلتر spring.
  */
 export default function MobileListingsView({ items, loading, failed, onRetry }: MobileListingsViewProps) {
   const [query, setQuery] = useState("");
@@ -43,6 +41,7 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
   const [sheetOpen, setSheetOpen] = useState(false);
   const parentRef = useRef<HTMLDivElement>(null);
   const vibrate = useHaptic();
+  const reduceMotion = useReducedMotion();
 
   const filtered = useMemo(() => {
     return items.filter((item) => {
@@ -61,28 +60,42 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
   const virtualizer = useVirtualizer({
     count: filtered.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 316,
+    estimateSize: () => 360,
     overscan: 4,
   });
 
   return (
-    <div className="bg-[#070C18] text-white lg:hidden">
-      <section className="px-4 pb-3 pt-24">
-        <p className="text-[11px] font-semibold tracking-[0.2em] text-cyan-300">آرشیو موبایل</p>
-        <h1 className="mt-2 font-vazirmatn text-2xl font-black leading-tight">
-          فایل‌های {siteConfig.brand.nameFa}
-        </h1>
+    <div className="bg-[#050B14] text-white lg:hidden">
+      <section className="relative overflow-hidden px-4 pb-3 pt-24">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(0,163,255,0.18),transparent_55%)]"
+        />
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={IOS_PAGE_SPRING}
+          className="relative"
+        >
+          <p className="inline-flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.2em] text-cyan-300">
+            <Sparkles className="h-3 w-3" />
+            آرشیو اختصاصی
+          </p>
+          <h1 className="mt-2 font-vazirmatn text-2xl font-black leading-tight">
+            فایل‌های {siteConfig.brand.nameFa}
+          </h1>
+        </motion.div>
 
-        <div className="mt-4 flex gap-2">
+        <div className="relative mt-4 flex gap-2">
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="جستجوی محله یا کد…"
-            className="h-11 flex-1 rounded-full border border-white/10 bg-white/5 px-4 text-sm outline-none placeholder:text-slate-500 focus:border-cyan-400/50"
+            className="h-11 flex-1 rounded-full border border-white/12 bg-white/[0.05] px-4 text-sm outline-none placeholder:text-slate-500 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] focus:border-cyan-400/50"
           />
           <IosTap
             haptic
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/5 ring-1 ring-white/10"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.05]"
             aria-label="فیلترها"
             onClick={() => {
               setSheetOpen(true);
@@ -127,7 +140,11 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
                     height: `${row.size}px`,
                   }}
                 >
-                  <MobilePropertyCard item={item} index={row.index} />
+                  <CompactPropertyCard
+                    item={item}
+                    variant="featured"
+                    priority={row.index < 2}
+                  />
                 </div>
               );
             })}
@@ -148,68 +165,5 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
         />
       </BottomSheet>
     </div>
-  );
-}
-
-function MobilePropertyCard({ item, index }: { item: PropertyRecord; index: number }) {
-  const [pressed, setPressed] = useState(false);
-
-  return (
-    <motion.article
-      className="ios-contain ios-glow-active relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.04]"
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0, scale: pressed ? 0.96 : 1 }}
-      transition={pressed ? IOS_TAP_SPRING : { ...IOS_PAGE_SPRING, delay: Math.min(index, 6) * 0.03 }}
-      style={{ willChange: pressed ? "transform" : "auto" }}
-      onPointerDown={() => setPressed(true)}
-      onPointerUp={() => setPressed(false)}
-      onPointerCancel={() => setPressed(false)}
-      onPointerLeave={() => setPressed(false)}
-    >
-      <span className="ios-glow-layer" />
-      <Link href={`/listings/${item.id}`} className="ios-tap-target block" scroll={false}>
-        <div className="ios-media-frame relative">
-          <SharedPropertyImage
-            id={item.id}
-            src={item.imageUrl}
-            alt={item.title}
-            className="absolute inset-0 h-full w-full"
-            priority={index < 2}
-            sizes="(max-width: 428px) 100vw, 390px"
-          />
-          <span className="absolute start-3 top-3 rounded-full bg-black/55 px-3 py-1 text-[11px] text-cyan-200 backdrop-blur">
-            {listingTypeLabel(item.listingType)}
-          </span>
-          <LikeButton propertyId={item.id} className="absolute end-3 top-3" />
-        </div>
-        <div className="space-y-2 p-4">
-          <p className="text-[11px] text-slate-500">{item.code}</p>
-          <SharedPropertyTitle
-            id={item.id}
-            title={item.title}
-            className="line-clamp-2 text-base font-semibold leading-7"
-          />
-          <p className="inline-flex items-center gap-1.5 text-sm text-slate-400">
-            <MapPin className="h-3.5 w-3.5 text-cyan-300" />
-            <span className="line-clamp-1">{item.location}</span>
-          </p>
-          <p className="text-cyan-300">{formatToman(item.price, item.listingType)}</p>
-          <div className="flex gap-3 text-[11px] text-slate-400">
-            <span className="inline-flex items-center gap-1">
-              <BedDouble className="h-3.5 w-3.5" />
-              {item.bedrooms.toLocaleString("fa-IR")}
-            </span>
-            <span className="inline-flex items-center gap-1">
-              <Bath className="h-3.5 w-3.5" />
-              {item.bathrooms.toLocaleString("fa-IR")}
-            </span>
-            <span className="inline-flex items-center gap-1">
-              <Ruler className="h-3.5 w-3.5" />
-              {item.areaSqm.toLocaleString("fa-IR")} م
-            </span>
-          </div>
-        </div>
-      </Link>
-    </motion.article>
   );
 }

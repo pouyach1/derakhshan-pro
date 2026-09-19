@@ -1,15 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { Bath, BedDouble, MapPin, Ruler, Search } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Search, Sparkles } from "lucide-react";
 import { api } from "@/lib/api";
-import { fallbackImage, formatToman, listingTypeLabel } from "@/lib/money";
 import { siteConfig } from "@/config/siteConfig";
 import PublicLoadError from "@/components/listings/PublicLoadError";
+import CompactPropertyCard from "@/components/mobile/CompactPropertyCard";
 import MobileListingsView from "@/components/mobile/MobileListingsView";
+import { IOS_PAGE_SPRING } from "@/lib/motion/ios";
 import type { PropertyRecord } from "@/server/db/store";
 
 type Filter = "all" | "sale" | "rent";
@@ -20,12 +19,19 @@ function logListingsError(error: unknown) {
   }
 }
 
+const FILTERS = [
+  ["all", "همه"],
+  ["sale", "فروش"],
+  ["rent", "اجاره"],
+] as const;
+
 export default function ListingsView() {
   const [items, setItems] = useState<PropertyRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
   const [failed, setFailed] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -75,111 +81,137 @@ export default function ListingsView() {
         onRetry={load}
       />
 
-      <div className="hidden bg-[#070C18] text-white lg:block">
-      <section className="relative overflow-hidden px-4 pb-10 pt-28 sm:px-6 lg:pt-32">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(0,240,255,0.16),_transparent_55%)]" />
-        <div className="relative mx-auto max-w-6xl">
-          <p className="text-xs font-semibold tracking-[0.22em] text-cyan-300">آرشیو فایل‌های فعال</p>
-          <h1 className="mt-4 max-w-3xl font-vazirmatn text-3xl font-black leading-tight sm:text-5xl">
-            فایل‌های قابل معامله {siteConfig.brand.nameFa}
-          </h1>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-400 sm:text-base">
-            جستجو، فیلتر و درخواست بازدید روی آگهی‌های منتشرشده. فایل‌های نمونه را از پنل مدیریت با آگهی واقعی عوض کنید.
-          </p>
-
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="relative flex-1">
-              <Search className="pointer-events-none absolute start-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="جستجوی عنوان، محله یا کد فایل..."
-                className="h-12 w-full rounded-full border border-white/10 bg-white/5 pe-4 ps-11 text-sm outline-none placeholder:text-slate-500 focus:border-cyan-400/60"
+      <div className="hidden min-h-dvh bg-[#050B14] text-white lg:block">
+        {/* Cinematic archive hero */}
+        <section className="relative overflow-hidden px-6 pb-12 pt-32 xl:px-10">
+          <div className="pointer-events-none absolute inset-0">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_-10%,rgba(0,163,255,0.22),transparent_60%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_40%,rgba(11,58,92,0.35),transparent_45%)]" />
+            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#050B14] to-transparent" />
+            {!reduceMotion ? (
+              <motion.div
+                aria-hidden
+                className="absolute -start-20 top-24 h-72 w-72 rounded-full bg-sky-500/10 blur-3xl"
+                animate={{ x: [0, 40, 0], opacity: [0.35, 0.6, 0.35] }}
+                transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
               />
-            </div>
-            <div className="flex gap-2">
-              {(
-                [
-                  ["all", "همه"],
-                  ["sale", "فروش"],
-                  ["rent", "اجاره"],
-                ] as const
-              ).map(([id, label]) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => setFilter(id)}
-                  className={`rounded-full px-4 py-2 text-sm ${
-                    filter === id ? "bg-cyan-400 text-slate-950" : "bg-white/5 text-slate-300 ring-1 ring-white/10"
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
+            ) : null}
           </div>
-        </div>
-      </section>
 
-      <section className="px-4 pb-24 sm:px-6">
-        <div className="mx-auto grid max-w-6xl gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {loading ? (
-            <p className="text-sm text-slate-400">در حال بارگذاری فایل‌ها...</p>
-          ) : failed ? (
-            <PublicLoadError onRetry={() => void load()} />
-          ) : filtered.length === 0 ? (
-            <p className="text-sm text-slate-400">فایل منتشرشده‌ای مطابق جستجو نیست.</p>
-          ) : (
-            filtered.map((item, index) => (
-              <motion.article
-                key={item.id}
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.04 }}
-                className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.04]"
-              >
-                <Link href={`/listings/${item.id}`} className="block">
-                  <div className="relative h-52">
-                    <Image
-                      src={fallbackImage(item.imageUrl)}
-                      alt={item.title}
-                      fill
-                      className="object-cover"
-                      sizes="400px"
-                    />
-                    <span className="absolute start-3 top-3 rounded-full bg-black/55 px-3 py-1 text-[11px] text-cyan-200 backdrop-blur">
-                      {listingTypeLabel(item.listingType)}
-                    </span>
-                  </div>
-                  <div className="space-y-3 p-5">
-                    <p className="text-[11px] text-slate-500">{item.code}</p>
-                    <h2 className="text-lg font-semibold">{item.title}</h2>
-                    <p className="inline-flex items-center gap-1.5 text-sm text-slate-400">
-                      <MapPin className="h-4 w-4 text-cyan-300" />
-                      {item.location}
-                    </p>
-                    <p className="text-cyan-300">{formatToman(item.price, item.listingType)}</p>
-                    <div className="flex gap-3 text-xs text-slate-400">
-                      <span className="inline-flex items-center gap-1">
-                        <BedDouble className="h-3.5 w-3.5" />
-                        {item.bedrooms.toLocaleString("fa-IR")} خواب
+          <div className="relative mx-auto max-w-7xl">
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={IOS_PAGE_SPRING}
+            >
+              <p className="inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-400/10 px-3.5 py-1.5 text-[11px] font-semibold tracking-[0.22em] text-cyan-200">
+                <Sparkles className="h-3.5 w-3.5" />
+                آرشیو اختصاصی
+              </p>
+              <h1 className="mt-6 max-w-4xl font-vazirmatn text-[clamp(2.4rem,5vw,4.25rem)] font-black leading-[1.15] tracking-tight">
+                فایل‌های قابل معامله
+                <span className="mt-2 block bg-gradient-to-l from-cyan-200 via-sky-300 to-cyan-400 bg-clip-text text-transparent">
+                  {siteConfig.brand.nameFa}
+                </span>
+              </h1>
+              <p className="mt-5 max-w-2xl text-base leading-8 text-slate-400">
+                جستجو، فیلتر و درخواست بازدید روی آگهی‌های منتشرشده — تجربه‌ای سینمایی برای ارائه روی تلویزیون و جلسه حضوری.
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="mt-10 flex flex-col gap-4 xl:flex-row xl:items-center"
+              initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ ...IOS_PAGE_SPRING, delay: 0.12 }}
+            >
+              <div className="relative flex-1">
+                <Search className="pointer-events-none absolute start-5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="جستجوی عنوان، محله یا کد فایل..."
+                  className="h-14 w-full rounded-full border border-white/12 bg-white/[0.05] pe-5 ps-12 text-sm outline-none placeholder:text-slate-500 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-md transition focus:border-cyan-400/60 focus:bg-white/[0.07]"
+                />
+              </div>
+              <div className="flex gap-2 rounded-full border border-white/10 bg-white/[0.03] p-1.5 backdrop-blur-md">
+                {FILTERS.map(([id, label]) => {
+                  const active = filter === id;
+                  return (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => setFilter(id)}
+                      className="relative rounded-full px-5 py-2.5 text-sm font-semibold"
+                    >
+                      {active ? (
+                        <motion.span
+                          layoutId="listings-filter-pill"
+                          className="absolute inset-0 rounded-full bg-gradient-to-l from-cyan-300 to-sky-400 shadow-[0_10px_30px_-12px_rgba(0,163,255,0.9)]"
+                          transition={IOS_PAGE_SPRING}
+                        />
+                      ) : null}
+                      <span className={active ? "relative text-slate-950" : "relative text-slate-300"}>
+                        {label}
                       </span>
-                      <span className="inline-flex items-center gap-1">
-                        <Bath className="h-3.5 w-3.5" />
-                        {item.bathrooms.toLocaleString("fa-IR")} سرویس
-                      </span>
-                      <span className="inline-flex items-center gap-1">
-                        <Ruler className="h-3.5 w-3.5" />
-                        {item.areaSqm.toLocaleString("fa-IR")} متر
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </motion.article>
-            ))
-          )}
-        </div>
-      </section>
+                    </button>
+                  );
+                })}
+              </div>
+            </motion.div>
+
+            <motion.p
+              className="mt-6 text-xs tracking-[0.16em] text-slate-500"
+              initial={reduceMotion ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.25 }}
+            >
+              {loading
+                ? "در حال آماده‌سازی آرشیو..."
+                : `${filtered.length.toLocaleString("fa-IR")} فایل نمایش داده می‌شود`}
+            </motion.p>
+          </div>
+        </section>
+
+        <section className="relative px-6 pb-28 xl:px-10">
+          <div className="mx-auto grid max-w-7xl gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            {loading ? (
+              Array.from({ length: 6 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="aspect-[4/5] animate-pulse rounded-[1.5rem] border border-white/8 bg-white/[0.04]"
+                />
+              ))
+            ) : failed ? (
+              <div className="sm:col-span-2 xl:col-span-3">
+                <PublicLoadError onRetry={() => void load()} />
+              </div>
+            ) : filtered.length === 0 ? (
+              <p className="text-sm text-slate-400 sm:col-span-2 xl:col-span-3">
+                فایل منتشرشده‌ای مطابق جستجو نیست.
+              </p>
+            ) : (
+              filtered.map((item, index) => (
+                <motion.div
+                  key={item.id}
+                  initial={reduceMotion ? false : { opacity: 0, y: 32, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{
+                    ...IOS_PAGE_SPRING,
+                    delay: Math.min(index, 12) * 0.05,
+                  }}
+                >
+                  <CompactPropertyCard
+                    item={item}
+                    variant="featured"
+                    priority={index < 3}
+                    className="h-full"
+                  />
+                </motion.div>
+              ))
+            )}
+          </div>
+        </section>
       </div>
     </>
   );
