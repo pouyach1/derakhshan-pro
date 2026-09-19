@@ -16,5 +16,8 @@
   ],
   "images": {
     "binding": "IMAGES"
+  },
+  "limits": {
+    "cpu_ms": 100
   }
 }
