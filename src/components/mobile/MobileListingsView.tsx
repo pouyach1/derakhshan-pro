@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { motion } from "framer-motion";
 import { SlidersHorizontal, Sparkles } from "lucide-react";
@@ -33,7 +32,7 @@ type MobileListingsViewProps = {
 };
 
 /**
- * آرشیو موبایل لوکس: لیست مجازی + کارت‌های سینمایی + فیلتر spring.
+ * آرشیو موبایل — تم سفید / آبی کم‌رنگ برند.
  */
 export default function MobileListingsView({ items, loading, failed, onRetry }: MobileListingsViewProps) {
   const [query, setQuery] = useState("");
@@ -59,16 +58,16 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
   const virtualizer = useVirtualizer({
     count: filtered.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 360,
+    estimateSize: () => 380,
     overscan: 4,
   });
 
   return (
-    <div className="bg-[#050B14] text-white lg:hidden">
+    <div className="bg-[#F3F7FB] text-[#0B3A5C] lg:hidden">
       <section className="relative overflow-hidden px-4 pb-3 pt-24">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(0,163,255,0.18),transparent_55%)]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(0,163,255,0.12),transparent_55%)]"
         />
         <motion.div
           initial={false}
@@ -76,11 +75,11 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
           transition={IOS_PAGE_SPRING}
           className="relative"
         >
-          <p className="inline-flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.2em] text-cyan-300">
+          <p className="inline-flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.18em] text-sky-600">
             <Sparkles className="h-3 w-3" />
             آرشیو اختصاصی
           </p>
-          <h1 className="mt-2 font-vazirmatn text-2xl font-black leading-tight">
+          <h1 className="mt-2 font-vazirmatn text-2xl font-black leading-tight text-[#0B3A5C]">
             فایل‌های {siteConfig.brand.nameFa}
           </h1>
         </motion.div>
@@ -90,24 +89,25 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="جستجوی محله یا کد…"
-            className="h-11 flex-1 rounded-full border border-white/12 bg-white/[0.05] px-4 text-sm outline-none placeholder:text-slate-500 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] focus:border-cyan-400/50"
+            className="h-11 flex-1 rounded-full border border-[#0B3A5C]/10 bg-white px-4 text-sm text-[#0B3A5C] outline-none placeholder:text-[#0B3A5C]/40 shadow-sm focus:border-sky-400"
           />
           <IosTap
             haptic
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.05]"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#0B3A5C]/10 bg-white shadow-sm"
             aria-label="فیلترها"
             onClick={() => {
               setSheetOpen(true);
               vibrate(10);
             }}
           >
-            <SlidersHorizontal className="h-4 w-4 text-cyan-300" />
+            <SlidersHorizontal className="h-4 w-4 text-sky-600" />
           </IosTap>
         </div>
 
         <SpringTabs
           className="mt-3"
           layoutGroupId="listing-filter-header"
+          tone="light"
           items={FILTER_TABS}
           value={filter}
           onChange={setFilter}
@@ -125,7 +125,7 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
         ) : failed && items.length === 0 ? (
           <PublicLoadError onRetry={onRetry} />
         ) : filtered.length === 0 ? (
-          <p className="py-10 text-sm text-slate-400">فایل منطبقی پیدا نشد.</p>
+          <p className="py-10 text-sm text-[#0B3A5C]/50">فایل منطبقی پیدا نشد.</p>
         ) : (
           <div className="relative w-full" style={{ height: `${virtualizer.getTotalSize()}px` }}>
             {virtualizer.getVirtualItems().map((row) => {
@@ -152,10 +152,11 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
       </PullToRefresh>
 
       <BottomSheet open={sheetOpen} onClose={() => setSheetOpen(false)} title="فیلتر فایل‌ها">
-        <p className="mb-3 text-xs text-slate-400">نوع معامله</p>
+        <p className="mb-3 text-xs text-[#0B3A5C]/55">نوع معامله</p>
         <SpringTabs
           items={FILTER_TABS}
           layoutGroupId="listing-filter-sheet"
+          tone="light"
           value={filter}
           onChange={(id) => {
             setFilter(id);

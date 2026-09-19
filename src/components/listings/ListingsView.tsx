@@ -11,19 +11,19 @@ import MobileListingsView from "@/components/mobile/MobileListingsView";
 import { IOS_PAGE_SPRING } from "@/lib/motion/ios";
 import type { PropertyRecord } from "@/server/db/store";
 
-function useMotionReady() {
-  const reduceMotion = useReducedMotion();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  return mounted && !reduceMotion;
-}
-
 type Filter = "all" | "sale" | "rent";
 
 function logListingsError(error: unknown) {
   if (process.env.NODE_ENV === "development") {
     console.error("[listings]", error);
   }
+}
+
+function useMotionReady() {
+  const reduceMotion = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted && !reduceMotion;
 }
 
 const FILTERS = [
@@ -88,41 +88,33 @@ export default function ListingsView() {
         onRetry={load}
       />
 
-      <div className="hidden min-h-dvh bg-[#050B14] text-white lg:block">
-        {/* Cinematic archive hero */}
+      <div className="hidden min-h-dvh bg-[#F3F7FB] text-[#0B3A5C] lg:block">
         <section className="relative overflow-hidden px-6 pb-12 pt-32 xl:px-10">
           <div className="pointer-events-none absolute inset-0">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_-10%,rgba(0,163,255,0.22),transparent_60%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_40%,rgba(11,58,92,0.35),transparent_45%)]" />
-            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#050B14] to-transparent" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_-10%,rgba(0,163,255,0.14),transparent_60%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_30%,rgba(11,58,92,0.06),transparent_45%)]" />
             {motionReady ? (
               <motion.div
                 aria-hidden
-                className="absolute -start-20 top-24 h-72 w-72 rounded-full bg-sky-500/10 blur-3xl"
-                animate={{ x: [0, 40, 0], opacity: [0.35, 0.6, 0.35] }}
+                className="absolute -start-20 top-24 h-72 w-72 rounded-full bg-sky-300/20 blur-3xl"
+                animate={{ x: [0, 40, 0], opacity: [0.35, 0.65, 0.35] }}
                 transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
               />
             ) : null}
           </div>
 
           <div className="relative mx-auto max-w-7xl">
-            <motion.div
-              initial={false}
-              animate={{ opacity: 1, y: 0 }}
-              transition={IOS_PAGE_SPRING}
-            >
-              <p className="inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-400/10 px-3.5 py-1.5 text-[11px] font-semibold tracking-[0.22em] text-cyan-200">
+            <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={IOS_PAGE_SPRING}>
+              <p className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-white/80 px-3.5 py-1.5 text-[11px] font-semibold tracking-[0.18em] text-sky-700 shadow-sm">
                 <Sparkles className="h-3.5 w-3.5" />
                 آرشیو اختصاصی
               </p>
-              <h1 className="mt-6 max-w-4xl font-vazirmatn text-[clamp(2.4rem,5vw,4.25rem)] font-black leading-[1.15] tracking-tight">
+              <h1 className="mt-6 max-w-4xl font-vazirmatn text-[clamp(2.2rem,4.5vw,3.75rem)] font-black leading-[1.2] tracking-tight text-[#0B3A5C]">
                 فایل‌های قابل معامله
-                <span className="mt-2 block bg-gradient-to-l from-cyan-200 via-sky-300 to-cyan-400 bg-clip-text text-transparent">
-                  {siteConfig.brand.nameFa}
-                </span>
+                <span className="mt-2 block text-sky-600">{siteConfig.brand.nameFa}</span>
               </h1>
-              <p className="mt-5 max-w-2xl text-base leading-8 text-slate-400">
-                جستجو، فیلتر و درخواست بازدید روی آگهی‌های منتشرشده — تجربه‌ای سینمایی برای ارائه روی تلویزیون و جلسه حضوری.
+              <p className="mt-5 max-w-2xl text-base leading-8 text-[#0B3A5C]/65">
+                جستجو، فیلتر و درخواست بازدید روی آگهی‌های منتشرشده — تجربه‌ای لوکس برای ارائه روی تلویزیون و جلسه حضوری.
               </p>
             </motion.div>
 
@@ -133,15 +125,15 @@ export default function ListingsView() {
               transition={{ ...IOS_PAGE_SPRING, delay: 0.12 }}
             >
               <div className="relative flex-1">
-                <Search className="pointer-events-none absolute start-5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                <Search className="pointer-events-none absolute start-5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#0B3A5C]/35" />
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="جستجوی عنوان، محله یا کد فایل..."
-                  className="h-14 w-full rounded-full border border-white/12 bg-white/[0.05] pe-5 ps-12 text-sm outline-none placeholder:text-slate-500 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-md transition focus:border-cyan-400/60 focus:bg-white/[0.07]"
+                  className="h-14 w-full rounded-full border border-[#0B3A5C]/10 bg-white pe-5 ps-12 text-sm text-[#0B3A5C] outline-none placeholder:text-[#0B3A5C]/40 shadow-[0_12px_40px_-28px_rgba(11,58,92,0.35)] transition focus:border-sky-400"
                 />
               </div>
-              <div className="flex gap-2 rounded-full border border-white/10 bg-white/[0.03] p-1.5 backdrop-blur-md">
+              <div className="flex gap-2 rounded-full border border-[#0B3A5C]/8 bg-white p-1.5 shadow-sm">
                 {FILTERS.map(([id, label]) => {
                   const active = filter === id;
                   return (
@@ -154,11 +146,11 @@ export default function ListingsView() {
                       {active ? (
                         <motion.span
                           layoutId="listings-filter-pill"
-                          className="absolute inset-0 rounded-full bg-gradient-to-l from-cyan-300 to-sky-400 shadow-[0_10px_30px_-12px_rgba(0,163,255,0.9)]"
+                          className="absolute inset-0 rounded-full bg-sky-500 shadow-[0_10px_28px_-12px_rgba(0,163,255,0.85)]"
                           transition={IOS_PAGE_SPRING}
                         />
                       ) : null}
-                      <span className={active ? "relative text-slate-950" : "relative text-slate-300"}>
+                      <span className={active ? "relative text-white" : "relative text-[#0B3A5C]/65"}>
                         {label}
                       </span>
                     </button>
@@ -168,7 +160,7 @@ export default function ListingsView() {
             </motion.div>
 
             <motion.p
-              className="mt-6 text-xs tracking-[0.16em] text-slate-500"
+              className="mt-6 text-xs tracking-[0.14em] text-[#0B3A5C]/45"
               initial={false}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.25 }}
@@ -186,7 +178,7 @@ export default function ListingsView() {
               Array.from({ length: 6 }).map((_, i) => (
                 <div
                   key={i}
-                  className="aspect-[4/5] animate-pulse rounded-[1.5rem] border border-white/8 bg-white/[0.04]"
+                  className="aspect-[4/5] animate-pulse rounded-[1.5rem] border border-[#0B3A5C]/8 bg-white"
                 />
               ))
             ) : failed ? (
@@ -194,7 +186,7 @@ export default function ListingsView() {
                 <PublicLoadError onRetry={() => void load()} />
               </div>
             ) : filtered.length === 0 ? (
-              <p className="text-sm text-slate-400 sm:col-span-2 xl:col-span-3">
+              <p className="text-sm text-[#0B3A5C]/55 sm:col-span-2 xl:col-span-3">
                 فایل منتشرشده‌ای مطابق جستجو نیست.
               </p>
             ) : (

@@ -230,10 +230,9 @@ export default function ClientDashboardView({ name, items }: ClientDashboardView
             </Link>
           </div>
 
-          <div className="overflow-hidden rounded-[1.75rem] bg-[#07111F] py-8 text-white shadow-[0_40px_100px_-60px_rgba(7,17,31,0.85)] md:py-10">
-            <div className="pointer-events-none absolute inset-0" />
+          <div className="overflow-hidden rounded-[1.75rem] border border-[#0B3A5C]/8 bg-white py-8 shadow-[0_28px_80px_-48px_rgba(11,58,92,0.3)] md:py-10">
             {featured.length === 0 ? (
-              <p className="rio-container text-sm text-slate-400">هنوز فایلی برای نمایش نیست.</p>
+              <p className="rio-container text-sm text-[#0B3A5C]/50">هنوز فایلی برای نمایش نیست.</p>
             ) : (
               <FreeScrollCarousel slideWidthRatio={{ mobile: 0.78, desktop: 0.34 }} gapPx={16}>
                 {featured.map((item, index) => (
@@ -258,9 +257,9 @@ export default function ClientDashboardView({ name, items }: ClientDashboardView
             </h2>
           </div>
 
-          <div className="overflow-hidden rounded-[1.75rem] bg-[#0B3A5C] py-8 text-white md:py-10">
+          <div className="overflow-hidden rounded-[1.75rem] border border-[#0B3A5C]/8 bg-[#EAF3FA] py-8 md:py-10">
             {recent.length === 0 ? (
-              <p className="rio-container text-sm text-white/60">فایلی برای نمایش نیست.</p>
+              <p className="rio-container text-sm text-[#0B3A5C]/50">فایلی برای نمایش نیست.</p>
             ) : (
               <PagingCarousel slideWidthRatio={{ mobile: 0.88, desktop: 0.5 }} gapPx={16}>
                 {recent.map((item, index) => (

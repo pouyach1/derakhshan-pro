@@ -17,6 +17,7 @@ type SpringTabsProps<T extends string> = {
   className?: string;
   /** جدا کردن layoutId وقتی چند گروه تب در صفحه هست */
   layoutGroupId?: string;
+  tone?: "dark" | "light";
 };
 
 /**
@@ -28,13 +29,21 @@ export default function SpringTabs<T extends string>({
   onChange,
   className,
   layoutGroupId = "spring-tabs",
+  tone = "dark",
 }: SpringTabsProps<T>) {
   const vibrate = useHaptic();
+  const light = tone === "light";
 
   return (
     <div
       role="tablist"
-      className={cn("relative flex gap-1 rounded-full bg-white/[0.04] p-1 ring-1 ring-white/10", className)}
+      className={cn(
+        "relative flex gap-1 rounded-full p-1",
+        light
+          ? "bg-white shadow-sm ring-1 ring-[#0B3A5C]/10"
+          : "bg-white/[0.04] ring-1 ring-white/10",
+        className,
+      )}
     >
       {items.map((item) => {
         const active = item.id === value;
@@ -46,7 +55,13 @@ export default function SpringTabs<T extends string>({
             aria-selected={active}
             className={cn(
               "ios-tap-target relative z-10 flex-1 rounded-full px-3 py-2 text-sm transition-colors",
-              active ? "text-slate-950" : "text-slate-400",
+              active
+                ? light
+                  ? "text-white"
+                  : "text-slate-950"
+                : light
+                  ? "text-[#0B3A5C]/55"
+                  : "text-slate-400",
             )}
             onClick={() => {
               if (item.id === value) return;
@@ -57,7 +72,10 @@ export default function SpringTabs<T extends string>({
             {active ? (
               <motion.span
                 layoutId={`${layoutGroupId}-indicator`}
-                className="absolute inset-0 -z-10 rounded-full bg-cyan-400"
+                className={cn(
+                  "absolute inset-0 -z-10 rounded-full",
+                  light ? "bg-sky-500" : "bg-cyan-400",
+                )}
                 transition={IOS_PAGE_SPRING}
                 style={{ willChange: "transform" }}
               />
