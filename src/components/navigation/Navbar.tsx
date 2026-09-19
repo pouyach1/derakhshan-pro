@@ -127,6 +127,16 @@ export default function Navbar() {
   useEffect(() => {
     setMounted(true);
     setSession(readClientSession());
+    void fetch("/api/auth/me")
+      .then((r) => r.json())
+      .then((payload) => {
+        if (payload?.ok && payload.data?.session) {
+          setSession(payload.data.session);
+        }
+      })
+      .catch(() => {
+        /* ignore */
+      });
   }, []);
 
   useMotionValueEvent(scrollY, "change", (value) => {

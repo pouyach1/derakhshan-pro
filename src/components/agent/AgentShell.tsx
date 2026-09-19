@@ -38,15 +38,27 @@ export default function AgentShell({ children }: { children: React.ReactNode }) 
 
   useEffect(() => {
     setSession(readClientSession());
+    void fetch("/api/auth/me")
+      .then((r) => r.json())
+      .then((payload) => {
+        if (payload?.ok && payload.data?.session) {
+          setSession(payload.data.session);
+        }
+      })
+      .catch(() => {
+        /* ignore */
+      });
   }, []);
 
   function logout() {
     clearClientSession();
     setToast(true);
-    window.setTimeout(() => {
-      router.replace("/login");
-      router.refresh();
-    }, 900);
+    void fetch("/api/auth/logout", { method: "POST" }).finally(() => {
+      window.setTimeout(() => {
+        router.replace("/login");
+        router.refresh();
+      }, 500);
+    });
   }
 
   return (

@@ -753,6 +753,11 @@ export async function ensureBootstrapped() {
   );
   const seedPassword = resolveSeedPassword();
 
+  // Repair: properties may exist while staff rows were wiped or never seeded.
+  if (!hasUsableStaff && seedPassword) {
+    await ensureStaffUsers(seedPassword);
+  }
+
   if (needsData) {
     if (!seedPassword) {
       // Empty Workers isolate without seed env: do NOT block client self-login.
@@ -775,4 +780,88 @@ export async function ensureBootstrapped() {
   }
 
   await syncStaffPasswordsFromEnv();
+}
+
+/** Ensure admin + primary agents exist even when the store already has other data. */
+async function ensureStaffUsers(seedPassword: string) {
+  const store = getStore();
+  const hash = await hashPassword(seedPassword);
+  const stamp = nowIso();
+  const staffSeed = [
+    {
+      id: "admin-1",
+      phone: "09121111111",
+      email: siteConfig.panels.demoAdminEmail,
+      name: siteConfig.brand.managerNameFa,
+      role: "admin" as const,
+      agentId: null as string | null,
+    },
+    {
+      id: "agent-1",
+      phone: "09122113456",
+      email: siteConfig.panels.demoAgentEmail,
+      name: "آرش شایگان",
+      role: "agent" as const,
+      agentId: "a1",
+    },
+  ];
+
+  let changed = false;
+  for (const seed of staffSeed) {
+    const existing = store.users.find(
+      (u) =>
+        u.id === seed.id ||
+        u.phone === seed.phone ||
+        (seed.email && u.email?.toLowerCase() === seed.email.toLowerCase()),
+    );
+    if (existing) {
+      existing.role = seed.role;
+      existing.passwordHash = hash;
+      existing.isActive = true;
+      existing.onboardingComplete = true;
+      existing.agentId = seed.agentId;
+      existing.email = seed.email;
+      existing.phone = seed.phone;
+      existing.name = seed.name;
+      existing.updatedAt = stamp;
+      changed = true;
+      continue;
+    }
+    store.users.push({
+      id: seed.id,
+      phone: seed.phone,
+      email: seed.email,
+      name: seed.name,
+      role: seed.role,
+      passwordHash: hash,
+      agentId: seed.agentId,
+      onboardingComplete: true,
+      clientProfile: null,
+      avatarUrl: null,
+      isActive: true,
+      createdAt: stamp,
+      updatedAt: stamp,
+    });
+    changed = true;
+  }
+
+  // Demote accidental guest-client rows that reused staff emails/phones.
+  for (const user of store.users) {
+    const staffHit = staffSeed.find(
+      (s) =>
+        user.phone === s.phone ||
+        (s.email && user.email?.toLowerCase() === s.email.toLowerCase()),
+    );
+    if (staffHit && user.role === "client") {
+      user.role = staffHit.role;
+      user.passwordHash = hash;
+      user.agentId = staffHit.agentId;
+      user.onboardingComplete = true;
+      user.isActive = true;
+      user.updatedAt = stamp;
+      changed = true;
+    }
+  }
+
+  if (changed) saveStore();
 }

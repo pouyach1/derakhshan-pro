@@ -1,7 +1,7 @@
 import type { z } from "zod";
 import { ApiError } from "@/server/http/response";
 import { hashPassword, verifyPassword } from "@/server/auth/password";
-import { normalizeIdentifier, normalizePhone, normalizeSecret, type AuthSession, type ClientProfile, type UserRole } from "@/lib/auth";
+import { findAuthUser, normalizeIdentifier, normalizePhone, normalizeSecret, type AuthSession, type ClientProfile, type UserRole } from "@/lib/auth";
 import type {
   clientCreateSchema,
   clientUpdateSchema,
@@ -86,10 +86,26 @@ export async function authenticate(input: z.infer<typeof loginSchema>): Promise<
   const identifier = normalizeIdentifier(input.identifier);
   const secret = normalizeSecret(input.secret);
   const isEmail = identifier.includes("@");
+  const knownHint = findAuthUser(identifier);
 
-  const user = store.users.find((u) =>
+  let user = store.users.find((u) =>
     isEmail ? u.email?.toLowerCase() === identifier : u.phone === identifier,
   );
+
+  // Staff emails/phones must never silently become guest clients.
+  if ((!user || !user.isActive) && knownHint && knownHint.role !== "client") {
+    await ensureBootstrapped();
+    user = getStore().users.find((u) =>
+      isEmail ? u.email?.toLowerCase() === identifier : u.phone === identifier,
+    );
+    if (!user || !user.isActive || user.role === "client") {
+      throw new ApiError(
+        503,
+        "STAFF_NOT_READY",
+        "حساب مدیر/مشاور هنوز آماده نیست. SEED_ADMIN_PASSWORD را تنظیم کنید یا دوباره تلاش کنید.",
+      );
+    }
+  }
 
   if (!user || !user.isActive) {
     const phone = isEmail ? "09000000000" : identifier;

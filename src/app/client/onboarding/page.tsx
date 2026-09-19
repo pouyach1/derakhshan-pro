@@ -1,28 +1,47 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import ClientOnboardingForm from "@/components/client/ClientOnboardingForm";
-import { needsClientOnboarding, readClientSession } from "@/lib/auth";
+import { homeForRole, needsClientOnboarding, type AuthSession } from "@/lib/auth";
 
 export default function ClientOnboardingPage() {
   const router = useRouter();
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const session = readClientSession();
-    if (!session) {
-      router.replace("/login");
-      return;
-    }
-    if (session.role !== "client") {
-      router.replace("/");
-      return;
-    }
-    if (!needsClientOnboarding(session)) {
-      router.replace("/");
-    }
+    void (async () => {
+      try {
+        const res = await fetch("/api/auth/me");
+        const payload = await res.json();
+        if (!res.ok || !payload?.ok || !payload.data?.session) {
+          router.replace("/login");
+          return;
+        }
+        const session = payload.data.session as AuthSession;
+        if (session.role !== "client") {
+          router.replace(homeForRole(session.role));
+          return;
+        }
+        if (!needsClientOnboarding(session)) {
+          router.replace("/client/dashboard");
+          return;
+        }
+        setReady(true);
+      } catch {
+        router.replace("/login");
+      }
+    })();
   }, [router]);
+
+  if (!ready) {
+    return (
+      <main className="flex min-h-dvh items-center justify-center bg-[#F3F7FB] text-sm text-[#0B3A5C]/55">
+        در حال آماده‌سازی پروفایل…
+      </main>
+    );
+  }
 
   return (
     <main className="relative flex min-h-dvh items-center justify-center overflow-hidden px-4 py-10 sm:px-6">

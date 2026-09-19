@@ -8,9 +8,11 @@ import { useState } from "react";
 import { AuthField, PasswordField } from "@/components/auth/AuthFields";
 import SocialButtons from "@/components/auth/SocialButtons";
 import {
+  ROLE_HOME,
   ROLE_LABELS,
   isValidIdentifier,
   lookupRole,
+  mirrorAuthSession,
   normalizeSecret,
   postAuthPath,
 } from "@/lib/auth";
@@ -80,7 +82,12 @@ export default function LoginForm() {
           return;
         }
         void remember;
-        router.replace(payload.data.redirectTo || postAuthPath(payload.data.session));
+        const session = payload.data.session;
+        const redirectTo =
+          payload.data.redirectTo ||
+          (session ? postAuthPath(session) : ROLE_HOME.client);
+        if (session) mirrorAuthSession(session);
+        router.replace(redirectTo);
         router.refresh();
       } catch {
         fail("ارتباط با سرور برقرار نشد. دوباره تلاش کنید.");
@@ -165,10 +172,10 @@ export default function LoginForm() {
             >
               نقش تشخیص‌داده‌شده: {ROLE_LABELS[detectedRole]}
               {detectedRole === "client"
-                ? ` · کد دمو: ${DEMO_OTP_HINT || "1234"}`
-                : DEMO_STAFF_PASSWORD
-                  ? ` · رمز: ${DEMO_STAFF_PASSWORD}`
-                  : ""}
+                ? ` · مسیر: پنل مشتری · کد دمو: ${DEMO_OTP_HINT || "1234"}`
+                : detectedRole === "admin"
+                  ? ` · مسیر: پنل مدیر${DEMO_STAFF_PASSWORD ? ` · رمز: ${DEMO_STAFF_PASSWORD}` : ""}`
+                  : ` · مسیر: پنل مشاور${DEMO_STAFF_PASSWORD ? ` · رمز: ${DEMO_STAFF_PASSWORD}` : ""}`}
             </motion.div>
           ) : null}
         </AnimatePresence>

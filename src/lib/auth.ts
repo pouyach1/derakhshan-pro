@@ -176,19 +176,49 @@ export function homeForRole(role: UserRole): string {
   return ROLE_HOME[role];
 }
 
+const SESSION_MIRROR_KEY = "agency_auth_mirror";
+
 export function setClientSession(session: AuthSession) {
   const maxAge = 60 * 60 * 24 * 7;
   document.cookie = `${AUTH_COOKIE}=${encodeURIComponent(encodeSession(session))}; path=/; max-age=${maxAge}; SameSite=Lax`;
+  try {
+    sessionStorage.setItem(SESSION_MIRROR_KEY, JSON.stringify(session));
+  } catch {
+    /* ignore */
+  }
 }
 
 export function clearClientSession() {
   document.cookie = `${AUTH_COOKIE}=; path=/; max-age=0; SameSite=Lax`;
+  try {
+    sessionStorage.removeItem(SESSION_MIRROR_KEY);
+  } catch {
+    /* ignore */
+  }
 }
 
 export function readClientSession(): AuthSession | null {
   if (typeof document === "undefined") return null;
+  try {
+    const mirrored = sessionStorage.getItem(SESSION_MIRROR_KEY);
+    if (mirrored) {
+      const parsed = JSON.parse(mirrored) as AuthSession;
+      if (parsed?.role && parsed?.phone) return parsed;
+    }
+  } catch {
+    /* ignore */
+  }
   const match = document.cookie.match(new RegExp(`(?:^|; )${AUTH_COOKIE}=([^;]*)`));
   return decodeSession(match?.[1] ? decodeURIComponent(match[1]) : null);
+}
+
+/** Persist a UI mirror after JWT login (httpOnly cookie is not JS-readable). */
+export function mirrorAuthSession(session: AuthSession) {
+  try {
+    sessionStorage.setItem(SESSION_MIRROR_KEY, JSON.stringify(session));
+  } catch {
+    /* ignore */
+  }
 }
 
 export function displayNameForSession(session: AuthSession): string {
