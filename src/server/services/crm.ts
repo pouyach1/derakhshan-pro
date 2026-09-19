@@ -34,18 +34,37 @@ function configuredClientOtp(): string | null {
   return otp ? otp : null;
 }
 
-function assertClientOtp(secret: string) {
+function clientOtpMatches(secret: string) {
   const otp = configuredClientOtp();
-  if (!otp) {
+  return Boolean(otp && secret === otp);
+}
+
+async function verifyClientSecret(user: UserRecord, secret: string) {
+  if (user.passwordHash) {
+    const ok = await verifyPassword(secret, user.passwordHash);
+    if (ok) return;
+    if (clientOtpMatches(secret)) return;
+    throw new ApiError(401, "INVALID_CREDENTIALS", "رمز عبور یا کد تأیید نادرست است");
+  }
+
+  if (clientOtpMatches(secret)) return;
+
+  // First password login for an OTP-only guest: bind the password to the account.
+  if (secret.length >= 6) {
+    user.passwordHash = await hashPassword(secret);
+    user.updatedAt = nowIso();
+    saveStore();
+    return;
+  }
+
+  if (!configuredClientOtp()) {
     throw new ApiError(
-      503,
-      "OTP_UNAVAILABLE",
-      "ورود با کد تأیید پیکربندی نشده است. DEMO_OTP را تنظیم کنید یا ارائه‌دهنده پیامک را وصل کنید.",
+      401,
+      "INVALID_CREDENTIALS",
+      "رمز عبور حداقل ۶ کاراکتر وارد کنید یا از کد یک‌بارمصرف استفاده کنید.",
     );
   }
-  if (secret.trim() !== otp) {
-    throw new ApiError(401, "INVALID_CREDENTIALS", "کد تأیید نادرست است");
-  }
+  throw new ApiError(401, "INVALID_CREDENTIALS", "کد تأیید نادرست است");
 }
 
 export async function authenticate(input: z.infer<typeof loginSchema>): Promise<AuthSession> {
@@ -69,18 +88,32 @@ export async function authenticate(input: z.infer<typeof loginSchema>): Promise<
   );
 
   if (!user || !user.isActive) {
-    assertClientOtp(secret);
     const phone = isEmail ? "09000000000" : identifier;
     const id = `client-${identifier}`;
     let guest = store.users.find((u) => u.id === id);
+
+    const otpOk = clientOtpMatches(secret);
+    const passwordOk = secret.length >= 6;
+
+    if (!otpOk && !passwordOk) {
+      if (!configuredClientOtp()) {
+        throw new ApiError(
+          401,
+          "INVALID_CREDENTIALS",
+          "رمز عبور حداقل ۶ کاراکتر وارد کنید.",
+        );
+      }
+      throw new ApiError(401, "INVALID_CREDENTIALS", "کد تأیید نادرست است");
+    }
+
     if (!guest) {
       guest = {
         id,
         phone,
         email: isEmail ? identifier : null,
-        name: "کاربر مهمان",
+        name: isEmail ? identifier.split("@")[0] || "کاربر" : "کاربر مهمان",
         role: "client",
-        passwordHash: null,
+        passwordHash: otpOk ? null : await hashPassword(secret),
         agentId: null,
         onboardingComplete: false,
         clientProfile: null,
@@ -91,7 +124,10 @@ export async function authenticate(input: z.infer<typeof loginSchema>): Promise<
       };
       store.users.push(guest);
       saveStore();
+    } else {
+      await verifyClientSecret(guest, secret);
     }
+
     return {
       id: guest.id,
       phone: guest.phone,
@@ -103,7 +139,7 @@ export async function authenticate(input: z.infer<typeof loginSchema>): Promise<
   }
 
   if (user.role === "client") {
-    assertClientOtp(secret);
+    await verifyClientSecret(user, secret);
   } else {
     if (!user.passwordHash) {
       throw new ApiError(401, "INVALID_CREDENTIALS", "رمز عبور برای این حساب تنظیم نشده است");

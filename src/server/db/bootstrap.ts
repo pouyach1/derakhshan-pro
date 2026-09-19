@@ -755,13 +755,10 @@ export async function ensureBootstrapped() {
 
   if (needsData) {
     if (!seedPassword) {
-      // Workers/cold isolates with no seed env: still allow login if staff hashes exist.
-      if (hasUsableStaff) {
-        return;
-      }
-      throw new Error(
-        "SEED_ADMIN_PASSWORD is required for seeding (min 8 characters). Set SEED_ADMIN_PASSWORD or NEXT_PUBLIC_DEMO_STAFF_PASSWORD in the server environment.",
-      );
+      // Empty Workers isolate without seed env: do NOT block client self-login.
+      // Staff demo data simply won't exist until a seed password is configured.
+      if (hasUsableStaff) return;
+      return;
     }
 
     if (!booting) {
