@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { nanoid } from "nanoid";
+import { nanoid } from "@/lib/id";
 import { propertyCreateSchema, propertyQuerySchema } from "@/server/validation/schemas";
 import { createProperty, listProperties } from "@/server/services/properties";
 import { getSessionFromRequest, requireSession } from "@/server/http/guard";

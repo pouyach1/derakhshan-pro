@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { nanoid } from "nanoid";
+import { nanoid } from "@/lib/id";
 import { contactSchema } from "@/server/validation/schemas";
 import { createContactMessage } from "@/server/services/crm";
 import { jsonError, jsonOk, ApiError } from "@/server/http/response";

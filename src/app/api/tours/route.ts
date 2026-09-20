@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { nanoid } from "nanoid";
+import { nanoid } from "@/lib/id";
 import { z } from "zod";
 import { tourCreateSchema, tourUpdateSchema } from "@/server/validation/schemas";
 import { createTour, listTours, updateTour } from "@/server/services/crm";

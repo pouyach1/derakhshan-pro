@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { nanoid } from "nanoid";
+import { nanoid } from "@/lib/id";
 import { listActivity } from "@/server/services/crm";
 import { requireSession } from "@/server/http/guard";
 import { jsonError, jsonOk } from "@/server/http/response";

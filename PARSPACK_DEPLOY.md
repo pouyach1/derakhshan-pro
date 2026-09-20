@@ -34,6 +34,21 @@ node server.cjs
 # یا: npm run start:node
 ```
 
+### اگر رجیستری پارس‌هاب روی یک پکیج `500` داد
+
+مثال واقعی: `nanoid-6.0.1.tgz` → `npm error E500`.
+
+این خطا از کد پروژه نیست؛ آینهٔ npm هاست (`-/repository/npm/`) occasionally پکیج‌ها را با 500 برمی‌گرداند.
+
+کارهایی که در مخزن انجام شده:
+- Cloudflare tooling اختیاری است (`--omit=optional`)
+- وابستگی `nanoid` حذف و با `src/lib/id.ts` جایگزین شده تا آن tarball لازم نباشد
+
+اگر پکیج دیگری `500` داد:
+1. یک‌بار **Rebuild** بزنید (گاهی موقتی است)
+2. Install command را روی `npm ci --omit=optional` نگه دارید
+3. اگر همان پکیج تکرار شد، بگویید تا جایگزین/پین شود
+
 Environment (الزامی):
 
 - `NODE_ENV=production`

@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { nanoid } from "nanoid";
+import { nanoid } from "@/lib/id";
 import { leadCreateSchema } from "@/server/validation/schemas";
 import { createLead, listLeads } from "@/server/services/crm";
 import { requireSession } from "@/server/http/guard";

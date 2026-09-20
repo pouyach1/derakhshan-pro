@@ -7,7 +7,7 @@
  * This module keeps the physical JSON I/O + backward-compatible re-exports.
  */
 
-import { nanoid } from "nanoid";
+import { nanoid } from "@/lib/id";
 import {
   emptyAgencyStore,
   normalizeAgencyStore,

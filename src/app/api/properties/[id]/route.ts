@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { nanoid } from "nanoid";
+import { nanoid } from "@/lib/id";
 import { propertyUpdateSchema } from "@/server/validation/schemas";
 import {
   deleteProperty,

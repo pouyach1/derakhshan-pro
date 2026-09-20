@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { nanoid } from "nanoid";
+import { nanoid } from "@/lib/id";
 
 export class ApiError extends Error {
   status: number;
