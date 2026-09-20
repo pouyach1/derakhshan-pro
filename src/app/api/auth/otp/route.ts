@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { nanoid } from "nanoid";
+import { nanoid } from "@/lib/id";
 import { otpRequestSchema } from "@/server/validation/schemas";
 import { jsonError, jsonOk, ApiError } from "@/server/http/response";
 import { rateLimit } from "@/server/auth/rate-limit";

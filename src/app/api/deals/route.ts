@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { nanoid } from "nanoid";
+import { nanoid } from "@/lib/id";
 import { z } from "zod";
 import { createDeal, listDeals, listPublicClosedDeals } from "@/server/services/properties";
 import { getSessionFromRequest, requireSession } from "@/server/http/guard";

@@ -1,4 +1,4 @@
-import { nanoid } from "nanoid";
+import { nanoid } from "@/lib/id";
 import { jsonError, jsonOk } from "@/server/http/response";
 
 /**
