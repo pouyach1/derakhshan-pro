@@ -1,25 +1,17 @@
 /**
  * ============================================================================
- * siteConfig.ts — تنها فایل تنظیمات برند برای تحویل به آژانس‌های مختلف
+ * siteConfig.ts — ساختار کامل سایت
  * ============================================================================
  *
- * چطور سریع سفارشی‌سازی کنید؟ فقط اطلاعات صاحب سایت:
- * 1) ثابت‌های OWNER_FILL پایین را با نام، تلفن، ایمیل، آدرس و واتساپ واقعی عوض کنید
- * 2) بخش social و seo را با لینک و دامنهٔ واقعی پر کنید
- * 3) لوگو و تصاویر را در public/images جایگزین کنید
- * 4) فایل‌های نمونه را از پنل ادمین /admin/properties حذف یا ویرایش کنید
+ * صاحب سایت: فقط فایل زیر را ویرایش کنید (نه این فایل):
+ *   →  src/config/SITE_INFO.ts
  *
- * املاک، لید، مشتری و بازدید از پنل کار می‌کنند؛ لازم نیست در این فایل آگهی بسازید.
- *
- * قوانین مهم:
- * - فقط متن داخل "..." یا '...' را عوض کنید
- * - نام فیلدها (مثل nameFa یا phone) را تغییر ندهید
- * - آیکون‌ها کلید متنی هستند (مثل "phone") — خودشان را عوض نکنید مگر بدانید نگاشت چیست
- * - بعد از ویرایش، سایت را یک‌بار رفرش کنید
- *
- * بخش‌های اصلی: brand | hero | about | services | stats | contact | social | seo |
- *                properties | agents | testimonials | nav | footer | home | panels
+ * این فایل بقیهٔ متن‌ها و ساختار صفحات را نگه می‌دارد و هویت برند را
+ * از SITE_INFO می‌خواند. املاک و CRM از پنل ادمین می‌آیند.
+ * ============================================================================
  */
+
+import { SITE_INFO } from "@/config/SITE_INFO";
 
 /** کلیدهای آیکون (کامپوننت‌ها این نام‌ها را به Lucide نگاشت می‌کنند) */
 export type SiteIconKey =
@@ -45,17 +37,14 @@ export type SiteIconKey =
   | "file-check"
   | "trophy";
 
-/* -------------------------------------------------------------------------- */
-/* OWNER_FILL — تنها بلوکی که صاحب سایت باید قبل از تحویل پر کند              */
-/* -------------------------------------------------------------------------- */
-
-const PHONE = "۰۲۱-۹۱۰۲۲۰۲۰";
-const EMAIL = "info@vorqen.ir";
-const ADDRESS_LINE1 = "تهران، الهیه، خیابان فرشته، پلاک ۱۲";
-const CITY = "تهران";
-const REGION = "منطقه ۱";
-const NAME_FA = "دپارتمان درخشان";
-const WHATSAPP_DIGITS = "989121000000"; // بدون + — برای ساخت لینک wa.me
+/* از SITE_INFO خوانده می‌شوند — برای ویرایش به آن فایل بروید */
+const PHONE = SITE_INFO.phone;
+const EMAIL = SITE_INFO.email;
+const ADDRESS_LINE1 = SITE_INFO.addressLine1;
+const CITY = SITE_INFO.city;
+const REGION = SITE_INFO.region;
+const NAME_FA = SITE_INFO.nameFa;
+const WHATSAPP_DIGITS = SITE_INFO.whatsapp;
 
 export const siteConfig = {
   /* ======================================================================== */
@@ -63,26 +52,25 @@ export const siteConfig = {
   /* ======================================================================== */
   brand: {
     /** نام انگلیسی برند (برای SEO و متادیتا) */
-    name: "Derakhshan Properties",
+    name: SITE_INFO.nameEn,
     /** نام فارسی برند — در هدر، فوتر و عناوین صفحات دیده می‌شود */
     nameFa: NAME_FA,
     /** نام انگلیسی جایگزین / برندینگ لاتین */
-    brandEn: "Derakhshan Properties",
+    brandEn: SITE_INFO.nameEn,
     /** شعار انگلیسی کوتاه */
-    tagline: "Luxury Residences & Private Brokerage",
+    tagline: SITE_INFO.taglineEn,
     /** شعار فارسی کوتاه */
-    taglineFa: "کارگزاری خصوصی املاک فاخر تهران",
+    taglineFa: SITE_INFO.taglineFa,
     /** توضیح کوتاه برند برای صفحهٔ اصلی و SEO */
-    description:
-      "دپارتمان درخشان؛ کارگزاری خصوصی خرید، فروش و اجاره املاک فاخر در شمال تهران — از پنت‌هاوس و ویلا تا دفاتر اداری منتخب، با مشاوره حقوقی و پیگیری تا تحویل.",
+    description: SITE_INFO.description,
     /** نام کوتاه فارسی برای فوتر و بج‌ها (مثلاً «املاک درخشان») */
-    shortNameFa: "املاک درخشان",
+    shortNameFa: SITE_INFO.shortNameFa,
     /** واترمارک بزرگ لاتین در فوتر (مثل DERAKHSHAN) */
-    watermark: "DERAKHSHAN",
+    watermark: SITE_INFO.watermark,
     /** نام محصول/پنل کوتاه (مثلاً «درخشان پرو») — در لاگین و شل پنل‌ها */
-    productNameFa: "درخشان پرو",
+    productNameFa: SITE_INFO.productNameFa,
     /** نام مدیر دفتر پیش‌فرض برای فرم تنظیمات ادمین */
-    managerNameFa: "آرشام درخشان",
+    managerNameFa: SITE_INFO.managerNameFa,
   },
 
   /* ======================================================================== */
@@ -134,26 +122,26 @@ export const siteConfig = {
     /** تلفن نمایشی (فارسی) */
     phone: PHONE,
     /** ساعات کاری برای نمایش در صفحه تماس */
-    hours: "شنبه تا چهارشنبه · ۹ تا ۱۸ · پنجشنبه ۹ تا ۱۴",
+    hours: SITE_INFO.hours,
     /** هندل تلگرام بدون @ */
-    telegramHandle: "derakhshanpro",
+    telegramHandle: SITE_INFO.telegramHandle,
     address: {
       /** آدرس کامل خط اول */
       line1: ADDRESS_LINE1,
       /** خط دوم آدرس / محله */
-      line2: "نزدیک میدان فرشته",
+      line2: SITE_INFO.addressLine2,
       /** استان / منطقه */
       region: REGION,
       /** شهر */
       city: CITY,
       /** کد پستی */
-      postal: "۱۹۱۵۶",
+      postal: SITE_INFO.postal,
     },
     /** لینک‌های مسیریابی */
     maps: {
       google: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${ADDRESS_LINE1} ${CITY}`)}`,
       waze: `https://waze.com/ul?q=${encodeURIComponent(`${ADDRESS_LINE1} ${CITY}`)}&navigate=yes`,
-      neshan: "https://neshan.org/maps/@35.8045,51.4280,16.0z",
+      neshan: SITE_INFO.mapsNeshan,
     },
   },
 
@@ -161,9 +149,9 @@ export const siteConfig = {
   /* social — شبکه‌های اجتماعی (واتس‌اپ بدون +؛ فقط ارقام بین‌المللی)            */
   /* ======================================================================== */
   social: {
-    linkedin: "https://www.linkedin.com/company/derakhshan-properties",
-    instagram: "https://instagram.com/derakhshan.pro",
-    telegram: "https://t.me/derakhshanpro",
+    linkedin: SITE_INFO.linkedin,
+    instagram: SITE_INFO.instagram,
+    telegram: SITE_INFO.telegram,
     /** فقط ارقام، بدون + — کامپوننت‌ها لینک wa.me را می‌سازند */
     whatsapp: WHATSAPP_DIGITS,
   },
@@ -173,14 +161,13 @@ export const siteConfig = {
   /* ======================================================================== */
   seo: {
     /** آدرس کامل سایت */
-    url: "https://vorqen.ir",
+    url: SITE_INFO.siteUrl,
     /** تصویر پیش‌فرض Open Graph */
     ogImage: "/images/landing/hero/banner.jpg",
     /** عنوان پیش‌فرض صفحات عمومی */
-    title: "دپارتمان درخشان | کارگزاری خصوصی املاک فاخر تهران",
+    title: SITE_INFO.seoTitle,
     /** توضیح متای پیش‌فرض */
-    description:
-      "نمایش حرفه‌ای آرشیو املاک، تیم مشاوران، معاملات موفق و پنل مدیریت برای دفاتر املاک — نسخه دمو درخشان پرو.",
+    description: SITE_INFO.seoDescription,
   },
 
   /* ======================================================================== */
@@ -379,7 +366,7 @@ export const siteConfig = {
   agents: [
     {
       id: "arsham",
-      name: "دکتر آرشام درخشان",
+      name: SITE_INFO.managerNameFa,
       role: "مدیریت ارشد و استراتژیست کلان املاک",
       department: "leadership" as const,
       image:
@@ -394,7 +381,7 @@ export const siteConfig = {
         { label: "رضایت موکلان VIP", value: "۹۹٪" },
       ],
       phone: PHONE,
-      whatsapp: "989121000000",
+      whatsapp: WHATSAPP_DIGITS,
     },
     {
       id: "sara",
@@ -522,7 +509,7 @@ export const siteConfig = {
   home: {
     /** عناوین بخش «چرا ما» / ارزش‌های پیشنهادی */
     valuePropsSection: {
-      eyebrow: "چرا درخشان پرو",
+      eyebrow: `چرا ${SITE_INFO.productNameFa}`,
       title: "چهار ستون یک تجربه ملکی فاخر",
       subtitle:
         "از دسترسی آف‌مارکت تا انضباط حقوقی و استراتژی سرمایه؛ هر بخش برای تصمیم‌های جدی طراحی شده است.",
@@ -790,12 +777,12 @@ export const siteConfig = {
     /** لینک‌های شبکه — icon کلید متنی است */
     socialLinks: [
       {
-        href: "https://instagram.com/derakhshan.pro",
+        href: SITE_INFO.instagram,
         label: "اینستاگرام لوکس",
         icon: "instagram" as SiteIconKey,
       },
       {
-        href: "https://t.me/derakhshanpro",
+        href: SITE_INFO.telegram,
         label: "تلگرام فایل‌های VIP",
         icon: "send" as SiteIconKey,
       },
@@ -805,7 +792,7 @@ export const siteConfig = {
         icon: "message-circle" as SiteIconKey,
       },
       {
-        href: "https://www.linkedin.com/company/derakhshan-properties",
+        href: SITE_INFO.linkedin,
         label: "لینکدین",
         icon: "linkedin" as SiteIconKey,
       },
@@ -835,10 +822,10 @@ export const siteConfig = {
   contactPage: {
     seoTitle: "ارتباط VIP",
     seoDescription:
-      "صفحه ارتباط لوکس درخشان پرو — پشتیبانی VIP، جلسه حضوری، کارشناسی ملک و مشاوره حقوقی با زیبایی‌شناسی آیس‌اسکای.",
+      "صفحه ارتباط لوکس — پشتیبانی VIP، جلسه حضوری، کارشناسی ملک و مشاوره حقوقی با زیبایی‌شناسی آیس‌اسکای.",
     hero: {
       badge: "تیم پشتیبانی VIP - فعال و پاسخگوی آنلاین",
-      title: "ارتباط با سرآغاز معمارانه‌ای نو در املاک درخشان",
+      title: `ارتباط با سرآغاز معمارانه‌ای نو در ${SITE_INFO.shortNameFa}`,
       subtitle:
         "تجربه‌ای سینمایی از ارتباط با دپارتمان لوکس؛ از مشاوره معماری و سرمایه‌گذاری تا هماهنگی جلسات VIP و پشتیبانی حقوقی اختصاصی.",
       primaryCta: "شروع ارتباط VIP",
@@ -896,22 +883,22 @@ export const siteConfig = {
         id: "maps",
         title: "مسیریابی دفتر مرکزی",
         detail: `${ADDRESS_LINE1} · ${CITY}`,
-        href: "https://www.google.com/maps/search/?api=1&query=%D9%86%DB%8C%D8%A7%D9%88%D8%B1%D8%A7%D9%86%20%D8%AE%DB%8C%D8%A7%D8%A8%D8%A7%D9%86%20%DB%8C%D8%A7%D8%B3%D8%B1",
+        href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${ADDRESS_LINE1} ${CITY}`)}`,
         icon: "navigation" as SiteIconKey,
         meta: "Google Maps · Waze · نشان",
       },
       {
         id: "telegram",
         title: "ارتباط تلگرام",
-        detail: "@derakhshanpro",
-        href: "https://t.me/derakhshanpro",
+        detail: `@${SITE_INFO.telegramHandle}`,
+        href: SITE_INFO.telegram,
         icon: "message-circle" as SiteIconKey,
         meta: "پیام‌رسانی امن برای مشتریان خاص",
       },
       {
         id: "hours",
         title: "ساعات پذیرش",
-        detail: "شنبه تا پنجشنبه · ۹ تا ۱۸",
+        detail: SITE_INFO.hours,
         href: "#branch",
         icon: "clock" as SiteIconKey,
         meta: "جلسات مدیریتی با هماهنگی قبلی",
@@ -920,18 +907,18 @@ export const siteConfig = {
     navLinks: [
       {
         label: "Waze",
-        href: "https://waze.com/ul?q=%D9%86%DB%8C%D8%A7%D9%88%D8%B1%D8%A7%D9%86%20%DB%8C%D8%A7%D8%B3%D8%B1&navigate=yes",
+        href: `https://waze.com/ul?q=${encodeURIComponent(`${ADDRESS_LINE1} ${CITY}`)}&navigate=yes`,
       },
       {
         label: "Google Maps",
-        href: "https://www.google.com/maps/search/?api=1&query=%D9%86%DB%8C%D8%A7%D9%88%D8%B1%D8%A7%D9%86%20%D8%AE%DB%8C%D8%A7%D8%A8%D8%A7%D9%86%20%DB%8C%D8%A7%D8%B3%D8%B1",
+        href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${ADDRESS_LINE1} ${CITY}`)}`,
       },
       {
         label: "نشان",
-        href: "https://neshan.org/maps/@35.8048,51.4321,16.0z",
+        href: SITE_INFO.mapsNeshan,
       },
       { label: "تماس", href: `tel:${PHONE.replace(/\s/g, "")}` },
-      { label: "تلگرام", href: "https://t.me/derakhshanpro" },
+      { label: "تلگرام", href: SITE_INFO.telegram },
     ],
     routeSteps: [
       "ورود از خیابان هدایتکار، جنب فروشگاه افق کوروش",
@@ -965,7 +952,7 @@ export const siteConfig = {
   servicesPage: {
     seoTitle: "خدمات VIP",
     seoDescription:
-      "خدمات جامع املاک درخشان پرو — خرید و فروش پنت‌هاوس، اجاره VIP، سرمایه‌گذاری، حقوقی، کارشناسی و بازسازی لوکس.",
+      `خدمات جامع ${SITE_INFO.productNameFa} — خرید و فروش پنت‌هاوس، اجاره VIP، سرمایه‌گذاری، حقوقی، کارشناسی و بازسازی لوکس.`,
     hero: {
       badge: "ارائه‌دهنده خدمات سطح الف (Class-A Standards)",
       title: "خدمات جامع و متمایز در والاترین سطح املاک کشور",
@@ -1100,12 +1087,12 @@ export const siteConfig = {
   /* doneDealsPage — محتوای صفحهٔ معاملات موفق                                   */
   /* ======================================================================== */
   doneDealsPage: {
-    seoTitle: "معاملات موفق | دپارتمان درخشان",
+    seoTitle: `معاملات موفق | ${NAME_FA}`,
     seoDescription:
-      "کارنامه معاملات موفق دپارتمان درخشان — پنت‌هاوس، ویلا و واحدهای منتخب شمال تهران با پیگیری تا تحویل.",
+      `کارنامه معاملات موفق ${NAME_FA} — پنت‌هاوس، ویلا و واحدهای منتخب شمال تهران با پیگیری تا تحویل.`,
     hero: {
       badge: "ثبت رکورد گران‌ترین پنت‌هاوس معامله‌شده سال",
-      title: "کارنامه درخشان؛ گزیده‌ای از برترین معاملات انجام‌شده",
+      title: `کارنامه ${SITE_INFO.shortNameFa}؛ گزیده‌ای از برترین معاملات انجام‌شده`,
       subtitle:
         "تجربه‌ای سینمایی از پرونده‌های بسته‌شده؛ با عمق بصری پارالاکس، محرمانگی کامل و استاندارد حقوقی سخت‌گیرانه.",
       primaryCta: "مشاهده پرونده‌ها",
@@ -1169,7 +1156,7 @@ export const siteConfig = {
   teamPage: {
     seoTitle: "تیم مشاوران",
     seoDescription:
-      "آشنایی با نخبگان درخشان پرو — مدیریت ارشد، مشاوران پنت‌هاوس، کارشناسان ویلا و دپارتمان حقوقی با استاندارد VIP.",
+      `آشنایی با نخبگان ${SITE_INFO.productNameFa} — مدیریت ارشد، مشاوران پنت‌هاوس، کارشناسان ویلا و دپارتمان حقوقی با استاندارد VIP.`,
     hero: {
       badge: "اعضای تاییدشده انجمن بین‌المللی مشاوران VIP",
       title: "معماران اعتماد؛ زبده‌ترین نخبگان صنعت املاک کشور",
@@ -1238,10 +1225,10 @@ export const siteConfig = {
     /** alt تصویر هیرو لاگین */
     loginHeroAlt: "نمای معماری لوکس املاک",
     /** دامنهٔ عمومی پیش‌فرض فرم تنظیمات */
-    publicDomain: "https://vorqen.ir",
+    publicDomain: SITE_INFO.siteUrl,
     /** ایمیل‌های دمو ورود (فقط آزمایشی) */
-    demoAdminEmail: "admin@vorqen.ir",
-    demoAgentEmail: "agent@vorqen.ir",
+    demoAdminEmail: SITE_INFO.adminEmail,
+    demoAgentEmail: SITE_INFO.agentEmail,
     /** محله‌های پیشنهادی فرم آنبوردینگ مشتری */
     neighborhoods: [
       "زعفرانیه",
