@@ -1,17 +1,18 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import CompactPropertyCard from "@/components/mobile/CompactPropertyCard";
-import FreeScrollCarousel from "@/components/mobile/carousel/FreeScrollCarousel";
-import PagingCarousel from "@/components/mobile/carousel/PagingCarousel";
+import { ArrowLeft, Bath, BedDouble, MapPin, Ruler } from "lucide-react";
 import { PropertyCardSkeletonList } from "@/components/mobile/PropertySkeletons";
 import { api } from "@/lib/api";
+import { fallbackImage, formatToman, listingTypeLabel } from "@/lib/money";
+import { cn } from "@/lib/utils";
 import type { PropertyRecord } from "@/server/db/store";
 
 /**
- * بخش زنده فایل‌ها روی Home — کاملاً جدا از Hero.
- * موبایل و دسکتاپ: ویژه (free-scroll) + جدیدترین (paging) + گرید همه.
+ * ویترین خانه — تم روشن برند (#F3F7FB / #0B3A5C).
+ * یک فایل تازهٔ بزرگ + بقیه در گرید، بدون کاروسل تکراری روی پس‌زمینهٔ تیره.
  */
 export default function HomePropertiesSection() {
   const [items, setItems] = useState<PropertyRecord[]>([]);
@@ -34,121 +35,143 @@ export default function HomePropertiesSection() {
     void load();
   }, [load]);
 
-  const featured = useMemo(() => {
-    const flagged = items.filter((p) => p.isFeatured);
-    return (flagged.length ? flagged : items).slice(0, 8);
-  }, [items]);
-
   const newest = useMemo(() => {
     return [...items]
       .sort((a, b) => (b.createdAt ?? "").localeCompare(a.createdAt ?? ""))
-      .slice(0, 8);
+      .slice(0, 7);
   }, [items]);
 
-  const all = useMemo(() => items.slice(0, 8), [items]);
+  const lead = newest[0];
+  const rest = newest.slice(1);
 
   return (
-    <section
-      className="relative overflow-hidden bg-[#070C18] py-12 text-white md:py-16 lg:py-20"
-      aria-label="فایل‌های پیشنهادی"
-    >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(0,163,255,0.12),_transparent_55%)]" />
-
-      <div className="relative space-y-12 lg:space-y-16">
-        <div>
-          <div className="rio-container mb-5 flex items-end justify-between gap-3 lg:mb-7">
-            <div>
-              <p className="text-[11px] font-semibold tracking-[0.18em] text-cyan-300 lg:text-xs">ویژه</p>
-              <h2 className="mt-1 font-vazirmatn text-xl font-black lg:text-3xl">ملک‌های ویژه</h2>
-              <p className="mt-2 hidden max-w-xl text-sm leading-7 text-slate-400 lg:block">
-                فایل‌های برجسته را آزادانه بکشید؛ با رها کردن، نزدیک‌ترین کارت با اسپرینگ قفل می‌شود.
-              </p>
-            </div>
-            <Link href="/listings" className="shrink-0 text-xs text-cyan-300 hover:text-cyan-200 lg:text-sm">
-              آرشیو کامل
-            </Link>
+    <section className="bg-[#F3F7FB] py-16 text-[#0B3A5C] md:py-24" aria-label="جدیدترین ملک‌ها">
+      <div className="rio-container">
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-4 md:mb-10">
+          <div className="max-w-2xl">
+            <p className="text-xs font-semibold tracking-[0.18em] text-sky-600">فایل‌های تازه</p>
+            <h2 className="mt-2 font-vazirmatn text-3xl font-semibold leading-relaxed md:text-4xl">
+              جدیدترین ملک‌ها
+            </h2>
+            <p className="mt-3 max-w-xl text-sm leading-7 text-[#0B3A5C]/70 md:text-base">
+              آخرین فایل‌های قابل معامله دفتر، با همان آرامش و خوانایی بقیهٔ سایت.
+            </p>
           </div>
-
-          {loading ? (
-            <div className="rio-container">
-              <PropertyCardSkeletonList count={1} />
-            </div>
-          ) : featured.length === 0 ? (
-            <p className="rio-container py-6 text-sm text-slate-400">فایل ویژه‌ای نیست.</p>
-          ) : (
-            <FreeScrollCarousel slideWidthRatio={{ mobile: 0.78, desktop: 0.34 }} gapPx={16}>
-              {featured.map((item, index) => (
-                <CompactPropertyCard
-                  key={item.id}
-                  item={item}
-                  variant="featured"
-                  priority={index === 0}
-                />
-              ))}
-            </FreeScrollCarousel>
-          )}
+          <Link
+            href="/listings"
+            className="inline-flex items-center gap-2 rounded-full bg-[#0B3A5C] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-600"
+          >
+            آرشیو کامل
+            <ArrowLeft className="h-4 w-4" />
+          </Link>
         </div>
 
-        <div>
-          <div className="rio-container mb-5 flex items-end justify-between gap-3 lg:mb-7">
-            <div>
-              <p className="text-[11px] font-semibold tracking-[0.18em] text-cyan-300 lg:text-xs">تازه</p>
-              <h2 className="mt-1 font-vazirmatn text-xl font-black lg:text-3xl">جدیدترین‌ها</h2>
-              <p className="mt-2 hidden max-w-xl text-sm leading-7 text-slate-400 lg:block">
-                هر سوایپ دقیقاً یک فایل جلو می‌رود — بدون توقف در حالت میانی.
-              </p>
-            </div>
+        {loading ? (
+          <PropertyCardSkeletonList count={4} />
+        ) : !lead ? (
+          <p className="rounded-[1.5rem] bg-white px-6 py-16 text-center text-sm text-[#0B3A5C]/55 ring-1 ring-[#0B3A5C]/8">
+            فعلاً فایلی برای نمایش نیست.
+          </p>
+        ) : (
+          <div className="space-y-5">
+            <LeadCard item={lead} />
+            {rest.length > 0 ? (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {rest.map((item) => (
+                  <QuietCard key={item.id} item={item} />
+                ))}
+              </div>
+            ) : null}
           </div>
-
-          {loading ? (
-            <div className="rio-container">
-              <PropertyCardSkeletonList count={1} />
-            </div>
-          ) : newest.length === 0 ? (
-            <p className="rio-container py-6 text-sm text-slate-400">فایل جدیدی نیست.</p>
-          ) : (
-            <PagingCarousel slideWidthRatio={{ mobile: 0.88, desktop: 0.5 }} gapPx={16}>
-              {newest.map((item, index) => (
-                <CompactPropertyCard
-                  key={item.id}
-                  item={item}
-                  variant="paging"
-                  priority={index === 0}
-                />
-              ))}
-            </PagingCarousel>
-          )}
-        </div>
-
-        <div className="rio-container">
-          <div className="mb-5 flex items-end justify-between gap-3 lg:mb-7">
-            <div>
-              <p className="text-[11px] font-semibold tracking-[0.18em] text-cyan-300 lg:text-xs">آرشیو زنده</p>
-              <h2 className="mt-1 font-vazirmatn text-xl font-black lg:text-3xl">همه ملک‌ها</h2>
-            </div>
-            <Link href="/listings" className="text-xs text-cyan-300 hover:text-cyan-200 lg:text-sm">
-              مشاهده همه
-            </Link>
-          </div>
-
-          {loading ? (
-            <PropertyCardSkeletonList count={4} />
-          ) : all.length === 0 ? (
-            <p className="py-8 text-sm text-slate-400">فعلاً فایلی برای نمایش نیست.</p>
-          ) : (
-            <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4 lg:gap-5">
-              {all.map((item, index) => (
-                <CompactPropertyCard
-                  key={item.id}
-                  item={item}
-                  variant="grid"
-                  priority={index < 2}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+        )}
       </div>
     </section>
+  );
+}
+
+function LeadCard({ item }: { item: PropertyRecord }) {
+  return (
+    <article className="overflow-hidden rounded-[1.75rem] bg-white shadow-[0_28px_70px_-42px_rgba(11,58,92,0.45)] ring-1 ring-[#0B3A5C]/8">
+      <Link href={`/listings/${item.id}`} className="grid lg:grid-cols-12">
+        <div className="relative min-h-[16rem] bg-[#E8F1F8] lg:col-span-7 lg:min-h-[26rem]">
+          <Image
+            src={fallbackImage(item.imageUrl)}
+            alt={item.title}
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 60vw"
+            className="object-cover"
+          />
+          <span className="absolute start-4 top-4 rounded-full bg-white/95 px-3 py-1 text-[11px] font-semibold text-[#0B3A5C] shadow-sm">
+            {listingTypeLabel(item.listingType)}
+          </span>
+        </div>
+        <div className="flex flex-col justify-center gap-4 p-6 md:p-10 lg:col-span-5">
+          <p className="inline-flex items-center gap-1.5 text-xs font-medium text-sky-600">
+            <MapPin className="h-3.5 w-3.5" />
+            {item.neighborhood || item.location}
+          </p>
+          <h3 className="font-vazirmatn text-2xl font-semibold leading-relaxed text-[#0B3A5C] md:text-3xl">
+            {item.title}
+          </h3>
+          <p className="text-lg font-semibold text-sky-600">{formatToman(item.price, item.listingType)}</p>
+          <Specs item={item} />
+          <span className="mt-2 inline-flex w-fit items-center gap-2 text-sm font-semibold text-[#0B3A5C]">
+            مشاهده فایل
+            <ArrowLeft className="h-4 w-4" />
+          </span>
+        </div>
+      </Link>
+    </article>
+  );
+}
+
+function QuietCard({ item }: { item: PropertyRecord }) {
+  return (
+    <article className="overflow-hidden rounded-[1.4rem] bg-white ring-1 ring-[#0B3A5C]/8 transition hover:-translate-y-0.5 hover:shadow-[0_22px_50px_-32px_rgba(11,58,92,0.4)]">
+      <Link href={`/listings/${item.id}`} className="block">
+        <div className="relative aspect-[4/3] bg-[#E8F1F8]">
+          <Image
+            src={fallbackImage(item.imageUrl)}
+            alt={item.title}
+            fill
+            sizes="(max-width: 640px) 100vw, 33vw"
+            className="object-cover"
+          />
+          <span className="absolute start-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-semibold text-[#0B3A5C]">
+            {listingTypeLabel(item.listingType)}
+          </span>
+        </div>
+        <div className="space-y-2 p-4">
+          <p className="line-clamp-1 text-[11px] text-[#0B3A5C]/55">{item.neighborhood || item.location}</p>
+          <h3 className="line-clamp-2 min-h-[3.25rem] font-vazirmatn text-base font-semibold leading-7 text-[#0B3A5C]">
+            {item.title}
+          </h3>
+          <p className="text-sm font-semibold text-sky-600">{formatToman(item.price, item.listingType)}</p>
+          <Specs item={item} compact />
+        </div>
+      </Link>
+    </article>
+  );
+}
+
+function Specs({ item, compact }: { item: PropertyRecord; compact?: boolean }) {
+  const rows = [
+    { icon: BedDouble, value: item.bedrooms, unit: "خواب" },
+    { icon: Bath, value: item.bathrooms, unit: "سرویس" },
+    { icon: Ruler, value: item.areaSqm, unit: "متر" },
+  ];
+  return (
+    <div className={cn("grid grid-cols-3 border-t border-[#0B3A5C]/8 pt-3", compact ? "gap-1" : "gap-2")}>
+      {rows.map((row) => (
+        <div key={row.unit} className="text-center">
+          <row.icon className="mx-auto h-4 w-4 text-sky-500" strokeWidth={1.75} />
+          <p className="mt-1 text-sm font-bold tabular-nums text-[#0B3A5C]">
+            {row.value.toLocaleString("fa-IR")}
+          </p>
+          <p className="text-[10px] text-[#0B3A5C]/45">{row.unit}</p>
+        </div>
+      ))}
+    </div>
   );
 }

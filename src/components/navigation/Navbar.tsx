@@ -51,13 +51,29 @@ function LoginButton({
   );
 }
 
-function DesktopNavLink({ href, label, active }: { href: string; label: string; active: boolean }) {
+function DesktopNavLink({
+  href,
+  label,
+  active,
+  onDark,
+}: {
+  href: string;
+  label: string;
+  active: boolean;
+  onDark: boolean;
+}) {
   return (
     <Link
       href={href}
       className={cn(
         "group relative px-1 py-1 font-vazirmatn text-sm transition-colors duration-300",
-        active ? "text-cyan-200" : "text-beige/85 hover:text-white",
+        onDark
+          ? active
+            ? "text-white"
+            : "text-white/80 hover:text-white"
+          : active
+            ? "text-[#0B3A5C]"
+            : "text-[#0B3A5C]/70 hover:text-[#0B3A5C]",
       )}
     >
       <motion.span className="inline-block" whileHover={{ y: -1 }} transition={IOS_TAP_SPRING}>
@@ -66,25 +82,39 @@ function DesktopNavLink({ href, label, active }: { href: string; label: string; 
       {active ? (
         <motion.span
           layoutId="nav-active-underline"
-          className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-l from-transparent via-cyan-300 to-transparent"
+          className="absolute inset-x-0 -bottom-1 h-px bg-sky-500"
           transition={IOS_PAGE_SPRING}
           style={{ willChange: "transform" }}
         />
       ) : (
         <span
           aria-hidden
-          className="absolute inset-x-0 -bottom-1 h-px origin-center scale-x-0 bg-white/40 transition-transform duration-300 group-hover:scale-x-100"
+          className={cn(
+            "absolute inset-x-0 -bottom-1 h-px origin-center scale-x-0 transition-transform duration-300 group-hover:scale-x-100",
+            onDark ? "bg-white/50" : "bg-[#0B3A5C]/25",
+          )}
         />
       )}
     </Link>
   );
 }
 
-function MenuToggle({ open, onToggle }: { open: boolean; onToggle: () => void }) {
+function MenuToggle({
+  open,
+  onToggle,
+  onDark,
+}: {
+  open: boolean;
+  onToggle: () => void;
+  onDark: boolean;
+}) {
   return (
     <motion.button
       type="button"
-      className="ios-tap-target relative z-50 flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.06] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md"
+      className={cn(
+        "ios-tap-target relative z-50 flex h-11 w-11 items-center justify-center rounded-full border backdrop-blur-md",
+        onDark ? "border-white/20 bg-white/10" : "border-[#0B3A5C]/10 bg-white",
+      )}
       aria-expanded={open}
       aria-controls="mobile-nav"
       aria-label={open ? "بستن منو" : "باز کردن منو"}
@@ -94,17 +124,17 @@ function MenuToggle({ open, onToggle }: { open: boolean; onToggle: () => void })
     >
       <span className="relative block h-3.5 w-5">
         <motion.span
-          className="absolute inset-x-0 top-0 h-px bg-beige"
+          className={cn("absolute inset-x-0 top-0 h-px", onDark ? "bg-white" : "bg-[#0B3A5C]")}
           animate={open ? { y: 6.5, rotate: 45 } : { y: 0, rotate: 0 }}
           transition={IOS_PAGE_SPRING}
         />
         <motion.span
-          className="absolute inset-x-0 top-[6.5px] h-px bg-beige"
+          className={cn("absolute inset-x-0 top-[6.5px] h-px", onDark ? "bg-white" : "bg-[#0B3A5C]")}
           animate={open ? { opacity: 0, scaleX: 0.4 } : { opacity: 1, scaleX: 1 }}
           transition={{ duration: 0.2 }}
         />
         <motion.span
-          className="absolute inset-x-0 bottom-0 h-px bg-beige"
+          className={cn("absolute inset-x-0 bottom-0 h-px", onDark ? "bg-white" : "bg-[#0B3A5C]")}
           animate={open ? { y: -6.5, rotate: -45 } : { y: 0, rotate: 0 }}
           transition={IOS_PAGE_SPRING}
         />
@@ -123,6 +153,7 @@ export default function Navbar() {
   const { scrollYProgress, scrollY } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 28, mass: 0.35 });
   const motionReady = mounted && !reduceMotion;
+  const onDark = pathname === "/" && !scrolled && !open;
 
   useEffect(() => {
     setMounted(true);
@@ -163,52 +194,15 @@ export default function Navbar() {
         animate={motionReady ? { y: 0, opacity: 1 } : { y: 0, opacity: 1 }}
         transition={IOS_PAGE_SPRING}
         className={cn(
-          "fixed inset-x-0 top-0 z-50",
-          scrolled || open ? "border-b border-white/10" : "border-b border-transparent",
+          "fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300",
+          onDark
+            ? "border-transparent bg-gradient-to-b from-[#061A2E]/70 to-transparent"
+            : "border-[#0B3A5C]/8 bg-[#F7FBFF]/92 shadow-[0_12px_40px_-28px_rgba(11,58,92,0.35)] backdrop-blur-xl",
         )}
       >
-        {/* Ambient luxury glow along the top edge */}
-        <motion.div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-l from-transparent via-cyan-300/70 to-transparent"
-          animate={
-            motionReady
-              ? { opacity: [0.35, 0.85, 0.35] }
-              : { opacity: 0.55 }
-          }
-          transition={motionReady ? { duration: 6, repeat: Infinity, ease: "easeInOut" } : undefined}
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-[12%] top-0 h-16 bg-[radial-gradient(ellipse_at_top,rgba(0,163,255,0.22),transparent_70%)] opacity-80"
-        />
-
-        <motion.div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-slate-950/82 backdrop-blur-2xl"
-          initial={false}
-          animate={{ opacity: scrolled || open ? 1 : 0 }}
-          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        />
-        <motion.div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-slate-950/55 via-slate-950/20 to-transparent"
-          initial={false}
-          animate={{ opacity: scrolled || open ? 0 : 1 }}
-          transition={{ duration: 0.4 }}
-        />
-
         <div className="rio-container relative flex h-[4.25rem] items-center justify-between gap-4 md:h-[5.25rem]">
           <div className="relative">
-            <Logo />
-            {motionReady ? (
-              <motion.span
-                aria-hidden
-                className="pointer-events-none absolute -inset-3 -z-10 rounded-full bg-cyan-400/10 blur-xl"
-                animate={{ opacity: [0.25, 0.55, 0.25], scale: [0.95, 1.05, 0.95] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              />
-            ) : null}
+            <Logo onDark={onDark} />
           </div>
 
           <nav className="hidden items-center gap-6 xl:gap-9 lg:flex" aria-label="اصلی">
@@ -219,26 +213,33 @@ export default function Navbar() {
                   : pathname === item.href || pathname.startsWith(`${item.href}/`);
               return (
                 <div key={item.href}>
-                  <DesktopNavLink href={item.href} label={item.label} active={active} />
+                  <DesktopNavLink href={item.href} label={item.label} active={active} onDark={onDark} />
                 </div>
               );
             })}
             <div className="ms-1 flex items-center gap-3">
-              <span className="hidden items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-semibold tracking-[0.16em] text-cyan-200/90 xl:inline-flex">
+              <span
+                className={cn(
+                  "hidden items-center gap-1.5 rounded-full px-3 py-1.5 text-[10px] font-semibold tracking-[0.16em] xl:inline-flex",
+                  onDark
+                    ? "border border-white/15 bg-white/10 text-white"
+                    : "border border-sky-200 bg-sky-50 text-[#0B3A5C]",
+                )}
+              >
                 <Sparkles className="h-3 w-3" />
                 VIP
               </span>
-              {session ? <UserAccountMenu tone="dark" /> : <LoginButton />}
+              {session ? <UserAccountMenu tone={onDark ? "dark" : "light"} /> : <LoginButton />}
             </div>
           </nav>
 
           <div className="flex items-center gap-2 lg:hidden">
             {session ? (
-              <UserAccountMenu tone="dark" onNavigated={() => setOpen(false)} />
+              <UserAccountMenu tone={onDark ? "dark" : "light"} onNavigated={() => setOpen(false)} />
             ) : (
               <LoginButton className="px-4 py-2 text-xs" />
             )}
-            <MenuToggle open={open} onToggle={() => setOpen((value) => !value)} />
+            <MenuToggle open={open} onDark={onDark} onToggle={() => setOpen((value) => !value)} />
           </div>
         </div>
 
