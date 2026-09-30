@@ -56,13 +56,12 @@ const SOCIAL_LINKS = siteConfig.footer.socialLinks.map((item) => ({
 
 const MARQUEE_ITEMS = [
   siteConfig.brand.taglineFa,
-  "پنت‌هاوس · زعفرانیه",
-  "ویلا · فرمانیه",
+  "ویلا · ماهدشت",
   "آف‌مارکت VIP",
-  "الهیه · فرشته",
-  siteConfig.brand.brandEn,
+  "گوهردشت · مهرشهر",
   "مشاوره محرمانه",
-  "نیاوران · جماران",
+  "عظیمیه · کمال‌شهر",
+  "باغ‌ویلا · فردیس",
 ];
 
 function formatTehranTime(date: Date) {

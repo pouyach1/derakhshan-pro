@@ -230,8 +230,8 @@ export default function ContactFormSection() {
             transition={{ ...softSpring, delay: 0.25 }}
             className="mt-4 max-w-md font-vazirmatn text-base leading-8 text-slate-600"
           >
-            فرم خصوصی برای موکلان خاص — جزئیات را بنویسید تا مسیر درست را با دقت و
-            محرمانگی کامل باز کنیم.
+            این فرم خصوصی است. جزئیات را بنویسید تا با دقت و محرمانگی کامل، مسیر درست را
+            برایتان باز کنیم.
           </motion.p>
 
           <motion.a

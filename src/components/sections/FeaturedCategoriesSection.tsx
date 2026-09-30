@@ -9,13 +9,13 @@ export default function FeaturedCategoriesSection() {
         <div className="mb-12 flex flex-wrap items-end justify-between gap-4">
           <div className="max-w-2xl">
             <p className="font-vazirmatn text-xs font-semibold tracking-[0.08em] text-sky-500">
-              مجموعه‌های گزیده
+              آرشیو خصوصی
             </p>
             <h2 className="mt-3 font-vazirmatn text-2xl font-semibold leading-relaxed md:text-4xl">
-              دسته‌بندی‌های پیشنهادی
+              مجموعه‌های منتخب
             </h2>
             <p className="mt-4 font-vazirmatn text-sm leading-relaxed text-slate-600 md:text-base">
-              ویترین گزیده برای کسانی که فقط بهترین‌ها را می‌خواهند.
+              اگر می‌دانید دنبال چه هستید، از اینجا شروع کنید.
             </p>
           </div>
         </div>
@@ -43,7 +43,7 @@ export default function FeaturedCategoriesSection() {
                   {category.title}
                 </h3>
                 <p className="mt-2 font-vazirmatn text-sm text-white/75 transition group-hover:text-sky-300">
-                  مشاهده این مجموعه ←
+                  مشاهده مجموعه ←
                 </p>
               </div>
             </Link>
