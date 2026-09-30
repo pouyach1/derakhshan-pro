@@ -15,13 +15,15 @@ type PropertyGalleryProps = {
   className?: string;
   /** برای shared-element با کارت لیست — فقط روی اسلاید اول */
   propertyId?: string;
+  /** ضربهٔ کوتاه (نه سوایپ) گالری تمام‌صفحه را باز می‌کند */
+  onOpen?: (index: number) => void;
 };
 
 /**
  * گالری افقی با paging + rubber-band؛ pinch-to-zoom با محدودیت نرم.
  * اسلاید اول در صورت وجود propertyId با layoutId مشترک کارت morph می‌شود.
  */
-export default function PropertyGallery({ images, alt, className, propertyId }: PropertyGalleryProps) {
+export default function PropertyGallery({ images, alt, className, propertyId, onOpen }: PropertyGalleryProps) {
   const slides = images.length ? images : [fallbackImage(null)];
   const [index, setIndex] = useState(0);
   const [zooming, setZooming] = useState(false);
@@ -56,6 +58,7 @@ export default function PropertyGallery({ images, alt, className, propertyId }: 
           go(index + (dx > 0 ? -1 : 1));
         } else {
           x.set(0);
+          if (Math.abs(mx) < 10) onOpen?.(index);
         }
         cancel?.();
       },
@@ -102,6 +105,7 @@ export default function PropertyGallery({ images, alt, className, propertyId }: 
         ref={containerRef}
         className="ios-media-frame relative w-full touch-none overflow-hidden rounded-[1.5rem] bg-slate-950"
         style={{ touchAction: "none" }}
+        onClick={() => onOpen?.(index)}
       >
         {showSharedHero && propertyId ? (
           <motion.div className="absolute inset-0" style={{ x, y, scale, willChange: "transform" }}>

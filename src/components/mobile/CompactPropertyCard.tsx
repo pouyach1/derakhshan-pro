@@ -1,11 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import { Bath, BedDouble, MapPin, Ruler } from "lucide-react";
-import { fallbackImage, formatToman, listingTypeLabel } from "@/lib/money";
+import PropertyGalleryTrigger from "@/components/listings/PropertyGalleryTrigger";
+import { frameLabel, listPropertyImages } from "@/lib/property-images";
+import { formatToman, listingTypeLabel } from "@/lib/money";
 import { IOS_TAP_SPRING } from "@/lib/motion/ios";
 import { cn } from "@/lib/utils";
 import type { PropertyRecord } from "@/server/db/store";
@@ -62,6 +63,7 @@ export default function CompactPropertyCard({
   const [hovered, setHovered] = useState(false);
   const reduceMotion = useReducedMotion();
   const styles = VARIANT_STYLES[variant];
+  const photoCount = listPropertyImages(item).length;
 
   return (
     <motion.article
@@ -95,26 +97,16 @@ export default function CompactPropertyCard({
         transition={{ duration: 0.4 }}
       />
 
-      <Link href={`/listings/${item.id}`} className="ios-tap-target block" scroll={false}>
-        <div className={cn("relative overflow-hidden bg-[#E8F1F8]", styles.media)}>
-          <motion.div
-            className="absolute inset-0"
-            animate={reduceMotion ? undefined : hovered ? { scale: 1.08 } : { scale: 1 }}
-            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <Image
-              src={fallbackImage(item.imageUrl)}
-              alt={item.title}
-              fill
-              priority={priority}
-              sizes={styles.sizes}
-              className="object-cover"
-            />
-          </motion.div>
+      <div className={cn("relative overflow-hidden bg-[#E8F1F8]", styles.media)}>
+        <PropertyGalleryTrigger
+          item={item}
+          sizes={styles.sizes}
+          priority={priority}
+          showCount={false}
+        />
+        <div className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-t from-[#0B3A5C]/75 via-[#0B3A5C]/15 to-transparent" />
 
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0B3A5C]/75 via-[#0B3A5C]/15 to-transparent" />
-
-          <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-3">
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-[3] flex items-start justify-between gap-2 p-3">
             <span className="rounded-full border border-white/40 bg-white/90 px-2.5 py-1 text-[10px] font-semibold tracking-wide text-[#0B3A5C] shadow-sm backdrop-blur-md">
               {listingTypeLabel(item.listingType)}
             </span>
@@ -127,10 +119,15 @@ export default function CompactPropertyCard({
               <span className="rounded-full border border-white/30 bg-[#0B3A5C]/55 px-2.5 py-1 font-mono text-[10px] tracking-wider text-white/90 backdrop-blur-md">
                 {item.code}
               </span>
+              {photoCount > 1 ? (
+                <span className="rounded-full bg-black/45 px-2.5 py-1 font-mono text-[10px] tracking-[0.16em] text-white">
+                  {frameLabel(1, photoCount)}
+                </span>
+              ) : null}
             </div>
           </div>
 
-          <div className="absolute inset-x-0 bottom-0 p-3.5 pt-10">
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] p-3.5 pt-10">
             <p className="mb-1.5 inline-flex items-center gap-1.5 text-[11px] text-white/85">
               <MapPin className="h-3 w-3 shrink-0 text-sky-200" />
               <span className="line-clamp-1">{item.neighborhood || item.location}</span>
@@ -139,8 +136,9 @@ export default function CompactPropertyCard({
               {item.title}
             </h3>
           </div>
-        </div>
+      </div>
 
+      <Link href={`/listings/${item.id}`} className="ios-tap-target block" scroll={false}>
         <div className={cn("bg-white", styles.pad)}>
           <p className={cn("font-semibold tracking-tight text-sky-600", styles.price)}>
             {formatToman(item.price, item.listingType)}
