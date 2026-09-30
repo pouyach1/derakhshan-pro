@@ -1,12 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Bath, BedDouble, MapPin, Ruler } from "lucide-react";
+import PropertyGalleryTrigger from "@/components/listings/PropertyGalleryTrigger";
 import { PropertyCardSkeletonList } from "@/components/mobile/PropertySkeletons";
 import { api } from "@/lib/api";
-import { fallbackImage, formatToman, listingTypeLabel } from "@/lib/money";
+import { formatToman, listingTypeLabel } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import type { PropertyRecord } from "@/server/db/store";
 
@@ -92,21 +92,18 @@ export default function HomePropertiesSection() {
 function LeadCard({ item }: { item: PropertyRecord }) {
   return (
     <article className="overflow-hidden rounded-[1.75rem] bg-white shadow-[0_28px_70px_-42px_rgba(11,58,92,0.45)] ring-1 ring-[#0B3A5C]/8">
-      <Link href={`/listings/${item.id}`} className="grid lg:grid-cols-12">
+      <div className="grid lg:grid-cols-12">
         <div className="relative min-h-[16rem] bg-[#E8F1F8] lg:col-span-7 lg:min-h-[26rem]">
-          <Image
-            src={fallbackImage(item.imageUrl)}
-            alt={item.title}
-            fill
+          <PropertyGalleryTrigger
+            item={item}
             priority
             sizes="(max-width: 1024px) 100vw, 60vw"
-            className="object-cover"
           />
-          <span className="absolute start-4 top-4 rounded-full bg-white/95 px-3 py-1 text-[11px] font-semibold text-[#0B3A5C] shadow-sm">
+          <span className="pointer-events-none absolute start-4 top-4 z-[5] rounded-full bg-white/95 px-3 py-1 text-[11px] font-semibold text-[#0B3A5C] shadow-sm">
             {listingTypeLabel(item.listingType)}
           </span>
         </div>
-        <div className="flex flex-col justify-center gap-4 p-6 md:p-10 lg:col-span-5">
+        <Link href={`/listings/${item.id}`} className="flex flex-col justify-center gap-4 p-6 md:p-10 lg:col-span-5">
           <p className="inline-flex items-center gap-1.5 text-xs font-medium text-sky-600">
             <MapPin className="h-3.5 w-3.5" />
             {item.neighborhood || item.location}
@@ -120,8 +117,8 @@ function LeadCard({ item }: { item: PropertyRecord }) {
             مشاهده فایل
             <ArrowLeft className="h-4 w-4" />
           </span>
-        </div>
-      </Link>
+        </Link>
+      </div>
     </article>
   );
 }
@@ -129,27 +126,19 @@ function LeadCard({ item }: { item: PropertyRecord }) {
 function QuietCard({ item }: { item: PropertyRecord }) {
   return (
     <article className="overflow-hidden rounded-[1.4rem] bg-white ring-1 ring-[#0B3A5C]/8 transition hover:-translate-y-0.5 hover:shadow-[0_22px_50px_-32px_rgba(11,58,92,0.4)]">
-      <Link href={`/listings/${item.id}`} className="block">
-        <div className="relative aspect-[4/3] bg-[#E8F1F8]">
-          <Image
-            src={fallbackImage(item.imageUrl)}
-            alt={item.title}
-            fill
-            sizes="(max-width: 640px) 100vw, 33vw"
-            className="object-cover"
-          />
-          <span className="absolute start-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-semibold text-[#0B3A5C]">
-            {listingTypeLabel(item.listingType)}
-          </span>
-        </div>
-        <div className="space-y-2 p-4">
+      <div className="relative aspect-[4/3] bg-[#E8F1F8]">
+        <PropertyGalleryTrigger item={item} sizes="(max-width: 640px) 100vw, 33vw" />
+        <span className="pointer-events-none absolute start-3 top-3 z-[5] rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-semibold text-[#0B3A5C]">
+          {listingTypeLabel(item.listingType)}
+        </span>
+      </div>
+      <Link href={`/listings/${item.id}`} className="block space-y-2 p-4">
           <p className="line-clamp-1 text-[11px] text-[#0B3A5C]/55">{item.neighborhood || item.location}</p>
           <h3 className="line-clamp-2 min-h-[3.25rem] font-vazirmatn text-base font-semibold leading-7 text-[#0B3A5C]">
             {item.title}
           </h3>
           <p className="text-sm font-semibold text-sky-600">{formatToman(item.price, item.listingType)}</p>
           <Specs item={item} compact />
-        </div>
       </Link>
     </article>
   );

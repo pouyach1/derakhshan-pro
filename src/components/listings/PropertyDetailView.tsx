@@ -7,7 +7,9 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Bath, BedDouble, MapPin, Ruler, ShieldCheck, Sparkles } from "lucide-react";
 import { api } from "@/lib/api";
 import { fallbackImage, formatToman, listingTypeLabel, propertyStatusLabel } from "@/lib/money";
+import { listPropertyImages } from "@/lib/property-images";
 import { siteConfig } from "@/config/siteConfig";
+import PropertyLightbox from "@/components/listings/PropertyLightbox";
 import PublicLoadError from "@/components/listings/PublicLoadError";
 import MobilePropertyDetail from "@/components/mobile/MobilePropertyDetail";
 import { IOS_PAGE_SPRING, IOS_TAP_SPRING } from "@/lib/motion/ios";
@@ -29,14 +31,12 @@ export default function PropertyDetailView({ id }: { id: string }) {
   const [formError, setFormError] = useState("");
   const reduceMotion = useReducedMotion();
   const [mounted, setMounted] = useState(false);
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState(0);
   useEffect(() => setMounted(true), []);
   const motionReady = mounted && !reduceMotion;
 
-  const gallery = useMemo(() => {
-    if (!item) return [];
-    const list = item.gallery?.length ? item.gallery : [item.imageUrl];
-    return list.filter(Boolean).map(fallbackImage);
-  }, [item]);
+  const gallery = useMemo(() => (item ? listPropertyImages(item) : []), [item]);
 
   const load = useCallback(async () => {
     setFailed(false);
@@ -127,30 +127,48 @@ export default function PropertyDetailView({ id }: { id: string }) {
   return (
     <>
       <MobilePropertyDetail item={item} failed={false} onRetry={() => void load()} />
+      <PropertyLightbox
+        open={galleryOpen}
+        images={gallery}
+        title={item.title}
+        code={item.code}
+        startIndex={galleryIndex}
+        onClose={() => setGalleryOpen(false)}
+      />
       <div className="hidden bg-[#F3F7FB] text-[#0B3A5C] lg:block">
         <div className="relative h-[68vh] min-h-[400px] max-h-[780px] overflow-hidden">
-          <motion.div
-            className="absolute inset-0"
-            initial={false}
-            animate={motionReady ? { scale: 1 } : { scale: 1 }}
-            transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+          <button
+            type="button"
+            aria-label={`مشاهده گالری ${item.title}`}
+            className="absolute inset-0 cursor-pointer"
+            onClick={() => {
+              setGalleryIndex(0);
+              setGalleryOpen(true);
+            }}
           >
-            <Image
-              src={fallbackImage(item.imageUrl)}
-              alt={item.title}
-              fill
-              className="object-cover"
-              priority
-              sizes="100vw"
-            />
-          </motion.div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#F3F7FB] via-[#0B3A5C]/35 to-[#0B3A5C]/25" />
+            <motion.span
+              className="absolute inset-0 block"
+              initial={false}
+              animate={motionReady ? { scale: 1 } : { scale: 1 }}
+              transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <Image
+                src={fallbackImage(item.imageUrl)}
+                alt=""
+                fill
+                className="object-cover"
+                priority
+                sizes="100vw"
+              />
+            </motion.span>
+          </button>
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#F3F7FB] via-[#0B3A5C]/35 to-[#0B3A5C]/25" />
 
-          <div className="absolute inset-x-0 bottom-0 z-10 mx-auto max-w-7xl px-6 pb-14 xl:px-10">
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 mx-auto max-w-7xl px-6 pb-14 xl:px-10">
             <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={IOS_PAGE_SPRING}>
               <Link
                 href="/listings"
-                className="mb-5 inline-flex items-center gap-2 text-sm text-white/85 transition hover:text-white"
+                className="pointer-events-auto mb-5 inline-flex items-center gap-2 text-sm text-white/85 transition hover:text-white"
               >
                 <ArrowRight className="h-4 w-4" />
                 بازگشت به آرشیو
@@ -239,17 +257,23 @@ export default function PropertyDetailView({ id }: { id: string }) {
                 <p className="text-[11px] font-semibold tracking-[0.2em] text-sky-600">گالری</p>
                 <div className="mt-4 grid grid-cols-3 gap-3">
                   {gallery.slice(0, 6).map((src, i) => (
-                    <motion.div
+                    <motion.button
                       key={`${src}-${i}`}
-                      className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-[#0B3A5C]/8"
+                      type="button"
+                      aria-label={`مشاهده تصویر ${i + 1}`}
+                      className="relative aspect-[4/3] cursor-pointer overflow-hidden rounded-2xl border border-[#0B3A5C]/8"
                       initial={false}
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true }}
                       transition={{ ...IOS_PAGE_SPRING, delay: i * 0.04 }}
                       whileHover={motionReady ? { scale: 1.02 } : undefined}
+                      onClick={() => {
+                        setGalleryIndex(i);
+                        setGalleryOpen(true);
+                      }}
                     >
                       <Image src={src} alt="" fill className="object-cover" sizes="220px" />
-                    </motion.div>
+                    </motion.button>
                   ))}
                 </div>
               </div>

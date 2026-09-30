@@ -9,7 +9,9 @@ import IosTap from "@/components/mobile/IosTap";
 import LikeButton from "@/components/mobile/LikeButton";
 import { PropertyDetailSkeleton } from "@/components/mobile/PropertySkeletons";
 import { SharedPropertyTitle } from "@/components/mobile/SharedPropertyHero";
+import PropertyLightbox from "@/components/listings/PropertyLightbox";
 import PublicLoadError from "@/components/listings/PublicLoadError";
+import { listPropertyImages } from "@/lib/property-images";
 import { siteConfig } from "@/config/siteConfig";
 import { useHaptic } from "@/hooks/useHaptic";
 import { api } from "@/lib/api";
@@ -33,12 +35,10 @@ export default function MobilePropertyDetail({ item, failed, onRetry }: MobilePr
   const [message, setMessage] = useState("مایل به بازدید و مشاوره برای این فایل هستم.");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [formError, setFormError] = useState("");
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState(0);
 
-  const gallery = useMemo(() => {
-    if (!item) return [];
-    const list = item.gallery?.length ? item.gallery : [item.imageUrl];
-    return list.filter(Boolean);
-  }, [item]);
+  const gallery = useMemo(() => (item ? listPropertyImages(item) : []), [item]);
 
   if (failed) {
     return (
@@ -100,7 +100,23 @@ export default function MobilePropertyDetail({ item, failed, onRetry }: MobilePr
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(ellipse_at_top,rgba(0,163,255,0.12),transparent_70%)]"
         />
-        <PropertyGallery images={gallery} alt={item.title} propertyId={item.id} />
+        <PropertyGallery
+          images={gallery}
+          alt={item.title}
+          propertyId={item.id}
+          onOpen={(index) => {
+            setGalleryIndex(index);
+            setGalleryOpen(true);
+          }}
+        />
+        <PropertyLightbox
+          open={galleryOpen}
+          images={gallery}
+          title={item.title}
+          code={item.code}
+          startIndex={galleryIndex}
+          onClose={() => setGalleryOpen(false)}
+        />
         <LikeButton propertyId={item.id} className="absolute end-7 top-28 z-10" />
       </div>
 
