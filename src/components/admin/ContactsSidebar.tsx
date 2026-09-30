@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { api } from "@/lib/api";
 import { fallbackImage } from "@/lib/money";
-import { siteConfig } from "@/config/siteConfig";
+import { SITE_INFO } from "@/config/SITE_INFO";
 import { cn } from "@/lib/utils";
 
 type ContactRole = "Realtor" | "Builder" | "Client";
@@ -49,7 +49,7 @@ export default function ContactsSidebar() {
             id: `agent-${agent.id}`,
             name: agent.name,
             role: "Realtor",
-            city: siteConfig.contact.address.city,
+            city: SITE_INFO.city,
             avatar: fallbackImage(agent.avatarUrl),
           });
         }
@@ -60,7 +60,7 @@ export default function ContactsSidebar() {
             id: `client-${client.id}`,
             name: client.name,
             role: "Client",
-            city: client.preferredNeighborhood || siteConfig.contact.address.city,
+            city: client.preferredNeighborhood || SITE_INFO.city,
             avatar: "/images/admin/avatars/sara-nouri.jpg",
           });
         }
@@ -77,7 +77,7 @@ export default function ContactsSidebar() {
     return contacts.filter((contact) => contact.role === activeCategory.role);
   }, [activeCategory, contacts]);
 
-  const cityLabel = siteConfig.contact.address.city;
+  const cityLabel = SITE_INFO.city;
   const cityCount = contacts.filter((contact) => contact.city.includes(cityLabel) || cityLabel.includes(contact.city)).length;
 
   return (
