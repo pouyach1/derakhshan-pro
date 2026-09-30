@@ -46,14 +46,14 @@ export default function MobileNavDrawer({
 
           <motion.div
             id="mobile-nav"
-            className="fixed inset-0 z-40 overflow-hidden bg-[#070C18] lg:hidden"
+            className="fixed inset-0 z-40 overflow-hidden bg-[#F3F7FB] text-[#0B3A5C] lg:hidden"
             initial={reduceMotion ? { opacity: 0 } : { y: "-10%", opacity: 0.7, scale: 1.03 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={reduceMotion ? { opacity: 0 } : { y: "-8%", opacity: 0.85, scale: 1.02 }}
             transition={IOS_PAGE_SPRING}
             style={{ willChange: "transform, opacity" }}
           >
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(0,240,255,0.12),_transparent_55%)]" />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(0,163,255,0.12),_transparent_55%)]" />
 
             <nav
               className="rio-container relative flex h-full flex-col justify-center gap-1 pt-16"
@@ -63,7 +63,7 @@ export default function MobileNavDrawer({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ ...IOS_PAGE_SPRING, delay: 0.05 }}
-                className="mb-6 text-[11px] font-semibold tracking-[0.28em] text-cyan-300/80"
+                className="mb-6 text-[11px] font-semibold tracking-[0.28em] text-sky-600"
               >
                 {siteConfig.brand.shortNameFa}
               </motion.p>
@@ -87,8 +87,8 @@ export default function MobileNavDrawer({
                         onClose();
                       }}
                       className={cn(
-                        "ios-tap-target group flex items-baseline justify-between gap-4 border-b border-white/5 py-3.5",
-                        active ? "text-cyan-200" : "text-beige",
+                        "ios-tap-target group flex items-baseline justify-between gap-4 border-b border-[#0B3A5C]/8 py-3.5",
+                        active ? "text-sky-600" : "text-[#0B3A5C]",
                       )}
                     >
                       <motion.span
@@ -98,7 +98,7 @@ export default function MobileNavDrawer({
                       >
                         {item.label}
                       </motion.span>
-                      <span className="font-mono text-[11px] tracking-[0.18em] text-slate-500 transition group-hover:text-cyan-400/80">
+                      <span className="font-mono text-[11px] tracking-[0.18em] text-[#0B3A5C]/35 transition group-hover:text-sky-600">
                         {String(index + 1).padStart(2, "0")}
                       </span>
                     </Link>
