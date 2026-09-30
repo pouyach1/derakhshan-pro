@@ -177,7 +177,7 @@ export default function ClientDashboardView({ name, items }: ClientDashboardView
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0B3A5C] via-[#0B3A5C]/25 to-transparent" />
                   <p className="absolute inset-x-0 bottom-0 p-5 font-vazirmatn text-sm font-medium text-white/90">
-                    پیشنهادهای زنده شمال تهران
+                    پیشنهادهای زنده بالاشهر کرج
                   </p>
                 </div>
               </motion.div>

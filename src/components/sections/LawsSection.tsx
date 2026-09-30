@@ -85,13 +85,13 @@ export default function LawsSection() {
       <div className="rio-container relative">
         <div className="mb-12 max-w-4xl">
           <p className="font-vazirmatn text-xs font-semibold tracking-[0.08em] text-sky-500">
-            اصول سرمایه‌گذاری
+            اصول معامله
           </p>
           <h2 className="mt-3 font-vazirmatn text-2xl font-semibold leading-relaxed text-slate-900 md:text-4xl">
-            ۱۲ اصل کلیدی سرمایه‌گذاری ملکی
+            ۱۲ اصلی که از صدها معامله یاد گرفتیم
           </h2>
           <p className="mt-4 font-vazirmatn text-sm leading-relaxed text-slate-600 md:text-base">
-            وقتی معاملات زیادی انجام می‌دهید، الگوها خودشان را نشان می‌دهند.
+            وقتی زیاد معامله کنید، الگوها خودشان را نشان می‌دهند.
           </p>
         </div>
 

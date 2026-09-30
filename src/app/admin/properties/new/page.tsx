@@ -322,7 +322,7 @@ function NewPropertyForm() {
             {step === 2 ? (
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="عنوان ملک">
-                  <input className={inputClass} value={draft.title} onChange={(e) => setDraft((d) => ({ ...d, title: e.target.value }))} placeholder={`مثلاً ${category.label} زعفرانیه`} />
+                  <input className={inputClass} value={draft.title} onChange={(e) => setDraft((d) => ({ ...d, title: e.target.value }))} placeholder={`مثلاً ${category.label} گوهردشت`} />
                 </Field>
                 <Field label="وضعیت معامله">
                   <select className={inputClass} value={draft.listingType} onChange={(e) => setDraft((d) => ({ ...d, listingType: e.target.value as "sale" | "rent" }))}>

@@ -111,14 +111,14 @@ export const ADMIN_CONTACTS: Contact[] = [
     id: "c1",
     name: "مهندس آرش شایگان",
     role: "Realtor",
-    city: "تهران",
+    city: "کرج",
     avatar: media.avatar.arash,
   },
   {
     id: "c2",
     name: "نگار محمدی",
     role: "Builder",
-    city: "تهران",
+    city: "کرج",
     avatar: media.avatar.negar,
   },
   {
@@ -132,7 +132,7 @@ export const ADMIN_CONTACTS: Contact[] = [
     id: "c4",
     name: "مریم فرهادی",
     role: "Realtor",
-    city: "تهران",
+    city: "کرج",
     avatar: media.avatar.maryam,
   },
   {
@@ -146,14 +146,14 @@ export const ADMIN_CONTACTS: Contact[] = [
     id: "c6",
     name: "سارا نوری",
     role: "Client",
-    city: "تهران",
+    city: "کرج",
     avatar: media.avatar.sara,
   },
   {
     id: "c7",
     name: "کاوه مرادی",
     role: "Realtor",
-    city: "تهران",
+    city: "کرج",
     avatar: media.avatar.kaveh,
   },
   {
@@ -167,7 +167,7 @@ export const ADMIN_CONTACTS: Contact[] = [
     id: "c9",
     name: "حمید رستمی",
     role: "Builder",
-    city: "تهران",
+    city: "کرج",
     avatar: media.avatar.hamid,
   },
   {
@@ -181,14 +181,14 @@ export const ADMIN_CONTACTS: Contact[] = [
     id: "c11",
     name: "پویا شریفی",
     role: "Realtor",
-    city: "تهران",
+    city: "کرج",
     avatar: media.avatar.pouya,
   },
   {
     id: "c12",
     name: "هانیه موسوی",
     role: "Client",
-    city: "تهران",
+    city: "کرج",
     avatar: media.avatar.hanieh,
   },
 ];
