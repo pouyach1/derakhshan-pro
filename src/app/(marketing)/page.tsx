@@ -1,5 +1,6 @@
 import HeroSection from "@/components/sections/HeroSection";
 import CtaTextSection from "@/components/sections/CtaTextSection";
+import TrustStatsSection from "@/components/sections/TrustStatsSection";
 import ValuePropsSection from "@/components/sections/ValuePropsSection";
 import HomePropertiesSection from "@/components/sections/HomePropertiesSection";
 import FeaturedCategoriesSection from "@/components/sections/FeaturedCategoriesSection";
@@ -15,6 +16,7 @@ export default function HomePage() {
     <>
       <HeroSection />
       <CtaTextSection title={INTRO_CTA.title} body={INTRO_CTA.body} cta={INTRO_CTA.cta} />
+      <TrustStatsSection />
       <ValuePropsSection />
       {/* فایل‌های زنده — جدا از Hero، برای موبایل و دسکتاپ */}
       <HomePropertiesSection />

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { CLIENT_LOGOS } from "@/config/home";
+import { BRANDS_EYEBROW, CLIENT_LOGOS } from "@/config/home";
 
 export default function ClientLogoMarquee() {
   const logos = [...CLIENT_LOGOS, ...CLIENT_LOGOS];
@@ -8,7 +8,7 @@ export default function ClientLogoMarquee() {
     <section className="overflow-hidden border-y border-brand-800/10 bg-beige py-12">
       <div className="rio-container mb-8">
         <p className="font-vazirmatn text-sm leading-relaxed text-brand-500">
-          بخشی از برندها و مجموعه‌هایی که با ما کار کرده‌اند
+          {BRANDS_EYEBROW}
         </p>
       </div>
       <div className="relative">

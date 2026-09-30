@@ -25,13 +25,6 @@ import { SITE } from "@/config/site";
 const spring = { type: "spring" as const, stiffness: 90, damping: 16 };
 const softSpring = { type: "spring" as const, stiffness: 60, damping: 18 };
 
-const INTERESTS = [
-  "اجاره فضای لوکس",
-  "خرید ملک VIP",
-  "فروش یا معرفی دارایی",
-  "مشاوره استراتژیک سرمایه‌گذاری",
-] as const;
-
 const CATEGORIES = [
   { id: "residential", label: "مسکونی لوکس", icon: Home },
   { id: "villa", label: "ویلا و باغ", icon: Trees },
@@ -340,7 +333,7 @@ export default function ContactFormSection() {
                     transition={{ ...spring, delay: 0.15 }}
                     className="font-vazirmatn text-2xl font-black text-[#0B132B] md:text-3xl"
                   >
-                    پیام شما دریافت شد
+                    درخواست شما ثبت شد
                   </motion.p>
                   <motion.p
                     initial={{ opacity: 0, y: 10 }}
@@ -348,7 +341,7 @@ export default function ContactFormSection() {
                     transition={{ ...softSpring, delay: 0.25 }}
                     className="mt-3 max-w-sm font-vazirmatn text-sm leading-7 text-slate-600"
                   >
-                    به‌زودی هماهنگ‌کننده VIP برای ادامه گفت‌وگو با شما تماس می‌گیرد.
+                    یکی از مشاوران ارشد، در اولین فرصت با شما تماس می‌گیرد.
                   </motion.p>
                 </motion.div>
               ) : (
@@ -426,14 +419,13 @@ export default function ContactFormSection() {
                     <span className="text-sm font-bold text-slate-700">
                       موضوع درخواست
                     </span>
-                    <select name="interest" className={fieldClass} defaultValue="">
-                      <option value="">در حال بررسی گزینه‌ها هستم...</option>
-                      {INTERESTS.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))}
-                    </select>
+                    <motion.input
+                      name="interest"
+                      placeholder="مثلاً: خرید ویلا در ماهدشت"
+                      whileFocus={reduceMotion ? undefined : { scale: 1.01 }}
+                      transition={spring}
+                      className={fieldClass}
+                    />
                   </motion.label>
 
                   <motion.fieldset
@@ -441,7 +433,7 @@ export default function ContactFormSection() {
                     variants={reduceMotion ? undefined : fieldVariants}
                   >
                     <legend className="text-sm font-bold text-slate-700">
-                      دسته‌بندی‌های موردنظر (چند گزینه)
+                      دسته‌بندی‌های موردنظر (چندانتخابی)
                     </legend>
                     <div className="mt-3 flex flex-wrap gap-2">
                       {CATEGORIES.map((category) => {
@@ -496,56 +488,63 @@ export default function ContactFormSection() {
                     <motion.textarea
                       name="message"
                       rows={4}
-                      placeholder="جزئیات بیشتری که باید بدانیم..."
+                      placeholder="بودجه، محله، متراژ و هر نکته‌ای که به ما کمک می‌کند..."
                       whileFocus={reduceMotion ? undefined : { scale: 1.01 }}
                       transition={spring}
                       className={`${fieldClass} min-h-28 resize-y`}
                     />
                   </motion.label>
 
-                  <motion.button
+                  <motion.div
                     custom={6}
                     variants={reduceMotion ? undefined : fieldVariants}
-                    type="submit"
-                    disabled={loading}
-                    whileHover={
-                      reduceMotion ? undefined : { y: -4, scale: 1.03 }
-                    }
-                    whileTap={{ scale: 0.97 }}
-                    transition={spring}
-                    className="relative inline-flex min-w-[180px] items-center justify-center gap-2 overflow-hidden rounded-full bg-gradient-to-l from-sky-500 to-[#00F0FF] px-7 py-3.5 text-sm font-bold text-[#0B132B] shadow-[0_20px_50px_-18px_rgba(0,240,255,0.75)] disabled:opacity-70"
+                    className="space-y-3"
                   >
-                    {!reduceMotion && (
-                      <motion.span
-                        aria-hidden
-                        className="pointer-events-none absolute inset-y-0 w-1/3 skew-x-12 bg-gradient-to-r from-transparent via-white/55 to-transparent"
-                        animate={{ x: ["-140%", "240%"] }}
-                        transition={{
-                          duration: 1.8,
-                          repeat: Infinity,
-                          ease: "easeInOut",
-                          repeatDelay: 1.1,
-                        }}
-                      />
-                    )}
-                    <span className="relative inline-flex items-center gap-2">
-                      {loading ? (
-                        <>
-                          <motion.span
-                            className="h-4 w-4 rounded-full border-2 border-[#0B132B]/30 border-t-[#0B132B]"
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 0.7, repeat: Infinity, ease: "linear" }}
-                          />
-                          در حال ارسال...
-                        </>
-                      ) : (
-                        <>
-                          ارسال درخواست
-                          <Send className="h-4 w-4" />
-                        </>
+                    <motion.button
+                      type="submit"
+                      disabled={loading}
+                      whileHover={
+                        reduceMotion ? undefined : { y: -4, scale: 1.03 }
+                      }
+                      whileTap={{ scale: 0.97 }}
+                      transition={spring}
+                      className="relative inline-flex min-w-[180px] items-center justify-center gap-2 overflow-hidden rounded-full bg-gradient-to-l from-sky-500 to-[#00F0FF] px-7 py-3.5 text-sm font-bold text-[#0B132B] shadow-[0_20px_50px_-18px_rgba(0,240,255,0.75)] disabled:opacity-70"
+                    >
+                      {!reduceMotion && (
+                        <motion.span
+                          aria-hidden
+                          className="pointer-events-none absolute inset-y-0 w-1/3 skew-x-12 bg-gradient-to-r from-transparent via-white/55 to-transparent"
+                          animate={{ x: ["-140%", "240%"] }}
+                          transition={{
+                            duration: 1.8,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                            repeatDelay: 1.1,
+                          }}
+                        />
                       )}
-                    </span>
-                  </motion.button>
+                      <span className="relative inline-flex items-center gap-2">
+                        {loading ? (
+                          <>
+                            <motion.span
+                              className="h-4 w-4 rounded-full border-2 border-[#0B132B]/30 border-t-[#0B132B]"
+                              animate={{ rotate: 360 }}
+                              transition={{ duration: 0.7, repeat: Infinity, ease: "linear" }}
+                            />
+                            در حال ارسال...
+                          </>
+                        ) : (
+                          <>
+                            ارسال درخواست
+                            <Send className="h-4 w-4" />
+                          </>
+                        )}
+                      </span>
+                    </motion.button>
+                    <p className="text-xs leading-6 text-slate-500">
+                      اطلاعات شما نزد ما محفوظ است و با هیچ شخص ثالثی به اشتراک گذاشته نمی‌شود.
+                    </p>
+                  </motion.div>
                 </motion.form>
               )}
             </AnimatePresence>

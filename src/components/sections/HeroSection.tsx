@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { Check, ArrowUpLeft } from "lucide-react";
 import { HERO } from "@/config/home";
-import { SITE } from "@/config/site";
 import { useIntro } from "@/components/providers/IntroProvider";
 import { EASE } from "@/lib/motion";
 
@@ -53,13 +53,6 @@ export default function HeroSection() {
         initial="hidden"
         animate={heroReady ? "show" : "hidden"}
       >
-        <motion.p
-          variants={fadeUp}
-          className="mb-5 font-sans text-xs font-semibold uppercase tracking-[0.28em] text-sky-400 md:text-sm"
-        >
-          {SITE.brandEn}
-        </motion.p>
-
         <motion.span
           variants={fadeUp}
           className="mb-5 inline-flex w-fit items-center rounded-full border border-white/20 bg-white/10 px-4 py-1.5 font-vazirmatn text-xs text-white/90 backdrop-blur-md md:text-sm"
@@ -93,6 +86,28 @@ export default function HeroSection() {
             className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/10 px-6 py-3 font-vazirmatn text-sm font-medium text-white backdrop-blur-md transition hover:border-sky-400/50 hover:bg-white/15"
           >
             {HERO.secondaryCta.label}
+          </Link>
+        </motion.div>
+
+        <motion.ul
+          variants={fadeUp}
+          className="mt-8 flex flex-wrap gap-x-5 gap-y-2 font-vazirmatn text-xs text-white/80 md:text-sm"
+        >
+          {HERO.trustItems.map((item) => (
+            <li key={item} className="inline-flex items-center gap-1.5">
+              <Check className="h-3.5 w-3.5 shrink-0 text-sky-400" strokeWidth={2.5} />
+              <span>{item}</span>
+            </li>
+          ))}
+        </motion.ul>
+
+        <motion.div variants={fadeUp} className="mt-8 md:absolute md:bottom-24 md:end-8 md:mt-0 lg:end-12">
+          <Link
+            href={HERO.floatingCta.href}
+            className="inline-flex items-center gap-2 rounded-2xl border border-white/25 bg-white/12 px-5 py-3.5 font-vazirmatn text-sm font-semibold text-white shadow-[0_20px_50px_-20px_rgba(0,0,0,0.55)] backdrop-blur-xl transition hover:border-sky-400/50 hover:bg-white/18"
+          >
+            {HERO.floatingCta.label}
+            <ArrowUpLeft className="h-4 w-4 text-sky-300" />
           </Link>
         </motion.div>
       </motion.div>
