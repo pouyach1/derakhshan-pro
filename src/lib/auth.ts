@@ -6,8 +6,37 @@ import {
   type UserRole,
 } from "@/config/auth";
 import { siteConfig } from "@/config/siteConfig";
+import {
+  AUTH_COOKIE,
+  clearClientSession,
+  decodeSession as decodeSessionMirror,
+  encodeSession as encodeSessionMirror,
+  mirrorAuthSession as mirrorAuthSessionMirror,
+  readClientSession as readClientSessionMirror,
+  setClientSession as setClientSessionMirror,
+} from "@/lib/client-session";
 
-export const AUTH_COOKIE = "agency_auth";
+export { AUTH_COOKIE, clearClientSession };
+
+export function encodeSession(session: AuthSession): string {
+  return encodeSessionMirror(session);
+}
+
+export function decodeSession(value: string | undefined | null): AuthSession | null {
+  return decodeSessionMirror(value) as AuthSession | null;
+}
+
+export function setClientSession(session: AuthSession) {
+  setClientSessionMirror(session);
+}
+
+export function readClientSession(): AuthSession | null {
+  return readClientSessionMirror() as AuthSession | null;
+}
+
+export function mirrorAuthSession(session: AuthSession) {
+  mirrorAuthSessionMirror(session);
+}
 
 export type DealIntent = "buy" | "rent" | "invest";
 
@@ -150,75 +179,8 @@ export function completeClientOnboarding(
   };
 }
 
-export function encodeSession(session: AuthSession): string {
-  if (typeof btoa === "function") {
-    return btoa(unescape(encodeURIComponent(JSON.stringify(session))));
-  }
-  return Buffer.from(JSON.stringify(session), "utf8").toString("base64");
-}
-
-export function decodeSession(value: string | undefined | null): AuthSession | null {
-  if (!value) return null;
-  try {
-    const json =
-      typeof atob === "function"
-        ? decodeURIComponent(escape(atob(value)))
-        : Buffer.from(value, "base64").toString("utf8");
-    const parsed = JSON.parse(json) as AuthSession;
-    if (!parsed?.role || !parsed?.phone) return null;
-    return parsed;
-  } catch {
-    return null;
-  }
-}
-
 export function homeForRole(role: UserRole): string {
   return ROLE_HOME[role];
-}
-
-const SESSION_MIRROR_KEY = "agency_auth_mirror";
-
-export function setClientSession(session: AuthSession) {
-  const maxAge = 60 * 60 * 24 * 7;
-  document.cookie = `${AUTH_COOKIE}=${encodeURIComponent(encodeSession(session))}; path=/; max-age=${maxAge}; SameSite=Lax`;
-  try {
-    sessionStorage.setItem(SESSION_MIRROR_KEY, JSON.stringify(session));
-  } catch {
-    /* ignore */
-  }
-}
-
-export function clearClientSession() {
-  document.cookie = `${AUTH_COOKIE}=; path=/; max-age=0; SameSite=Lax`;
-  try {
-    sessionStorage.removeItem(SESSION_MIRROR_KEY);
-  } catch {
-    /* ignore */
-  }
-}
-
-export function readClientSession(): AuthSession | null {
-  if (typeof document === "undefined") return null;
-  try {
-    const mirrored = sessionStorage.getItem(SESSION_MIRROR_KEY);
-    if (mirrored) {
-      const parsed = JSON.parse(mirrored) as AuthSession;
-      if (parsed?.role && parsed?.phone) return parsed;
-    }
-  } catch {
-    /* ignore */
-  }
-  const match = document.cookie.match(new RegExp(`(?:^|; )${AUTH_COOKIE}=([^;]*)`));
-  return decodeSession(match?.[1] ? decodeURIComponent(match[1]) : null);
-}
-
-/** Persist a UI mirror after JWT login (httpOnly cookie is not JS-readable). */
-export function mirrorAuthSession(session: AuthSession) {
-  try {
-    sessionStorage.setItem(SESSION_MIRROR_KEY, JSON.stringify(session));
-  } catch {
-    /* ignore */
-  }
 }
 
 export function displayNameForSession(session: AuthSession): string {

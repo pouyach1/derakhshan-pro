@@ -16,11 +16,11 @@ import {
   Settings,
   X,
 } from "lucide-react";
-import { clearClientSession, readClientSession } from "@/lib/auth";
+import { clearClientSession, readClientSession } from "@/lib/client-session";
 import { cn } from "@/lib/utils";
 import { api } from "@/lib/api";
 import AuthToast from "@/components/auth/AuthToast";
-import { siteConfig } from "@/config/siteConfig";
+import { SITE_INFO } from "@/config/SITE_INFO";
 
 const NAV_ITEMS = [
   { href: "/admin/dashboard", label: "خانه" },
@@ -64,14 +64,14 @@ export default function AdminHeader({
             </svg>
           </span>
           <div className="hidden sm:block">
-            <p className="text-sm font-semibold text-admin-navy">{siteConfig.brand.productNameFa}</p>
+            <p className="text-sm font-semibold text-admin-navy">{SITE_INFO.productNameFa}</p>
             <p className="text-[11px] text-slate-500">سامانه مدیریت آگهی</p>
           </div>
         </Link>
 
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
-          <FilterChip label={siteConfig.contact.address.city} />
-          <FilterChip label={siteConfig.contact.address.region} />
+          <FilterChip label={SITE_INFO.city} />
+          <FilterChip label={SITE_INFO.region} />
           <LuxurySearch />
         </div>
 

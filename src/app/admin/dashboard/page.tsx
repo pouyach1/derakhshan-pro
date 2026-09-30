@@ -13,15 +13,22 @@ import {
 } from "lucide-react";
 import FeaturedPropertyHero from "@/components/admin/FeaturedPropertyHero";
 import MostViewedProperties from "@/components/admin/MostViewedProperties";
-import { AGENT_STATUS_LABEL, type AgentStatus } from "@/config/dashboards";
 import type { FeaturedProperty, ViewedProperty } from "@/config/admin";
+import { SITE_INFO } from "@/config/SITE_INFO";
 import { cn } from "@/lib/utils";
 import { api } from "@/lib/api";
 import { fallbackImage, formatToman } from "@/lib/money";
-import { siteConfig } from "@/config/siteConfig";
 import type { PropertyRecord } from "@/server/db/store";
 
 const ease = [0.22, 1, 0.36, 1] as const;
+
+type AgentStatus = "active" | "away" | "inactive";
+
+const AGENT_STATUS_LABEL: Record<AgentStatus, string> = {
+  active: "فعال",
+  away: "مرخصی",
+  inactive: "غیرفعال",
+};
 
 const statusStyle: Record<AgentStatus, string> = {
   active: "bg-emerald-50 text-emerald-700 ring-emerald-200",
@@ -108,7 +115,7 @@ export default function AdminDashboardPage() {
           image: fallbackImage(item.imageUrl),
           highlights: item.features.slice(0, 3),
           agent: {
-            name: siteConfig.brand.nameFa,
+            name: SITE_INFO.nameFa,
             role: "Realtor",
             avatar: "/images/admin/avatars/arash-shayegan.jpg",
             roleLabel: "مشاور مسئول",
