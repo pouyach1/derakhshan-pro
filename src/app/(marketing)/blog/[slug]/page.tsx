@@ -6,25 +6,45 @@ import RelatedPosts from "@/components/blog/RelatedPosts";
 import ArticleReadingProgress from "@/components/blog/ArticleReadingProgress";
 import ArticleAuthor from "@/components/blog/ArticleAuthor";
 import ArticleCTA from "@/components/blog/ArticleCTA";
-import {
-  getBlogPostBySlug,
-  getPublishedBlogPosts,
-  getRelatedBlogPosts,
-} from "@/data/blog";
+import { getRelatedBlogPosts, getPublishedBlogPosts } from "@/data/blog";
+import { decodeBlogSlugParam } from "@/lib/blog/slug";
+import { getSessionFromRequest } from "@/server/http/guard";
+import { getBlogPostBySlug } from "@/server/services/blog";
 import { siteConfig } from "@/config/siteConfig";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
+/** Always read live store — newly published posts must not 404 behind static cache. */
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
   const posts = await getPublishedBlogPosts();
   return posts.map((post) => ({ slug: post.slug }));
 }
 
+async function loadPostForRequest(rawSlug: string) {
+  const slug = decodeBlogSlugParam(rawSlug);
+  const session = await getSessionFromRequest();
+
+  // Public published first.
+  let post = await getBlogPostBySlug(slug, { publicOnly: true });
+  let isPreview = false;
+
+  // Staff may preview drafts / unpublished they can access.
+  if (!post && session && (session.role === "admin" || session.role === "agent")) {
+    post = await getBlogPostBySlug(slug, { publicOnly: false, session });
+    if (post && post.status !== "published") isPreview = true;
+  }
+
+  return { post, isPreview, slug };
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const post = await getBlogPostBySlug(slug);
+  const { slug: raw } = await params;
+  const { post } = await loadPostForRequest(raw);
   if (!post || post.status !== "published") {
     return { title: `مقاله یافت نشد | ${siteConfig.brand.nameFa}` };
   }
@@ -52,10 +72,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
-  const { slug } = await params;
-  const post = await getBlogPostBySlug(slug);
+  const { slug: raw } = await params;
+  const { post, isPreview } = await loadPostForRequest(raw);
 
-  if (!post || post.status !== "published") {
+  if (!post) {
     notFound();
   }
 
@@ -86,10 +106,19 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   return (
     <article className="relative bg-[#F3F7FB] text-[#0B3A5C]" dir="rtl">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      {post.status === "published" ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      ) : null}
+
+      {isPreview ? (
+        <div className="border-b border-amber-200 bg-amber-50 px-4 py-3 text-center text-sm font-medium text-amber-900">
+          پیش‌نمایش داخلی — این مقاله هنوز منتشر نشده و برای عموم نمایش داده نمی‌شود.
+        </div>
+      ) : null}
+
       <ArticleReadingProgress targetId="article-body" />
 
       <div

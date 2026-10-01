@@ -42,11 +42,12 @@ export default function BlogForm({
   const [status, setStatus] = useState<BlogStatus>(initial?.status ?? "draft");
   const [slug, setSlug] = useState(initial?.slug ?? "");
   const [slugTouched, setSlugTouched] = useState(Boolean(initial?.slug));
+  const [coverImage, setCoverImage] = useState(initial?.coverImage ?? "");
+  const [savedSlug, setSavedSlug] = useState(initial?.slug ?? "");
   const [dirty, setDirty] = useState(false);
   const resolvedAuthor = author ?? initial?.author;
-  const canPreview =
-    (mode === "edit" && status === "published" && (slug || initial?.slug)) ||
-    (status === "published" && Boolean(slug));
+  const previewSlug = savedSlug || slug || initial?.slug || "";
+  const canPreview = Boolean(previewSlug) && (status === "published" || mode === "edit");
 
   useEffect(() => {
     if (!dirty) return;
@@ -68,7 +69,6 @@ export default function BlogForm({
     const content = String(data.get("content") ?? "").trim();
     const excerpt = String(data.get("excerpt") ?? "").trim();
     const category = String(data.get("category") ?? BLOG_CATEGORIES[0]).trim();
-    const coverImage = String(data.get("coverImage") ?? "").trim();
     const readingTimeRaw = Number(data.get("readingTime"));
     const nextSlug = (slug || slugFromTitle(title)).trim();
 
@@ -78,7 +78,7 @@ export default function BlogForm({
       excerpt,
       content,
       category,
-      coverImage,
+      coverImage: coverImage.trim(),
       status: nextStatus,
       readingTime:
         Number.isFinite(readingTimeRaw) && readingTimeRaw > 0
@@ -106,12 +106,14 @@ export default function BlogForm({
 
     setStatus(result.data.status);
     setSlug(result.data.slug);
+    setSavedSlug(result.data.slug);
+    setCoverImage(result.data.coverImage || coverImage);
     setDirty(false);
     setSaveState("success");
     setNotice(
       result.data.status === "published"
-        ? "مقاله با موفقیت منتشر شد."
-        : "پیش‌نویس با موفقیت ذخیره شد.",
+        ? `مقاله منتشر شد. برای مشاهده: /blog/${result.data.slug}`
+        : "پیش‌نویس ذخیره شد. با دکمه پیش‌نمایش می‌توانید آن را ببینید (فقط برای خودتان).",
     );
 
     if (mode === "create") {
@@ -258,7 +260,7 @@ export default function BlogForm({
         <BlogRichTextArea defaultValue={initial?.content ?? ""} />
       </div>
 
-      <BlogImageUpload value={initial?.coverImage} />
+      <BlogImageUpload value={coverImage} onChange={setCoverImage} />
 
       <div className="flex flex-wrap items-center gap-2 border-t border-white/10 pt-4">
         <button
@@ -282,13 +284,13 @@ export default function BlogForm({
         </button>
         {canPreview ? (
           <Link
-            href={`/blog/${slug || initial?.slug}`}
+            href={`/blog/${previewSlug}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-ws-text transition duration-200 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/50"
           >
             <Eye className="h-4 w-4" aria-hidden />
-            پیش‌نمایش
+            {status === "published" ? "مشاهده در وبلاگ" : "پیش‌نمایش"}
           </Link>
         ) : null}
         <Link

@@ -63,24 +63,27 @@ export default function BlogPostHeader({ post }: BlogPostHeaderProps) {
         </div>
       </div>
 
-      <div className="rio-container">
-        <figure className="group relative overflow-hidden rounded-[1.5rem] border border-[#0B3A5C]/8 bg-[#E8F1F8] shadow-[0_28px_70px_-48px_rgba(11,58,92,0.4)] md:rounded-[1.75rem]">
-          <div className="relative aspect-[16/10] w-full md:aspect-[21/9]">
-            <Image
-              src={post.coverImage}
-              alt={post.title}
-              fill
-              priority
-              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 92vw, 1120px"
-              className="object-cover transition duration-700 ease-out group-hover:scale-[1.02]"
-            />
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0B3A5C]/25 via-transparent to-transparent"
-            />
-          </div>
-        </figure>
-      </div>
+      {post.coverImage ? (
+        <div className="rio-container">
+          <figure className="group relative overflow-hidden rounded-[1.5rem] border border-[#0B3A5C]/8 bg-[#E8F1F8] shadow-[0_28px_70px_-48px_rgba(11,58,92,0.4)] md:rounded-[1.75rem]">
+            <div className="relative aspect-[16/10] w-full md:aspect-[21/9]">
+              <Image
+                src={post.coverImage}
+                alt={post.title}
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 92vw, 1120px"
+                className="object-cover transition duration-700 ease-out group-hover:scale-[1.02]"
+                unoptimized={post.coverImage.startsWith("/uploads/")}
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0B3A5C]/25 via-transparent to-transparent"
+              />
+            </div>
+          </figure>
+        </div>
+      ) : null}
     </header>
   );
 }

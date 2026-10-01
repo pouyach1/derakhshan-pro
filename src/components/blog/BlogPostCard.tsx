@@ -34,7 +34,7 @@ export default function BlogPostCard({ post, emphasis = "default" }: BlogPostCar
         aria-label={post.title}
       >
         <Image
-          src={post.coverImage}
+          src={post.coverImage || "/images/landing/hero/banner.jpg"}
           alt={post.title}
           fill
           sizes={
@@ -43,6 +43,7 @@ export default function BlogPostCard({ post, emphasis = "default" }: BlogPostCar
               : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           }
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
+          unoptimized={Boolean(post.coverImage?.startsWith("/uploads/"))}
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0B3A5C]/35 via-transparent to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-90" />
         <span className="absolute start-3 top-3 rounded-full border border-white/45 bg-white/90 px-2.5 py-1 text-[10px] font-semibold text-[#0B3A5C] shadow-sm backdrop-blur-md">

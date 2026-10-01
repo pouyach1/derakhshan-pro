@@ -5,18 +5,24 @@ const MAX_FILES = 15;
 const MAX_BYTES = 2.5 * 1024 * 1024; // after client compress; hard cap
 const ALLOWED = new Set(["image/jpeg", "image/png", "image/jpg"]);
 
-function uploadsRoot() {
+type UploadKind = "properties" | "blog";
+
+function uploadsRoot(kind: UploadKind = "properties") {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const path = require("path") as typeof import("path");
-  return path.join(process.cwd(), "public", "uploads", "properties");
+  return path.join(process.cwd(), "public", "uploads", kind);
 }
 
-export async function savePropertyImageUploads(files: File[]): Promise<string[]> {
+async function saveImageUploads(
+  files: File[],
+  kind: UploadKind,
+  maxFiles = MAX_FILES,
+): Promise<string[]> {
   if (!files.length) {
     throw new ApiError(400, "NO_FILES", "هیچ فایلی ارسال نشده است");
   }
-  if (files.length > MAX_FILES) {
-    throw new ApiError(400, "TOO_MANY", `حداکثر ${MAX_FILES} عکس در هر بار مجاز است`);
+  if (files.length > maxFiles) {
+    throw new ApiError(400, "TOO_MANY", `حداکثر ${maxFiles} عکس در هر بار مجاز است`);
   }
 
   let fs: typeof import("fs");
@@ -33,7 +39,7 @@ export async function savePropertyImageUploads(files: File[]): Promise<string[]>
   }
 
   const stamp = new Date().toISOString().slice(0, 10);
-  const dir = path.join(uploadsRoot(), stamp);
+  const dir = path.join(uploadsRoot(kind), stamp);
   fs.mkdirSync(dir, { recursive: true });
 
   const urls: string[] = [];
@@ -51,7 +57,15 @@ export async function savePropertyImageUploads(files: File[]): Promise<string[]>
     const ext = type.includes("png") && !type.includes("jpeg") ? "png" : "jpg";
     const filename = `${id}.${ext}`;
     fs.writeFileSync(path.join(dir, filename), buf);
-    urls.push(`/uploads/properties/${stamp}/${filename}`);
+    urls.push(`/uploads/${kind}/${stamp}/${filename}`);
   }
   return urls;
+}
+
+export async function savePropertyImageUploads(files: File[]): Promise<string[]> {
+  return saveImageUploads(files, "properties");
+}
+
+export async function saveBlogImageUploads(files: File[]): Promise<string[]> {
+  return saveImageUploads(files, "blog", 1);
 }
