@@ -83,7 +83,7 @@ export default function HeroBanner({
 
           <div className="flex flex-wrap gap-2">
             <Link
-              href="/agent/properties?add=1"
+              href="/agent/properties/new"
               className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
             >
               <PlusCircle className="h-4 w-4" />
