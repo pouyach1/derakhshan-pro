@@ -487,6 +487,80 @@ function NewsletterBlock({ reduce }: { reduce: boolean | null }) {
   );
 }
 
+/** فوتر موبایل — مینیمال و کوتاه */
+function MobileCompactFooter() {
+  const footer = siteConfig.footer;
+  const essential = [
+    ...PROPERTY_LINKS.slice(0, 3),
+    ...LEGAL_LINKS.slice(0, 2),
+  ];
+
+  return (
+    <div className="relative z-10 md:hidden">
+      <div className="border-t border-white/10 bg-[#071A2C]/40 px-4 py-7">
+        <div className="mx-auto max-w-lg space-y-5 text-center">
+          <div>
+            <p
+              dir="ltr"
+              lang="en"
+              className="rio-display text-[1.65rem] tracking-[0.18em] text-white [unicode-bidi:isolate]"
+            >
+              DERAKHSHAN
+            </p>
+            <p className="mt-1.5 text-sm font-semibold text-sky-100/90">{siteConfig.brand.nameFa}</p>
+            <p className="mt-1 text-xs leading-6 text-slate-400">{siteConfig.brand.taglineFa}</p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <Link
+              href={footer.ctaPrimary.href}
+              className="ios-tap-target inline-flex items-center gap-1.5 rounded-full bg-sky-400 px-4 py-2.5 text-xs font-bold text-[#071A2C]"
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              {footer.ctaPrimary.label}
+            </Link>
+            <a
+              href={`tel:${SITE.phone.replace(/\s/g, "")}`}
+              className="ios-tap-target inline-flex items-center gap-1.5 rounded-full border border-white/20 px-4 py-2.5 text-xs font-semibold text-white"
+            >
+              <Phone className="h-3.5 w-3.5 text-sky-300" />
+              تماس
+            </a>
+          </div>
+
+          <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs text-slate-300">
+            {essential.map((item) => (
+              <Link key={item.href + item.label} href={item.href} className="hover:text-sky-200">
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex items-center justify-center gap-2">
+            {SOCIAL_LINKS.map((item) => {
+              const Icon = item.icon;
+              return (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={item.label}
+                  className="ios-tap-target inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/12 text-sky-200"
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              );
+            })}
+          </div>
+
+          <p className="text-[10px] leading-5 text-slate-500">{footer.copyright}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Footer() {
   const reduceMotion = useReducedMotion();
   const footer = siteConfig.footer;
@@ -526,8 +600,12 @@ export default function Footer() {
     >
       <IceField reduce={reduceMotion} />
 
+      {/* موبایل مینیمال */}
+      <MobileCompactFooter />
+
+      {/* دسکتاپ / تبلت بزرگ */}
       <motion.div
-        className="relative z-10"
+        className="relative z-10 hidden md:block"
         style={reduceMotion ? undefined : { y: rise, opacity: fade }}
       >
         <NeighborhoodRibbon />
@@ -641,7 +719,7 @@ export default function Footer() {
             whileTap={{ scale: 0.95 }}
             transition={IOS_PAGE_SPRING}
             className={cn(
-              "ios-tap-target fixed bottom-5 start-5 z-50 inline-flex items-center gap-2 rounded-full border border-sky-300/30 bg-[#071A2C]/88 px-4 py-3 text-xs font-bold text-sky-50 backdrop-blur-xl md:bottom-8 md:start-8",
+              "ios-tap-target fixed bottom-5 start-5 z-50 inline-flex items-center gap-2 rounded-full border border-sky-300/30 bg-[#071A2C]/88 px-3.5 py-2.5 text-[11px] font-bold text-sky-50 backdrop-blur-xl md:bottom-8 md:start-8 md:px-4 md:py-3 md:text-xs",
             )}
           >
             <ArrowUp className="h-4 w-4 text-sky-300" />

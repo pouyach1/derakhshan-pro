@@ -25,12 +25,12 @@ const VARIANT_STYLES: Record<
   { wrap: string; media: string; title: string; sizes: string; pad: string; price: string }
 > = {
   grid: {
-    wrap: "rounded-[1.35rem]",
+    wrap: "rounded-[1.15rem]",
     media: "aspect-[4/3]",
-    title: "text-sm leading-6 lg:text-[0.95rem]",
+    title: "text-[0.8rem] leading-5 sm:text-sm sm:leading-6",
     sizes: "(max-width: 1023px) 45vw, 280px",
-    pad: "px-3 py-3",
-    price: "text-xs lg:text-sm",
+    pad: "px-2.5 py-2.5 sm:px-3 sm:py-3",
+    price: "text-[11px] sm:text-xs",
   },
   featured: {
     wrap: "rounded-[1.55rem]",
@@ -106,29 +106,55 @@ export default function CompactPropertyCard({
         />
         <div className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-t from-[#0B3A5C]/75 via-[#0B3A5C]/15 to-transparent" />
 
-          <div className="pointer-events-none absolute inset-x-0 top-0 z-[3] flex items-start justify-between gap-2 p-3">
-            <span className="rounded-full border border-white/40 bg-white/90 px-2.5 py-1 text-[10px] font-semibold tracking-wide text-[#0B3A5C] shadow-sm backdrop-blur-md">
+          <div
+            className={cn(
+              "pointer-events-none absolute inset-x-0 top-0 z-[3] flex items-start justify-between gap-2",
+              variant === "grid" ? "p-2" : "p-3",
+            )}
+          >
+            <span
+              className={cn(
+                "rounded-full border border-white/40 bg-white/90 font-semibold tracking-wide text-[#0B3A5C] shadow-sm backdrop-blur-md",
+                variant === "grid" ? "px-2 py-0.5 text-[9px]" : "px-2.5 py-1 text-[10px]",
+              )}
+            >
               {listingTypeLabel(item.listingType)}
             </span>
-            <div className="flex flex-col items-end gap-1.5">
-              {item.isFeatured ? (
-                <span className="rounded-full border border-sky-300/50 bg-sky-500 px-2.5 py-1 text-[10px] font-bold text-white shadow-[0_8px_20px_-10px_rgba(0,163,255,0.9)]">
-                  ویژه
+            {variant !== "grid" ? (
+              <div className="flex flex-col items-end gap-1.5">
+                {item.isFeatured ? (
+                  <span className="rounded-full border border-sky-300/50 bg-sky-500 px-2.5 py-1 text-[10px] font-bold text-white shadow-[0_8px_20px_-10px_rgba(0,163,255,0.9)]">
+                    ویژه
+                  </span>
+                ) : null}
+                <span className="rounded-full border border-white/30 bg-[#0B3A5C]/55 px-2.5 py-1 font-mono text-[10px] tracking-wider text-white/90 backdrop-blur-md">
+                  {item.code}
                 </span>
-              ) : null}
-              <span className="rounded-full border border-white/30 bg-[#0B3A5C]/55 px-2.5 py-1 font-mono text-[10px] tracking-wider text-white/90 backdrop-blur-md">
-                {item.code}
+                {photoCount > 1 ? (
+                  <span className="rounded-full bg-black/45 px-2.5 py-1 font-mono text-[10px] tracking-[0.16em] text-white">
+                    {frameLabel(1, photoCount)}
+                  </span>
+                ) : null}
+              </div>
+            ) : item.isFeatured ? (
+              <span className="rounded-full bg-sky-500 px-2 py-0.5 text-[9px] font-bold text-white">
+                ویژه
               </span>
-              {photoCount > 1 ? (
-                <span className="rounded-full bg-black/45 px-2.5 py-1 font-mono text-[10px] tracking-[0.16em] text-white">
-                  {frameLabel(1, photoCount)}
-                </span>
-              ) : null}
-            </div>
+            ) : null}
           </div>
 
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] p-3.5 pt-10">
-            <p className="mb-1.5 inline-flex items-center gap-1.5 text-[11px] text-white/85">
+          <div
+            className={cn(
+              "pointer-events-none absolute inset-x-0 bottom-0 z-[3] pt-8",
+              variant === "grid" ? "p-2" : "p-3.5",
+            )}
+          >
+            <p
+              className={cn(
+                "mb-1 inline-flex items-center gap-1 text-white/85",
+                variant === "grid" ? "text-[10px]" : "text-[11px]",
+              )}
+            >
               <MapPin className="h-3 w-3 shrink-0 text-sky-200" />
               <span className="line-clamp-1">{item.neighborhood || item.location}</span>
             </p>
@@ -143,7 +169,12 @@ export default function CompactPropertyCard({
           <p className={cn("font-semibold tracking-tight text-sky-600", styles.price)}>
             {formatToman(item.price, item.listingType)}
           </p>
-          <div className="mt-3 grid grid-cols-3 divide-x divide-x-reverse divide-[#0B3A5C]/10 border-t border-[#0B3A5C]/8 pt-3">
+          <div
+            className={cn(
+              "grid grid-cols-3 divide-x divide-x-reverse divide-[#0B3A5C]/10 border-t border-[#0B3A5C]/8",
+              variant === "grid" ? "mt-2 pt-2" : "mt-3 pt-3",
+            )}
+          >
             <Spec icon={BedDouble} value={item.bedrooms} unit="خواب" compact={variant === "grid"} />
             <Spec icon={Bath} value={item.bathrooms} unit="سرویس" compact={variant === "grid"} />
             <Spec icon={Ruler} value={item.areaSqm} unit="متر" compact={variant === "grid"} />

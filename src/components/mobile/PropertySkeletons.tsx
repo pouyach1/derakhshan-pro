@@ -38,9 +38,19 @@ export function PropertyCardSkeleton() {
   );
 }
 
-export function PropertyCardSkeletonList({ count = 3 }: { count?: number }) {
+export function PropertyCardSkeletonList({
+  count = 3,
+  className,
+}: {
+  count?: number;
+  className?: string;
+}) {
   return (
-    <div className="space-y-4" role="status" aria-label="در حال بارگذاری فایل‌ها">
+    <div
+      className={cn("grid grid-cols-2 gap-2.5 lg:grid-cols-1 lg:gap-4", className)}
+      role="status"
+      aria-label="در حال بارگذاری فایل‌ها"
+    >
       {Array.from({ length: count }, (_, i) => (
         <PropertyCardSkeleton key={i} />
       ))}
