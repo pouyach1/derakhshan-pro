@@ -168,12 +168,18 @@ function BrandBillboard({ reduce }: { reduce: boolean | null }) {
         />
       ) : null}
 
-      <p className="relative z-10 mb-4 text-center text-[11px] font-semibold tracking-[0.42em] text-sky-200/80 md:text-xs">
+      <p
+        dir="ltr"
+        lang="en"
+        className="relative z-10 mb-4 text-center text-[11px] font-semibold tracking-[0.42em] text-sky-200/80 md:text-xs [unicode-bidi:isolate]"
+      >
         PRIVATE BROKERAGE · KARAJ
       </p>
 
       <motion.h2
-        className="rio-display relative z-10 select-none text-center font-semibold leading-[0.86] tracking-[-0.04em] text-white"
+        dir="ltr"
+        lang="en"
+        className="rio-display relative z-10 select-none text-center font-semibold leading-[0.86] tracking-[-0.04em] text-white [unicode-bidi:isolate]"
         style={{ fontSize: "clamp(2.6rem, 11.5vw, 8.75rem)" }}
         initial={reduce ? false : { opacity: 0, y: 36 }}
         whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
@@ -209,7 +215,7 @@ function BrandBillboard({ reduce }: { reduce: boolean | null }) {
       </motion.h2>
 
       <div className="relative z-10 mx-auto mt-6 flex max-w-2xl flex-col items-center gap-2 text-center">
-        <p className="rio-display text-sm tracking-[0.28em] text-sky-100/90 md:text-base">
+        <p dir="ltr" lang="en" className="rio-display text-sm tracking-[0.28em] text-sky-100/90 md:text-base [unicode-bidi:isolate]">
           Derakhshan Properties
         </p>
         <p className="font-vazirmatn text-lg font-bold text-white md:text-xl">
