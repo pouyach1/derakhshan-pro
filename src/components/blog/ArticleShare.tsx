@@ -44,12 +44,12 @@ export default function ArticleShare({ title, className }: ArticleShareProps) {
         "inline-flex items-center gap-2 rounded-full border border-sky-100/90 bg-white/70 px-3.5 py-2 text-xs font-semibold text-[#0B3A5C]/75 shadow-sm backdrop-blur-md transition hover:border-sky-200 hover:bg-white hover:text-[#0B3A5C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/60",
         className,
       )}
-      aria-label={copied ? "لینک کپی شد" : "اشتراک‌گذاری مقاله"}
+      aria-label={copied ? "کپی شد" : "اشتراک‌گذاری مقاله"}
     >
       {copied ? (
         <>
           <Check className="h-3.5 w-3.5 text-sky-600" aria-hidden />
-          لینک کپی شد
+          کپی شد
         </>
       ) : (
         <>

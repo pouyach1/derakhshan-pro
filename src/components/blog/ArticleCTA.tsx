@@ -28,14 +28,17 @@ export default function ArticleCTA() {
         <div className="flex flex-wrap gap-3 md:col-span-4 md:justify-start">
           <Link
             href="/listings"
-            className="inline-flex items-center gap-2 rounded-full bg-[#0B3A5C] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/60"
+            className="group/cta inline-flex items-center gap-2 rounded-full bg-[#0B3A5C] px-5 py-2.5 text-sm font-semibold text-white transition duration-200 hover:bg-sky-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/60"
           >
             مشاهده آرشیو
-            <ArrowLeft className="h-4 w-4" aria-hidden />
+            <ArrowLeft
+              className="h-4 w-4 transition-transform duration-200 ease-out group-hover/cta:-translate-x-0.5"
+              aria-hidden
+            />
           </Link>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 rounded-full border border-sky-200/80 bg-white/80 px-5 py-2.5 text-sm font-semibold text-[#0B3A5C] transition hover:border-sky-300 hover:bg-sky-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/60"
+            className="inline-flex items-center gap-2 rounded-full border border-sky-200/80 bg-white/80 px-5 py-2.5 text-sm font-semibold text-[#0B3A5C] transition duration-200 hover:border-sky-300 hover:bg-sky-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/60"
           >
             درخواست مشاوره
           </Link>

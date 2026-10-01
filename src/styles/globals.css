@@ -140,6 +140,18 @@
   }
 }
 
+/* Blog hero atmosphere — transform/opacity only */
+@keyframes blog-glow {
+  from {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.85;
+  }
+  to {
+    transform: translate3d(10px, -8px, 0);
+    opacity: 1;
+  }
+}
+
 @keyframes marquee-reverse {
   from {
     transform: translateX(-50%);
