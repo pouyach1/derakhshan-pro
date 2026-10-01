@@ -20,9 +20,12 @@ export default function BlogPostHeader({ post }: BlogPostHeaderProps) {
       <div className="rio-container">
         <Link
           href="/blog"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0B3A5C]/55 transition hover:text-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/60"
+          className="group/back inline-flex items-center gap-1.5 text-xs font-semibold text-[#0B3A5C]/55 transition-colors duration-200 hover:text-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/60"
         >
-          <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+          <ArrowRight
+            className="h-3.5 w-3.5 transition-transform duration-200 ease-out group-hover/back:translate-x-0.5"
+            aria-hidden
+          />
           بازگشت به مجله
         </Link>
 
