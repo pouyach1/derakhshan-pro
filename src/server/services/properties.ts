@@ -217,6 +217,7 @@ export async function createProperty(
     features: input.features,
     imageUrl: cover,
     gallery,
+    videos: (input.videos ?? []).filter(Boolean).slice(0, 3),
     agentId: input.agentId ?? null,
     views: 0,
     isFeatured: input.isFeatured ?? false,
@@ -269,6 +270,10 @@ export async function updateProperty(
     features: input.features ?? existing.features,
     imageUrl: input.imageUrl ?? existing.imageUrl,
     gallery: input.gallery ?? existing.gallery,
+    videos:
+      input.videos !== undefined
+        ? input.videos.filter(Boolean).slice(0, 3)
+        : existing.videos ?? [],
     agentId: input.agentId ?? existing.agentId,
     isFeatured: input.isFeatured ?? existing.isFeatured,
     version: existing.version + 1,

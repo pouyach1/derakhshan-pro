@@ -30,6 +30,11 @@ export type PropertyRecord = {
    * Phase B may move these into property_images without changing API contracts.
    */
   gallery: string[];
+  /**
+   * Aparat share/embed URLs (max 3). Empty = no video.
+   * Videos stream from Aparat so listing pages stay light.
+   */
+  videos?: string[];
   agentId: string | null;
   views: number;
   isFeatured: boolean;
