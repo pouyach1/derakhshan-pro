@@ -1,6 +1,6 @@
 import Button from "@/components/ui/Button";
 import PropertyCard from "@/components/ui/PropertyCard";
-import { DEALS } from "@/config/home";
+import { DEALS, DEALS_FOOTNOTE } from "@/config/home";
 
 export default function DoneDealsSection() {
   return (
@@ -17,7 +17,7 @@ export default function DoneDealsSection() {
           </div>
           <div className="md:col-span-4 md:justify-self-end">
             <Button href="/done-deals" variant="primary" className="font-vazirmatn normal-case tracking-normal">
-              مشاهده کارنامه کامل
+              مشاهده کارنامه کامل ↗
             </Button>
           </div>
         </div>
@@ -27,6 +27,10 @@ export default function DoneDealsSection() {
             <PropertyCard key={deal.id} deal={deal} />
           ))}
         </div>
+
+        <p className="mt-10 text-center font-vazirmatn text-sm text-brand-800/65 md:text-base">
+          {DEALS_FOOTNOTE}
+        </p>
       </div>
     </section>
   );

@@ -208,9 +208,7 @@ export default function Navbar() {
           <nav className="hidden items-center gap-6 xl:gap-9 lg:flex" aria-label="اصلی">
             {NAV.map((item) => {
               const active =
-                item.href === "/"
-                  ? pathname === "/"
-                  : pathname === item.href || pathname.startsWith(`${item.href}/`);
+                pathname === item.href || pathname.startsWith(`${item.href}/`);
               return (
                 <div key={item.href}>
                   <DesktopNavLink href={item.href} label={item.label} active={active} onDark={onDark} />
@@ -218,17 +216,20 @@ export default function Navbar() {
               );
             })}
             <div className="ms-1 flex items-center gap-3">
-              <span
-                className={cn(
-                  "hidden items-center gap-1.5 rounded-full px-3 py-1.5 text-[10px] font-semibold tracking-[0.16em] xl:inline-flex",
-                  onDark
-                    ? "border border-white/15 bg-white/10 text-white"
-                    : "border border-sky-200 bg-sky-50 text-[#0B3A5C]",
-                )}
-              >
-                <Sparkles className="h-3 w-3" />
-                VIP
-              </span>
+              <motion.div whileHover={{ y: -2, scale: 1.02 }} whileTap={{ scale: 0.97 }} transition={IOS_TAP_SPRING}>
+                <Link
+                  href="/contact"
+                  className={cn(
+                    "inline-flex items-center gap-2 rounded-full px-4 py-2.5 font-vazirmatn text-sm font-semibold transition",
+                    onDark
+                      ? "border border-white/25 bg-white/10 text-white hover:bg-white/15"
+                      : "border border-sky-200 bg-sky-50 text-[#0B3A5C] hover:border-sky-300 hover:bg-sky-100",
+                  )}
+                >
+                  <Sparkles className="h-3.5 w-3.5" />
+                  درخواست مشاوره اختصاصی
+                </Link>
+              </motion.div>
               {session ? <UserAccountMenu tone={onDark ? "dark" : "light"} /> : <LoginButton />}
             </div>
           </nav>
@@ -257,12 +258,22 @@ export default function Navbar() {
         items={NAV}
         activeHref={pathname}
         footer={
-          !session ? (
-            <LoginButton
-              className="mt-4 w-full max-w-xs py-3.5 text-base"
+          <div className="mt-4 flex w-full max-w-xs flex-col gap-3">
+            <Link
+              href="/contact"
               onClick={() => setOpen(false)}
-            />
-          ) : null
+              className="ios-tap-target inline-flex items-center justify-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-5 py-3.5 font-vazirmatn text-base font-semibold text-[#0B3A5C]"
+            >
+              <Sparkles className="h-4 w-4" />
+              درخواست مشاوره اختصاصی
+            </Link>
+            {!session ? (
+              <LoginButton
+                className="w-full py-3.5 text-base"
+                onClick={() => setOpen(false)}
+              />
+            ) : null}
+          </div>
         }
       />
     </>

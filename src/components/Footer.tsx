@@ -48,6 +48,7 @@ const FOOTER_ICONS: Record<string, LucideIcon> = {
 const PROPERTY_LINKS = siteConfig.footer.columns.brand.links;
 const SERVICE_LINKS = siteConfig.footer.columns.services.links;
 const PANEL_LINKS = siteConfig.footer.columns.panels.links;
+const LEGAL_LINKS = siteConfig.footer.columns.legal.links;
 
 const SOCIAL_LINKS = siteConfig.footer.socialLinks.map((item) => ({
   ...item,
@@ -194,8 +195,11 @@ function BrandBillboard({ reduce }: { reduce: boolean | null }) {
           </motion.span>
         ))}
       </motion.p>
-      <p className="relative z-10 mt-4 text-center text-sm tracking-[0.28em] text-cyan-300/90 md:text-base">
+      <p className="relative z-10 mt-4 text-center font-vazirmatn text-lg font-semibold text-white md:text-xl">
         {siteConfig.brand.nameFa}
+      </p>
+      <p className="relative z-10 mt-2 text-center font-vazirmatn text-sm text-cyan-300/90 md:text-base">
+        {siteConfig.brand.taglineFa}
       </p>
     </div>
   );
@@ -453,10 +457,11 @@ function NewsletterBlock({ reduce }: { reduce: boolean | null }) {
               whileHover={reduce ? undefined : { scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={IOS_TAP_SPRING}
-              className="ios-tap-target inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-400 text-slate-950 disabled:opacity-60"
+              className="ios-tap-target inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-xl bg-cyan-400 px-4 text-sm font-bold text-slate-950 disabled:opacity-60"
               aria-label="عضویت در خبرنامه"
             >
-              <ArrowLeft className="h-5 w-5" />
+              عضویت
+              <ArrowLeft className="h-4 w-4" />
             </motion.button>
           </motion.div>
           <AnimatePresence>
@@ -562,9 +567,14 @@ export default function Footer() {
             </div>
             <div>
               <p className="mb-4 text-sm font-bold tracking-wide text-cyan-300">
-                {footer.columns.socialTitle}
+                {footer.columns.legal.title}
               </p>
-              <div className="flex flex-wrap gap-2.5">
+              <ul className="space-y-3">
+                {LEGAL_LINKS.map((item, i) => (
+                  <FooterLink key={item.label} href={item.href} label={item.label} index={i} />
+                ))}
+              </ul>
+              <div className="mt-5 flex flex-wrap gap-2.5">
                 {SOCIAL_LINKS.map((item) => (
                   <MagneticSocial
                     key={item.label}

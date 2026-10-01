@@ -49,20 +49,18 @@ export default function HomePropertiesSection() {
       <div className="rio-container">
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4 md:mb-10">
           <div className="max-w-2xl">
-            <p className="text-xs font-semibold tracking-[0.18em] text-sky-600">فایل‌های تازه</p>
-            <h2 className="mt-2 font-vazirmatn text-3xl font-semibold leading-relaxed md:text-4xl">
-              آخرین ملک‌های آماده‌ی معامله در آرشیو ما
+            <h2 className="font-vazirmatn text-3xl font-semibold leading-relaxed md:text-4xl">
+              فایل‌های تازه
             </h2>
             <p className="mt-3 max-w-xl text-sm leading-7 text-[#0B3A5C]/70 md:text-base">
-              ویلا، آپارتمان و دفاتر منتخب بالاشهر کرج، مستقیم از آرشیو خصوصی دفتر.
+              آخرین ملک‌های آماده‌ی معامله در آرشیو ما
             </p>
           </div>
           <Link
             href="/listings"
             className="inline-flex items-center gap-2 rounded-full bg-[#0B3A5C] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-600"
           >
-            مشاهده آرشیو کامل
-            <ArrowLeft className="h-4 w-4" />
+            مشاهده آرشیو کامل ←
           </Link>
         </div>
 
@@ -139,6 +137,10 @@ function QuietCard({ item }: { item: PropertyRecord }) {
           </h3>
           <p className="text-sm font-semibold text-sky-600">{formatToman(item.price, item.listingType)}</p>
           <Specs item={item} compact />
+          <span className="inline-flex items-center gap-1.5 pt-1 text-xs font-semibold text-[#0B3A5C]">
+            مشاهده فایل
+            <ArrowLeft className="h-3.5 w-3.5" />
+          </span>
       </Link>
     </article>
   );

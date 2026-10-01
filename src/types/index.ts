@@ -10,7 +10,7 @@ export type Deal = {
   area: string;
   size?: string;
   title: string;
-  status: "فروخته‌شده" | "اجاره‌داده‌شده";
+  status: "فروخته‌شد" | "اجاره داده شد";
   image: string;
 };
 
@@ -18,17 +18,11 @@ export type Law = {
   statement: string;
 };
 
-export type ContactInterest =
-  | "اجاره فضای لوکس"
-  | "خرید ملک VIP"
-  | "فروش یا معرفی دارایی"
-  | "مشاوره استراتژیک سرمایه‌گذاری";
-
 export type ContactFormValues = {
   name: string;
   email: string;
   phone?: string;
-  interest: ContactInterest | "";
+  interest: string;
   categories: Array<"مسکونی لوکس" | "ویلا و باغ" | "اداری" | "تجاری و مختلط">;
   message?: string;
 };

@@ -21,27 +21,25 @@ export default function Logo({
     <Link
       href={href}
       className={cn("group inline-flex flex-col items-start", className)}
-      aria-label={`${SITE.brandEn} — صفحه اصلی`}
+      aria-label={`${SITE.nameFa} — صفحه اصلی`}
     >
       <motion.span
         className={cn(
-          "bg-clip-text font-sans text-sm font-semibold uppercase tracking-[0.28em] text-transparent md:text-base",
-          onDark
-            ? "bg-gradient-to-l from-cyan-200 via-sky-300 to-cyan-400"
-            : "bg-gradient-to-l from-[#0B3A5C] via-sky-600 to-sky-500",
+          "font-vazirmatn text-base font-semibold tracking-tight md:text-lg",
+          onDark ? "text-white" : "text-[#0B3A5C]",
         )}
-        whileHover={reduceMotion ? undefined : { letterSpacing: "0.34em" }}
+        whileHover={reduceMotion ? undefined : { y: -1 }}
         transition={IOS_TAP_SPRING}
       >
-        {SITE.brandEn}
+        {SITE.nameFa}
       </motion.span>
       <span
         className={cn(
-          "mt-0.5 font-vazirmatn text-[11px] transition",
-          onDark ? "text-white/75 group-hover:text-white" : "text-[#0B3A5C]/65 group-hover:text-[#0B3A5C]",
+          "mt-0.5 max-w-[14rem] font-vazirmatn text-[11px] leading-relaxed transition",
+          onDark ? "text-white/70 group-hover:text-white/90" : "text-[#0B3A5C]/60 group-hover:text-[#0B3A5C]",
         )}
       >
-        {SITE.nameFa}
+        {SITE.taglineFa}
       </span>
     </Link>
   );

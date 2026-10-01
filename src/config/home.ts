@@ -13,6 +13,8 @@ export const INTRO_CTA = {
 
 export const VALUE_PROPS = siteConfig.home.valueProps;
 
+export const TRUST_STATS = siteConfig.home.trustStats;
+
 export const FEATURED_CATEGORIES = siteConfig.home.featuredCategories;
 
 export const CLIENT_LOGOS = [...siteConfig.home.clientLogos];
@@ -24,3 +26,7 @@ export const DEALS: Deal[] = siteConfig.home.deals.map((d) => ({ ...d }));
 export const LAWS: Law[] = siteConfig.home.laws.map((l) => ({ ...l }));
 
 export const OFF_MARKET_CTA = siteConfig.home.offMarketCta;
+
+export const DEALS_FOOTNOTE = siteConfig.home.dealsFootnote;
+
+export const BRANDS_EYEBROW = siteConfig.home.brandsEyebrow;
