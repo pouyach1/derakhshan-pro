@@ -4,6 +4,9 @@ import BlogArchive from "@/components/blog/BlogArchive";
 import { getPublishedBlogPosts } from "@/data/blog";
 import { siteConfig } from "@/config/siteConfig";
 
+/** Live store — newly published posts must appear immediately. */
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: `مجله املاک | ${siteConfig.brand.nameFa}`,
   description:

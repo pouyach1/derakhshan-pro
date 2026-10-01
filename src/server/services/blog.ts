@@ -3,7 +3,7 @@ import { revalidatePath } from "next/cache";
 import type { AuthSession } from "@/lib/auth";
 import type { BlogAuthor, BlogPost } from "@/types/blog";
 import { estimateReadingTimeMinutes } from "@/lib/blog/reading-time";
-import { normalizeBlogSlug, slugFromTitle } from "@/lib/blog/slug";
+import { decodeBlogSlugParam, normalizeBlogSlug, slugFromTitle } from "@/lib/blog/slug";
 import { BLOG_CATEGORIES } from "@/data/blog-categories";
 import { ApiError } from "@/server/http/response";
 import { ensureBootstrapped } from "@/server/db/bootstrap";
@@ -222,9 +222,13 @@ export async function getBlogPostBySlug(
   opts?: { session?: AuthSession | null; publicOnly?: boolean },
 ): Promise<BlogPost | null> {
   await ensureBootstrapped();
-  const normalized = normalizeBlogSlug(slug) || slug.trim();
+  const decoded = decodeBlogSlugParam(slug);
+  const normalized = normalizeBlogSlug(decoded) || decoded;
+  const candidates = new Set(
+    [decoded, normalized, slug.trim(), normalizeBlogSlug(slug)].filter(Boolean),
+  );
   const row = blogRows().find(
-    (item) => !item.softDeleted && (item.slug === normalized || item.slug === slug.trim()),
+    (item) => !item.softDeleted && candidates.has(item.slug),
   );
   if (!row) return null;
 
