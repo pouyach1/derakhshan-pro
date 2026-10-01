@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { nanoid } from "@/lib/id";
 import { propertyCreateSchema, propertyQuerySchema } from "@/server/validation/schemas";
 import { createProperty, listProperties } from "@/server/services/properties";
-import { getSessionFromRequest, requireSession } from "@/server/http/guard";
+import { agentScopeId, getSessionFromRequest, requireSession } from "@/server/http/guard";
 import { jsonError, jsonOk } from "@/server/http/response";
 
 export async function GET(request: NextRequest) {
@@ -15,14 +15,22 @@ export async function GET(request: NextRequest) {
 
     if (!session || session.role === "client") {
       const status = query.status === "sold" ? "sold" : "published";
-      const data = await listProperties({ ...query, status });
+      const data = await listProperties({ ...query, agentId: undefined, status });
       return jsonOk(data, { requestId });
     }
 
     await requireSession(request, ["admin", "agent"]);
+    if (session.role === "agent") {
+      const mine = agentScopeId(session);
+      const data = await listProperties(
+        { ...query, agentId: undefined },
+        { agentId: mine, roles: ["agent"] },
+      );
+      return jsonOk(data, { requestId });
+    }
+
     const data = await listProperties(query, {
-      agentId: session.agentId,
-      roles: [session.role],
+      roles: ["admin"],
     });
     return jsonOk(data, { requestId });
   } catch (error) {
@@ -36,7 +44,7 @@ export async function POST(request: NextRequest) {
     const session = await requireSession(request, ["admin", "agent"]);
     const body = propertyCreateSchema.parse(await request.json());
     if (session.role === "agent") {
-      body.agentId = session.agentId || session.id;
+      body.agentId = agentScopeId(session);
     }
     const item = await createProperty(body, { id: session.id, role: session.role });
     return jsonOk(item, { requestId, status: 201 });

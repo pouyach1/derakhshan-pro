@@ -113,11 +113,17 @@ export async function listProperties(
   const store = getStore();
   let rows = store.properties.filter((p) => !p.softDeleted);
 
+  const agentOnly =
+    Boolean(scope?.agentId) &&
+    Boolean(scope?.roles?.includes("agent")) &&
+    !scope?.roles?.includes("admin");
+
   if (query.status) rows = rows.filter((p) => p.status === query.status);
   if (query.listingType) rows = rows.filter((p) => p.listingType === query.listingType);
-  if (query.agentId) rows = rows.filter((p) => p.agentId === query.agentId);
-  if (scope?.agentId && scope.roles?.includes("agent") && !scope.roles.includes("admin")) {
-    rows = rows.filter((p) => p.agentId === scope.agentId);
+  // Agents cannot widen scope via ?agentId= — session scope wins.
+  if (query.agentId && !agentOnly) rows = rows.filter((p) => p.agentId === query.agentId);
+  if (agentOnly) {
+    rows = rows.filter((p) => p.agentId === scope!.agentId);
   }
   if (query.minPrice != null) rows = rows.filter((p) => p.price >= query.minPrice!);
   if (query.maxPrice != null) rows = rows.filter((p) => p.price <= query.maxPrice!);
@@ -244,7 +250,7 @@ export async function createProperty(
 export async function updateProperty(
   id: string,
   input: z.infer<typeof propertyUpdateSchema>,
-  actor?: { id?: string; role?: string },
+  actor?: { id?: string; role?: string; lockAgentId?: boolean },
 ) {
   await ensureBootstrapped();
   const store = getStore();
@@ -255,6 +261,9 @@ export async function updateProperty(
   }
 
   const prevStatus = existing.status;
+  const nextAgentId = actor?.lockAgentId
+    ? existing.agentId
+    : (input.agentId ?? existing.agentId);
   Object.assign(existing, {
     title: input.title ?? existing.title,
     location: input.location ?? existing.location,
@@ -274,7 +283,7 @@ export async function updateProperty(
       input.videos !== undefined
         ? input.videos.filter(Boolean).slice(0, 3)
         : existing.videos ?? [],
-    agentId: input.agentId ?? existing.agentId,
+    agentId: nextAgentId,
     isFeatured: input.isFeatured ?? existing.isFeatured,
     version: existing.version + 1,
     updatedAt: nowIso(),
@@ -314,10 +323,14 @@ export async function deleteProperty(id: string, actor?: { id?: string; role?: s
   return { id, deleted: true };
 }
 
-export async function listDeals() {
+export async function listDeals(scope?: { agentId?: string }) {
   await ensureBootstrapped();
   const store = getStore();
-  return [...(store.deals ?? [])].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  let rows = [...(store.deals ?? [])];
+  if (scope?.agentId) {
+    rows = rows.filter((deal) => deal.agentId === scope.agentId);
+  }
+  return rows.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
 export type PublicDealCard = {

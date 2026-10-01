@@ -2,21 +2,18 @@ import { NextRequest } from "next/server";
 import { nanoid } from "@/lib/id";
 import { clientCreateSchema } from "@/server/validation/schemas";
 import { createClient, listClients } from "@/server/services/crm";
-import { requireSession } from "@/server/http/guard";
-import { jsonError, jsonOk, ApiError } from "@/server/http/response";
+import { agentScopeId, requireSession } from "@/server/http/guard";
+import { jsonError, jsonOk } from "@/server/http/response";
 
 export async function GET(request: NextRequest) {
   const requestId = nanoid(10);
   try {
     const session = await requireSession(request, ["admin", "agent"]);
+    // Agents: ignore ?agentId= — session identity is authoritative.
     const agentId =
       session.role === "agent"
-        ? session.agentId || session.id
+        ? agentScopeId(session)
         : request.nextUrl.searchParams.get("agentId") || undefined;
-    // Admin may omit agentId to list the whole office CRM.
-    if (session.role === "agent" && !agentId) {
-      throw new ApiError(400, "AGENT_REQUIRED", "شناسه مشاور لازم است");
-    }
     const items = await listClients(agentId);
     return jsonOk({ items }, { requestId });
   } catch (error) {
@@ -32,7 +29,7 @@ export async function POST(request: NextRequest) {
     const body = clientCreateSchema.parse(json);
     const agentId =
       session.role === "agent"
-        ? session.agentId || session.id
+        ? agentScopeId(session)
         : typeof json.agentId === "string"
           ? json.agentId
           : request.nextUrl.searchParams.get("agentId") || "a1";

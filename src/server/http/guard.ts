@@ -25,6 +25,30 @@ export async function requireSession(
   return session;
 }
 
+/** Stable owner key for agent-scoped CRM records (agentId preferred, else user id). */
+export function agentScopeId(session: AuthSession): string {
+  return session.agentId || session.id;
+}
+
+/**
+ * Server-side ownership gate for agent sessions.
+ * Admin always passes. Missing/empty resource owner is denied for agents (no orphan claim).
+ */
+export function assertAgentOwns(
+  resourceAgentId: string | null | undefined,
+  session: AuthSession,
+  message = "دسترسی به این مورد مجاز نیست",
+): void {
+  if (session.role === "admin") return;
+  if (session.role !== "agent") {
+    throw new ApiError(403, "FORBIDDEN", "دسترسی به این بخش مجاز نیست");
+  }
+  const mine = agentScopeId(session);
+  if (!resourceAgentId || resourceAgentId !== mine) {
+    throw new ApiError(403, "FORBIDDEN", message);
+  }
+}
+
 export function clientIp(request: NextRequest) {
   return (
     request.headers.get("cf-connecting-ip") ||

@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { nanoid } from "@/lib/id";
 import { leadUpdateSchema } from "@/server/validation/schemas";
 import { updateLead } from "@/server/services/crm";
-import { requireSession } from "@/server/http/guard";
+import { agentScopeId, requireSession } from "@/server/http/guard";
 import { jsonError, jsonOk } from "@/server/http/response";
 
 type Ctx = { params: Promise<{ id: string }> };
@@ -13,8 +13,11 @@ export async function PATCH(request: NextRequest, ctx: Ctx) {
     const session = await requireSession(request, ["admin", "agent"]);
     const { id } = await ctx.params;
     const body = leadUpdateSchema.parse(await request.json());
+    if (session.role === "agent") {
+      delete body.assignedAgentId;
+    }
     const scope =
-      session.role === "agent" ? { agentId: session.agentId || session.id } : undefined;
+      session.role === "agent" ? { agentId: agentScopeId(session) } : undefined;
     const item = await updateLead(id, body, scope);
     return jsonOk(item, { requestId });
   } catch (error) {

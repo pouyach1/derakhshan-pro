@@ -3,20 +3,18 @@ import { nanoid } from "@/lib/id";
 import { z } from "zod";
 import { tourCreateSchema, tourUpdateSchema } from "@/server/validation/schemas";
 import { createTour, listTours, updateTour } from "@/server/services/crm";
-import { requireSession } from "@/server/http/guard";
+import { agentScopeId, requireSession } from "@/server/http/guard";
 import { jsonError, jsonOk, ApiError } from "@/server/http/response";
 
 export async function GET(request: NextRequest) {
   const requestId = nanoid(10);
   try {
     const session = await requireSession(request, ["admin", "agent"]);
+    // Agents: ignore ?agentId= — session identity is authoritative.
     const agentId =
       session.role === "agent"
-        ? session.agentId || session.id
+        ? agentScopeId(session)
         : request.nextUrl.searchParams.get("agentId") || undefined;
-    if (session.role === "agent" && !agentId) {
-      throw new ApiError(400, "AGENT_REQUIRED", "شناسه مشاور لازم است");
-    }
     const items = await listTours(agentId);
     return jsonOk({ items }, { requestId });
   } catch (error) {
@@ -32,7 +30,7 @@ export async function POST(request: NextRequest) {
     const body = tourCreateSchema.parse(json);
     const agentId =
       session.role === "agent"
-        ? session.agentId || session.id
+        ? agentScopeId(session)
         : typeof json.agentId === "string"
           ? json.agentId
           : "a1";
@@ -50,7 +48,7 @@ export async function PATCH(request: NextRequest) {
     const id = request.nextUrl.searchParams.get("id");
     if (!id) throw new ApiError(400, "ID_REQUIRED", "شناسه بازدید لازم است");
     const body = tourUpdateSchema.parse(await request.json());
-    const scopeAgentId = session.role === "admin" ? null : session.agentId || session.id;
+    const scopeAgentId = session.role === "admin" ? null : agentScopeId(session);
     const item = await updateTour(id, scopeAgentId, body);
     return jsonOk(item, { requestId });
   } catch (error) {
