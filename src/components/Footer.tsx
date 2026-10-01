@@ -56,13 +56,14 @@ const SOCIAL_LINKS = siteConfig.footer.socialLinks.map((item) => ({
 }));
 
 const MARQUEE_ITEMS = [
+  "DERAKHSHAN",
+  "گوهردشت",
+  "عظیمیه",
+  "مهرشهر",
+  "ماهدشت",
+  "کمال‌شهر",
+  "فردیس",
   siteConfig.brand.taglineFa,
-  "ویلا · ماهدشت",
-  "آف‌مارکت VIP",
-  "گوهردشت · مهرشهر",
-  "مشاوره محرمانه",
-  "عظیمیه · کمال‌شهر",
-  "باغ‌ویلا · فردیس",
 ];
 
 function formatTehranTime(date: Date) {
@@ -75,48 +76,45 @@ function formatTehranTime(date: Date) {
   }).format(date);
 }
 
-/** پس‌زمینه اورورا — فقط transform/opacity */
-function AuroraField({ reduce }: { reduce: boolean | null }) {
+/** پس‌زمینه معماری یخ‌نمایی — بدون اورورای عمومی */
+function IceField({ reduce }: { reduce: boolean | null }) {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+      <div className="absolute inset-0 bg-[linear-gradient(165deg,#071A2C_0%,#0B3A5C_42%,#0E4A72_72%,#082338_100%)]" />
+      <div className="absolute inset-0 opacity-[0.14] [background-image:linear-gradient(rgba(255,255,255,0.11)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.11)_1px,transparent_1px)] [background-size:72px_72px] [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_78%)]" />
       <motion.div
-        className="absolute -end-[20%] -top-[30%] h-[70vmax] w-[70vmax] rounded-full bg-cyan-400/20 blur-[100px]"
-        animate={reduce ? undefined : { x: [0, 80, -40, 0], y: [0, 50, -30, 0], scale: [1, 1.12, 0.94, 1] }}
-        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute -start-[18%] top-[-20%] h-[55vmax] w-[55vmax] rounded-full bg-sky-400/15 blur-[90px]"
+        animate={reduce ? undefined : { x: [0, 50, -20, 0], y: [0, 30, -15, 0] }}
+        transition={{ duration: 24, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute -start-[15%] top-[40%] h-[55vmax] w-[55vmax] rounded-full bg-sky-600/15 blur-[110px]"
-        animate={reduce ? undefined : { x: [0, -60, 30, 0], y: [0, -40, 20, 0], scale: [1, 0.9, 1.08, 1] }}
-        transition={{ duration: 26, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute -end-[12%] bottom-[-10%] h-[45vmax] w-[45vmax] rounded-full bg-[#7DD3FC]/12 blur-[100px]"
+        animate={reduce ? undefined : { x: [0, -40, 25, 0], y: [0, -25, 20, 0] }}
+        transition={{ duration: 28, repeat: Infinity, ease: "easeInOut" }}
       />
-      <motion.div
-        className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-l from-transparent via-cyan-400/50 to-transparent"
-        animate={reduce ? undefined : { opacity: [0.25, 0.7, 0.25] }}
-        transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_transparent_30%,_#070C18_78%)]" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-l from-transparent via-sky-300/50 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#041018] to-transparent" />
     </div>
   );
 }
 
-function MarqueeRibbon({ reverse = false }: { reverse?: boolean }) {
+function NeighborhoodRibbon() {
   const row = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
   return (
-    <div className="relative overflow-hidden border-y border-white/10 bg-white/[0.02] py-3.5">
+    <div className="relative overflow-hidden border-y border-white/10 bg-white/[0.03] py-3">
       <div
-        className={cn(
-          "flex w-max gap-10 whitespace-nowrap will-change-transform",
-          reverse ? "animate-marquee-reverse" : "animate-marquee",
-        )}
-        style={{ animationDuration: reverse ? "42s" : "36s" }}
+        className="flex w-max animate-marquee gap-8 whitespace-nowrap will-change-transform"
+        style={{ animationDuration: "38s" }}
       >
         {row.map((item, i) => (
           <span
             key={`${item}-${i}`}
-            className="inline-flex items-center gap-10 text-[11px] font-semibold tracking-[0.22em] text-slate-400 md:text-xs"
+            className="inline-flex items-center gap-8 text-[11px] font-semibold tracking-[0.18em] text-sky-100/70 md:text-xs"
           >
-            <span className="text-cyan-300/80">{item}</span>
-            <span className="h-1 w-1 rounded-full bg-cyan-400/60" />
+            <span className={item === "DERAKHSHAN" ? "rio-display tracking-[0.28em] text-white" : ""}>
+              {item}
+            </span>
+            <span className="h-1 w-1 rounded-full bg-sky-300/70" />
           </span>
         ))}
       </div>
@@ -124,18 +122,18 @@ function MarqueeRibbon({ reverse = false }: { reverse?: boolean }) {
   );
 }
 
-/** برند غول‌پیکر با واکنش به موس روی دسکتاپ */
+/** بیلبورد انگلیسی برند — حرف‌به‌حرف با درخشش اسکای */
 function BrandBillboard({ reduce }: { reduce: boolean | null }) {
-  const word = siteConfig.brand.watermark || "DERAKHSHAN";
+  const word = (siteConfig.brand.watermark || "DERAKHSHAN").toUpperCase();
   const letters = word.split("");
   const ref = useRef<HTMLDivElement>(null);
   const mx = useMotionValue(0.5);
   const my = useMotionValue(0.5);
-  const sx = useSpring(mx, { stiffness: 120, damping: 22 });
-  const sy = useSpring(my, { stiffness: 120, damping: 22 });
+  const sx = useSpring(mx, { stiffness: 110, damping: 22 });
+  const sy = useSpring(my, { stiffness: 110, damping: 22 });
   const glareX = useTransform(sx, (v) => `${v * 100}%`);
   const glareY = useTransform(sy, (v) => `${v * 100}%`);
-  const glare = useMotionTemplate`radial-gradient(520px circle at ${glareX} ${glareY}, rgba(0,240,255,0.22), transparent 55%)`;
+  const glare = useMotionTemplate`radial-gradient(420px circle at ${glareX} ${glareY}, rgba(125,211,252,0.28), transparent 58%)`;
 
   const onMove = (e: ReactMouseEvent) => {
     if (reduce || !ref.current) return;
@@ -152,117 +150,136 @@ function BrandBillboard({ reduce }: { reduce: boolean | null }) {
         mx.set(0.5);
         my.set(0.5);
       }}
-      className="relative overflow-hidden py-6 md:py-10"
+      className="relative overflow-hidden py-4 md:py-8"
     >
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-80"
+        className="pointer-events-none absolute inset-0"
         style={{ background: glare }}
       />
-      <motion.p
-        className="relative z-10 select-none text-center font-black leading-[0.85] tracking-[-0.04em] text-white"
-        style={{ fontSize: "clamp(2.8rem, 12vw, 9.5rem)" }}
-        initial={reduce ? false : { opacity: 0, y: 40 }}
+
+      {/* نور عبوری روی کلمه انگلیسی */}
+      {!reduce ? (
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute inset-y-[12%] start-0 z-20 w-1/3 skew-x-[-18deg] bg-gradient-to-l from-transparent via-white/25 to-transparent blur-md"
+          animate={{ x: ["-40%", "140%"] }}
+          transition={{ duration: 4.8, repeat: Infinity, ease: "easeInOut", repeatDelay: 2.4 }}
+        />
+      ) : null}
+
+      <p
+        dir="ltr"
+        lang="en"
+        className="relative z-10 mb-4 text-center text-[11px] font-semibold tracking-[0.42em] text-sky-200/80 md:text-xs [unicode-bidi:isolate]"
+      >
+        PRIVATE BROKERAGE · KARAJ
+      </p>
+
+      <motion.h2
+        dir="ltr"
+        lang="en"
+        className="rio-display relative z-10 select-none text-center font-semibold leading-[0.86] tracking-[-0.04em] text-white [unicode-bidi:isolate]"
+        style={{ fontSize: "clamp(2.6rem, 11.5vw, 8.75rem)" }}
+        initial={reduce ? false : { opacity: 0, y: 36 }}
         whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.4 }}
         transition={IOS_PAGE_SPRING}
+        aria-label={word}
       >
         {letters.map((ch, i) => (
           <motion.span
             key={`${ch}-${i}`}
             className="inline-block"
-            initial={reduce ? false : { opacity: 0, y: 36, rotateX: 40 }}
-            whileInView={
-              reduce
-                ? undefined
-                : { opacity: 1, y: 0, rotateX: 0 }
-            }
+            initial={reduce ? false : { opacity: 0, y: 42, rotateX: 48 }}
+            whileInView={reduce ? undefined : { opacity: 1, y: 0, rotateX: 0 }}
             viewport={{ once: true, amount: 0.5 }}
-            transition={{ ...IOS_PAGE_SPRING, delay: i * 0.035 }}
+            transition={{ ...IOS_PAGE_SPRING, delay: i * 0.04 }}
             whileHover={
               reduce
                 ? undefined
                 : {
-                    y: -10,
-                    color: "#67E8F9",
-                    textShadow: "0 0 40px rgba(0,240,255,0.45)",
+                    y: -8,
+                    color: "#7DD3FC",
                     transition: IOS_TAP_SPRING,
                   }
             }
-            style={{ transformStyle: "preserve-3d" }}
+            style={{
+              transformStyle: "preserve-3d",
+              perspective: 800,
+            }}
           >
             {ch === " " ? "\u00A0" : ch}
           </motion.span>
         ))}
-      </motion.p>
-      <p className="relative z-10 mt-4 text-center font-vazirmatn text-lg font-semibold text-white md:text-xl">
-        {siteConfig.brand.nameFa}
-      </p>
-      <p className="relative z-10 mt-2 text-center font-vazirmatn text-sm text-cyan-300/90 md:text-base">
-        {siteConfig.brand.taglineFa}
-      </p>
+      </motion.h2>
+
+      <div className="relative z-10 mx-auto mt-6 flex max-w-2xl flex-col items-center gap-2 text-center">
+        <p dir="ltr" lang="en" className="rio-display text-sm tracking-[0.28em] text-sky-100/90 md:text-base [unicode-bidi:isolate]">
+          Derakhshan Properties
+        </p>
+        <p className="font-vazirmatn text-lg font-bold text-white md:text-xl">
+          {siteConfig.brand.nameFa}
+        </p>
+        <p className="font-vazirmatn text-sm leading-7 text-sky-100/75 md:text-base">
+          {siteConfig.brand.taglineFa}
+        </p>
+      </div>
     </div>
   );
 }
 
 function SpotlightCta({ reduce }: { reduce: boolean | null }) {
   const footer = siteConfig.footer;
-  const ref = useRef<HTMLDivElement>(null);
-  const mx = useMotionValue(50);
-  const my = useMotionValue(40);
-  const sx = useSpring(mx, { stiffness: 80, damping: 20 });
-  const sy = useSpring(my, { stiffness: 80, damping: 20 });
-  const spotlight = useMotionTemplate`radial-gradient(520px circle at ${sx}% ${sy}%, rgba(0,240,255,0.18), transparent 50%)`;
-
   return (
-    <motion.div
-      ref={ref}
-      onMouseMove={(e) => {
-        if (reduce || !ref.current) return;
-        const r = ref.current.getBoundingClientRect();
-        mx.set(((e.clientX - r.left) / r.width) * 100);
-        my.set(((e.clientY - r.top) / r.height) * 100);
-      }}
+    <motion.section
       initial={reduce ? false : { opacity: 0, y: 28 }}
       whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.35 }}
       transition={IOS_PAGE_SPRING}
-      className="relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-7 md:rounded-[2rem] md:p-12"
+      className="relative overflow-hidden border-y border-white/10 py-10 md:py-14"
     >
-      <motion.div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: spotlight }} />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,163,255,0.16),transparent_62%)]"
+      />
       <div className="relative z-10 mx-auto max-w-3xl text-center">
-        <motion.p
-          className="text-[11px] font-semibold tracking-[0.3em] text-cyan-300 md:text-xs"
-          animate={reduce ? undefined : { opacity: [0.55, 1, 0.55] }}
-          transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
-        >
-          {siteConfig.brand.shortNameFa}
-        </motion.p>
-        <h2 className="mt-4 font-vazirmatn text-2xl font-black leading-tight tracking-tight md:text-4xl lg:text-5xl">
+        <p className="text-[11px] font-semibold tracking-[0.32em] text-sky-300 md:text-xs">
+          DERAKHSHAN · VIP DESK
+        </p>
+        <h3 className="mt-4 font-vazirmatn text-2xl font-black leading-tight tracking-tight text-white md:text-4xl lg:text-[2.75rem]">
           {footer.ctaTitle}
-        </h2>
+        </h3>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <motion.div whileHover={reduce ? undefined : { y: -4, scale: 1.03 }} whileTap={{ scale: 0.97 }} transition={IOS_TAP_SPRING}>
+          <motion.div
+            whileHover={reduce ? undefined : { y: -3, scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+            transition={IOS_TAP_SPRING}
+          >
             <Link
               href={footer.ctaPrimary.href}
-              className="ios-tap-target inline-flex items-center gap-2 rounded-full bg-cyan-400 px-6 py-3.5 text-sm font-bold text-slate-950"
+              className="ios-tap-target inline-flex items-center gap-2 rounded-full bg-sky-400 px-6 py-3.5 text-sm font-bold text-[#071A2C]"
             >
               <Sparkles className="h-4 w-4" />
               {footer.ctaPrimary.label}
             </Link>
           </motion.div>
-          <motion.div whileHover={reduce ? undefined : { y: -4, scale: 1.03 }} whileTap={{ scale: 0.97 }} transition={IOS_TAP_SPRING}>
+          <motion.div
+            whileHover={reduce ? undefined : { y: -3, scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+            transition={IOS_TAP_SPRING}
+          >
             <a
               href={`tel:${SITE.phone.replace(/\s/g, "")}`}
-              className="ios-tap-target inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-6 py-3.5 text-sm font-bold text-white backdrop-blur-md transition hover:border-cyan-400/40 hover:text-cyan-200"
+              className="ios-tap-target inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.04] px-6 py-3.5 text-sm font-bold text-white transition hover:border-sky-300/50 hover:text-sky-100"
             >
-              <Phone className="h-4 w-4 text-cyan-300" />
+              <Phone className="h-4 w-4 text-sky-300" />
               {footer.ctaSecondaryLabel}
             </a>
           </motion.div>
         </div>
       </div>
-    </motion.div>
+    </motion.section>
   );
 }
 
@@ -274,32 +291,27 @@ function LiveStatus({ time }: { time: string }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.4 }}
       transition={IOS_PAGE_SPRING}
-      className="grid gap-4 md:grid-cols-[auto_1fr] md:items-center"
+      className="grid gap-5 md:grid-cols-[auto_1fr] md:items-center"
     >
-      <div className="inline-flex items-center gap-3 rounded-2xl border border-white/10 bg-black/25 px-4 py-3 backdrop-blur-md">
-        <motion.span
-          animate={{ rotate: [0, 8, -8, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <Clock3 className="h-4 w-4 text-cyan-300" />
-        </motion.span>
+      <div className="inline-flex items-center gap-3 rounded-2xl border border-white/12 bg-black/20 px-4 py-3 backdrop-blur-md">
+        <Clock3 className="h-4 w-4 text-sky-300" />
         <div>
           <p className="text-[11px] text-slate-400">{footer.clockLabel}</p>
-          <p className="font-mono text-lg tracking-[0.14em] text-cyan-300 tabular-nums">
+          <p className="font-mono text-lg tracking-[0.14em] text-sky-200 tabular-nums">
             {time || "\u00a0\u00a0:\u00a0\u00a0:\u00a0\u00a0"}
           </p>
         </div>
       </div>
       <div className="space-y-2">
-        <p className="inline-flex items-center gap-2 text-xs font-semibold text-cyan-200">
+        <p className="inline-flex items-center gap-2 text-xs font-semibold text-sky-100">
           <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-60" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-cyan-400" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-60" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-sky-400" />
           </span>
           {footer.statusBadge}
         </p>
         <p className="inline-flex items-start gap-2 text-sm leading-7 text-slate-300">
-          <MapPin className="mt-1 h-4 w-4 shrink-0 text-cyan-300" />
+          <MapPin className="mt-1 h-4 w-4 shrink-0 text-sky-300" />
           <span>
             {SITE.address.line1}
             <span className="mt-1 block text-xs text-slate-500">
@@ -318,16 +330,16 @@ function FooterLink({ href, label, index }: { href: string; label: string; index
       initial={{ opacity: 0, x: 12 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      transition={{ ...IOS_PAGE_SPRING, delay: Math.min(index, 8) * 0.04 }}
+      transition={{ ...IOS_PAGE_SPRING, delay: Math.min(index, 8) * 0.035 }}
     >
       <Link
         href={href}
-        className="group relative inline-flex text-sm text-slate-300 transition-colors hover:text-cyan-200"
+        className="group relative inline-flex text-sm text-slate-300 transition-colors hover:text-sky-200"
       >
         <span>{label}</span>
-        <motion.span
+        <span
           aria-hidden
-          className="absolute inset-x-0 -bottom-0.5 h-px origin-right scale-x-0 bg-cyan-400/80 transition-transform duration-300 group-hover:origin-left group-hover:scale-x-100"
+          className="absolute inset-x-0 -bottom-0.5 h-px origin-right scale-x-0 bg-sky-300/80 transition-transform duration-300 group-hover:origin-left group-hover:scale-x-100"
         />
       </Link>
     </motion.li>
@@ -354,8 +366,8 @@ function MagneticSocial({
   const onMove = (e: ReactMouseEvent) => {
     if (reduce || !ref.current) return;
     const r = ref.current.getBoundingClientRect();
-    x.set((e.clientX - r.left - r.width / 2) * 0.35);
-    y.set((e.clientY - r.top - r.height / 2) * 0.35);
+    x.set((e.clientX - r.left - r.width / 2) * 0.32);
+    y.set((e.clientY - r.top - r.height / 2) * 0.32);
   };
 
   return (
@@ -372,7 +384,7 @@ function MagneticSocial({
       }}
       style={{ x: sx, y: sy }}
       whileTap={{ scale: 0.94 }}
-      className="ios-tap-target inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-cyan-300 transition hover:border-cyan-400/40 hover:bg-cyan-400/10 hover:text-cyan-100"
+      className="ios-tap-target inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-white/[0.04] text-sky-200 transition hover:border-sky-300/45 hover:bg-sky-400/10 hover:text-white"
     >
       <Icon className="h-5 w-5" />
     </motion.a>
@@ -385,10 +397,7 @@ function NewsletterBlock({ reduce }: { reduce: boolean | null }) {
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
   const focused = useMotionValue(0);
   const borderOpacity = useSpring(focused, { stiffness: 200, damping: 24 });
-  const ring = useTransform(
-    borderOpacity,
-    (v) => `0 0 0 ${v * 4}px rgba(0, 240, 255, 0.18)`,
-  );
+  const ring = useTransform(borderOpacity, (v) => `0 0 0 ${v * 3}px rgba(125, 211, 252, 0.22)`);
 
   async function onNewsletter(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -419,27 +428,23 @@ function NewsletterBlock({ reduce }: { reduce: boolean | null }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.35 }}
       transition={IOS_PAGE_SPRING}
-      className="relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-gradient-to-br from-white/[0.06] to-transparent p-6 md:p-8"
+      className="relative overflow-hidden rounded-[1.6rem] border border-white/12 bg-white/[0.04] p-6 md:p-8"
     >
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute -end-10 -top-10 h-40 w-40 rounded-full bg-cyan-400/20 blur-3xl"
-        animate={reduce ? undefined : { scale: [1, 1.2, 1], opacity: [0.25, 0.45, 0.25] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-      />
       <div className="relative z-10 grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
         <div>
-          <p className="text-[11px] font-semibold tracking-[0.22em] text-cyan-300 md:text-xs">
+          <p className="text-[11px] font-semibold tracking-[0.22em] text-sky-300 md:text-xs">
             {footer.newsletterEyebrow}
           </p>
-          <h3 className="mt-3 font-vazirmatn text-2xl font-black md:text-3xl">{footer.newsletterTitle}</h3>
+          <h3 className="mt-3 font-vazirmatn text-2xl font-black text-white md:text-3xl">
+            {footer.newsletterTitle}
+          </h3>
           <p className="mt-3 max-w-xl text-sm leading-7 text-slate-400">{footer.newsletterBody}</p>
         </div>
 
         <form onSubmit={onNewsletter} className="space-y-3">
           <label className="block text-xs font-semibold text-slate-400">{footer.newsletterLabel}</label>
           <motion.div
-            className="flex gap-2 rounded-2xl border border-white/10 bg-black/30 p-1.5"
+            className="flex gap-2 rounded-2xl border border-white/12 bg-[#071A2C]/55 p-1.5"
             style={{ boxShadow: ring }}
           >
             <input
@@ -454,10 +459,10 @@ function NewsletterBlock({ reduce }: { reduce: boolean | null }) {
             <motion.button
               type="submit"
               disabled={status === "loading"}
-              whileHover={reduce ? undefined : { scale: 1.05 }}
+              whileHover={reduce ? undefined : { scale: 1.04 }}
               whileTap={{ scale: 0.95 }}
               transition={IOS_TAP_SPRING}
-              className="ios-tap-target inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-xl bg-cyan-400 px-4 text-sm font-bold text-slate-950 disabled:opacity-60"
+              className="ios-tap-target inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-xl bg-sky-400 px-4 text-sm font-bold text-[#071A2C] disabled:opacity-60"
               aria-label="عضویت در خبرنامه"
             >
               عضویت
@@ -470,7 +475,7 @@ function NewsletterBlock({ reduce }: { reduce: boolean | null }) {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="text-xs font-semibold text-cyan-300"
+                className="text-xs font-semibold text-sky-300"
               >
                 {footer.newsletterSuccess}
               </motion.p>
@@ -492,8 +497,8 @@ export default function Footer() {
     target: rootRef,
     offset: ["start end", "end end"],
   });
-  const rise = useTransform(scrollYProgress, [0, 1], [40, 0]);
-  const fade = useTransform(scrollYProgress, [0, 0.35], [0.65, 1]);
+  const rise = useTransform(scrollYProgress, [0, 1], [36, 0]);
+  const fade = useTransform(scrollYProgress, [0, 0.35], [0.7, 1]);
 
   useEffect(() => {
     const tick = () => setTime(formatTehranTime(new Date()));
@@ -517,18 +522,17 @@ export default function Footer() {
     <footer
       ref={rootRef}
       dir="rtl"
-      className="relative overflow-hidden bg-[#070C18] font-vazirmatn text-white"
+      className="relative overflow-hidden font-vazirmatn text-white"
     >
-      <AuroraField reduce={reduceMotion} />
+      <IceField reduce={reduceMotion} />
 
       <motion.div
         className="relative z-10"
         style={reduceMotion ? undefined : { y: rise, opacity: fade }}
       >
-        <MarqueeRibbon />
-        <MarqueeRibbon reverse />
+        <NeighborhoodRibbon />
 
-        <div className="rio-container space-y-12 py-12 md:space-y-16 md:py-20 lg:space-y-20 lg:py-24">
+        <div className="rio-container space-y-12 py-12 md:space-y-16 md:py-20 lg:py-24">
           <BrandBillboard reduce={reduceMotion} />
           <SpotlightCta reduce={reduceMotion} />
           <LiveStatus time={time} />
@@ -536,7 +540,7 @@ export default function Footer() {
 
           <section className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
             <div>
-              <p className="mb-4 text-sm font-bold tracking-wide text-cyan-300">
+              <p className="mb-4 text-sm font-bold tracking-wide text-sky-300">
                 {footer.columns.brand.title}
               </p>
               <ul className="space-y-3">
@@ -546,7 +550,7 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <p className="mb-4 text-sm font-bold tracking-wide text-cyan-300">
+              <p className="mb-4 text-sm font-bold tracking-wide text-sky-300">
                 {footer.columns.services.title}
               </p>
               <ul className="space-y-3">
@@ -556,7 +560,7 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <p className="mb-4 text-sm font-bold tracking-wide text-cyan-300">
+              <p className="mb-4 text-sm font-bold tracking-wide text-sky-300">
                 {footer.columns.panels.title}
               </p>
               <ul className="space-y-3">
@@ -566,7 +570,7 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <p className="mb-4 text-sm font-bold tracking-wide text-cyan-300">
+              <p className="mb-4 text-sm font-bold tracking-wide text-sky-300">
                 {footer.columns.legal.title}
               </p>
               <ul className="space-y-3">
@@ -597,22 +601,25 @@ export default function Footer() {
           <section className="relative flex flex-col gap-5 border-t border-white/10 pt-8 md:flex-row md:items-center md:justify-between">
             <motion.span
               aria-hidden
-              className="pointer-events-none absolute inset-x-0 top-0 h-px origin-center bg-gradient-to-l from-transparent via-cyan-400/70 to-transparent"
+              className="pointer-events-none absolute inset-x-0 top-0 h-px origin-center bg-gradient-to-l from-transparent via-sky-300/70 to-transparent"
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 1.05, ease: [0.16, 1, 0.3, 1] }}
             />
             <div className="space-y-2">
+              <p className="rio-display text-xs tracking-[0.2em] text-sky-100/80">
+                DERAKHSHAN PROPERTIES
+              </p>
               <p className="text-xs leading-6 text-slate-400 md:text-sm">{footer.copyright}</p>
               <p className="inline-flex items-center gap-2 text-[11px] text-slate-500">
-                <ShieldCheck className="h-3.5 w-3.5 text-cyan-400" />
+                <ShieldCheck className="h-3.5 w-3.5 text-sky-400" />
                 {footer.privacyNote}
               </p>
             </div>
             <div className="flex flex-wrap gap-4 text-xs text-slate-500">
               {NAV.slice(0, 4).map((item) => (
-                <Link key={item.href} href={item.href} className="transition hover:text-cyan-300">
+                <Link key={item.href} href={item.href} className="transition hover:text-sky-300">
                   {item.label}
                 </Link>
               ))}
@@ -633,9 +640,11 @@ export default function Footer() {
             whileHover={reduceMotion ? undefined : { y: -5, scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             transition={IOS_PAGE_SPRING}
-            className="ios-tap-target fixed bottom-5 start-5 z-50 inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-[#070C18]/85 px-4 py-3 text-xs font-bold text-cyan-100 backdrop-blur-xl md:bottom-8 md:start-8"
+            className={cn(
+              "ios-tap-target fixed bottom-5 start-5 z-50 inline-flex items-center gap-2 rounded-full border border-sky-300/30 bg-[#071A2C]/88 px-4 py-3 text-xs font-bold text-sky-50 backdrop-blur-xl md:bottom-8 md:start-8",
+            )}
           >
-            <ArrowUp className="h-4 w-4 text-cyan-300" />
+            <ArrowUp className="h-4 w-4 text-sky-300" />
             {footer.backToTop}
           </motion.button>
         ) : null}
