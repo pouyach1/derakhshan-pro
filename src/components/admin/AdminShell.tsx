@@ -15,7 +15,11 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const pathname = usePathname();
 
   return (
-    <div dir="rtl" lang="fa" className="min-h-dvh bg-admin-canvas font-vazir text-slate-900 antialiased">
+    <div
+      dir="rtl"
+      lang="fa"
+      className="workspace-dark min-h-dvh bg-admin-canvas font-vazir text-ws-text antialiased"
+    >
       <AdminHeader />
 
       <div className="mx-auto grid max-w-[1600px] gap-4 px-4 py-4 lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-5 lg:px-6 lg:py-6">

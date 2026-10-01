@@ -36,6 +36,18 @@
   --nav--height: 4rem;
   --font-primary: Rubik, Arial, sans-serif;
   --font-display: "Blauer Nue", Rubik, Verdana, sans-serif;
+
+  /* Admin/Agent workspace surfaces (light defaults) */
+  --admin-canvas: #f4f6f8;
+  --admin-soft: #efefef;
+  --admin-card: #ffffff;
+  --ws-bg: #f4f6f8;
+  --ws-surface: #ffffff;
+  --ws-elevated: #f3f7fb;
+  --ws-border: rgba(15, 23, 42, 0.1);
+  --ws-text: #0b3a5c;
+  --ws-muted: #64748b;
+  --ws-accent: #00a3ff;
 }
 
 @layer base {
@@ -230,5 +242,164 @@
 html.show-intro header {
   z-index: 110;
   pointer-events: auto;
+}
+
+/* =============================================================================
+   Workspace Dark — scoped to Admin / Agent shells only (.workspace-dark)
+   Public marketing /blog stays light. Night-friendly graphite, not pure black.
+   ============================================================================= */
+.workspace-dark {
+  color-scheme: dark;
+  --admin-canvas: #10151c;
+  --admin-soft: #1a222d;
+  --admin-card: #171c24;
+  --ws-bg: #10151c;
+  --ws-surface: #171c24;
+  --ws-elevated: #1c2430;
+  --ws-border: rgba(148, 163, 184, 0.16);
+  --ws-text: #e6edf5;
+  --ws-muted: #9aa8b8;
+  --ws-accent: #38bdf8;
+  background: var(--ws-bg);
+  color: var(--ws-text);
+}
+
+.workspace-dark ::selection {
+  background: rgba(56, 189, 248, 0.35);
+  color: #f8fafc;
+}
+
+/* Common light utilities → workspace dark surfaces */
+.workspace-dark .bg-white,
+.workspace-dark .bg-white\/70,
+.workspace-dark .bg-white\/80,
+.workspace-dark .bg-white\/90,
+.workspace-dark .bg-white\/55,
+.workspace-dark .bg-white\/65 {
+  background-color: var(--ws-surface) !important;
+}
+
+.workspace-dark .bg-\[\#F3F7FB\],
+.workspace-dark .bg-\[\#F3F7FB\]\/80,
+.workspace-dark .bg-\[\#F8FBFE\],
+.workspace-dark .bg-\[\#E8F1F8\] {
+  background-color: var(--ws-elevated) !important;
+}
+
+.workspace-dark .bg-slate-50,
+.workspace-dark .bg-slate-100,
+.workspace-dark .hover\:bg-slate-50:hover,
+.workspace-dark .hover\:bg-admin-soft:hover {
+  background-color: var(--ws-elevated) !important;
+}
+
+.workspace-dark .bg-sky-50,
+.workspace-dark .hover\:bg-sky-50:hover {
+  background-color: rgba(14, 165, 233, 0.12) !important;
+}
+
+.workspace-dark .text-slate-900,
+.workspace-dark .text-slate-800,
+.workspace-dark .text-admin-navy,
+.workspace-dark .text-\[\#0B3A5C\] {
+  color: var(--ws-text) !important;
+}
+
+.workspace-dark .text-slate-700,
+.workspace-dark .text-slate-600,
+.workspace-dark .text-slate-500,
+.workspace-dark .text-slate-400 {
+  color: var(--ws-muted) !important;
+}
+
+.workspace-dark .border-slate-200,
+.workspace-dark .border-slate-200\/60,
+.workspace-dark .border-slate-200\/70,
+.workspace-dark .border-slate-200\/80,
+.workspace-dark .border-slate-100,
+.workspace-dark .border-sky-100,
+.workspace-dark .border-sky-100\/80,
+.workspace-dark .border-sky-100\/90,
+.workspace-dark .border-\[\#0B3A5C\]\/8 {
+  border-color: var(--ws-border) !important;
+}
+
+.workspace-dark .ring-slate-200,
+.workspace-dark .ring-slate-200\/60,
+.workspace-dark .ring-slate-200\/80,
+.workspace-dark .ring-sky-100 {
+  --tw-ring-color: var(--ws-border) !important;
+}
+
+.workspace-dark .shadow-sm,
+.workspace-dark .shadow-xl,
+.workspace-dark .shadow-\[0_18px_48px_-40px_rgba\(11\,58\,92\,0\.3\)\],
+.workspace-dark .shadow-\[0_20px_50px_-42px_rgba\(11\,58\,92\,0\.35\)\],
+.workspace-dark .shadow-\[0_16px_40px_-36px_rgba\(11\,58\,92\,0\.3\)\],
+.workspace-dark .shadow-\[0_18px_48px_-40px_rgba\(11\,58\,92\,0\.35\)\] {
+  box-shadow: 0 18px 40px -28px rgba(0, 0, 0, 0.55) !important;
+}
+
+.workspace-dark input,
+.workspace-dark textarea,
+.workspace-dark select {
+  color: var(--ws-text);
+  background-color: var(--ws-elevated);
+  border-color: var(--ws-border);
+}
+
+.workspace-dark input::placeholder,
+.workspace-dark textarea::placeholder {
+  color: rgba(154, 168, 184, 0.7);
+}
+
+.workspace-dark input:focus,
+.workspace-dark textarea:focus,
+.workspace-dark select:focus {
+  border-color: rgba(56, 189, 248, 0.55) !important;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
+}
+
+.workspace-dark option {
+  background: #171c24;
+  color: #e6edf5;
+}
+
+/* Soften status chips on dark */
+.workspace-dark .bg-emerald-50 {
+  background-color: rgba(16, 185, 129, 0.14) !important;
+}
+.workspace-dark .text-emerald-700 {
+  color: #6ee7b7 !important;
+}
+.workspace-dark .ring-emerald-100 {
+  --tw-ring-color: rgba(16, 185, 129, 0.25) !important;
+}
+.workspace-dark .bg-amber-50,
+.workspace-dark .bg-amber-50\/80 {
+  background-color: rgba(245, 158, 11, 0.14) !important;
+}
+.workspace-dark .text-amber-700,
+.workspace-dark .text-amber-800 {
+  color: #fcd34d !important;
+}
+.workspace-dark .ring-amber-100,
+.workspace-dark .border-amber-100 {
+  --tw-ring-color: rgba(245, 158, 11, 0.25) !important;
+  border-color: rgba(245, 158, 11, 0.25) !important;
+}
+.workspace-dark .bg-rose-50,
+.workspace-dark .hover\:bg-rose-50:hover {
+  background-color: rgba(244, 63, 94, 0.12) !important;
+}
+
+/* Keep primary navy buttons readable on dark */
+.workspace-dark .bg-admin-navy {
+  background-color: #0b3a5c !important;
+  color: #f8fafc !important;
+}
+.workspace-dark .hover\:bg-sky-600:hover {
+  background-color: #0284c7 !important;
 }
 

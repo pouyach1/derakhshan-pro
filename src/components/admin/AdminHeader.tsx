@@ -55,18 +55,18 @@ export default function AdminHeader({
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-admin-canvas/90 font-vazir backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-[#121821]/92 font-vazir backdrop-blur-md">
       <div className="mx-auto flex max-w-[1600px] flex-wrap items-center gap-3 px-4 py-3 lg:px-6">
         <Link href="/admin/dashboard" className="flex items-center gap-2">
-          <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-admin-navy text-white shadow-sm">
+          <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-sky-500/15 text-sky-300 ring-1 ring-sky-400/25">
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
               <path d="M4 20V9.5L12 4l8 5.5V20" />
               <path d="M9 20v-6h6v6" />
             </svg>
           </span>
           <div className="hidden sm:block">
-            <p className="text-sm font-semibold text-admin-navy">{SITE_INFO.productNameFa}</p>
-            <p className="text-[11px] text-slate-500">سامانه مدیریت آگهی</p>
+            <p className="text-sm font-semibold text-ws-text">{SITE_INFO.productNameFa}</p>
+            <p className="text-[11px] text-ws-muted">سامانه مدیریت آگهی</p>
           </div>
         </Link>
 
@@ -76,7 +76,7 @@ export default function AdminHeader({
           <LuxurySearch />
         </div>
 
-        <nav className="flex flex-wrap items-center gap-1 rounded-full bg-white p-1 shadow-sm ring-1 ring-slate-200/80">
+        <nav className="flex flex-wrap items-center gap-1 rounded-full bg-white/5 p-1 ring-1 ring-white/10">
           {NAV_ITEMS.map((item) => {
             const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
@@ -84,10 +84,10 @@ export default function AdminHeader({
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "rounded-full px-3.5 py-2 text-xs font-medium transition sm:text-sm",
+                  "rounded-full px-3.5 py-2 text-xs font-medium transition duration-200 sm:text-sm",
                   active
-                    ? "bg-admin-navy text-white shadow-sm"
-                    : "text-slate-600 hover:bg-admin-soft hover:text-admin-navy",
+                    ? "bg-sky-500/20 text-sky-100 ring-1 ring-sky-400/40"
+                    : "text-ws-muted hover:bg-white/10 hover:text-ws-text",
                 )}
               >
                 {item.label}
@@ -100,7 +100,7 @@ export default function AdminHeader({
           <button
             type="button"
             aria-label="اعلان‌ها"
-            className="relative inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-600 shadow-sm ring-1 ring-slate-200"
+            className="relative inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-ws-muted ring-1 ring-white/10 transition hover:bg-white/10 hover:text-ws-text"
           >
             <Bell className="h-5 w-5" strokeWidth={1.8} />
             {alertCount > 0 ? (
@@ -198,17 +198,17 @@ function AdminAccountMenu() {
           aria-label="منوی حساب کاربری"
           aria-expanded={open}
           onClick={() => setOpen((value) => !value)}
-          className="inline-flex items-center gap-1.5 rounded-full bg-white p-0.5 pe-2 shadow-sm ring-1 ring-slate-200 transition hover:ring-admin-sky/40"
+          className="inline-flex items-center gap-1.5 rounded-full bg-white/5 p-0.5 pe-2 ring-1 ring-white/10 transition hover:ring-sky-400/40"
         >
           <Image
             src="/images/admin/avatars/arash-shayegan.jpg"
             alt="آواتار کاربر"
             width={40}
             height={40}
-            className="h-9 w-9 rounded-full object-cover ring-2 ring-white"
+            className="h-9 w-9 rounded-full object-cover ring-2 ring-white/10"
           />
           <ChevronDown
-            className={cn("hidden h-4 w-4 text-slate-400 transition sm:block", open && "rotate-180")}
+            className={cn("hidden h-4 w-4 text-ws-muted transition sm:block", open && "rotate-180")}
             strokeWidth={2}
           />
         </button>
@@ -220,33 +220,33 @@ function AdminAccountMenu() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 6, scale: 0.98 }}
               transition={{ duration: 0.16 }}
-              className="absolute end-0 top-[calc(100%+0.5rem)] z-50 w-56 overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-slate-200"
+              className="absolute end-0 top-[calc(100%+0.5rem)] z-50 w-56 overflow-hidden rounded-2xl border border-white/10 bg-[#171c24] shadow-xl"
             >
-              <div className="border-b border-slate-100 px-3.5 py-3">
-                <p className="truncate text-sm font-semibold text-admin-navy">{name} - مدیر</p>
-                <p className="text-[11px] text-slate-500">پنل مدیریت</p>
+              <div className="border-b border-white/10 px-3.5 py-3">
+                <p className="truncate text-sm font-semibold text-ws-text">{name} - مدیر</p>
+                <p className="text-[11px] text-ws-muted">پنل مدیریت</p>
               </div>
               <div className="p-1.5">
                 <Link
                   href="/admin/settings"
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm text-slate-700 transition hover:bg-admin-soft"
+                  className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm text-ws-muted transition hover:bg-white/5 hover:text-ws-text"
                 >
-                  <Settings className="h-4 w-4 text-slate-500" strokeWidth={1.9} />
+                  <Settings className="h-4 w-4" strokeWidth={1.9} />
                   تنظیمات حساب
                 </Link>
                 <Link
                   href="/"
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm text-slate-700 transition hover:bg-admin-soft"
+                  className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm text-ws-muted transition hover:bg-white/5 hover:text-ws-text"
                 >
-                  <ExternalLink className="h-4 w-4 text-slate-500" strokeWidth={1.9} />
+                  <ExternalLink className="h-4 w-4" strokeWidth={1.9} />
                   مشاهده سایت
                 </Link>
                 <button
                   type="button"
                   onClick={logout}
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm text-rose-600 transition hover:bg-rose-50"
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm text-rose-300 transition hover:bg-rose-500/10"
                 >
                   <LogOut className="h-4 w-4" strokeWidth={1.9} />
                   خروج از حساب
@@ -291,13 +291,13 @@ function LuxurySearch() {
     <div
       className={cn(
         "group relative flex h-11 min-w-[12rem] flex-1 items-center gap-2 rounded-2xl px-3 transition-all duration-300",
-        "border border-white/30 bg-white/40 shadow-sm backdrop-blur-md dark:border-white/10 dark:bg-slate-900/20",
+        "border border-white/10 bg-white/5 backdrop-blur-md",
         "sm:max-w-md",
-        "focus-within:border-sky-500/40 focus-within:ring-4 focus-within:ring-sky-500/10",
-        focused && "border-sky-500/40 ring-4 ring-sky-500/10",
+        "focus-within:border-sky-400/40 focus-within:ring-4 focus-within:ring-sky-500/15",
+        focused && "border-sky-400/40 ring-4 ring-sky-500/15",
       )}
     >
-      <kbd className="hidden shrink-0 items-center gap-1 rounded-md border border-slate-200/70 bg-white/50 px-1.5 py-0.5 font-mono text-[10px] font-medium text-slate-500 sm:inline-flex dark:border-white/10 dark:bg-white/5 dark:text-slate-400">
+      <kbd className="hidden shrink-0 items-center gap-1 rounded-md border border-white/10 bg-white/5 px-1.5 py-0.5 font-mono text-[10px] font-medium text-ws-muted sm:inline-flex">
         {isMac ? "⌘" : "Ctrl"}
         <span>K</span>
       </kbd>
@@ -308,7 +308,7 @@ function LuxurySearch() {
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         placeholder="جستجوی کد، محله یا مشاور…"
-        className="h-full w-full min-w-0 bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400 dark:text-slate-100"
+        className="h-full w-full min-w-0 bg-transparent text-sm text-ws-text outline-none placeholder:text-ws-muted/70"
         aria-label="جستجو"
       />
       <AnimatePresence initial={false}>
@@ -325,13 +325,13 @@ function LuxurySearch() {
               setQuery("");
               inputRef.current?.focus();
             }}
-            className="inline-flex h-6 w-6 items-center justify-center rounded-full text-slate-400 transition hover:bg-white/70 hover:text-slate-700 dark:hover:bg-white/10 dark:hover:text-white"
+            className="inline-flex h-6 w-6 items-center justify-center rounded-full text-ws-muted transition hover:bg-white/10 hover:text-ws-text"
           >
             <X className="h-3.5 w-3.5" strokeWidth={2} />
           </motion.button>
         ) : null}
       </AnimatePresence>
-      <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-sky-500/10 text-sky-500">
+      <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-sky-500/15 text-sky-300">
         <Search className="h-4 w-4" strokeWidth={1.9} />
       </span>
     </div>
@@ -342,10 +342,10 @@ function FilterChip({ label }: { label: string }) {
   return (
     <button
       type="button"
-      className="inline-flex h-10 items-center gap-2 rounded-full bg-white px-3.5 text-sm text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:ring-admin-sky/40"
+      className="inline-flex h-10 items-center gap-2 rounded-full bg-white/5 px-3.5 text-sm text-ws-muted ring-1 ring-white/10 transition hover:bg-white/10 hover:text-ws-text hover:ring-sky-400/30"
     >
       <span>{label}</span>
-      <ChevronDown className="h-4 w-4 text-slate-400" strokeWidth={2} />
+      <ChevronDown className="h-4 w-4 opacity-70" strokeWidth={2} />
     </button>
   );
 }

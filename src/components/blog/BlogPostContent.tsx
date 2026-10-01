@@ -6,6 +6,7 @@ type BlogPostContentProps = {
 
 type Block =
   | { type: "p"; text: string }
+  | { type: "h1"; text: string }
   | { type: "h2"; text: string }
   | { type: "h3"; text: string }
   | { type: "quote"; text: string }
@@ -14,7 +15,7 @@ type Block =
 
 /**
  * Lightweight editorial parser for mock / future plain-text content.
- * Supports paragraphs, ## / ### headings, > quotes, and - / 1. lists.
+ * Supports # / ## / ###, > quotes, lists, and inline ** * __ [link](url).
  */
 function parseContent(content: string): Block[] {
   const lines = content.replace(/\r\n/g, "\n").split("\n");
@@ -38,6 +39,12 @@ function parseContent(content: string): Block[] {
 
     if (line.startsWith("## ")) {
       blocks.push({ type: "h2", text: line.slice(3).trim() });
+      i += 1;
+      continue;
+    }
+
+    if (line.startsWith("# ")) {
+      blocks.push({ type: "h1", text: line.slice(2).trim() });
       i += 1;
       continue;
     }
@@ -79,6 +86,7 @@ function parseContent(content: string): Block[] {
       const next = (lines[i] ?? "").trim();
       if (
         !next ||
+        next.startsWith("# ") ||
         next.startsWith("## ") ||
         next.startsWith("### ") ||
         next.startsWith("> ") ||
@@ -97,8 +105,7 @@ function parseContent(content: string): Block[] {
 }
 
 function InlineText({ text }: { text: string }) {
-  /** Minimal **bold** support without a markdown dependency. */
-  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  const parts = text.split(/(\*\*[^*]+\*\*|__[^_]+__|\*[^*]+\*|\[[^\]]+\]\([^)]+\))/g);
   return (
     <>
       {parts.map((part, index) => {
@@ -107,6 +114,34 @@ function InlineText({ text }: { text: string }) {
             <strong key={index} className="font-semibold text-[#0B3A5C]">
               {part.slice(2, -2)}
             </strong>
+          );
+        }
+        if (part.startsWith("__") && part.endsWith("__") && part.length > 4) {
+          return (
+            <span key={index} className="underline decoration-sky-400/70 underline-offset-4">
+              {part.slice(2, -2)}
+            </span>
+          );
+        }
+        if (part.startsWith("*") && part.endsWith("*") && part.length > 2) {
+          return (
+            <em key={index} className="italic text-[#0B3A5C]/90">
+              {part.slice(1, -1)}
+            </em>
+          );
+        }
+        const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+        if (link) {
+          return (
+            <a
+              key={index}
+              href={link[2]}
+              className="font-semibold text-sky-700 underline decoration-sky-300/70 underline-offset-4 transition hover:text-sky-600"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {link[1]}
+            </a>
           );
         }
         return <Fragment key={index}>{part}</Fragment>;
@@ -132,6 +167,15 @@ export default function BlogPostContent({ content }: BlogPostContentProps) {
     >
       {blocks.map((block, index) => {
         switch (block.type) {
+          case "h1":
+            return (
+              <h2
+                key={index}
+                className="mt-12 mb-4 font-vazirmatn text-2xl font-black leading-10 tracking-tight text-[#0B3A5C] first:mt-0 md:text-3xl"
+              >
+                <InlineText text={block.text} />
+              </h2>
+            );
           case "h2":
             return (
               <h2
