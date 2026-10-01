@@ -65,16 +65,16 @@ export default function AgentShell({ children }: { children: React.ReactNode }) 
     <div
       dir="rtl"
       lang="fa"
-      className="min-h-dvh bg-[#F1EFEA] font-vazirmatn text-slate-900 antialiased"
+      className="min-h-dvh bg-[#F3F7FB] font-vazirmatn text-slate-900 antialiased"
     >
       <header className="sticky top-0 z-40 border-b border-slate-200/60 bg-white/70 backdrop-blur-md">
         <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-sm">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#0B3A5C] text-white shadow-sm">
               <Building2 className="h-5 w-5" />
             </span>
             <div>
-              <p className="text-sm font-semibold text-slate-900">پنل مشاور</p>
+              <p className="text-sm font-semibold text-[#0B3A5C]">پنل مشاور</p>
               <p className="text-xs text-slate-500">
                 {session
                   ? `${displayNameForSession(session)} · مشاور`
@@ -94,8 +94,8 @@ export default function AgentShell({ children }: { children: React.ReactNode }) 
                   className={cn(
                     "inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-sm transition",
                     active
-                      ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/25"
-                      : "bg-white/80 text-slate-600 ring-1 ring-slate-200/60 hover:bg-white hover:text-slate-900",
+                      ? "bg-[#0B3A5C] text-white shadow-sm shadow-sky-900/20"
+                      : "bg-white/80 text-slate-600 ring-1 ring-slate-200/60 hover:bg-white hover:text-[#0B3A5C]",
                   )}
                 >
                   <item.icon className="h-4 w-4" />
