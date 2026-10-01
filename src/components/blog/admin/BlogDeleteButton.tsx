@@ -1,20 +1,44 @@
 "use client";
 
 import { useState } from "react";
-import { Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Loader2, Trash2 } from "lucide-react";
+import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 type BlogDeleteButtonProps = {
+  postId: string;
   title: string;
   className?: string;
 };
 
 /**
- * Destructive action with confirmation.
- * Mock phase: does not permanently delete — persistence comes later.
+ * Destructive soft-delete with confirmation — server re-checks ownership.
  */
-export default function BlogDeleteButton({ title, className }: BlogDeleteButtonProps) {
+export default function BlogDeleteButton({
+  postId,
+  title,
+  className,
+}: BlogDeleteButtonProps) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function confirmDelete() {
+    setLoading(true);
+    setError(null);
+    const result = await api<{ id: string; deleted: true }>(`/api/blog/${postId}`, {
+      method: "DELETE",
+    });
+    setLoading(false);
+    if (!result.ok) {
+      setError(result.error.message || "حذف ناموفق بود");
+      return;
+    }
+    setOpen(false);
+    router.refresh();
+  }
 
   return (
     <>
@@ -43,23 +67,31 @@ export default function BlogDeleteButton({ title, className }: BlogDeleteButtonP
               حذف مقاله؟
             </h2>
             <p className="mt-2 text-sm leading-7 text-[#0B3A5C]/70">
-              «{title}» برای حذف انتخاب شد. حذف دائمی پس از اتصال پایگاه‌داده فعال می‌شود و در این فاز
-              دادهٔ آزمایشی تغییر نمی‌کند.
+              «{title}» برای حذف انتخاب شد. این عملیات مقاله را از فهرست مدیریت حذف می‌کند و از وبلاگ
+              عمومی نیز ناپدید می‌شود.
             </p>
+            {error ? (
+              <p className="mt-3 text-sm text-rose-600" role="alert">
+                {error}
+              </p>
+            ) : null}
             <div className="mt-5 flex flex-wrap justify-end gap-2">
               <button
                 type="button"
+                disabled={loading}
                 onClick={() => setOpen(false)}
-                className="rounded-full bg-[#F3F7FB] px-4 py-2 text-sm font-semibold text-[#0B3A5C] transition hover:bg-sky-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/50"
+                className="rounded-full bg-[#F3F7FB] px-4 py-2 text-sm font-semibold text-[#0B3A5C] transition hover:bg-sky-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/50 disabled:opacity-60"
               >
                 انصراف
               </button>
               <button
                 type="button"
-                onClick={() => setOpen(false)}
-                className="rounded-full bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"
+                disabled={loading}
+                onClick={() => void confirmDelete()}
+                className="inline-flex items-center gap-2 rounded-full bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 disabled:opacity-60"
               >
-                متوجه شدم
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                حذف قطعی
               </button>
             </div>
           </div>

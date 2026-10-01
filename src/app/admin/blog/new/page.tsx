@@ -16,7 +16,7 @@ export default function AdminBlogNewPage() {
       <BlogForm
         mode="create"
         basePath={BASE_PATH}
-        author={{ id: "author-admin", name: "تحریریه درخشان" }}
+        author={{ id: "admin-1", name: "تحریریه درخشان" }}
       />
     </div>
   );

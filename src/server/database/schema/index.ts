@@ -6,6 +6,7 @@ export type { ClientRecord, ClientNote, ClientUrgency, ClientIntent } from "./cl
 export type { LeadRecord, LeadStatus } from "./leads";
 export type { TourRecord, TourStatus } from "./tours";
 export type { DealRecord, DealStatus, DealType } from "./deals";
+export type { BlogPostRecord, BlogPostStatus } from "./blog_posts";
 export type {
   NotificationRecord,
   NotificationChannel,

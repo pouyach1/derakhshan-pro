@@ -1,6 +1,6 @@
 "use client";
 
-import { BLOG_CATEGORIES } from "@/data/blog";
+import { BLOG_CATEGORIES } from "@/data/blog-categories";
 import { cn } from "@/lib/utils";
 
 type BlogCategoryFilterProps = {

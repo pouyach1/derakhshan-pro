@@ -1,13 +1,26 @@
 import BlogManageHeader from "@/components/blog/admin/BlogManageHeader";
 import BlogTable from "@/components/blog/admin/BlogTable";
-import { getBlogPosts } from "@/data/blog";
+import { getBlogStats, listBlogPosts } from "@/server/services/blog";
+import { requireSession } from "@/server/http/guard";
 
 const BASE_PATH = "/admin/blog";
 
-export default function AdminBlogPage() {
-  const posts = getBlogPosts();
-  const published = posts.filter((post) => post.status === "published").length;
-  const drafts = posts.length - published;
+export default async function AdminBlogPage() {
+  const session = await requireSession(undefined, ["admin"]);
+  const [{ items: posts }, stats] = await Promise.all([
+    listBlogPosts(
+      {
+        page: 1,
+        pageSize: 200,
+        q: undefined,
+        status: undefined,
+        category: undefined,
+        authorUserId: undefined,
+      },
+      { session },
+    ),
+    getBlogStats(session),
+  ]);
 
   return (
     <div className="space-y-6 font-vazirmatn" dir="rtl">
@@ -15,9 +28,9 @@ export default function AdminBlogPage() {
         title="وبلاگ"
         subtitle="مدیریت مجله املاک درخشان — ایجاد، ویرایش و انتشار مقالات تحریریه."
         basePath={BASE_PATH}
-        total={posts.length}
-        published={published}
-        drafts={drafts}
+        total={stats.total}
+        published={stats.published}
+        drafts={stats.drafts}
       />
       <BlogTable posts={posts} basePath={BASE_PATH} />
     </div>
