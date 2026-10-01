@@ -347,7 +347,8 @@ export async function updateLead(
   const existing = store.leads.find((l) => l.id === id);
   if (!existing) throw new ApiError(404, "NOT_FOUND", "لید یافت نشد");
   if (scope?.agentId) {
-    if (existing.assignedAgentId && existing.assignedAgentId !== scope.agentId) {
+    // Agents cannot claim unassigned leads or mutate another agent's lead.
+    if (!existing.assignedAgentId || existing.assignedAgentId !== scope.agentId) {
       throw new ApiError(403, "FORBIDDEN", "این لید متعلق به مشاور دیگری است");
     }
   }
@@ -356,7 +357,7 @@ export async function updateLead(
     notes: input.notes ?? existing.notes,
     assignedAgentId:
       scope?.agentId != null
-        ? existing.assignedAgentId ?? scope.agentId
+        ? existing.assignedAgentId
         : (input.assignedAgentId ?? existing.assignedAgentId),
     propertyTitle: input.propertyTitle ?? existing.propertyTitle,
     updatedAt: nowIso(),
@@ -371,38 +372,59 @@ export async function updateLead(
   return existing;
 }
 
-export async function listActivity(limit = 50) {
+export async function listActivity(
+  limit = 50,
+  scope?: { actorId?: string; agentId?: string },
+) {
   await ensureBootstrapped();
   const store = getStore();
-  return store.activity.slice(0, Math.min(Math.max(limit, 1), 200));
+  const capped = Math.min(Math.max(limit, 1), 200);
+  let rows = [...store.activity];
+  if (scope?.actorId || scope?.agentId) {
+    const allowedActors = new Set(
+      [scope.actorId, scope.agentId].filter(Boolean) as string[],
+    );
+    rows = rows.filter(
+      (row) => row.actorId != null && allowedActors.has(row.actorId),
+    );
+  }
+  return rows.slice(0, capped);
 }
 
-export async function listAgents() {
+export async function listAgents(scope?: { agentId?: string; userId?: string }) {
   await ensureBootstrapped();
   const store = getStore();
-  return store.users
-    .filter((u) => u.role === "agent")
-    .map((agent) => {
-      const agentKey = agent.agentId || agent.id;
-      const listed = store.properties.filter(
-        (p) => p.agentId === agentKey && !p.softDeleted,
-      ).length;
-      const closed = store.properties.filter(
-        (p) => p.agentId === agentKey && p.status === "sold",
-      ).length;
-      return {
-        id: agentKey,
-        userId: agent.id,
-        name: agent.name,
-        phone: agent.phone,
-        email: agent.email,
-        avatarUrl: agent.avatarUrl,
-        listedProperties: listed,
-        dealsClosed: closed,
-        isActive: agent.isActive,
-        status: agent.isActive ? ("active" as const) : ("inactive" as const),
-      };
-    });
+  let agents = store.users.filter((u) => u.role === "agent");
+  // Agents may only resolve their own directory entry (no peer PII / counts).
+  if (scope?.agentId || scope?.userId) {
+    agents = agents.filter(
+      (agent) =>
+        agent.id === scope.userId ||
+        agent.agentId === scope.agentId ||
+        agent.id === scope.agentId,
+    );
+  }
+  return agents.map((agent) => {
+    const agentKey = agent.agentId || agent.id;
+    const listed = store.properties.filter(
+      (p) => p.agentId === agentKey && !p.softDeleted,
+    ).length;
+    const closed = store.properties.filter(
+      (p) => p.agentId === agentKey && p.status === "sold",
+    ).length;
+    return {
+      id: agentKey,
+      userId: agent.id,
+      name: agent.name,
+      phone: agent.phone,
+      email: agent.email,
+      avatarUrl: agent.avatarUrl,
+      listedProperties: listed,
+      dealsClosed: closed,
+      isActive: agent.isActive,
+      status: agent.isActive ? ("active" as const) : ("inactive" as const),
+    };
+  });
 }
 
 export async function listClients(agentId?: string) {
@@ -535,21 +557,39 @@ export async function createContactMessage(input: z.infer<typeof contactSchema>,
   return { id: row.id, received: true };
 }
 
-export async function getPlatformStats() {
+export async function getPlatformStats(scope?: { agentId?: string }) {
   await ensureBootstrapped();
   const store = getStore();
-  const live = store.properties.filter((p) => !p.softDeleted);
+  const agentId = scope?.agentId;
+  const live = store.properties.filter(
+    (p) => !p.softDeleted && (!agentId || p.agentId === agentId),
+  );
+  const leads = agentId
+    ? store.leads.filter((l) => l.assignedAgentId === agentId)
+    : store.leads;
+  const clients = agentId
+    ? store.clients.filter((c) => c.agentId === agentId)
+    : store.clients;
+  const deals = agentId
+    ? (store.deals ?? []).filter((d) => d.agentId === agentId)
+    : (store.deals ?? []);
+
   return {
     totalProperties: live.length,
     publishedProperties: live.filter((p) => p.status === "published").length,
     negotiationProperties: live.filter((p) => p.status === "negotiation").length,
     soldProperties: live.filter((p) => p.status === "sold").length,
-    newLeads: store.leads.filter((l) => l.status === "new").length,
-    unreadMessages: store.contacts.filter((c) => c.status === "new").length,
-    agents: store.users.filter((u) => u.role === "agent").length,
-    registeredClients: store.clients.length + store.users.filter((u) => u.role === "client").length,
+    newLeads: leads.filter((l) => l.status === "new").length,
+    // Contact inbox is office-wide admin work — agents do not see unread counts.
+    unreadMessages: agentId
+      ? 0
+      : store.contacts.filter((c) => c.status === "new").length,
+    agents: agentId ? 1 : store.users.filter((u) => u.role === "agent").length,
+    registeredClients:
+      clients.length +
+      (agentId ? 0 : store.users.filter((u) => u.role === "client").length),
     monthlyDeals:
-      (store.deals ?? []).filter((d) => d.status === "closed").length ||
+      deals.filter((d) => d.status === "closed").length ||
       live.filter((p) => p.status === "sold").length,
     totalViews: live.reduce((sum, p) => sum + p.views, 0),
     brand: siteConfig.brand.nameFa,

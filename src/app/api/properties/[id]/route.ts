@@ -6,7 +6,11 @@ import {
   getProperty,
   updateProperty,
 } from "@/server/services/properties";
-import { requireSession, getSessionFromRequest } from "@/server/http/guard";
+import {
+  assertAgentOwns,
+  getSessionFromRequest,
+  requireSession,
+} from "@/server/http/guard";
 import { jsonError, jsonOk, ApiError } from "@/server/http/response";
 
 type Ctx = { params: Promise<{ id: string }> };
@@ -17,11 +21,19 @@ export async function GET(_request: NextRequest, ctx: Ctx) {
     const { id } = await ctx.params;
     const session = await getSessionFromRequest(_request);
     const countView = _request.nextUrl.searchParams.get("view") === "1";
-    const item = await getProperty(id, { countView });
-    const staff = session?.role === "admin" || session?.role === "agent";
-    if (!staff && item.status !== "published" && item.status !== "sold") {
-      throw new ApiError(404, "NOT_FOUND", "ملک یافت نشد");
+    const item = await getProperty(id, { countView: countView && (!session || session.role === "client") });
+
+    if (!session || session.role === "client") {
+      if (item.status !== "published" && item.status !== "sold") {
+        throw new ApiError(404, "NOT_FOUND", "ملک یافت نشد");
+      }
+      return jsonOk(item, { requestId });
     }
+
+    if (session.role === "agent") {
+      assertAgentOwns(item.agentId, session, "این ملک متعلق به مشاور دیگری است");
+    }
+
     return jsonOk(item, { requestId });
   } catch (error) {
     return jsonError(error, requestId);
@@ -36,11 +48,14 @@ export async function PATCH(request: NextRequest, ctx: Ctx) {
     const body = propertyUpdateSchema.parse(await request.json());
     if (session.role === "agent") {
       const current = await getProperty(id);
-      if (current.agentId && current.agentId !== session.agentId) {
-        throw new ApiError(403, "FORBIDDEN", "این ملک متعلق به مشاور دیگری است");
-      }
+      assertAgentOwns(current.agentId, session, "این ملک متعلق به مشاور دیگری است");
+      delete body.agentId;
     }
-    const item = await updateProperty(id, body, { id: session.id, role: session.role });
+    const item = await updateProperty(id, body, {
+      id: session.id,
+      role: session.role,
+      lockAgentId: session.role === "agent",
+    });
     return jsonOk(item, { requestId });
   } catch (error) {
     return jsonError(error, requestId);
@@ -54,9 +69,7 @@ export async function DELETE(request: NextRequest, ctx: Ctx) {
     const { id } = await ctx.params;
     if (session.role === "agent") {
       const current = await getProperty(id);
-      if (current.agentId && current.agentId !== session.agentId) {
-        throw new ApiError(403, "FORBIDDEN", "این ملک متعلق به مشاور دیگری است");
-      }
+      assertAgentOwns(current.agentId, session, "این ملک متعلق به مشاور دیگری است");
     }
     const result = await deleteProperty(id, { id: session.id, role: session.role });
     return jsonOk(result, { requestId });

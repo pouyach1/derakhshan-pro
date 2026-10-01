@@ -6,7 +6,11 @@ import {
   listPropertyImages,
   replacePropertyImages,
 } from "@/server/services/properties";
-import { getSessionFromRequest, requireSession } from "@/server/http/guard";
+import {
+  assertAgentOwns,
+  getSessionFromRequest,
+  requireSession,
+} from "@/server/http/guard";
 import { jsonError, jsonOk, ApiError } from "@/server/http/response";
 
 type Ctx = { params: Promise<{ id: string }> };
@@ -21,10 +25,15 @@ export async function GET(request: NextRequest, ctx: Ctx) {
     const { id } = await ctx.params;
     const session = await getSessionFromRequest(request);
     const property = await getProperty(id);
-    const staff = session?.role === "admin" || session?.role === "agent";
-    if (!staff && property.status !== "published" && property.status !== "sold") {
-      throw new ApiError(404, "NOT_FOUND", "ملک یافت نشد");
+
+    if (!session || session.role === "client") {
+      if (property.status !== "published" && property.status !== "sold") {
+        throw new ApiError(404, "NOT_FOUND", "ملک یافت نشد");
+      }
+    } else if (session.role === "agent") {
+      assertAgentOwns(property.agentId, session, "این ملک متعلق به مشاور دیگری است");
     }
+
     const items = await listPropertyImages(id);
     return jsonOk({ items, gallery: property.gallery, imageUrl: property.imageUrl }, { requestId });
   } catch (error) {
@@ -40,9 +49,7 @@ export async function PUT(request: NextRequest, ctx: Ctx) {
     const body = replaceSchema.parse(await request.json());
     if (session.role === "agent") {
       const current = await getProperty(id);
-      if (current.agentId && current.agentId !== session.agentId) {
-        throw new ApiError(403, "FORBIDDEN", "این ملک متعلق به مشاور دیگری است");
-      }
+      assertAgentOwns(current.agentId, session, "این ملک متعلق به مشاور دیگری است");
     }
     const items = await replacePropertyImages(id, body.urls, {
       id: session.id,
