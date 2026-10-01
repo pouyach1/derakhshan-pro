@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Bath, BedDouble, MapPin, Ruler } from "lucide-react";
 import PropertyGalleryTrigger from "@/components/listings/PropertyGalleryTrigger";
+import CompactPropertyCard from "@/components/mobile/CompactPropertyCard";
 import { PropertyCardSkeletonList } from "@/components/mobile/PropertySkeletons";
 import { api } from "@/lib/api";
 import { formatToman, listingTypeLabel } from "@/lib/money";
@@ -12,7 +13,7 @@ import type { PropertyRecord } from "@/server/db/store";
 
 /**
  * ویترین خانه — تم روشن برند (#F3F7FB / #0B3A5C).
- * یک فایل تازهٔ بزرگ + بقیه در گرید، بدون کاروسل تکراری روی پس‌زمینهٔ تیره.
+ * موبایل: گرید ۲ ستونه جمع‌وجور · دسکتاپ: لید بزرگ + گرید.
  */
 export default function HomePropertiesSection() {
   const [items, setItems] = useState<PropertyRecord[]>([]);
@@ -38,27 +39,27 @@ export default function HomePropertiesSection() {
   const newest = useMemo(() => {
     return [...items]
       .sort((a, b) => (b.createdAt ?? "").localeCompare(a.createdAt ?? ""))
-      .slice(0, 7);
+      .slice(0, 8);
   }, [items]);
 
   const lead = newest[0];
   const rest = newest.slice(1);
 
   return (
-    <section className="bg-[#F3F7FB] py-16 text-[#0B3A5C] md:py-24" aria-label="فایل‌های تازه">
+    <section className="bg-[#F3F7FB] py-12 text-[#0B3A5C] md:py-24" aria-label="فایل‌های تازه">
       <div className="rio-container">
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-4 md:mb-10">
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-3 md:mb-10 md:gap-4">
           <div className="max-w-2xl">
-            <h2 className="font-vazirmatn text-3xl font-semibold leading-relaxed md:text-4xl">
+            <h2 className="font-vazirmatn text-2xl font-semibold leading-relaxed md:text-4xl">
               فایل‌های تازه
             </h2>
-            <p className="mt-3 max-w-xl text-sm leading-7 text-[#0B3A5C]/70 md:text-base">
+            <p className="mt-2 max-w-xl text-sm leading-7 text-[#0B3A5C]/70 md:mt-3 md:text-base">
               آخرین ملک‌های آماده‌ی معامله در آرشیو ما
             </p>
           </div>
           <Link
             href="/listings"
-            className="inline-flex items-center gap-2 rounded-full bg-[#0B3A5C] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-600"
+            className="inline-flex items-center gap-2 rounded-full bg-[#0B3A5C] px-4 py-2 text-xs font-semibold text-white transition hover:bg-sky-600 md:px-5 md:py-2.5 md:text-sm"
           >
             مشاهده آرشیو کامل ←
           </Link>
@@ -71,16 +72,31 @@ export default function HomePropertiesSection() {
             فعلاً فایلی برای نمایش نیست.
           </p>
         ) : (
-          <div className="space-y-5">
-            <LeadCard item={lead} />
-            {rest.length > 0 ? (
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {rest.map((item) => (
-                  <QuietCard key={item.id} item={item} />
-                ))}
-              </div>
-            ) : null}
-          </div>
+          <>
+            {/* موبایل / تبلت کوچک: دو ستون */}
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-3 lg:hidden">
+              {newest.map((item, index) => (
+                <CompactPropertyCard
+                  key={item.id}
+                  item={item}
+                  variant="grid"
+                  priority={index < 2}
+                />
+              ))}
+            </div>
+
+            {/* دسکتاپ: لید + گرید */}
+            <div className="hidden space-y-5 lg:block">
+              <LeadCard item={lead} />
+              {rest.length > 0 ? (
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {rest.map((item) => (
+                    <QuietCard key={item.id} item={item} />
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          </>
         )}
       </div>
     </section>
@@ -131,16 +147,16 @@ function QuietCard({ item }: { item: PropertyRecord }) {
         </span>
       </div>
       <Link href={`/listings/${item.id}`} className="block space-y-2 p-4">
-          <p className="line-clamp-1 text-[11px] text-[#0B3A5C]/55">{item.neighborhood || item.location}</p>
-          <h3 className="line-clamp-2 min-h-[3.25rem] font-vazirmatn text-base font-semibold leading-7 text-[#0B3A5C]">
-            {item.title}
-          </h3>
-          <p className="text-sm font-semibold text-sky-600">{formatToman(item.price, item.listingType)}</p>
-          <Specs item={item} compact />
-          <span className="inline-flex items-center gap-1.5 pt-1 text-xs font-semibold text-[#0B3A5C]">
-            مشاهده فایل
-            <ArrowLeft className="h-3.5 w-3.5" />
-          </span>
+        <p className="line-clamp-1 text-[11px] text-[#0B3A5C]/55">{item.neighborhood || item.location}</p>
+        <h3 className="line-clamp-2 min-h-[3.25rem] font-vazirmatn text-base font-semibold leading-7 text-[#0B3A5C]">
+          {item.title}
+        </h3>
+        <p className="text-sm font-semibold text-sky-600">{formatToman(item.price, item.listingType)}</p>
+        <Specs item={item} compact />
+        <span className="inline-flex items-center gap-1.5 pt-1 text-xs font-semibold text-[#0B3A5C]">
+          مشاهده فایل
+          <ArrowLeft className="h-3.5 w-3.5" />
+        </span>
       </Link>
     </article>
   );
