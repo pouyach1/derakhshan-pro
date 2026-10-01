@@ -67,17 +67,17 @@ export default function AgentShell({ children }: { children: React.ReactNode }) 
     <div
       dir="rtl"
       lang="fa"
-      className="min-h-dvh bg-[#F3F7FB] font-vazirmatn text-slate-900 antialiased"
+      className="workspace-dark min-h-dvh bg-admin-canvas font-vazirmatn text-ws-text antialiased"
     >
-      <header className="sticky top-0 z-40 border-b border-slate-200/60 bg-white/70 backdrop-blur-md">
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#121821]/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#0B3A5C] text-white shadow-sm">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-sky-500/15 text-sky-300 ring-1 ring-sky-400/25">
               <Building2 className="h-5 w-5" />
             </span>
             <div>
-              <p className="text-sm font-semibold text-[#0B3A5C]">پنل مشاور</p>
-              <p className="text-xs text-slate-500">
+              <p className="text-sm font-semibold text-ws-text">پنل مشاور</p>
+              <p className="text-xs text-ws-muted">
                 {session
                   ? `${displayNameForSession(session)} · مشاور`
                   : `${siteConfig.panels.agentShellFallback} · ${siteConfig.brand.productNameFa}`}
@@ -94,10 +94,10 @@ export default function AgentShell({ children }: { children: React.ReactNode }) 
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-sm transition",
+                    "inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-sm transition duration-200",
                     active
-                      ? "bg-[#0B3A5C] text-white shadow-sm shadow-sky-900/20"
-                      : "bg-white/80 text-slate-600 ring-1 ring-slate-200/60 hover:bg-white hover:text-[#0B3A5C]",
+                      ? "bg-sky-500/20 text-sky-100 ring-1 ring-sky-400/40"
+                      : "bg-white/5 text-ws-muted ring-1 ring-white/10 hover:bg-white/10 hover:text-ws-text",
                   )}
                 >
                   <item.icon className="h-4 w-4" />
@@ -105,12 +105,12 @@ export default function AgentShell({ children }: { children: React.ReactNode }) 
                 </Link>
               );
             })}
-            {session ? <UserAccountMenu tone="light" /> : null}
+            {session ? <UserAccountMenu tone="dark" /> : null}
             {!session ? (
               <button
                 type="button"
                 onClick={logout}
-                className="inline-flex items-center gap-2 rounded-full bg-white/80 px-3.5 py-2 text-sm text-slate-600 ring-1 ring-slate-200/60 transition hover:bg-rose-50 hover:text-rose-700 hover:ring-rose-200"
+                className="inline-flex items-center gap-2 rounded-full bg-white/5 px-3.5 py-2 text-sm text-ws-muted ring-1 ring-white/10 transition hover:bg-rose-500/10 hover:text-rose-300 hover:ring-rose-400/30"
               >
                 <LogOut className="h-4 w-4" />
                 <span className="hidden sm:inline">خروج از حساب</span>

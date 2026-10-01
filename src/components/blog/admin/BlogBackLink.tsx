@@ -18,7 +18,7 @@ export default function BlogBackLink({
     <Link
       href={href}
       className={cn(
-        "inline-flex items-center gap-1.5 text-sm font-semibold text-[#0B3A5C]/65 transition hover:text-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/50",
+        "inline-flex items-center gap-1.5 text-sm font-semibold text-ws-muted transition duration-200 hover:text-sky-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/50",
         className,
       )}
     >

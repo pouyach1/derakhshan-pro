@@ -33,13 +33,23 @@ const config: Config = {
           300: "#b8b8b8",
         },
         admin: {
-          canvas: "#F4F6F8",
-          soft: "#EFEFEF",
-          card: "#FFFFFF",
+          /** Surfaces remapped via CSS vars for light / workspace-dark */
+          canvas: "var(--admin-canvas)",
+          soft: "var(--admin-soft)",
+          card: "var(--admin-card)",
           sky: "#00A3FF",
           "sky-soft": "#38BDF8",
           navy: "#0F172A",
           "navy-soft": "#1E293B",
+        },
+        ws: {
+          bg: "var(--ws-bg)",
+          surface: "var(--ws-surface)",
+          elevated: "var(--ws-elevated)",
+          border: "var(--ws-border)",
+          text: "var(--ws-text)",
+          muted: "var(--ws-muted)",
+          accent: "var(--ws-accent)",
         },
         sky: {
           400: "#38BDF8",
