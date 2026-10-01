@@ -1,12 +1,17 @@
+import { redirect } from "next/navigation";
 import BlogManageHeader from "@/components/blog/admin/BlogManageHeader";
 import BlogTable from "@/components/blog/admin/BlogTable";
 import { getBlogStats, listBlogPosts } from "@/server/services/blog";
-import { requireSession } from "@/server/http/guard";
+import { getSessionFromRequest } from "@/server/http/guard";
 
 const BASE_PATH = "/agent/blog";
 
 export default async function AgentBlogPage() {
-  const session = await requireSession(undefined, ["agent"]);
+  const session = await getSessionFromRequest();
+  if (!session || session.role !== "agent") {
+    redirect(`/login?next=${encodeURIComponent(BASE_PATH)}`);
+  }
+
   const [{ items: posts }, stats] = await Promise.all([
     listBlogPosts(
       {

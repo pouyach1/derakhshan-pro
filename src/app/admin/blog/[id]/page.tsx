@@ -1,7 +1,8 @@
+import { redirect } from "next/navigation";
 import BlogBackLink from "@/components/blog/admin/BlogBackLink";
 import BlogForm from "@/components/blog/admin/BlogForm";
 import { getBlogPostById } from "@/server/services/blog";
-import { requireSession } from "@/server/http/guard";
+import { getSessionFromRequest } from "@/server/http/guard";
 import { ApiError } from "@/server/http/response";
 
 const BASE_PATH = "/admin/blog";
@@ -11,7 +12,11 @@ type PageProps = {
 };
 
 export default async function AdminBlogEditPage({ params }: PageProps) {
-  const session = await requireSession(undefined, ["admin"]);
+  const session = await getSessionFromRequest();
+  if (!session || session.role !== "admin") {
+    redirect(`/login?next=${encodeURIComponent(BASE_PATH)}`);
+  }
+
   const { id } = await params;
 
   let post;
