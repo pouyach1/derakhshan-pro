@@ -28,6 +28,8 @@ const NAV_ITEMS = [
   { href: "/admin/properties", label: "آگهی‌ها" },
   { href: "/admin/leads", label: "پیگیری‌ها" },
   { href: "/admin/clients", label: "مشتریان" },
+  { href: "/admin/support", label: "پشتیبانی" },
+  { href: "/admin/team-chat", label: "چت ادمین" },
   { href: "/admin/tours", label: "بازدیدها" },
   { href: "/admin/agents", label: "مشاوران" },
   { href: "/admin/blog", label: "وبلاگ" },

@@ -641,8 +641,20 @@ export async function updateClient(
   if (scope?.agentId && existing.agentId !== scope.agentId) {
     throw new ApiError(403, "FORBIDDEN", "این مشتری متعلق به مشاور دیگری است");
   }
+  if (input.name != null) existing.name = input.name.trim();
+  if (input.phone != null) existing.phone = normalizePhone(input.phone);
+  if (input.email !== undefined) {
+    existing.email = input.email ? String(input.email) : null;
+  }
+  if (input.preferredNeighborhood != null) {
+    existing.preferredNeighborhood = input.preferredNeighborhood;
+  }
+  if (input.budgetMin != null) existing.budgetMin = input.budgetMin;
+  if (input.budgetMax != null) existing.budgetMax = input.budgetMax;
   if (input.urgency) existing.urgency = input.urgency;
-  if (input.preferredNeighborhood != null) existing.preferredNeighborhood = input.preferredNeighborhood;
+  if (input.intent) existing.intent = input.intent;
+  // Agents cannot reassign clients to another desk.
+  if (input.agentId && !scope?.agentId) existing.agentId = input.agentId;
   if (input.notes) {
     existing.notes = input.notes.map((note) => ({
       id: note.id || newId(),
@@ -653,6 +665,35 @@ export async function updateClient(
   existing.updatedAt = nowIso();
   saveStore();
   return existing;
+}
+
+export async function deleteClient(
+  id: string,
+  scope?: { agentId?: string | null },
+) {
+  await ensureBootstrapped();
+  const store = getStore();
+  const index = store.clients.findIndex((c) => c.id === id);
+  if (index < 0) throw new ApiError(404, "NOT_FOUND", "مشتری یافت نشد");
+  const existing = store.clients[index];
+  if (scope?.agentId && existing.agentId !== scope.agentId) {
+    throw new ApiError(403, "FORBIDDEN", "این مشتری متعلق به مشاور دیگری است");
+  }
+  store.clients.splice(index, 1);
+  store.activity.unshift({
+    id: newId(),
+    actorId: null,
+    actorRole: scope?.agentId ? "agent" : "admin",
+    action: "client.delete",
+    entityType: "client",
+    entityId: id,
+    detail: { name: existing.name, phone: existing.phone },
+    ip: null,
+    requestId: null,
+    createdAt: nowIso(),
+  });
+  saveStore();
+  return { id, deleted: true as const };
 }
 
 function defaultSettings(): AgencySettings {

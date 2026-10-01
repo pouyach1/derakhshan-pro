@@ -13,8 +13,10 @@ import {
   GripVertical,
   Mail,
   MapPin,
+  Pencil,
   Phone,
   Sparkles,
+  Trash2,
   UserRoundPlus,
   Wallet,
   X,
@@ -227,6 +229,74 @@ export default function AdminClientsPage() {
     if (!res.ok) void load();
   }
 
+  async function saveClient(
+    id: string,
+    payload: {
+      name: string;
+      phone: string;
+      email: string;
+      preferredNeighborhood: string;
+      budgetMin: number;
+      budgetMax: number;
+      urgency: Urgency;
+      intent: ClientRecord["intent"];
+      agentId: string;
+      noteText: string;
+    },
+  ) {
+    setSaving(true);
+    const existing = clients.find((c) => c.id === id);
+    const notes = [...(existing?.notes ?? [])];
+    if (payload.noteText.trim()) {
+      notes.unshift({
+        id: `n-${Date.now()}`,
+        text: payload.noteText.trim(),
+        at: new Date().toISOString(),
+      });
+    }
+    const res = await api<ClientRecord>(`/api/clients/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        name: payload.name.trim(),
+        phone: payload.phone.trim(),
+        email: payload.email.trim(),
+        preferredNeighborhood: payload.preferredNeighborhood.trim(),
+        budgetMin: payload.budgetMin,
+        budgetMax: payload.budgetMax,
+        urgency: payload.urgency,
+        intent: payload.intent,
+        agentId: payload.agentId || undefined,
+        notes,
+      }),
+    });
+    setSaving(false);
+    if (!res.ok) {
+      setError(res.error.message);
+      return false;
+    }
+    setClients((prev) => prev.map((c) => (c.id === id ? res.data : c)));
+    setSelected(res.data);
+    setError("");
+    return true;
+  }
+
+  async function removeClient(id: string) {
+    setSaving(true);
+    const res = await api<{ id: string; deleted: boolean }>(`/api/clients/${id}`, {
+      method: "DELETE",
+    });
+    setSaving(false);
+    if (!res.ok) {
+      setError(res.error.message);
+      return false;
+    }
+    setClients((prev) => prev.filter((c) => c.id !== id));
+    setOrder((prev) => prev.filter((item) => item !== id));
+    setSelected(null);
+    setError("");
+    return true;
+  }
+
   function placeCard(clientId: string, target: Urgency, indexInColumn: number) {
     const client = clients.find((c) => c.id === clientId);
     if (!client) return;
@@ -391,12 +461,16 @@ export default function AdminClientsPage() {
         {selected ? (
           <ClientDetailDrawer
             client={selected}
+            agents={agents}
             agentLabel={agentName(selected.agentId)}
             urgencyLabel={COLUMNS.find((c) => c.id === selected.urgency)?.label || selected.urgency}
+            saving={saving}
             onClose={() => setSelected(null)}
             onUrgency={(urgency) => {
               void setUrgency(selected.id, urgency);
             }}
+            onSave={(payload) => saveClient(selected.id, payload)}
+            onDelete={() => removeClient(selected.id)}
           />
         ) : null}
       </AnimatePresence>
@@ -487,17 +561,88 @@ function ClientCard({
 
 function ClientDetailDrawer({
   client,
+  agents,
   agentLabel,
   urgencyLabel,
+  saving,
   onClose,
   onUrgency,
+  onSave,
+  onDelete,
 }: {
   client: ClientRecord;
+  agents: Array<{ id: string; name: string }>;
   agentLabel: string;
   urgencyLabel: string;
+  saving: boolean;
   onClose: () => void;
   onUrgency: (urgency: Urgency) => void;
+  onSave: (payload: {
+    name: string;
+    phone: string;
+    email: string;
+    preferredNeighborhood: string;
+    budgetMin: number;
+    budgetMax: number;
+    urgency: Urgency;
+    intent: ClientRecord["intent"];
+    agentId: string;
+    noteText: string;
+  }) => Promise<boolean>;
+  onDelete: () => Promise<boolean>;
 }) {
+  const [editing, setEditing] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [form, setForm] = useState({
+    name: client.name,
+    phone: client.phone,
+    email: client.email || "",
+    preferredNeighborhood: client.preferredNeighborhood || "",
+    budgetMin: String(client.budgetMin || 0),
+    budgetMax: String(client.budgetMax || 0),
+    urgency: client.urgency,
+    intent: client.intent,
+    agentId: client.agentId,
+    noteText: "",
+  });
+
+  useEffect(() => {
+    setForm({
+      name: client.name,
+      phone: client.phone,
+      email: client.email || "",
+      preferredNeighborhood: client.preferredNeighborhood || "",
+      budgetMin: String(client.budgetMin || 0),
+      budgetMax: String(client.budgetMax || 0),
+      urgency: client.urgency,
+      intent: client.intent,
+      agentId: client.agentId,
+      noteText: "",
+    });
+    setEditing(false);
+    setConfirmDelete(false);
+  }, [client.id]);
+
+  async function handleSave() {
+    if (!form.name.trim() || !form.phone.trim()) return;
+    const ok = await onSave({
+      name: form.name,
+      phone: form.phone,
+      email: form.email,
+      preferredNeighborhood: form.preferredNeighborhood,
+      budgetMin: Number(form.budgetMin) || 0,
+      budgetMax: Number(form.budgetMax) || 0,
+      urgency: form.urgency,
+      intent: form.intent,
+      agentId: form.agentId,
+      noteText: form.noteText,
+    });
+    if (ok) {
+      setEditing(false);
+      setForm((f) => ({ ...f, noteText: "" }));
+    }
+  }
+
   return (
     <motion.div
       className="fixed inset-0 z-[60] flex items-end justify-center bg-slate-900/40 p-3 backdrop-blur-sm sm:items-center sm:p-6"
@@ -524,79 +669,253 @@ function ClientDetailDrawer({
               {client.name}
             </h2>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600"
-            aria-label="بستن"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-
-        <div className="mt-5 grid gap-3 text-sm text-slate-600">
-          <DetailRow icon={<Phone className="h-4 w-4" />} label="موبایل" value={client.phone} ltr />
-          <DetailRow icon={<Mail className="h-4 w-4" />} label="ایمیل" value={client.email || "—"} ltr />
-          <DetailRow icon={<MapPin className="h-4 w-4" />} label="محله ترجیحی" value={client.preferredNeighborhood || "—"} />
-          <DetailRow
-            icon={<Wallet className="h-4 w-4" />}
-            label="بودجه"
-            value={`${formatToman(client.budgetMin)} تا ${formatToman(client.budgetMax)}`}
-          />
-          <DetailRow icon={<Sparkles className="h-4 w-4" />} label="قصد" value={INTENT_LABEL[client.intent]} />
-          <DetailRow icon={<UserRoundPlus className="h-4 w-4" />} label="مشاور" value={agentLabel} />
-          <DetailRow
-            icon={<Eye className="h-4 w-4" />}
-            label="اولویت فعلی"
-            value={urgencyLabel}
-          />
-        </div>
-
-        <div className="mt-5">
-          <p className="mb-2 text-xs font-semibold text-admin-navy">تغییر اولویت</p>
-          <div className="flex flex-wrap gap-2">
-            {COLUMNS.map((col) => (
-              <button
-                key={col.id}
-                type="button"
-                onClick={() => onUrgency(col.id)}
-                className={cn(
-                  "rounded-full px-3 py-1.5 text-xs font-semibold ring-1 transition",
-                  client.urgency === col.id
-                    ? cn(col.soft, col.accent, col.ring)
-                    : "bg-white text-slate-600 ring-slate-200 hover:bg-slate-50",
-                )}
-              >
-                {col.label}
-              </button>
-            ))}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setEditing((v) => !v);
+                setConfirmDelete(false);
+              }}
+              className={cn(
+                "inline-flex h-9 items-center gap-1.5 rounded-full px-3 text-xs font-semibold transition",
+                editing
+                  ? "bg-admin-sky text-white"
+                  : "bg-admin-soft text-admin-navy hover:bg-sky-100",
+              )}
+            >
+              <Pencil className="h-3.5 w-3.5" />
+              {editing ? "مشاهده" : "ویرایش"}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600"
+              aria-label="بستن"
+            >
+              <X className="h-4 w-4" />
+            </button>
           </div>
         </div>
 
-        <div className="mt-6">
-          <p className="mb-2 text-xs font-semibold text-admin-navy">
-            یادداشت‌ها ({client.notes.length.toLocaleString("fa-IR")})
-          </p>
-          {client.notes.length === 0 ? (
-            <p className="rounded-2xl bg-slate-50 px-4 py-6 text-center text-xs text-slate-400">
-              هنوز یادداشتی ثبت نشده است
-            </p>
-          ) : (
-            <ul className="space-y-2">
-              {client.notes.map((note, index) => (
-                <li
-                  key={note.id || `${index}-${note.at || ""}`}
-                  className="rounded-2xl bg-admin-soft/60 px-4 py-3 text-sm leading-7 text-slate-700"
+        {editing ? (
+          <div className="mt-5 grid gap-3">
+            <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
+              نام
+              <input
+                className={inputClass}
+                value={form.name}
+                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+              />
+            </label>
+            <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
+              موبایل
+              <input
+                className={inputClass}
+                dir="ltr"
+                value={form.phone}
+                onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+              />
+            </label>
+            <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
+              ایمیل
+              <input
+                className={inputClass}
+                dir="ltr"
+                value={form.email}
+                onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+              />
+            </label>
+            <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
+              محله ترجیحی
+              <input
+                className={inputClass}
+                value={form.preferredNeighborhood}
+                onChange={(e) => setForm((f) => ({ ...f, preferredNeighborhood: e.target.value }))}
+              />
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
+                بودجه از (تومان)
+                <input
+                  className={inputClass}
+                  dir="ltr"
+                  inputMode="numeric"
+                  value={form.budgetMin}
+                  onChange={(e) => setForm((f) => ({ ...f, budgetMin: e.target.value }))}
+                />
+              </label>
+              <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
+                بودجه تا (تومان)
+                <input
+                  className={inputClass}
+                  dir="ltr"
+                  inputMode="numeric"
+                  value={form.budgetMax}
+                  onChange={(e) => setForm((f) => ({ ...f, budgetMax: e.target.value }))}
+                />
+              </label>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
+                اولویت
+                <select
+                  className={inputClass}
+                  value={form.urgency}
+                  onChange={(e) => setForm((f) => ({ ...f, urgency: e.target.value as Urgency }))}
                 >
-                  <p>{note.text}</p>
-                  {note.at ? (
-                    <p className="mt-1 text-[11px] text-slate-400" dir="ltr">
-                      {note.at}
-                    </p>
-                  ) : null}
-                </li>
-              ))}
-            </ul>
+                  <option value="low">عادی</option>
+                  <option value="medium">متوسط</option>
+                  <option value="high">فوری</option>
+                </select>
+              </label>
+              <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
+                قصد
+                <select
+                  className={inputClass}
+                  value={form.intent}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, intent: e.target.value as ClientRecord["intent"] }))
+                  }
+                >
+                  <option value="buy">خرید</option>
+                  <option value="rent">اجاره</option>
+                  <option value="invest">سرمایه‌گذاری</option>
+                </select>
+              </label>
+            </div>
+            <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
+              مشاور
+              <select
+                className={inputClass}
+                value={form.agentId}
+                onChange={(e) => setForm((f) => ({ ...f, agentId: e.target.value }))}
+              >
+                {agents.map((agent) => (
+                  <option key={agent.id} value={agent.id}>
+                    {agent.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
+              یادداشت جدید (اختیاری)
+              <textarea
+                className={cn(inputClass, "h-24 resize-none py-3")}
+                value={form.noteText}
+                onChange={(e) => setForm((f) => ({ ...f, noteText: e.target.value }))}
+                placeholder="یادداشت پیگیری…"
+              />
+            </label>
+            <motion.button
+              type="button"
+              disabled={saving}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => void handleSave()}
+              className="mt-1 inline-flex h-11 items-center justify-center rounded-full bg-admin-sky text-sm font-semibold text-white disabled:opacity-60"
+            >
+              {saving ? "در حال ذخیره…" : "ذخیره تغییرات"}
+            </motion.button>
+          </div>
+        ) : (
+          <>
+            <div className="mt-5 grid gap-3 text-sm text-slate-600">
+              <DetailRow icon={<Phone className="h-4 w-4" />} label="موبایل" value={client.phone} ltr />
+              <DetailRow icon={<Mail className="h-4 w-4" />} label="ایمیل" value={client.email || "—"} ltr />
+              <DetailRow icon={<MapPin className="h-4 w-4" />} label="محله ترجیحی" value={client.preferredNeighborhood || "—"} />
+              <DetailRow
+                icon={<Wallet className="h-4 w-4" />}
+                label="بودجه"
+                value={`${formatToman(client.budgetMin)} تا ${formatToman(client.budgetMax)}`}
+              />
+              <DetailRow icon={<Sparkles className="h-4 w-4" />} label="قصد" value={INTENT_LABEL[client.intent]} />
+              <DetailRow icon={<UserRoundPlus className="h-4 w-4" />} label="مشاور" value={agentLabel} />
+              <DetailRow icon={<Eye className="h-4 w-4" />} label="اولویت فعلی" value={urgencyLabel} />
+            </div>
+
+            <div className="mt-5">
+              <p className="mb-2 text-xs font-semibold text-admin-navy">تغییر اولویت</p>
+              <div className="flex flex-wrap gap-2">
+                {COLUMNS.map((col) => (
+                  <button
+                    key={col.id}
+                    type="button"
+                    onClick={() => onUrgency(col.id)}
+                    className={cn(
+                      "rounded-full px-3 py-1.5 text-xs font-semibold ring-1 transition",
+                      client.urgency === col.id
+                        ? cn(col.soft, col.accent, col.ring)
+                        : "bg-white text-slate-600 ring-slate-200 hover:bg-slate-50",
+                    )}
+                  >
+                    {col.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <p className="mb-2 text-xs font-semibold text-admin-navy">
+                یادداشت‌ها ({client.notes.length.toLocaleString("fa-IR")})
+              </p>
+              {client.notes.length === 0 ? (
+                <p className="rounded-2xl bg-slate-50 px-4 py-6 text-center text-xs text-slate-400">
+                  هنوز یادداشتی ثبت نشده است
+                </p>
+              ) : (
+                <ul className="space-y-2">
+                  {client.notes.map((note, index) => (
+                    <li
+                      key={note.id || `${index}-${note.at || ""}`}
+                      className="rounded-2xl bg-admin-soft/60 px-4 py-3 text-sm leading-7 text-slate-700"
+                    >
+                      <p>{note.text}</p>
+                      {note.at ? (
+                        <p className="mt-1 text-[11px] text-slate-400" dir="ltr">
+                          {note.at}
+                        </p>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </>
+        )}
+
+        <div className="mt-6 border-t border-slate-100 pt-4">
+          {confirmDelete ? (
+            <div className="rounded-2xl bg-rose-50 px-4 py-3">
+              <p className="text-sm font-medium text-rose-700">
+                حذف «{client.name}» قطعی است. ادامه می‌دهید؟
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  disabled={saving}
+                  onClick={() => void onDelete()}
+                  className="inline-flex h-10 items-center gap-1.5 rounded-full bg-rose-600 px-4 text-xs font-semibold text-white disabled:opacity-60"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  {saving ? "…" : "بله، حذف شود"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirmDelete(false)}
+                  className="inline-flex h-10 items-center rounded-full bg-white px-4 text-xs font-semibold text-slate-600 ring-1 ring-slate-200"
+                >
+                  انصراف
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setConfirmDelete(true)}
+              className="inline-flex h-10 items-center gap-1.5 rounded-full bg-rose-50 px-4 text-xs font-semibold text-rose-700 ring-1 ring-rose-100 transition hover:bg-rose-100"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              حذف مشتری
+            </button>
           )}
         </div>
 

@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   LogOut,
   Home,
+  MessageCircle,
   Newspaper,
   Users,
 } from "lucide-react";
@@ -30,6 +31,7 @@ const nav = [
   { href: "/agent/dashboard", label: "داشبورد", icon: LayoutDashboard },
   { href: "/agent/properties", label: "املاک من", icon: Home },
   { href: "/agent/clients", label: "مشتریان", icon: Users },
+  { href: "/agent/chat", label: "چت ادمین", icon: MessageCircle },
   { href: "/agent/schedule", label: "بازدیدها", icon: CalendarDays },
   { href: "/agent/blog", label: "وبلاگ", icon: Newspaper },
 ];

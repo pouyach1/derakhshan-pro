@@ -27,6 +27,15 @@ export const MIGRATIONS: Migration[] = [
       "Non-destructive; reversible by clearing blogPosts (data loss only of blog rows).",
     applied: true,
   },
+  {
+    id: "2026-10-01-chat-collections",
+    title: "Add chatThreads and chatMessages to AgencyStore",
+    description:
+      "Additive optional arrays AgencyStore.chatThreads and AgencyStore.chatMessages. " +
+      "normalizeAgencyStore defaults missing fields to []. " +
+      "Supports support (client↔office) and admin (agent↔admins) desks.",
+    applied: true,
+  },
 ];
 
 export function listPendingMigrations() {

@@ -153,8 +153,8 @@ export default function ClientDashboardView({ name, items }: ClientDashboardView
                   <DashButton href="/listings" tone="primary" icon={<Building2 className="h-4 w-4" />}>
                     مشاهده آرشیو املاک
                   </DashButton>
-                  <DashButton href="/contact" tone="glass" icon={<Headphones className="h-4 w-4" />}>
-                    درخواست مشاوره
+                  <DashButton href="/client/support" tone="glass" icon={<Headphones className="h-4 w-4" />}>
+                    چت پشتیبانی
                   </DashButton>
                   <DashButton href="/client/onboarding" tone="ghost" icon={<UserRound className="h-4 w-4" />}>
                     تکمیل پروفایل
@@ -199,9 +199,9 @@ export default function ClientDashboardView({ name, items }: ClientDashboardView
             icon={<Building2 className="h-5 w-5" />}
           />
           <QuickAction
-            href="/contact"
-            title="مشاوره VIP"
-            desc="هماهنگی بازدید خصوصی"
+            href="/client/support"
+            title="چت پشتیبانی"
+            desc="گفتگوی مستقیم با دفتر"
             icon={<Headphones className="h-5 w-5" />}
           />
           <QuickAction
