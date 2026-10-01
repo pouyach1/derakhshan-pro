@@ -1,24 +1,32 @@
 import type { BlogStatus } from "@/types/blog";
+import { cn } from "@/lib/utils";
 
 const LABELS: Record<BlogStatus, string> = {
   draft: "پیش‌نویس",
-  published: "منتشرشده",
+  published: "منتشر شده",
 };
 
 type BlogStatusBadgeProps = {
   status: BlogStatus;
+  className?: string;
 };
 
-export default function BlogStatusBadge({ status }: BlogStatusBadgeProps) {
+export default function BlogStatusBadge({ status, className }: BlogStatusBadgeProps) {
   const published = status === "published";
   return (
     <span
-      className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold ${
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1",
         published
-          ? "bg-sky-50 text-sky-700 ring-1 ring-sky-100"
-          : "bg-slate-100 text-slate-600 ring-1 ring-slate-200"
-      }`}
+          ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+          : "bg-amber-50 text-amber-700 ring-amber-100",
+        className,
+      )}
     >
+      <span
+        aria-hidden
+        className={cn("h-1.5 w-1.5 rounded-full", published ? "bg-emerald-500" : "bg-amber-400")}
+      />
       {LABELS[status]}
     </span>
   );

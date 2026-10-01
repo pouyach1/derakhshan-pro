@@ -1,14 +1,14 @@
 import BlogBackLink from "@/components/blog/admin/BlogBackLink";
-import BlogForm from "@/components/blog/admin/BlogForm";
+import AgentBlogAuthorBridge from "@/components/blog/admin/AgentBlogAuthorBridge";
 import { getBlogPostById } from "@/data/blog";
 
-const BASE_PATH = "/admin/blog";
+const BASE_PATH = "/agent/blog";
 
 type PageProps = {
   params: Promise<{ id: string }>;
 };
 
-export default async function AdminBlogEditPage({ params }: PageProps) {
+export default async function AgentBlogEditPage({ params }: PageProps) {
   const { id } = await params;
   const post = getBlogPostById(id);
 
@@ -29,9 +29,9 @@ export default async function AdminBlogEditPage({ params }: PageProps) {
       <div>
         <BlogBackLink href={BASE_PATH} />
         <h1 className="mt-4 font-vazirmatn text-2xl font-bold text-[#0B3A5C]">{post.title}</h1>
-        <p className="mt-1 text-sm leading-7 text-[#0B3A5C]/60">ویرایش مقاله — ذخیرهٔ دائمی در فاز بک‌اند.</p>
+        <p className="mt-1 text-sm leading-7 text-[#0B3A5C]/60">ویرایش مقاله مشاور.</p>
       </div>
-      <BlogForm mode="edit" basePath={BASE_PATH} initial={post} author={post.author} />
+      <AgentBlogAuthorBridge mode="edit" basePath={BASE_PATH} initial={post} />
     </div>
   );
 }
