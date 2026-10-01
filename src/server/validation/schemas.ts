@@ -38,7 +38,23 @@ export const propertyCreateSchema = z.object({
   areaSqm: z.number().nonnegative().default(0),
   features: z.array(z.string()).default([]),
   imageUrl: z.string().optional(),
-  gallery: z.array(z.string()).default([]),
+  gallery: z.array(z.string()).max(15).default([]),
+  /** Aparat share URLs — 0 to 3 (optional; empty allowed) */
+  videos: z
+    .array(
+      z
+        .string()
+        .trim()
+        .refine(
+          (value) =>
+            !value ||
+            /aparat\.com\/(?:v\/|video\/video\/embed\/videohash\/|video\/)/i.test(value) ||
+            /^[A-Za-z0-9]{4,20}$/.test(value),
+          "فقط لینک آپارات مجاز است",
+        ),
+    )
+    .max(3)
+    .default([]),
   agentId: z.string().optional(),
   isFeatured: z.boolean().optional(),
   code: z.string().optional(),

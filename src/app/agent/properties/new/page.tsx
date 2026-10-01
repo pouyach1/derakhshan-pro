@@ -9,12 +9,12 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
-  ImagePlus,
   Sparkles,
 } from "lucide-react";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { fallbackImage, formatToman } from "@/lib/money";
+import { isValidAparatUrl } from "@/lib/aparat";
 import {
   PROPERTY_CATEGORIES,
   getPropertyCategory,
@@ -23,6 +23,7 @@ import {
   type PropertyCategoryId,
 } from "@/config/property-categories";
 import { siteConfig } from "@/config/siteConfig";
+import PropertyMediaFields from "@/components/agent/PropertyMediaFields";
 import type { PropertyRecord } from "@/server/db/store";
 
 const NEIGHBORHOODS = siteConfig.panels.neighborhoods;
@@ -32,7 +33,7 @@ const STEPS = [
   { id: 1, title: "نوع فایل", subtitle: "چه ملکی می‌خواهید ثبت کنید؟" },
   { id: 2, title: "اطلاعات اصلی", subtitle: "عنوان، قیمت و محله — همین سه تا کافی است برای شروع" },
   { id: 3, title: "مشخصات", subtitle: "فقط فیلدهای لازم همین نوع ملک" },
-  { id: 4, title: "تصویر و ثبت", subtitle: "کاور را بگذارید و فایل را ذخیره کنید" },
+  { id: 4, title: "عکس و ویدیو", subtitle: "عکس آپلود کنید؛ ویدیو اختیاری از آپارات" },
 ] as const;
 
 type Draft = {
@@ -44,8 +45,8 @@ type Draft = {
   location: string;
   neighborhood: string;
   description: string;
-  imageUrl: string;
-  galleryText: string;
+  gallery: string[];
+  videos: string[];
   features: string[];
   fieldValues: Partial<Record<CategoryFieldId, string>>;
 };
@@ -61,8 +62,8 @@ function emptyDraft(): Draft {
     location: `کرج، ${NEIGHBORHOODS[0] || siteConfig.contact.address.city}`,
     neighborhood: NEIGHBORHOODS[0] || siteConfig.contact.address.city,
     description: "",
-    imageUrl: DEFAULT_IMAGE,
-    galleryText: DEFAULT_IMAGE,
+    gallery: [],
+    videos: [],
     features: [],
     fieldValues: { ...cat.defaults },
   };
@@ -118,6 +119,7 @@ function AgentNewPropertyForm() {
         if (field.mapsTo === "bathrooms") fieldValues[field.id] = String(item.bathrooms);
         if (field.mapsTo === "areaSqm") fieldValues[field.id] = String(item.areaSqm);
       }
+      const gallery = (item.gallery?.length ? item.gallery : [item.imageUrl]).filter(Boolean);
       setDraft({
         title: item.title,
         category: (PROPERTY_CATEGORIES.some((c) => c.id === item.category)
@@ -134,10 +136,8 @@ function AgentNewPropertyForm() {
         location: item.location,
         neighborhood: item.neighborhood,
         description: item.description,
-        imageUrl: item.imageUrl || DEFAULT_IMAGE,
-        galleryText: (item.gallery?.length ? item.gallery : [item.imageUrl])
-          .filter(Boolean)
-          .join("\n"),
+        gallery,
+        videos: (item.videos ?? []).filter(Boolean).slice(0, 3),
         features: item.features.filter((f) => cat.features.includes(f)),
         fieldValues,
       });
@@ -189,13 +189,21 @@ function AgentNewPropertyForm() {
       setStep(2);
       return;
     }
+    if (draft.gallery.length < 1) {
+      setError("حداقل یک عکس آپلود کنید");
+      setStep(4);
+      return;
+    }
+    const videos = draft.videos.map((item) => item.trim()).filter(Boolean);
+    if (videos.some((item) => !isValidAparatUrl(item))) {
+      setError("لینک ویدیو باید از آپارات باشد");
+      setStep(4);
+      return;
+    }
     setSaving(true);
     setError("");
-    const gallery = draft.galleryText
-      .split(/\n|,/)
-      .map((item) => item.trim())
-      .filter(Boolean);
-    const cover = draft.imageUrl || gallery[0] || DEFAULT_IMAGE;
+    const gallery = draft.gallery.slice(0, 15);
+    const cover = gallery[0];
     const mapped = mapCategoryFieldsToProperty({
       category: draft.category,
       values: draft.fieldValues,
@@ -214,7 +222,8 @@ function AgentNewPropertyForm() {
       bathrooms: mapped.bathrooms,
       areaSqm: mapped.areaSqm,
       imageUrl: cover,
-      gallery: gallery.length ? gallery : [cover],
+      gallery,
+      videos: videos.slice(0, 3),
       features: mapped.features,
     };
     const res = editingId
@@ -235,7 +244,7 @@ function AgentNewPropertyForm() {
     router.refresh();
   }
 
-  const coverPreview = fallbackImage(draft.imageUrl || DEFAULT_IMAGE);
+  const coverPreview = fallbackImage(draft.gallery[0] || DEFAULT_IMAGE);
 
   return (
     <div className="space-y-5 font-vazirmatn" dir="rtl">
@@ -529,36 +538,13 @@ function AgentNewPropertyForm() {
               ) : null}
 
               {step === 4 ? (
-                <div className="space-y-4">
-                  <Field label="آدرس تصویر کاور">
-                    <div className="relative">
-                      <ImagePlus className="pointer-events-none absolute start-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                      <input
-                        className={`${inputClass} ps-10`}
-                        value={draft.imageUrl}
-                        onChange={(e) =>
-                          setDraft((d) => ({
-                            ...d,
-                            imageUrl: e.target.value,
-                            galleryText: d.galleryText.includes(d.imageUrl)
-                              ? d.galleryText.replace(d.imageUrl, e.target.value)
-                              : e.target.value,
-                          }))
-                        }
-                        placeholder="/images/... یا لینک تصویر"
-                        dir="ltr"
-                      />
-                    </div>
-                  </Field>
-                  <Field label="گالری (هر خط یک تصویر — اختیاری)">
-                    <textarea
-                      className={`${inputClass} min-h-28 py-3`}
-                      value={draft.galleryText}
-                      onChange={(e) => setDraft((d) => ({ ...d, galleryText: e.target.value }))}
-                      placeholder={"هر خط یک مسیر یا لینک تصویر"}
-                      dir="ltr"
-                    />
-                  </Field>
+                <div className="space-y-6">
+                  <PropertyMediaFields
+                    images={draft.gallery}
+                    videos={draft.videos}
+                    onImagesChange={(gallery) => setDraft((d) => ({ ...d, gallery }))}
+                    onVideosChange={(videos) => setDraft((d) => ({ ...d, videos }))}
+                  />
                   <Field label="وضعیت انتشار">
                     <div className="grid grid-cols-3 gap-2">
                       {(
@@ -584,9 +570,6 @@ function AgentNewPropertyForm() {
                       ))}
                     </div>
                   </Field>
-                  <div className="relative aspect-[16/10] overflow-hidden rounded-[1.5rem] bg-[#E8F1F8] ring-1 ring-slate-200">
-                    <Image src={coverPreview} alt="پیش‌نمایش کاور" fill className="object-cover" sizes="640px" />
-                  </div>
                 </div>
               ) : null}
             </motion.div>

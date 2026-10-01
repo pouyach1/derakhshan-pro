@@ -8,6 +8,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, Sparkles } from "lucide-react";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { isValidAparatUrl } from "@/lib/aparat";
 import {
   PROPERTY_CATEGORIES,
   getPropertyCategory,
@@ -16,13 +17,14 @@ import {
   type PropertyCategoryId,
 } from "@/config/property-categories";
 import { siteConfig } from "@/config/siteConfig";
+import PropertyMediaFields from "@/components/agent/PropertyMediaFields";
 import type { PropertyRecord } from "@/server/db/store";
 
 const STEPS = [
   { id: 1, title: "نوع ملک", subtitle: "دسته‌بندی مناسب را انتخاب کنید" },
   { id: 2, title: "اطلاعات کلی", subtitle: "عنوان، قیمت و موقعیت" },
   { id: 3, title: "مشخصات تخصصی", subtitle: "فیلدهای مخصوص همین نوع ملک" },
-  { id: 4, title: "رسانه و انتشار", subtitle: "تصاویر، مشاور و وضعیت" },
+  { id: 4, title: "رسانه و انتشار", subtitle: "آپلود عکس، ویدیو آپارات، مشاور و وضعیت" },
 ] as const;
 
 type Draft = {
@@ -34,8 +36,8 @@ type Draft = {
   location: string;
   neighborhood: string;
   description: string;
-  imageUrl: string;
-  galleryText: string;
+  gallery: string[];
+  videos: string[];
   features: string[];
   fieldValues: Partial<Record<CategoryFieldId, string>>;
 };
@@ -51,8 +53,8 @@ function emptyDraft(): Draft {
     location: siteConfig.contact.address.line1 as string,
     neighborhood: siteConfig.contact.address.city as string,
     description: "",
-    imageUrl: "/images/landing/hero/banner.jpg",
-    galleryText: "/images/landing/hero/banner.jpg",
+    gallery: [],
+    videos: [],
     features: [],
     fieldValues: { ...cat.defaults },
   };
@@ -104,6 +106,7 @@ function NewPropertyForm() {
         if (field.mapsTo === "bathrooms") fieldValues[field.id] = String(item.bathrooms);
         if (field.mapsTo === "areaSqm") fieldValues[field.id] = String(item.areaSqm);
       }
+      const gallery = (item.gallery?.length ? item.gallery : [item.imageUrl]).filter(Boolean);
       setDraft({
         title: item.title,
         category: (PROPERTY_CATEGORIES.some((c) => c.id === item.category)
@@ -115,8 +118,8 @@ function NewPropertyForm() {
         location: item.location,
         neighborhood: item.neighborhood,
         description: item.description,
-        imageUrl: item.imageUrl,
-        galleryText: (item.gallery?.length ? item.gallery : [item.imageUrl]).filter(Boolean).join("\n"),
+        gallery,
+        videos: (item.videos ?? []).filter(Boolean).slice(0, 3),
         features: item.features.filter((f) => cat.features.includes(f)),
         fieldValues,
       });
@@ -151,13 +154,21 @@ function NewPropertyForm() {
   }
 
   async function save() {
+    if (draft.gallery.length < 1) {
+      setError("حداقل یک عکس آپلود کنید");
+      setStep(4);
+      return;
+    }
+    const videos = draft.videos.map((item) => item.trim()).filter(Boolean);
+    if (videos.some((item) => !isValidAparatUrl(item))) {
+      setError("لینک ویدیو باید از آپارات باشد");
+      setStep(4);
+      return;
+    }
     setSaving(true);
     setError("");
-    const gallery = draft.galleryText
-      .split(/\n|,/)
-      .map((item) => item.trim())
-      .filter(Boolean);
-    const cover = draft.imageUrl || gallery[0] || "/images/landing/hero/banner.jpg";
+    const gallery = draft.gallery.slice(0, 15);
+    const cover = gallery[0];
     const mapped = mapCategoryFieldsToProperty({
       category: draft.category,
       values: draft.fieldValues,
@@ -176,7 +187,8 @@ function NewPropertyForm() {
       bathrooms: mapped.bathrooms,
       areaSqm: mapped.areaSqm,
       imageUrl: cover,
-      gallery: gallery.length ? gallery : [cover],
+      gallery,
+      videos: videos.slice(0, 3),
       features: mapped.features,
       agentId: agentId || undefined,
     };
@@ -410,18 +422,14 @@ function NewPropertyForm() {
             ) : null}
 
             {step === 4 ? (
-              <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-                <div className="space-y-4">
-                  <Field label="تصویر شاخص">
-                    <input className={inputClass} value={draft.imageUrl} onChange={(e) => setDraft((d) => ({ ...d, imageUrl: e.target.value }))} />
-                  </Field>
-                  <Field label="گالری تصاویر (هر خط یک مسیر)">
-                    <textarea
-                      className={`${inputClass} min-h-28 py-3`}
-                      value={draft.galleryText}
-                      onChange={(e) => setDraft((d) => ({ ...d, galleryText: e.target.value }))}
-                    />
-                  </Field>
+              <div className="space-y-6">
+                <PropertyMediaFields
+                  images={draft.gallery}
+                  videos={draft.videos}
+                  onImagesChange={(gallery) => setDraft((d) => ({ ...d, gallery }))}
+                  onVideosChange={(videos) => setDraft((d) => ({ ...d, videos }))}
+                />
+                <div className="grid gap-5 lg:grid-cols-2">
                   <Field label="وضعیت انتشار">
                     <select className={inputClass} value={draft.status} onChange={(e) => setDraft((d) => ({ ...d, status: e.target.value as PropertyRecord["status"] }))}>
                       <option value="published">منتشرشده</option>
@@ -430,43 +438,34 @@ function NewPropertyForm() {
                       <option value="sold">واگذار شده</option>
                     </select>
                   </Field>
-                  <p className="text-sm text-slate-500">مشاور مسئول</p>
-                  <div className="grid gap-2 sm:grid-cols-2">
-                    {agents.map((agent) => (
-                      <button
-                        key={agent.id}
-                        type="button"
-                        onClick={() => setAgentId(agent.id)}
-                        className={cn(
-                          "rounded-2xl px-3 py-3 text-start text-sm font-semibold transition",
-                          agentId === agent.id ? "bg-admin-sky text-white" : "bg-admin-soft text-admin-navy",
-                        )}
-                      >
-                        {agent.name}
-                      </button>
-                    ))}
+                  <div>
+                    <p className="mb-1.5 text-sm font-medium text-admin-navy">مشاور مسئول</p>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {agents.map((agent) => (
+                        <button
+                          key={agent.id}
+                          type="button"
+                          onClick={() => setAgentId(agent.id)}
+                          className={cn(
+                            "rounded-2xl px-3 py-3 text-start text-sm font-semibold transition",
+                            agentId === agent.id ? "bg-admin-sky text-white" : "bg-admin-soft text-admin-navy",
+                          )}
+                        >
+                          {agent.name}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
-                <div className="space-y-3">
-                  <div className="relative h-56 overflow-hidden rounded-[1.5rem] bg-admin-soft ring-1 ring-slate-200/70">
-                    <Image src={draft.imageUrl || "/images/landing/hero/banner.jpg"} alt="" fill className="object-cover" />
+                {draft.gallery[0] ? (
+                  <div className="relative h-48 overflow-hidden rounded-[1.5rem] bg-admin-soft ring-1 ring-slate-200/70">
+                    <Image src={draft.gallery[0]} alt="" fill className="object-cover" />
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-admin-navy/80 to-transparent p-4 text-white">
                       <p className="text-xs text-white/70">{category.label}</p>
                       <p className="mt-1 font-vazirmatn text-sm font-bold">{draft.title || "پیش‌نمایش عنوان"}</p>
                     </div>
                   </div>
-                  <div className="rounded-[1.35rem] bg-admin-soft p-4 text-sm text-admin-navy">
-                    <p>
-                      متراژ اصلی:{" "}
-                      {draft.fieldValues.areaSqm ||
-                        draft.fieldValues.builtArea ||
-                        draft.fieldValues.landArea ||
-                        "—"}{" "}
-                      متر
-                    </p>
-                    <p className="mt-1">امکانات انتخابی: {draft.features.length.toLocaleString("fa-IR")}</p>
-                  </div>
-                </div>
+                ) : null}
               </div>
             ) : null}
           </motion.div>

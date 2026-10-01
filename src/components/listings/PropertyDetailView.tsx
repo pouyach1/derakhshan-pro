@@ -10,6 +10,7 @@ import { fallbackImage, formatToman, listingTypeLabel, propertyStatusLabel } fro
 import { listPropertyImages } from "@/lib/property-images";
 import { siteConfig } from "@/config/siteConfig";
 import PropertyLightbox from "@/components/listings/PropertyLightbox";
+import PropertyAparatVideos from "@/components/listings/PropertyAparatVideos";
 import PublicLoadError from "@/components/listings/PublicLoadError";
 import MobilePropertyDetail from "@/components/mobile/MobilePropertyDetail";
 import { IOS_PAGE_SPRING, IOS_TAP_SPRING } from "@/lib/motion/ios";
@@ -278,6 +279,8 @@ export default function PropertyDetailView({ id }: { id: string }) {
                 </div>
               </div>
             ) : null}
+
+            <PropertyAparatVideos videos={item.videos} className="mt-10" />
           </motion.div>
 
           <motion.form

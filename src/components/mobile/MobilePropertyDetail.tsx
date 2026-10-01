@@ -10,6 +10,7 @@ import LikeButton from "@/components/mobile/LikeButton";
 import { PropertyDetailSkeleton } from "@/components/mobile/PropertySkeletons";
 import { SharedPropertyTitle } from "@/components/mobile/SharedPropertyHero";
 import PropertyLightbox from "@/components/listings/PropertyLightbox";
+import PropertyAparatVideos from "@/components/listings/PropertyAparatVideos";
 import PublicLoadError from "@/components/listings/PublicLoadError";
 import { listPropertyImages } from "@/lib/property-images";
 import { siteConfig } from "@/config/siteConfig";
@@ -177,6 +178,8 @@ export default function MobilePropertyDetail({ item, failed, onRetry }: MobilePr
             ))}
           </div>
         ) : null}
+
+        <PropertyAparatVideos videos={item.videos} className="pt-3" compact />
       </motion.section>
 
       <motion.form
