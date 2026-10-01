@@ -1,23 +1,19 @@
 import BlogBackLink from "@/components/blog/admin/BlogBackLink";
-import BlogForm from "@/components/blog/admin/BlogForm";
+import AgentBlogAuthorBridge from "@/components/blog/admin/AgentBlogAuthorBridge";
 
-const BASE_PATH = "/admin/blog";
+const BASE_PATH = "/agent/blog";
 
-export default function AdminBlogNewPage() {
+export default function AgentBlogNewPage() {
   return (
     <div className="space-y-5 font-vazirmatn" dir="rtl">
       <div>
         <BlogBackLink href={BASE_PATH} />
         <h1 className="mt-4 font-vazirmatn text-2xl font-bold text-[#0B3A5C]">مقاله جدید</h1>
         <p className="mt-1 text-sm leading-7 text-[#0B3A5C]/60">
-          فرم حرفه‌ای ثبت مقاله برای مجله درخشان.
+          مقاله با هویت مشاور واردشده ثبت می‌شود (آماده‌سازی برای اتصال بک‌اند).
         </p>
       </div>
-      <BlogForm
-        mode="create"
-        basePath={BASE_PATH}
-        author={{ id: "author-admin", name: "تحریریه درخشان" }}
-      />
+      <AgentBlogAuthorBridge mode="create" basePath={BASE_PATH} />
     </div>
   );
 }

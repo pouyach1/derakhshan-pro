@@ -164,3 +164,13 @@ export function getRelatedBlogPosts(post: BlogPost, limit = 3): BlogPost[] {
     .filter((item) => item.id !== post.id && item.category === post.category)
     .slice(0, limit);
 }
+
+/**
+ * Filter mock posts by author display name.
+ * Future DB phase should filter by stable author/user id instead.
+ */
+export function getBlogPostsByAuthorName(authorName: string): BlogPost[] {
+  const normalized = authorName.trim();
+  if (!normalized) return [];
+  return getBlogPosts().filter((post) => post.author.name.trim() === normalized);
+}

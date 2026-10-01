@@ -29,6 +29,7 @@ const NAV_ITEMS = [
   { href: "/admin/clients", label: "مشتریان" },
   { href: "/admin/tours", label: "بازدیدها" },
   { href: "/admin/agents", label: "مشاوران" },
+  { href: "/admin/blog", label: "وبلاگ" },
   { href: "/admin/settings", label: "تنظیمات" },
 ] as const;
 

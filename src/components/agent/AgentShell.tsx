@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   LogOut,
   Home,
+  Newspaper,
   Users,
 } from "lucide-react";
 import AuthToast from "@/components/auth/AuthToast";
@@ -28,6 +29,7 @@ const nav = [
   { href: "/agent/properties", label: "املاک من", icon: Home },
   { href: "/agent/clients", label: "مشتریان", icon: Users },
   { href: "/agent/schedule", label: "بازدیدها", icon: CalendarDays },
+  { href: "/agent/blog", label: "وبلاگ", icon: Newspaper },
 ];
 
 export default function AgentShell({ children }: { children: React.ReactNode }) {
