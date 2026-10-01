@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { BlogAuthor } from "@/types/blog";
+import type { BlogAuthor, BlogPost } from "@/types/blog";
 import { displayNameForSession, readClientSession } from "@/lib/auth";
 import BlogForm from "@/components/blog/admin/BlogForm";
-import type { BlogPost } from "@/types/blog";
 
 type AgentBlogAuthorBridgeProps = {
   mode: "create" | "edit";
@@ -13,8 +12,7 @@ type AgentBlogAuthorBridgeProps = {
 };
 
 /**
- * Supplies authenticated advisor identity into BlogForm for create/edit.
- * Uses session name + agentId — ready for future DB author mapping.
+ * Supplies authenticated advisor identity (stable user id) into BlogForm.
  */
 export default function AgentBlogAuthorBridge({
   mode,
@@ -27,7 +25,7 @@ export default function AgentBlogAuthorBridge({
     const local = readClientSession();
     if (local) {
       setAuthor({
-        id: local.agentId ? `agent-${local.agentId}` : `user-${local.id}`,
+        id: local.id,
         name: displayNameForSession(local),
       });
     }
@@ -37,7 +35,7 @@ export default function AgentBlogAuthorBridge({
         const session = payload?.data?.session;
         if (!session) return;
         setAuthor({
-          id: session.agentId ? `agent-${session.agentId}` : `user-${session.id}`,
+          id: session.id,
           name: displayNameForSession(session),
         });
       })

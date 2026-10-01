@@ -96,7 +96,7 @@ export default function BlogTable({ posts, basePath }: BlogTableProps) {
                   <Pencil className="h-3.5 w-3.5" aria-hidden />
                   ویرایش
                 </Link>
-                <BlogDeleteButton title={post.title} />
+                <BlogDeleteButton postId={post.id} title={post.title} />
               </div>
             </li>
           );

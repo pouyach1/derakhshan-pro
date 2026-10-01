@@ -1,5 +1,6 @@
 import { hashPassword } from "@/server/auth/password";
 import { siteConfig } from "@/config/siteConfig";
+import { BLOG_SEED_AUTHORS, BLOG_SEED_POSTS } from "@/server/db/blog-seed";
 import {
   getStore,
   newId,
@@ -155,6 +156,7 @@ export async function buildSeedStore(): Promise<AgencyStore> {
     activity: [],
     propertyImages: [],
     deals: [],
+    blogPosts: [],
   };
 
   const samples: SeedProperty[] = [
@@ -682,7 +684,118 @@ export async function buildSeedStore(): Promise<AgencyStore> {
     },
   );
 
+  // Editorial seed authors not already in staff list (e.g. سارا نوری).
+  for (const author of Object.values(BLOG_SEED_AUTHORS)) {
+    const exists = store.users.some((user) => user.id === author.userId);
+    if (exists) continue;
+    store.users.push({
+      id: author.userId,
+      phone: author.phone,
+      email: author.email,
+      name: author.name,
+      role: "agent",
+      passwordHash: staffHash,
+      agentId: author.agentId,
+      onboardingComplete: true,
+      clientProfile: null,
+      avatarUrl: author.avatarUrl,
+      isActive: true,
+      createdAt: stamp,
+      updatedAt: stamp,
+    });
+  }
+
+  store.blogPosts = BLOG_SEED_POSTS.map((seed) => {
+    const author = BLOG_SEED_AUTHORS[seed.authorName];
+    return {
+      id: seed.id,
+      title: seed.title,
+      slug: seed.slug,
+      excerpt: seed.excerpt,
+      content: seed.content,
+      coverImage: seed.coverImage,
+      category: seed.category,
+      authorUserId: author.userId,
+      authorAgentId: author.agentId,
+      status: seed.status,
+      softDeleted: false,
+      publishedAt: seed.publishedAt,
+      readingTime: seed.readingTime,
+      createdAt: seed.publishedAt || stamp,
+      updatedAt: seed.publishedAt || stamp,
+    };
+  });
+
   return store;
+}
+
+function ensureBlogAuthorUsers() {
+  const store = getStore();
+  const stamp = nowIso();
+  let changed = false;
+  for (const author of Object.values(BLOG_SEED_AUTHORS)) {
+    const existing = store.users.find(
+      (user) =>
+        user.id === author.userId ||
+        user.phone === author.phone ||
+        (author.email && user.email?.toLowerCase() === author.email.toLowerCase()),
+    );
+    if (existing) {
+      if (!existing.avatarUrl && author.avatarUrl) {
+        existing.avatarUrl = author.avatarUrl;
+        changed = true;
+      }
+      continue;
+    }
+    store.users.push({
+      id: author.userId,
+      phone: author.phone,
+      email: author.email,
+      name: author.name,
+      role: "agent",
+      passwordHash: null,
+      agentId: author.agentId,
+      onboardingComplete: true,
+      clientProfile: null,
+      avatarUrl: author.avatarUrl,
+      isActive: true,
+      createdAt: stamp,
+      updatedAt: stamp,
+    });
+    changed = true;
+  }
+  return changed;
+}
+
+function hydrateBlogPosts() {
+  const store = getStore();
+  if (!store.blogPosts) store.blogPosts = [];
+  if (store.blogPosts.length > 0) return false;
+
+  const authorsReady = ensureBlogAuthorUsers();
+  const stamp = nowIso();
+  for (const seed of BLOG_SEED_POSTS) {
+    const author = BLOG_SEED_AUTHORS[seed.authorName];
+    if (!author) continue;
+    store.blogPosts.push({
+      id: seed.id,
+      title: seed.title,
+      slug: seed.slug,
+      excerpt: seed.excerpt,
+      content: seed.content,
+      coverImage: seed.coverImage,
+      category: seed.category,
+      authorUserId: author.userId,
+      authorAgentId: author.agentId,
+      status: seed.status,
+      softDeleted: false,
+      publishedAt: seed.publishedAt,
+      readingTime: seed.readingTime,
+      createdAt: seed.publishedAt || stamp,
+      updatedAt: seed.publishedAt || stamp,
+    });
+  }
+  return authorsReady || store.blogPosts.length > 0;
 }
 
 function hydrateDerivedCollections() {
@@ -694,6 +807,10 @@ function hydrateDerivedCollections() {
   }
   if (!store.deals) {
     store.deals = [];
+    changed = true;
+  }
+  if (!store.blogPosts) {
+    store.blogPosts = [];
     changed = true;
   }
   if (store.propertyImages.length === 0 && store.properties.length > 0) {
@@ -734,6 +851,7 @@ function hydrateDerivedCollections() {
     }
     if (store.deals.length > 0) changed = true;
   }
+  if (hydrateBlogPosts()) changed = true;
   if (changed) saveStore();
 }
 

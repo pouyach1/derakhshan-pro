@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { sanitizeBlogHref } from "@/lib/blog/safe-href";
 
 type BlogPostContentProps = {
   content: string;
@@ -132,13 +133,18 @@ function InlineText({ text }: { text: string }) {
         }
         const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
         if (link) {
+          const href = sanitizeBlogHref(link[2] ?? "");
+          if (!href) {
+            return <Fragment key={index}>{link[1]}</Fragment>;
+          }
+          const external = href.startsWith("http");
           return (
             <a
               key={index}
-              href={link[2]}
+              href={href}
               className="font-semibold text-sky-700 underline decoration-sky-300/70 underline-offset-4 transition hover:text-sky-600"
-              target="_blank"
-              rel="noopener noreferrer"
+              target={external ? "_blank" : undefined}
+              rel={external ? "noopener noreferrer" : undefined}
             >
               {link[1]}
             </a>

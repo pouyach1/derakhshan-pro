@@ -8,10 +8,20 @@ export const metadata: Metadata = {
   title: `مجله املاک | ${siteConfig.brand.nameFa}`,
   description:
     "مجله تخصصی املاک درخشان: تحلیل بازار، راهنمای خرید و فروش، سرمایه‌گذاری و معرفی محله‌های کرج.",
+  alternates: {
+    canonical: "/blog",
+  },
+  openGraph: {
+    title: `مجله املاک | ${siteConfig.brand.nameFa}`,
+    description:
+      "مجله تخصصی املاک درخشان: تحلیل بازار، راهنمای خرید و فروش، سرمایه‌گذاری و معرفی محله‌های کرج.",
+    type: "website",
+    url: "/blog",
+  },
 };
 
-export default function BlogIndexPage() {
-  const posts = getPublishedBlogPosts();
+export default async function BlogIndexPage() {
+  const posts = await getPublishedBlogPosts();
 
   return (
     <div className="bg-[#F3F7FB] text-[#0B3A5C]" dir="rtl">

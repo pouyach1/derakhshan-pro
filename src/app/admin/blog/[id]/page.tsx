@@ -1,6 +1,8 @@
 import BlogBackLink from "@/components/blog/admin/BlogBackLink";
 import BlogForm from "@/components/blog/admin/BlogForm";
-import { getBlogPostById } from "@/data/blog";
+import { getBlogPostById } from "@/server/services/blog";
+import { requireSession } from "@/server/http/guard";
+import { ApiError } from "@/server/http/response";
 
 const BASE_PATH = "/admin/blog";
 
@@ -9,16 +11,20 @@ type PageProps = {
 };
 
 export default async function AdminBlogEditPage({ params }: PageProps) {
+  const session = await requireSession(undefined, ["admin"]);
   const { id } = await params;
-  const post = getBlogPostById(id);
 
-  if (!post) {
+  let post;
+  try {
+    post = await getBlogPostById(id, { session });
+  } catch (error) {
+    if (!(error instanceof ApiError) || error.status !== 404) throw error;
     return (
       <div className="space-y-4 font-vazirmatn" dir="rtl">
         <BlogBackLink href={BASE_PATH} />
         <h1 className="mt-4 text-2xl font-bold text-[#0B3A5C]">مقاله یافت نشد</h1>
         <p className="text-sm text-[#0B3A5C]/60">
-          شناسه <span dir="ltr" className="font-mono">{id}</span> در دادهٔ آزمایشی وجود ندارد.
+          شناسه <span dir="ltr" className="font-mono">{id}</span> در پایگاه داده وجود ندارد.
         </p>
       </div>
     );
@@ -29,7 +35,7 @@ export default async function AdminBlogEditPage({ params }: PageProps) {
       <div>
         <BlogBackLink href={BASE_PATH} />
         <h1 className="mt-4 font-vazirmatn text-2xl font-bold text-[#0B3A5C]">{post.title}</h1>
-        <p className="mt-1 text-sm leading-7 text-[#0B3A5C]/60">ویرایش مقاله — ذخیرهٔ دائمی در فاز بک‌اند.</p>
+        <p className="mt-1 text-sm leading-7 text-[#0B3A5C]/60">ویرایش مقاله — ذخیره در پایگاه داده دفتر.</p>
       </div>
       <BlogForm mode="edit" basePath={BASE_PATH} initial={post} author={post.author} />
     </div>

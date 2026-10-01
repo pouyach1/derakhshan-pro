@@ -160,3 +160,46 @@ export const settingsUpdateSchema = z.object({
   address: z.string().optional(),
   publicDomain: z.string().optional(),
 });
+
+const blogCategorySchema = z.enum([
+  "خرید ملک",
+  "فروش ملک",
+  "سرمایه‌گذاری",
+  "بازار املاک",
+  "راهنمای محله‌ها",
+]);
+
+const coverImageSchema = z
+  .string()
+  .trim()
+  .max(500)
+  .refine(
+    (value) =>
+      !value ||
+      value.startsWith("/") ||
+      /^https?:\/\//i.test(value),
+    "آدرس تصویر نامعتبر است",
+  );
+
+export const blogCreateSchema = z.object({
+  title: z.string().trim().min(2, "عنوان الزامی است").max(200),
+  slug: z.string().trim().max(120).optional().or(z.literal("")),
+  excerpt: z.string().trim().max(600).default(""),
+  content: z.string().trim().min(1, "متن مقاله الزامی است").max(100_000),
+  coverImage: coverImageSchema.optional().or(z.literal("")),
+  category: blogCategorySchema,
+  status: z.enum(["draft", "published"]).default("draft"),
+  readingTime: z.number().int().positive().max(120).optional(),
+  authorUserId: z.string().min(1).optional(),
+});
+
+export const blogUpdateSchema = blogCreateSchema.partial();
+
+export const blogQuerySchema = z.object({
+  q: z.string().optional(),
+  status: z.enum(["draft", "published"]).optional(),
+  category: z.string().optional(),
+  authorUserId: z.string().optional(),
+  page: z.coerce.number().int().positive().default(1),
+  pageSize: z.coerce.number().int().positive().max(100).default(50),
+});
