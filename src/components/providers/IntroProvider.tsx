@@ -22,8 +22,8 @@ type IntroContextValue = {
 
 const IntroContext = createContext<IntroContextValue | null>(null);
 
-/** Hard cap so a stuck timeline can never block the site forever. */
-const INTRO_SAFETY_MS = 22_000;
+/** Hard cap so a stuck timeline can never block the site forever (~8s intro + buffer). */
+const INTRO_SAFETY_MS = 10_000;
 
 function readShown() {
   try {
