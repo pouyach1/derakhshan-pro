@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import AdminHeader from "@/components/admin/AdminHeader";
 import ContactsSidebar from "@/components/admin/ContactsSidebar";
+import { useWorkspaceTheme } from "@/hooks/useWorkspaceTheme";
 import { cn } from "@/lib/utils";
 
 /**
@@ -13,14 +14,18 @@ import { cn } from "@/lib/utils";
  */
 export default function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { isDark, toggleTheme } = useWorkspaceTheme();
 
   return (
     <div
       dir="rtl"
       lang="fa"
-      className="workspace-dark min-h-dvh bg-admin-canvas font-vazir text-ws-text antialiased"
+      className={cn(
+        "min-h-dvh bg-admin-canvas font-vazir antialiased",
+        isDark ? "workspace-dark text-ws-text" : "text-slate-900",
+      )}
     >
-      <AdminHeader />
+      <AdminHeader isDark={isDark} onToggleTheme={toggleTheme} />
 
       <div className="mx-auto grid max-w-[1600px] gap-4 px-4 py-4 lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-5 lg:px-6 lg:py-6">
         <aside
