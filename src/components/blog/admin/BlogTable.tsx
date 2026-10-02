@@ -72,18 +72,18 @@ export default function BlogTable({ posts, basePath }: BlogTableProps) {
               >
                 {post.title}
               </Link>
-              <p className="mt-2 text-xs text-[#0B3A5C]/55">
+              <p className="mt-2 text-xs leading-5 text-[#0B3A5C]/55">
                 {post.author.name}
                 {dateLabel ? ` · ${dateLabel}` : ""}
                 {` · ${formatReadingTime(post.readingTime)}`}
               </p>
-              <div className="mt-3 flex flex-wrap gap-1.5">
+              <div className="mt-3.5 flex flex-wrap gap-2">
                 {canPreview ? (
                   <Link
                     href={`/blog/${post.slug}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-[#0B3A5C]/70 ring-1 ring-sky-100"
+                    className="ios-tap-target inline-flex min-h-10 items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold text-[#0B3A5C]/70 ring-1 ring-sky-100"
                   >
                     <Eye className="h-3.5 w-3.5" aria-hidden />
                     مشاهده
@@ -91,7 +91,7 @@ export default function BlogTable({ posts, basePath }: BlogTableProps) {
                 ) : null}
                 <Link
                   href={`${basePath}/${post.id}`}
-                  className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-[#0B3A5C] ring-1 ring-sky-100"
+                  className="ios-tap-target inline-flex min-h-10 items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold text-[#0B3A5C] ring-1 ring-sky-100"
                 >
                   <Pencil className="h-3.5 w-3.5" aria-hidden />
                   ویرایش
