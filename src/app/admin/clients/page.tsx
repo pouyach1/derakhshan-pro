@@ -359,9 +359,9 @@ export default function AdminClientsPage() {
               <Sparkles className="h-3.5 w-3.5" />
               CRM مشتریان
             </p>
-            <h1 className="mt-2 font-vazirmatn text-2xl font-bold text-admin-navy">کارت‌های موکلان</h1>
+            <h1 className="mt-2 font-vazirmatn text-xl font-bold text-admin-navy sm:text-2xl">کارت‌های موکلان</h1>
             <p className="mt-1 max-w-xl text-sm leading-7 text-slate-500">
-              با دستگیره کارت را بین ستون‌ها بکشید. برای دیدن جزئیات، روی کارت یا «مشاهده» بزنید.
+              ستون‌ها را افقی ورق بزنید؛ با دستگیره کارت را جابه‌جا کنید یا «مشاهده» بزنید.
             </p>
           </div>
           <p className="rounded-full bg-admin-soft px-3 py-1.5 text-xs font-medium text-admin-navy">
@@ -389,7 +389,7 @@ export default function AdminClientsPage() {
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => void createClient()}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-admin-sky text-sm font-semibold text-white shadow-[0_14px_36px_-18px_rgba(14,165,233,0.9)] disabled:opacity-60"
+            className="ios-tap-target inline-flex h-11 items-center justify-center gap-2 rounded-full bg-admin-sky text-sm font-semibold text-white shadow-[0_14px_36px_-18px_rgba(14,165,233,0.9)] disabled:opacity-60"
           >
             <UserRoundPlus className="h-4 w-4" />
             {saving ? "..." : "ثبت مشتری"}
@@ -399,7 +399,7 @@ export default function AdminClientsPage() {
 
       {error ? <p className="text-sm text-rose-500">{error}</p> : null}
 
-      <div className="grid gap-4 xl:grid-cols-3">
+      <div className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-2 pt-1 [scrollbar-width:thin] xl:grid xl:grid-cols-3 xl:overflow-visible xl:pb-0">
         {COLUMNS.map((column) => (
           <section
             key={column.id}
@@ -408,7 +408,7 @@ export default function AdminClientsPage() {
             }}
             data-column={column.id}
             className={cn(
-              "min-h-[28rem] rounded-[1.75rem] p-3 ring-1 transition sm:p-4",
+              "flex w-[min(86vw,19.5rem)] shrink-0 flex-col rounded-[1.6rem] p-3 ring-1 transition sm:w-[20rem] sm:p-4 xl:w-auto xl:min-h-[28rem] xl:rounded-[1.75rem]",
               column.soft,
               column.ring,
               hoverColumn === column.id && draggingId ? "ring-2 ring-admin-sky/70 scale-[1.01]" : "",
@@ -526,7 +526,7 @@ function ClientCard({
           type="button"
           aria-label="جابه‌جایی کارت"
           onPointerDown={(e) => controls.start(e)}
-          className="mt-0.5 inline-flex h-8 w-8 shrink-0 touch-none items-center justify-center rounded-xl bg-admin-soft text-admin-navy"
+          className="ios-tap-target mt-0.5 inline-flex h-10 w-10 shrink-0 touch-none items-center justify-center rounded-xl bg-admin-soft text-admin-navy"
         >
           <GripVertical className="h-4 w-4 opacity-60" />
         </button>

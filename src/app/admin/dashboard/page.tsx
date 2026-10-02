@@ -155,33 +155,35 @@ export default function AdminDashboardPage() {
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <h1 className="text-xl font-semibold text-admin-navy sm:text-2xl">داشبورد مدیریت</h1>
-            <p className="mt-1 text-sm text-slate-500">نمای زنده عملکرد دفتر و تیم مشاوران</p>
+            <p className="mt-1 text-sm leading-6 text-slate-500">نمای زنده عملکرد دفتر و تیم مشاوران</p>
           </div>
           <Link
             href="/admin/properties/new"
-            className="inline-flex items-center gap-2 rounded-full bg-admin-sky px-4 py-2.5 text-sm font-medium text-white shadow-lg shadow-sky-500/20"
+            className="ios-tap-target inline-flex min-h-11 items-center gap-2 rounded-full bg-admin-sky px-4 py-2.5 text-sm font-medium text-white shadow-lg shadow-sky-500/20"
           >
             <CirclePlus className="h-4 w-4" />
             افزودن ملک جدید
           </Link>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-3 xl:grid-cols-4">
           {cards.map((item, index) => (
             <motion.article
               key={item.label}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05, duration: 0.35, ease }}
-              className="rounded-[1.5rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 sm:p-5"
+              className="rounded-[1.35rem] bg-admin-card p-3.5 shadow-sm ring-1 ring-slate-200/70 sm:rounded-[1.5rem] sm:p-5"
             >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs text-slate-500">{item.label}</p>
-                  <p className="mt-2 text-2xl font-semibold tabular-nums text-admin-navy">{item.value}</p>
+              <div className="flex items-start justify-between gap-2 sm:gap-3">
+                <div className="min-w-0">
+                  <p className="truncate text-[11px] text-slate-500 sm:text-xs">{item.label}</p>
+                  <p className="mt-1.5 text-xl font-semibold tabular-nums text-admin-navy sm:mt-2 sm:text-2xl">
+                    {item.value}
+                  </p>
                 </div>
-                <span className={cn("flex h-10 w-10 items-center justify-center rounded-2xl", item.tone)}>
-                  <item.icon className="h-5 w-5" strokeWidth={1.7} />
+                <span className={cn("flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl sm:h-10 sm:w-10", item.tone)}>
+                  <item.icon className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={1.7} />
                 </span>
               </div>
             </motion.article>
@@ -193,7 +195,62 @@ export default function AdminDashboardPage() {
         <div className="border-b border-slate-100 px-4 py-4 sm:px-5">
           <h2 className="text-base font-semibold text-admin-navy">عملکرد مشاوران</h2>
         </div>
-        <div className="overflow-x-auto">
+
+        {/* Mobile: stacked agent cards */}
+        <ul className="divide-y divide-slate-100 md:hidden">
+          {agents.map((agent, index) => (
+            <motion.li
+              key={agent.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.06 + index * 0.04, duration: 0.32, ease }}
+              className="px-4 py-3.5"
+            >
+              <div className="flex items-center gap-3">
+                <Image
+                  src={fallbackImage(agent.avatarUrl)}
+                  alt={agent.name}
+                  width={44}
+                  height={44}
+                  className="h-11 w-11 rounded-full object-cover ring-2 ring-white"
+                />
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="truncate text-sm font-semibold text-admin-navy">{agent.name}</p>
+                    <span
+                      className={cn(
+                        "shrink-0 inline-flex rounded-full px-2.5 py-1 text-[11px] font-medium ring-1",
+                        statusStyle[agent.status] ?? statusStyle.inactive,
+                      )}
+                    >
+                      {AGENT_STATUS_LABEL[agent.status] ?? AGENT_STATUS_LABEL.inactive}
+                    </span>
+                  </div>
+                  <div className="mt-2 grid grid-cols-2 gap-2">
+                    <div className="rounded-xl bg-admin-soft px-2.5 py-2">
+                      <p className="text-[10px] text-slate-500">آگهی فعال</p>
+                      <p className="text-sm font-semibold tabular-nums text-admin-navy">
+                        {agent.listedProperties.toLocaleString("fa-IR")}
+                      </p>
+                    </div>
+                    <div className="rounded-xl bg-admin-soft px-2.5 py-2">
+                      <p className="text-[10px] text-slate-500">معامله بسته</p>
+                      <p className="text-sm font-semibold tabular-nums text-admin-navy">
+                        {agent.dealsClosed.toLocaleString("fa-IR")}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.li>
+          ))}
+          {agents.length === 0 ? (
+            <li className="px-4 py-8 text-center text-sm text-slate-400">مشاوری ثبت نشده</li>
+          ) : null}
+        </ul>
+
+        {/* Desktop table */}
+        <div className="hidden overflow-x-auto md:block">
           <table className="min-w-full text-sm">
             <thead>
               <tr className="bg-admin-soft/70 text-xs text-slate-500">

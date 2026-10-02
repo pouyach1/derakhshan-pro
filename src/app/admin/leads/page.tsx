@@ -313,9 +313,9 @@ export default function LeadsPage() {
               <Sparkles className="h-3.5 w-3.5" />
               قیف پیگیری
             </p>
-            <h1 className="mt-2 font-vazirmatn text-2xl font-bold text-admin-navy">پیگیری مشتریان</h1>
+            <h1 className="mt-2 font-vazirmatn text-xl font-bold text-admin-navy sm:text-2xl">پیگیری مشتریان</h1>
             <p className="mt-1 max-w-xl text-sm leading-7 text-slate-500">
-              یک‌ضرب به مرحله بعد بروید، کارت را بکشید، یا جزئیات را باز کنید — ساده و سریع.
+              ستون‌ها را ورق بزنید، یک‌ضرب مرحله بعد بروید، یا جزئیات را باز کنید.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -332,7 +332,7 @@ export default function LeadsPage() {
               whileHover={{ y: -1 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setAddOpen((v) => !v)}
-              className="inline-flex h-10 items-center gap-2 rounded-full bg-admin-sky px-4 text-sm font-semibold text-white shadow-[0_14px_36px_-18px_rgba(14,165,233,0.9)]"
+              className="ios-tap-target inline-flex h-11 items-center gap-2 rounded-full bg-admin-sky px-4 text-sm font-semibold text-white shadow-[0_14px_36px_-18px_rgba(14,165,233,0.9)]"
             >
               <Plus className="h-4 w-4" />
               لید جدید
@@ -510,7 +510,7 @@ function FilterChip({
       type="button"
       onClick={onClick}
       className={cn(
-        "inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold transition",
+        "ios-tap-target inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-2.5 text-xs font-semibold transition",
         active
           ? soft && accent
             ? cn(soft, accent, "ring-1", "ring-current/20")

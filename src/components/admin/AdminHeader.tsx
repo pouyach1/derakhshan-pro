@@ -22,20 +22,8 @@ import { cn } from "@/lib/utils";
 import { api } from "@/lib/api";
 import AuthToast from "@/components/auth/AuthToast";
 import WorkspaceThemeToggle from "@/components/workspace/WorkspaceThemeToggle";
+import { ADMIN_NAV_ITEMS } from "@/config/admin-nav";
 import { SITE_INFO } from "@/config/SITE_INFO";
-
-const NAV_ITEMS = [
-  { href: "/admin/dashboard", label: "خانه" },
-  { href: "/admin/properties", label: "آگهی‌ها" },
-  { href: "/admin/leads", label: "پیگیری‌ها" },
-  { href: "/admin/clients", label: "مشتریان" },
-  { href: "/admin/support", label: "پشتیبانی" },
-  { href: "/admin/team-chat", label: "چت ادمین" },
-  { href: "/admin/tours", label: "بازدیدها" },
-  { href: "/admin/agents", label: "مشاوران" },
-  { href: "/admin/blog", label: "وبلاگ" },
-  { href: "/admin/settings", label: "تنظیمات" },
-] as const;
 
 type AdminHeaderProps = {
   viewMode?: "grid" | "list";
@@ -106,7 +94,7 @@ export default function AdminHeader({
             isDark ? "bg-white/5 ring-1 ring-white/10" : "bg-white shadow-sm ring-1 ring-slate-200/80",
           )}
         >
-          {NAV_ITEMS.map((item) => {
+          {ADMIN_NAV_ITEMS.map((item) => {
             const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
               <Link
@@ -181,7 +169,13 @@ export default function AdminHeader({
   );
 }
 
-function AdminAccountMenu({ isDark = true }: { isDark?: boolean }) {
+export function AdminAccountMenu({
+  isDark = true,
+  compact = false,
+}: {
+  isDark?: boolean;
+  compact?: boolean;
+}) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("مدیر سیستم");
@@ -234,7 +228,8 @@ function AdminAccountMenu({ isDark = true }: { isDark?: boolean }) {
           aria-expanded={open}
           onClick={() => setOpen((value) => !value)}
           className={cn(
-            "inline-flex items-center gap-1.5 rounded-full p-0.5 pe-2 transition",
+            "ios-tap-target inline-flex items-center gap-1.5 rounded-full p-0.5 transition",
+            compact ? "pe-0.5" : "pe-2",
             isDark
               ? "bg-white/5 ring-1 ring-white/10 hover:ring-sky-400/40"
               : "bg-white shadow-sm ring-1 ring-slate-200 hover:ring-admin-sky/40",
@@ -246,18 +241,21 @@ function AdminAccountMenu({ isDark = true }: { isDark?: boolean }) {
             width={40}
             height={40}
             className={cn(
-              "h-9 w-9 rounded-full object-cover ring-2",
+              "rounded-full object-cover ring-2",
+              compact ? "h-9 w-9" : "h-9 w-9",
               isDark ? "ring-white/10" : "ring-white",
             )}
           />
-          <ChevronDown
-            className={cn(
-              "hidden h-4 w-4 transition sm:block",
-              open && "rotate-180",
-              isDark ? "text-ws-muted" : "text-slate-400",
-            )}
-            strokeWidth={2}
-          />
+          {!compact ? (
+            <ChevronDown
+              className={cn(
+                "hidden h-4 w-4 transition sm:block",
+                open && "rotate-180",
+                isDark ? "text-ws-muted" : "text-slate-400",
+              )}
+              strokeWidth={2}
+            />
+          ) : null}
         </button>
 
         <AnimatePresence>
