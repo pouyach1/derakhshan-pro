@@ -9,6 +9,7 @@ import IosTap from "@/components/mobile/IosTap";
 import LikeButton from "@/components/mobile/LikeButton";
 import { PropertyDetailSkeleton } from "@/components/mobile/PropertySkeletons";
 import { SharedPropertyTitle } from "@/components/mobile/SharedPropertyHero";
+import AgentProfileLink from "@/components/agents/AgentProfileLink";
 import PropertyLightbox from "@/components/listings/PropertyLightbox";
 import PropertyAparatVideos from "@/components/listings/PropertyAparatVideos";
 import PublicLoadError from "@/components/listings/PublicLoadError";
@@ -18,10 +19,10 @@ import { useHaptic } from "@/hooks/useHaptic";
 import { api } from "@/lib/api";
 import { formatToman, listingTypeLabel, propertyStatusLabel } from "@/lib/money";
 import { IOS_PAGE_SPRING, IOS_TAP_SPRING } from "@/lib/motion/ios";
-import type { PropertyRecord } from "@/server/db/store";
+import type { PropertyWithAgent } from "@/server/services/agents-public";
 
 type MobilePropertyDetailProps = {
-  item: PropertyRecord | null;
+  item: PropertyWithAgent | null;
   failed: boolean;
   onRetry: () => void;
 };
@@ -151,14 +152,15 @@ export default function MobilePropertyDetail({ item, failed, onRetry }: MobilePr
           as="h1"
           className="text-2xl font-black leading-9 text-[#0B3A5C]"
         />
-        <p className="inline-flex items-center gap-2 text-sm text-[#0B3A5C]/60">
-          <MapPin className="h-4 w-4 text-sky-500" />
+        <p className="inline-flex items-center gap-2 text-sm font-semibold text-[#0B3A5C]/80">
+          <MapPin className="h-4 w-4 text-sky-600" />
           {item.location}
         </p>
-        <p className="font-vazirmatn text-xl font-bold text-sky-600">
+        <p className="font-vazirmatn text-xl font-bold text-sky-700">
           {formatToman(item.price, item.listingType)}
         </p>
-        <p className="text-sm leading-8 text-[#0B3A5C]/70">{item.description}</p>
+        {item.agent ? <AgentProfileLink agent={item.agent} /> : null}
+        <p className="text-sm font-medium leading-8 text-[#0B3A5C]">{item.description}</p>
 
         <div className="grid grid-cols-3 gap-2 pt-1">
           <Spec icon={BedDouble} value={item.bedrooms.toLocaleString("fa-IR")} label="خواب" />
@@ -171,7 +173,7 @@ export default function MobilePropertyDetail({ item, failed, onRetry }: MobilePr
             {item.features.map((feature) => (
               <span
                 key={feature}
-                className="rounded-full border border-[#0B3A5C]/10 bg-white px-3 py-1.5 text-xs text-[#0B3A5C]/70"
+                className="rounded-full border border-[#0B3A5C]/10 bg-white px-3 py-1.5 text-xs font-semibold text-[#0B3A5C]"
               >
                 {feature}
               </span>
@@ -256,7 +258,7 @@ function Spec({
     >
       <Icon className="mx-auto mb-1.5 h-4 w-4 text-sky-500" strokeWidth={1.75} />
       <p className="font-vazirmatn text-base font-bold tabular-nums text-[#0B3A5C]">{value}</p>
-      <p className="mt-0.5 text-[10px] tracking-wide text-[#0B3A5C]/45">{label}</p>
+      <p className="mt-0.5 text-[10px] font-semibold tracking-wide text-[#0B3A5C]/65">{label}</p>
     </motion.div>
   );
 }

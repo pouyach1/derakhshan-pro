@@ -9,12 +9,13 @@ import { api } from "@/lib/api";
 import { fallbackImage, formatToman, listingTypeLabel, propertyStatusLabel } from "@/lib/money";
 import { listPropertyImages } from "@/lib/property-images";
 import { siteConfig } from "@/config/siteConfig";
+import AgentProfileLink from "@/components/agents/AgentProfileLink";
 import PropertyLightbox from "@/components/listings/PropertyLightbox";
 import PropertyAparatVideos from "@/components/listings/PropertyAparatVideos";
 import PublicLoadError from "@/components/listings/PublicLoadError";
 import MobilePropertyDetail from "@/components/mobile/MobilePropertyDetail";
 import { IOS_PAGE_SPRING, IOS_TAP_SPRING } from "@/lib/motion/ios";
-import type { PropertyRecord } from "@/server/db/store";
+import type { PropertyWithAgent } from "@/server/services/agents-public";
 
 function logDetailError(error: unknown) {
   if (process.env.NODE_ENV === "development") {
@@ -23,7 +24,7 @@ function logDetailError(error: unknown) {
 }
 
 export default function PropertyDetailView({ id }: { id: string }) {
-  const [item, setItem] = useState<PropertyRecord | null>(null);
+  const [item, setItem] = useState<PropertyWithAgent | null>(null);
   const [failed, setFailed] = useState(false);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -43,7 +44,7 @@ export default function PropertyDetailView({ id }: { id: string }) {
     setFailed(false);
     setItem(null);
     try {
-      const res = await api<PropertyRecord>(`/api/properties/${id}?view=1`);
+      const res = await api<PropertyWithAgent>(`/api/properties/${id}?view=1`);
       if (!res.ok) {
         logDetailError(res.error);
         setFailed(true);
@@ -163,45 +164,50 @@ export default function PropertyDetailView({ id }: { id: string }) {
               />
             </motion.span>
           </button>
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#F3F7FB] via-[#0B3A5C]/35 to-[#0B3A5C]/25" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0B3A5C]/80 via-[#0B3A5C]/35 to-[#0B3A5C]/20" />
 
           <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 mx-auto max-w-7xl px-6 pb-14 xl:px-10">
             <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={IOS_PAGE_SPRING}>
               <Link
                 href="/listings"
-                className="pointer-events-auto mb-5 inline-flex items-center gap-2 text-sm text-white/85 transition hover:text-white"
+                className="pointer-events-auto mb-5 inline-flex items-center gap-2 rounded-full bg-black/35 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-black/45"
               >
                 <ArrowRight className="h-4 w-4" />
                 بازگشت به آرشیو
               </Link>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-full border border-white/40 bg-white/90 px-3 py-1 text-[11px] font-semibold tracking-wide text-[#0B3A5C] backdrop-blur-md">
+                <span className="rounded-full border border-white/50 bg-white px-3 py-1 text-[11px] font-bold tracking-wide text-[#0B3A5C]">
                   {listingTypeLabel(item.listingType)}
                 </span>
-                <span className="rounded-full border border-white/25 bg-[#0B3A5C]/50 px-3 py-1 font-mono text-[11px] text-white/90 backdrop-blur-md">
+                <span className="rounded-full bg-black/45 px-3 py-1 font-mono text-[11px] font-semibold text-white backdrop-blur-md">
                   {item.code}
                 </span>
-                <span className="rounded-full border border-sky-200/60 bg-sky-500/90 px-3 py-1 text-[11px] text-white backdrop-blur-md">
+                <span className="rounded-full bg-sky-500 px-3 py-1 text-[11px] font-bold text-white">
                   {propertyStatusLabel(item.status)}
                 </span>
                 {item.isFeatured ? (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-white/30 bg-white/20 px-3 py-1 text-[11px] font-bold text-white backdrop-blur-md">
-                    <Sparkles className="h-3 w-3" />
+                  <span className="inline-flex items-center gap-1 rounded-full bg-white/95 px-3 py-1 text-[11px] font-bold text-[#0B3A5C]">
+                    <Sparkles className="h-3 w-3 text-sky-600" />
                     ویژه
                   </span>
                 ) : null}
               </div>
-              <h1 className="mt-5 max-w-4xl font-vazirmatn text-[clamp(1.9rem,4vw,3.4rem)] font-black leading-[1.25] tracking-tight text-white drop-shadow-sm">
+              <h1 className="mt-5 max-w-4xl font-vazirmatn text-[clamp(1.9rem,4vw,3.4rem)] font-black leading-[1.25] tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]">
                 {item.title}
               </h1>
-              <p className="mt-4 inline-flex items-center gap-2 text-base text-white/85">
+              <p className="mt-4 inline-flex items-center gap-2 text-base font-semibold text-white">
                 <MapPin className="h-4 w-4 text-sky-200" />
                 {item.location}
                 {item.neighborhood ? ` · ${item.neighborhood}` : ""}
               </p>
-              <p className="mt-5 font-vazirmatn text-2xl font-bold text-sky-100 sm:text-3xl">
+              <p className="mt-5 inline-flex rounded-2xl bg-white px-4 py-2 font-vazirmatn text-2xl font-bold text-sky-700 shadow-lg sm:text-3xl">
                 {formatToman(item.price, item.listingType)}
               </p>
+              {item.agent ? (
+                <div className="pointer-events-auto mt-5">
+                  <AgentProfileLink agent={item.agent} tone="onMedia" />
+                </div>
+              ) : null}
             </motion.div>
           </div>
         </div>
@@ -214,7 +220,15 @@ export default function PropertyDetailView({ id }: { id: string }) {
             transition={{ ...IOS_PAGE_SPRING, delay: 0.1 }}
           >
             <p className="text-[11px] font-semibold tracking-[0.2em] text-sky-600">درباره فایل</p>
-            <p className="mt-4 text-base leading-9 text-[#0B3A5C]/75">{item.description}</p>
+            <p className="mt-4 text-base font-medium leading-9 text-[#0B3A5C]">{item.description}</p>
+            {item.agent ? (
+              <div className="mt-6">
+                <p className="mb-2 text-[11px] font-semibold tracking-[0.16em] text-sky-600">
+                  مشاور مسئول فایل
+                </p>
+                <AgentProfileLink agent={item.agent} />
+              </div>
+            ) : null}
 
             <div className="mt-10 grid grid-cols-3 gap-3">
               <LuxurySpec
@@ -244,7 +258,7 @@ export default function PropertyDetailView({ id }: { id: string }) {
                   {item.features.map((feature) => (
                     <span
                       key={feature}
-                      className="rounded-full border border-[#0B3A5C]/10 bg-[#F3F7FB] px-4 py-2 text-xs text-[#0B3A5C]/75"
+                      className="rounded-full border border-[#0B3A5C]/10 bg-[#F3F7FB] px-4 py-2 text-xs font-semibold text-[#0B3A5C]"
                     >
                       {feature}
                     </span>
@@ -294,8 +308,9 @@ export default function PropertyDetailView({ id }: { id: string }) {
               <ShieldCheck className="h-4 w-4" />
               درخواست بازدید محرمانه
             </p>
-            <p className="mt-2 text-sm leading-7 text-[#0B3A5C]/55">
+            <p className="mt-2 text-sm leading-7 text-[#0B3A5C]/70">
               مشخصات شما برای مشاور مسئول این فایل در پنل دفتر ثبت می‌شود.
+              {item.agent ? ` · مسئول: ${item.agent.name}` : ""}
             </p>
             <label className="mt-6 block text-xs text-[#0B3A5C]/55">
               نام
@@ -367,7 +382,7 @@ function LuxurySpec({
     >
       <Icon className="mx-auto mb-3 h-5 w-5 text-sky-500" strokeWidth={1.75} />
       <p className="font-vazirmatn text-xl font-bold tabular-nums text-[#0B3A5C]">{value}</p>
-      <p className="mt-1 text-[11px] tracking-wide text-[#0B3A5C]/45">{label}</p>
+      <p className="mt-1 text-[11px] font-semibold tracking-wide text-[#0B3A5C]/65">{label}</p>
     </motion.div>
   );
 }
