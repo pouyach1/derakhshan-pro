@@ -16,6 +16,7 @@ export async function middleware(request: NextRequest) {
   const isAgentRoute = pathname.startsWith("/agent");
   const isClientRoute = pathname.startsWith("/client");
   const isOnboarding = pathname.startsWith("/client/onboarding");
+  const isClientSupport = pathname.startsWith("/client/support");
   const isLogin = pathname.startsWith("/login");
 
   if ((isAdminRoute || isAgentRoute || isClientRoute) && !session) {
@@ -25,7 +26,15 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (isClientRoute && session && session.role === "client" && !isOnboarding && needsClientOnboarding(session)) {
+  // Support chat stays reachable while the client finishes onboarding.
+  if (
+    isClientRoute &&
+    session &&
+    session.role === "client" &&
+    !isOnboarding &&
+    !isClientSupport &&
+    needsClientOnboarding(session)
+  ) {
     return NextResponse.redirect(new URL("/client/onboarding", request.url));
   }
 
