@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import IntroShell from "@/components/providers/IntroShell";
 import MobileMotionRoot from "@/components/mobile/MobileMotionRoot";
 import MobilePageTransition from "@/components/mobile/MobilePageTransition";
+import LuxuryCursor from "@/components/motion/LuxuryCursor";
 
 const vazirmatn = Vazirmatn({
   subsets: ["arabic", "latin"],
@@ -21,6 +22,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
     >
       <IntroShell>
         <MobileMotionRoot>
+          <LuxuryCursor />
           <Navbar />
           <main>
             <MobilePageTransition>{children}</MobilePageTransition>

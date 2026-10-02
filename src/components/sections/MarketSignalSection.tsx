@@ -10,6 +10,7 @@ import {
   useReducedMotion,
   useSpring,
   useTransform,
+  type MotionValue,
 } from "framer-motion";
 import { ArrowUpLeft } from "lucide-react";
 import { INTRO_CTA, SIGNAL_NEIGHBORHOODS, TRUST_STATS } from "@/config/home";
@@ -26,11 +27,14 @@ export default function MarketSignalSection() {
   const inView = useInView(sectionRef, { once: true, amount: 0.28 });
   const pointerX = useMotionValue(0.5);
   const pointerY = useMotionValue(0.35);
-  const smoothX = useSpring(pointerX, { stiffness: 80, damping: 24, mass: 0.6 });
-  const smoothY = useSpring(pointerY, { stiffness: 80, damping: 24, mass: 0.6 });
+  const smoothX = useSpring(pointerX, { stiffness: 90, damping: 22, mass: 0.55 });
+  const smoothY = useSpring(pointerY, { stiffness: 90, damping: 22, mass: 0.55 });
   const glowX = useTransform(smoothX, (v) => `${v * 100}%`);
   const glowY = useTransform(smoothY, (v) => `${v * 100}%`);
-  const glow = useMotionTemplate`radial-gradient(42rem 28rem at ${glowX} ${glowY}, rgba(0,163,255,0.22), transparent 62%)`;
+  const glow = useMotionTemplate`radial-gradient(34rem 24rem at ${glowX} ${glowY}, rgba(0,163,255,0.28), transparent 58%)`;
+  const hotGlow = useMotionTemplate`radial-gradient(12rem 10rem at ${glowX} ${glowY}, rgba(186,230,253,0.35), transparent 70%)`;
+  const px = useTransform(smoothX, (v) => `${v * 100}%`);
+  const py = useTransform(smoothY, (v) => `${v * 100}%`);
 
   function onPointerMove(event: ReactPointerEvent<HTMLElement>) {
     if (reduceMotion) return;
@@ -51,6 +55,8 @@ export default function MarketSignalSection() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(0,163,255,0.18),transparent_55%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_80%,rgba(11,58,92,0.55),transparent_45%)]" />
         <motion.div className="absolute inset-0" style={{ backgroundImage: glow }} />
+        <motion.div className="absolute inset-0 mix-blend-screen" style={{ backgroundImage: hotGlow }} />
+        <PointerConstellation x={px} y={py} active={inView && !reduceMotion} />
         <div
           className="absolute inset-0 opacity-[0.07] mix-blend-soft-light"
           style={{
@@ -102,6 +108,7 @@ export default function MarketSignalSection() {
             >
               <Link
                 href={INTRO_CTA.cta.href}
+                data-cursor="ورود"
                 className="ios-tap-target group inline-flex min-h-12 items-center gap-2.5 rounded-full bg-sky-500 px-6 py-3 font-vazirmatn text-sm font-semibold text-white shadow-[0_18px_50px_-18px_rgba(0,163,255,0.85)] transition hover:bg-sky-400"
               >
                 {INTRO_CTA.cta.label}
@@ -114,6 +121,54 @@ export default function MarketSignalSection() {
         </div>
       </div>
     </section>
+  );
+}
+
+function PointerConstellation({
+  x,
+  y,
+  active,
+}: {
+  x: MotionValue<string>;
+  y: MotionValue<string>;
+  active: boolean;
+}) {
+  if (!active) return null;
+  const nodes = [
+    { left: 18, top: 12 },
+    { left: 82, top: 20 },
+    { left: 88, top: 62 },
+    { left: 22, top: 78 },
+    { left: 50, top: 8 },
+  ];
+  return (
+    <motion.div
+      className="absolute h-40 w-40 -translate-x-1/2 -translate-y-1/2"
+      style={{ left: x, top: y }}
+    >
+      <motion.div
+        className="absolute inset-0 rounded-full border border-sky-300/25"
+        animate={{ scale: [0.75, 1.12, 0.75], opacity: [0.4, 0.1, 0.4] }}
+        transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+      />
+      {nodes.map((node, index) => (
+        <motion.span
+          key={index}
+          className="absolute h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-200/85 shadow-[0_0_12px_rgba(125,211,252,0.85)]"
+          style={{ left: `${node.left}%`, top: `${node.top}%` }}
+          animate={{
+            opacity: [0.25, 0.95, 0.3],
+            scale: [0.8, 1.4, 0.85],
+          }}
+          transition={{
+            duration: 2.2 + index * 0.2,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: index * 0.16,
+          }}
+        />
+      ))}
+    </motion.div>
   );
 }
 
