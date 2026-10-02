@@ -6,9 +6,10 @@ import {
   getProperty,
   updateProperty,
 } from "@/server/services/properties";
-import { attachAgent } from "@/server/services/agents-public";
+import { presentProperty } from "@/server/services/agents-public";
 import {
   assertAgentOwns,
+  getSessionFromRequest,
   requireSession,
 } from "@/server/http/guard";
 import { jsonError, jsonOk, ApiError } from "@/server/http/response";
@@ -19,24 +20,25 @@ export async function GET(_request: NextRequest, ctx: Ctx) {
   const requestId = nanoid(10);
   try {
     const { id } = await ctx.params;
-    const session = await requireSession(_request, ["admin", "agent", "client"]);
+    const session = await getSessionFromRequest(_request);
     const countView = _request.nextUrl.searchParams.get("view") === "1";
     const item = await getProperty(id, {
-      countView: countView && session.role === "client",
+      countView: Boolean(countView && (!session || session.role === "client")),
     });
 
-    if (session.role === "client") {
+    // Guests and clients only see public catalog statuses.
+    if (!session || session.role === "client") {
       if (item.status !== "published" && item.status !== "sold") {
         throw new ApiError(404, "NOT_FOUND", "ملک یافت نشد");
       }
-      return jsonOk(attachAgent(item), { requestId });
+      return jsonOk(presentProperty(item, Boolean(session)), { requestId });
     }
 
     if (session.role === "agent") {
       assertAgentOwns(item.agentId, session, "این ملک متعلق به مشاور دیگری است");
     }
 
-    return jsonOk(attachAgent(item), { requestId });
+    return jsonOk(presentProperty(item, true), { requestId });
   } catch (error) {
     return jsonError(error, requestId);
   }

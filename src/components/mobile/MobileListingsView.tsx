@@ -14,7 +14,7 @@ import PublicLoadError from "@/components/listings/PublicLoadError";
 import { siteConfig } from "@/config/siteConfig";
 import { useHaptic } from "@/hooks/useHaptic";
 import { IOS_PAGE_SPRING } from "@/lib/motion/ios";
-import type { PropertyRecord } from "@/server/db/store";
+import type { PropertyWithAgent } from "@/server/services/agents-public";
 
 type Filter = "all" | "sale" | "rent";
 
@@ -25,7 +25,7 @@ const FILTER_TABS = [
 ];
 
 type MobileListingsViewProps = {
-  items: PropertyRecord[];
+  items: PropertyWithAgent[];
   loading: boolean;
   failed: boolean;
   onRetry: () => void | Promise<void>;
