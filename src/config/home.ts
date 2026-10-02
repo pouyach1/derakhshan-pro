@@ -6,6 +6,7 @@ import { siteConfig } from "@/config/siteConfig";
 export const HERO = siteConfig.hero;
 
 export const INTRO_CTA = {
+  eyebrow: siteConfig.about.eyebrow,
   title: siteConfig.about.title,
   cta: siteConfig.about.cta,
   body: siteConfig.about.body,
@@ -14,6 +15,8 @@ export const INTRO_CTA = {
 export const VALUE_PROPS = siteConfig.home.valueProps;
 
 export const TRUST_STATS = siteConfig.home.trustStats;
+
+export const SIGNAL_NEIGHBORHOODS = siteConfig.home.signalNeighborhoods;
 
 export const FEATURED_CATEGORIES = siteConfig.home.featuredCategories;
 
