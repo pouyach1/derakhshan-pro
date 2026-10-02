@@ -81,20 +81,20 @@ export default function HeroBanner({
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap">
             <Link
               href="/agent/properties/new"
-              className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
+              className="ios-tap-target inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
             >
               <PlusCircle className="h-4 w-4" />
-              + ثبت فایل جدید
+              ثبت فایل جدید
             </Link>
             <Link
               href="/agent/clients?add=1"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-medium text-slate-700 ring-1 ring-slate-200/80 transition hover:bg-slate-50"
+              className="ios-tap-target inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-medium text-slate-700 ring-1 ring-slate-200/80 transition hover:bg-slate-50"
             >
               <UserPlus className="h-4 w-4" />
-              + مشتری جدید
+              مشتری جدید
             </Link>
           </div>
         </div>

@@ -117,21 +117,21 @@ export default function AgentClientsPage() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-xl font-semibold text-slate-900 sm:text-2xl">مشتریان اختصاصی</h1>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm leading-6 text-slate-500">
             فقط لیدها و مشتریانی که به شما اختصاص داده شده‌اند
           </p>
         </div>
         <button
           type="button"
           onClick={() => setAddOpen(true)}
-          className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white shadow-lg shadow-emerald-600/20"
+          className="ios-tap-target inline-flex min-h-11 items-center gap-2 rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white shadow-lg shadow-emerald-600/20"
         >
           <Plus className="h-4 w-4" />
-          Add Client
+          مشتری جدید
         </button>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
         {clients.map((client, index) => {
           const matches = matchCounts.get(client.id) ?? 0;
           return (
@@ -139,21 +139,27 @@ export default function AgentClientsPage() {
               key={client.id}
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05, duration: 0.32, ease }}
-              whileHover={{ scale: 1.02 }}
-              className="rounded-[1.5rem] border border-slate-200/60 bg-white/80 p-5 shadow-sm backdrop-blur-md"
+              transition={{ delay: Math.min(index * 0.05, 0.24), duration: 0.32, ease }}
+              whileHover={{ scale: 1.01 }}
+              className="rounded-[1.5rem] border border-slate-200/60 bg-white/80 p-4 shadow-sm backdrop-blur-md sm:p-5"
             >
               <div className="flex items-start justify-between gap-3">
-                <div>
-                  <h2 className="text-lg font-semibold text-slate-900">{client.name}</h2>
-                  <p className="mt-1 inline-flex items-center gap-1.5 text-sm text-slate-500">
+                <div className="min-w-0">
+                  <h2 className="truncate text-base font-semibold text-slate-900 sm:text-lg">
+                    {client.name}
+                  </h2>
+                  <a
+                    href={`tel:${client.phone}`}
+                    className="ios-tap-target mt-1 inline-flex items-center gap-1.5 text-sm text-slate-500"
+                    dir="ltr"
+                  >
                     <Phone className="h-3.5 w-3.5" />
                     {client.phone}
-                  </p>
+                  </a>
                 </div>
                 <span
                   className={cn(
-                    "rounded-full px-2.5 py-1 text-xs font-medium ring-1",
+                    "shrink-0 rounded-full px-2.5 py-1 text-xs font-medium ring-1",
                     URGENCY_TONE[client.urgency],
                   )}
                 >
@@ -163,24 +169,24 @@ export default function AgentClientsPage() {
 
               <div className="mt-4 grid gap-2 text-sm text-slate-600">
                 <p className="inline-flex items-center gap-2">
-                  <Wallet className="h-4 w-4 text-emerald-600" />
-                  بودجه: {client.budgetLabel}
+                  <Wallet className="h-4 w-4 shrink-0 text-emerald-600" />
+                  <span className="truncate">بودجه: {client.budgetLabel}</span>
                 </p>
                 <p className="inline-flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-emerald-600" />
-                  محله ترجیحی: {client.preferredNeighborhood}
+                  <MapPin className="h-4 w-4 shrink-0 text-emerald-600" />
+                  <span className="truncate">محله ترجیحی: {client.preferredNeighborhood}</span>
                 </p>
               </div>
 
               <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 ring-1 ring-emerald-200">
                   <Sparkles className="h-3.5 w-3.5" />
-                  {matches.toLocaleString("fa-IR")} Matching Properties Found
+                  {matches.toLocaleString("fa-IR")} فایل هم‌خوان
                 </span>
                 <button
                   type="button"
                   onClick={() => setActive(client)}
-                  className="text-sm font-medium text-slate-700 underline-offset-2 hover:underline"
+                  className="ios-tap-target inline-flex min-h-10 items-center rounded-full bg-slate-900 px-3.5 py-2 text-xs font-semibold text-white sm:bg-transparent sm:px-0 sm:py-0 sm:text-sm sm:font-medium sm:text-slate-700 sm:underline-offset-2 sm:hover:underline"
                 >
                   تایم‌لاین و تماس
                 </button>
@@ -188,6 +194,11 @@ export default function AgentClientsPage() {
             </motion.article>
           );
         })}
+        {clients.length === 0 ? (
+          <p className="col-span-full rounded-2xl border border-dashed border-slate-300 bg-white/50 px-4 py-10 text-center text-sm text-slate-500">
+            هنوز مشتری اختصاصی ندارید
+          </p>
+        ) : null}
       </div>
 
       {/* Timeline / call log modal */}
@@ -244,7 +255,7 @@ export default function AgentClientsPage() {
                 <button
                   type="button"
                   onClick={addNote}
-                  className="mt-3 w-full rounded-full bg-emerald-600 py-2.5 text-sm font-medium text-white"
+                  className="ios-tap-target mt-3 w-full rounded-full bg-emerald-600 py-3 text-sm font-medium text-white"
                 >
                   افزودن یادداشت
                 </button>
@@ -311,7 +322,7 @@ export default function AgentClientsPage() {
               <button
                 type="button"
                 onClick={addClient}
-                className="w-full rounded-full bg-emerald-600 py-2.5 text-sm font-medium text-white"
+                className="ios-tap-target w-full rounded-full bg-emerald-600 py-3 text-sm font-medium text-white"
               >
                 ذخیره مشتری
               </button>

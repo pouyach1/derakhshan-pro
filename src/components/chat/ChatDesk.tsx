@@ -147,6 +147,8 @@ export default function ChatDesk({
   const active = threads.find((t) => t.id === activeId) ?? null;
   const unreadKey = ensureOwn ? "unreadForOwner" : "unreadForAdmin";
 
+  const hideThreadRailOnMobile = ensureOwn || threads.length <= 1;
+
   return (
     <div className="space-y-4">
       {backHref ? (
@@ -155,7 +157,7 @@ export default function ChatDesk({
       <motion.section
         initial={reduceMotion ? false : { opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-[1.85rem] bg-admin-card p-5 shadow-[0_24px_60px_-40px_rgba(11,58,92,0.35)] ring-1 ring-slate-200/70 sm:p-6"
+        className="relative overflow-hidden rounded-[1.5rem] bg-admin-card p-4 shadow-[0_24px_60px_-40px_rgba(11,58,92,0.35)] ring-1 ring-slate-200/70 sm:rounded-[1.85rem] sm:p-6"
       >
         <div
           aria-hidden
@@ -166,7 +168,7 @@ export default function ChatDesk({
             <Sparkles className="h-3.5 w-3.5" />
             گفتگوی آنلاین
           </p>
-          <h1 className="mt-2 font-vazirmatn text-2xl font-bold text-admin-navy">{title}</h1>
+          <h1 className="mt-2 font-vazirmatn text-xl font-bold text-admin-navy sm:text-2xl">{title}</h1>
           <p className="mt-1 max-w-2xl text-sm leading-7 text-slate-500">{subtitle}</p>
         </div>
       </motion.section>
@@ -174,7 +176,37 @@ export default function ChatDesk({
       {error ? <p className="text-sm text-rose-500">{error}</p> : null}
 
       <div className="grid gap-4 lg:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[320px_minmax(0,1fr)]">
-        <aside className="rounded-[1.75rem] bg-admin-card p-3 shadow-sm ring-1 ring-slate-200/70 sm:p-4">
+        {/* Mobile thread chips when multiple threads */}
+        {!hideThreadRailOnMobile && threads.length > 1 ? (
+          <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-0.5 lg:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {threads.map((thread) => {
+              const activeThread = thread.id === activeId;
+              const unread = thread[unreadKey];
+              return (
+                <button
+                  key={thread.id}
+                  type="button"
+                  onClick={() => setActiveId(thread.id)}
+                  className={cn(
+                    "ios-tap-target shrink-0 rounded-full px-3.5 py-2 text-xs font-semibold transition",
+                    activeThread
+                      ? "bg-admin-sky text-white"
+                      : "bg-admin-soft text-admin-navy ring-1 ring-slate-200/70",
+                  )}
+                >
+                  {thread.ownerName}
+                  {unread > 0 ? (
+                    <span className="ms-1.5 tabular-nums opacity-80">
+                      {unread.toLocaleString("fa-IR")}
+                    </span>
+                  ) : null}
+                </button>
+              );
+            })}
+          </div>
+        ) : null}
+
+        <aside className="hidden rounded-[1.75rem] bg-admin-card p-3 shadow-sm ring-1 ring-slate-200/70 sm:p-4 lg:block">
           <p className="mb-3 px-1 text-xs font-semibold text-admin-navy">گفتگوها</p>
           {loading ? (
             <p className="rounded-2xl bg-admin-soft px-3 py-8 text-center text-xs text-slate-400">
@@ -195,7 +227,7 @@ export default function ChatDesk({
                       type="button"
                       onClick={() => setActiveId(thread.id)}
                       className={cn(
-                        "w-full rounded-2xl px-3 py-3 text-start transition",
+                        "ios-tap-target w-full rounded-2xl px-3 py-3 text-start transition",
                         activeThread
                           ? "bg-admin-sky text-white shadow-lg shadow-sky-500/20"
                           : "bg-admin-soft/80 text-admin-navy hover:bg-admin-soft",
@@ -230,7 +262,7 @@ export default function ChatDesk({
           )}
         </aside>
 
-        <section className="flex min-h-[28rem] flex-col rounded-[1.75rem] bg-admin-card shadow-sm ring-1 ring-slate-200/70">
+        <section className="flex min-h-[min(70dvh,32rem)] flex-col rounded-[1.5rem] bg-admin-card shadow-sm ring-1 ring-slate-200/70 sm:min-h-[28rem] sm:rounded-[1.75rem]">
           {active ? (
             <>
               <header className="flex items-center gap-3 border-b border-slate-100 px-4 py-3.5 sm:px-5">
@@ -316,10 +348,10 @@ export default function ChatDesk({
                     type="submit"
                     disabled={sending || !draft.trim()}
                     whileTap={{ scale: 0.97 }}
-                    className="inline-flex h-11 items-center gap-2 rounded-full bg-admin-navy px-4 text-sm font-semibold text-white disabled:opacity-50"
+                    className="ios-tap-target inline-flex h-11 shrink-0 items-center gap-2 rounded-full bg-admin-navy px-4 text-sm font-semibold text-white disabled:opacity-50"
                   >
                     <SendHorizonal className="h-4 w-4" />
-                    ارسال
+                    <span className="hidden sm:inline">ارسال</span>
                   </motion.button>
                 </form>
               </footer>

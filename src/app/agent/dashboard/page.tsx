@@ -112,10 +112,10 @@ export default function AgentDashboardPage() {
       <motion.section
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-[1.75rem] border border-amber-200/60 bg-gradient-to-l from-amber-50/90 via-white/80 to-emerald-50/80 p-5"
+        className="rounded-[1.5rem] border border-amber-200/60 bg-gradient-to-l from-amber-50/90 via-white/80 to-emerald-50/80 p-4 sm:rounded-[1.75rem] sm:p-5"
       >
         <p className="text-xs font-medium text-amber-800">نکته دفتر</p>
-        <h2 className="mt-1 text-lg font-semibold text-slate-900">
+        <h2 className="mt-1 text-base font-semibold leading-7 text-slate-900 sm:text-lg">
           فایل‌ها و مشتریان {siteConfig.brand.nameFa} از داده زنده خوانده می‌شوند
         </h2>
         <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">
