@@ -205,14 +205,6 @@
     user-select: none;
   }
 
-  /* کرسر لوکس دسکتاپ — فقط وقتی LuxuryCursor فعال است */
-  @media (hover: hover) and (pointer: fine) {
-    html.luxury-cursor-on,
-    html.luxury-cursor-on * {
-      cursor: none !important;
-    }
-  }
-
   /* سایه بدون انیمیت box-shadow — لایه‌ی جدا با opacity */
   .ios-glow-layer {
     pointer-events: none;
