@@ -1,20 +1,45 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   AnimatePresence,
   motion,
   useMotionValue,
   useReducedMotion,
   useSpring,
+  useTransform,
 } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 type HoverMode = "default" | "link" | "press";
 
+type TrailDot = {
+  id: number;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  speed: number;
+};
+
+type Ripple = {
+  id: number;
+  x: number;
+  y: number;
+};
+
+type Spark = {
+  id: number;
+  x: number;
+  y: number;
+  dx: number;
+  dy: number;
+};
+
 /**
- * کرسر لوکس دسکتاپ برای سایت عمومی:
- * حلقهٔ دوگانه + مدار چرخان + دنبالهٔ ستاره‌ای + تغییر شکل روی لینک/دکمه.
+ * کرسر سینمایی دسکتاپ:
+ * هستهٔ درخشان + قاب شش‌ضلعی چرخان + دنبالهٔ دنباله‌دار سرعتی
+ * + موج کلیک + جرقه‌های حرکت سریع + کشش مغناطیسی روی لینک/دکمه.
  */
 export default function LuxuryCursor() {
   const reduceMotion = useReducedMotion();
@@ -22,16 +47,28 @@ export default function LuxuryCursor() {
   const [visible, setVisible] = useState(false);
   const [mode, setMode] = useState<HoverMode>("default");
   const [label, setLabel] = useState("");
-  const [trail, setTrail] = useState<Array<{ x: number; y: number; id: number }>>([]);
+  const [trail, setTrail] = useState<TrailDot[]>([]);
+  const [ripples, setRipples] = useState<Ripple[]>([]);
+  const [sparks, setSparks] = useState<Spark[]>([]);
+
+  const lastPos = useRef({ x: -100, y: -100, t: 0 });
 
   const rawX = useMotionValue(-100);
   const rawY = useMotionValue(-100);
-  const coreX = useSpring(rawX, { stiffness: 560, damping: 36, mass: 0.4 });
-  const coreY = useSpring(rawY, { stiffness: 560, damping: 36, mass: 0.4 });
-  const ringX = useSpring(rawX, { stiffness: 200, damping: 24, mass: 0.65 });
-  const ringY = useSpring(rawY, { stiffness: 200, damping: 24, mass: 0.65 });
-  const orbitX = useSpring(rawX, { stiffness: 100, damping: 20, mass: 0.85 });
-  const orbitY = useSpring(rawY, { stiffness: 100, damping: 20, mass: 0.85 });
+  const speedMV = useMotionValue(0);
+
+  const coreX = useSpring(rawX, { stiffness: 720, damping: 38, mass: 0.28 });
+  const coreY = useSpring(rawY, { stiffness: 720, damping: 38, mass: 0.28 });
+  const ringX = useSpring(rawX, { stiffness: 260, damping: 26, mass: 0.55 });
+  const ringY = useSpring(rawY, { stiffness: 260, damping: 26, mass: 0.55 });
+  const orbitX = useSpring(rawX, { stiffness: 120, damping: 22, mass: 0.8 });
+  const orbitY = useSpring(rawY, { stiffness: 120, damping: 22, mass: 0.8 });
+  const bloomX = useSpring(rawX, { stiffness: 60, damping: 18, mass: 1.1 });
+  const bloomY = useSpring(rawY, { stiffness: 60, damping: 18, mass: 1.1 });
+
+  const bloomScale = useTransform(speedMV, [0, 40, 90], [0.7, 1.15, 1.55]);
+  const bloomOpacity = useTransform(speedMV, [0, 25, 80], [0.22, 0.45, 0.7]);
+  const trailStretch = useTransform(speedMV, [0, 50, 100], [1, 1.8, 2.8]);
 
   useEffect(() => {
     if (reduceMotion) return;
@@ -50,7 +87,11 @@ export default function LuxuryCursor() {
   useEffect(() => {
     if (!enabled) return;
     let trailId = 0;
+    let rippleId = 0;
+    let sparkId = 0;
     let lastTrail = 0;
+    let lastSpark = 0;
+
     const interactiveSelector =
       'a, button, [role="button"], input, textarea, select, label, summary, [data-cursor]';
 
@@ -62,6 +103,15 @@ export default function LuxuryCursor() {
     function onMove(event: PointerEvent) {
       let x = event.clientX;
       let y = event.clientY;
+      const now = performance.now();
+      const prev = lastPos.current;
+      const dt = Math.max(now - (prev.t || now), 8);
+      let vx = ((x - prev.x) / dt) * 16;
+      let vy = ((y - prev.y) / dt) * 16;
+      const speed = Math.min(Math.hypot(vx, vy), 120);
+      speedMV.set(speed);
+      lastPos.current = { x, y, t: now };
+
       const target = resolveTarget(event.target);
 
       if (target) {
@@ -71,8 +121,8 @@ export default function LuxuryCursor() {
         const dx = cx - x;
         const dy = cy - y;
         const dist = Math.hypot(dx, dy);
-        if (dist < 130) {
-          const pull = (1 - dist / 130) * 0.32;
+        if (dist < 140) {
+          const pull = (1 - dist / 140) * 0.38;
           x += dx * pull;
           y += dy * pull;
         }
@@ -96,25 +146,55 @@ export default function LuxuryCursor() {
       rawY.set(y);
       setVisible(true);
 
-      const now = performance.now();
-      if (now - lastTrail > 26) {
+      if (now - lastTrail > 18) {
         lastTrail = now;
         trailId += 1;
         const id = trailId;
-        setTrail((prev) => [...prev.slice(-12), { x, y, id }]);
+        setTrail((prevTrail) => [
+          ...prevTrail.slice(-16),
+          { x, y, id, vx, vy, speed },
+        ]);
+      }
+
+      // جرقه هنگام حرکت سریع
+      if (speed > 38 && now - lastSpark > 42) {
+        lastSpark = now;
+        const angle = Math.atan2(vy, vx) + Math.PI;
+        const burst = Array.from({ length: 3 }, (_, i) => {
+          sparkId += 1;
+          const spread = (i - 1) * 0.55;
+          return {
+            id: sparkId,
+            x,
+            y,
+            dx: Math.cos(angle + spread) * (14 + Math.random() * 22),
+            dy: Math.sin(angle + spread) * (14 + Math.random() * 22),
+          };
+        });
+        setSparks((prevSparks) => [...prevSparks.slice(-18), ...burst]);
       }
     }
 
-    function onDown() {
-      setMode("press");
+    function spawnRipple(x: number, y: number) {
+      rippleId += 1;
+      const id = rippleId;
+      setRipples((prevRipples) => [...prevRipples.slice(-4), { id, x, y }]);
     }
+
+    function onDown(event: PointerEvent) {
+      setMode("press");
+      spawnRipple(event.clientX, event.clientY);
+    }
+
     function onUp(event: PointerEvent) {
       setMode(resolveTarget(event.target) ? "link" : "default");
     }
+
     function onLeave() {
       setVisible(false);
       setMode("default");
       setLabel("");
+      speedMV.set(0);
     }
 
     window.addEventListener("pointermove", onMove, { passive: true });
@@ -127,29 +207,106 @@ export default function LuxuryCursor() {
       window.removeEventListener("pointerup", onUp);
       document.removeEventListener("mouseleave", onLeave);
     };
-  }, [enabled, rawX, rawY]);
+  }, [enabled, rawX, rawY, speedMV]);
 
   if (!enabled) return null;
 
   const expanded = mode === "link" || mode === "press";
-  const orbitSize = expanded ? 72 : 52;
-  const ringSize = mode === "press" ? 28 : expanded ? 56 : 36;
+  const orbitSize = mode === "press" ? 44 : expanded ? 84 : 58;
+  const ringSize = mode === "press" ? 22 : expanded ? 62 : 38;
 
   return (
-    <div aria-hidden className={cn("pointer-events-none fixed inset-0 z-[200] hidden lg:block", !visible && "opacity-0")}>
+    <div
+      aria-hidden
+      className={cn(
+        "pointer-events-none fixed inset-0 z-[200] hidden lg:block",
+        !visible && "opacity-0",
+      )}
+    >
+      {/* شکوفهٔ نرم عقب‌مانده */}
+      <motion.div
+        className="absolute"
+        style={{
+          left: bloomX,
+          top: bloomY,
+          x: "-50%",
+          y: "-50%",
+          scale: bloomScale,
+          opacity: bloomOpacity,
+        }}
+      >
+        <div className="h-28 w-28 rounded-full bg-[radial-gradient(circle,rgba(56,189,248,0.45)_0%,rgba(0,163,255,0.18)_40%,transparent_70%)] blur-md" />
+      </motion.div>
+
+      {/* دنبالهٔ دنباله‌دار سرعتی */}
       <AnimatePresence>
-        {trail.map((dot) => (
+        {trail.map((dot, index) => {
+          const age = index / Math.max(trail.length - 1, 1);
+          const angle = Math.atan2(dot.vy, dot.vx) * (180 / Math.PI);
+          const length = 6 + (dot.speed / 100) * 22;
+          return (
+            <motion.span
+              key={dot.id}
+              className="absolute origin-center rounded-full"
+              style={{
+                left: dot.x,
+                top: dot.y,
+                width: length,
+                height: 2 + age * 1.5,
+                background:
+                  "linear-gradient(90deg, rgba(186,230,253,0.95), rgba(0,163,255,0.15))",
+                boxShadow: "0 0 10px rgba(56,189,248,0.55)",
+                rotate: angle,
+                scaleX: trailStretch,
+              }}
+              initial={{ opacity: 0.85, scale: 1 }}
+              animate={{ opacity: 0, scale: 0.2 }}
+              transition={{ duration: 0.55 + (1 - age) * 0.15, ease: "easeOut" }}
+            />
+          );
+        })}
+      </AnimatePresence>
+
+      {/* جرقه‌های سرعت */}
+      <AnimatePresence>
+        {sparks.map((spark) => (
           <motion.span
-            key={dot.id}
-            className="absolute h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-300"
-            style={{ left: dot.x, top: dot.y }}
-            initial={{ opacity: 0.6, scale: 0.85 }}
-            animate={{ opacity: 0, scale: 0.1 }}
-            transition={{ duration: 0.5 }}
+            key={spark.id}
+            className="absolute h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-200"
+            style={{ left: spark.x, top: spark.y }}
+            initial={{ opacity: 0.95, x: 0, y: 0, scale: 1 }}
+            animate={{
+              opacity: 0,
+              x: spark.dx,
+              y: spark.dy,
+              scale: 0,
+            }}
+            transition={{ duration: 0.55, ease: "easeOut" }}
+            onAnimationComplete={() => {
+              setSparks((prev) => prev.filter((s) => s.id !== spark.id));
+            }}
           />
         ))}
       </AnimatePresence>
 
+      {/* موج کلیک */}
+      <AnimatePresence>
+        {ripples.map((ripple) => (
+          <motion.span
+            key={ripple.id}
+            className="absolute rounded-full border border-sky-300/70"
+            style={{ left: ripple.x, top: ripple.y, x: "-50%", y: "-50%" }}
+            initial={{ width: 12, height: 12, opacity: 0.85 }}
+            animate={{ width: 120, height: 120, opacity: 0 }}
+            transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+            onAnimationComplete={() => {
+              setRipples((prev) => prev.filter((r) => r.id !== ripple.id));
+            }}
+          />
+        ))}
+      </AnimatePresence>
+
+      {/* مدار شش‌ضلعی + ماهواره‌ها */}
       <motion.div
         className="absolute"
         style={{
@@ -162,20 +319,42 @@ export default function LuxuryCursor() {
         }}
       >
         <motion.div
-          className="absolute inset-0 rounded-full border border-dashed border-sky-300/45"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 7.5, repeat: Infinity, ease: "linear" }}
-        />
-        <motion.div
           className="absolute inset-0"
-          animate={{ rotate: -360 }}
-          transition={{ duration: 11, repeat: Infinity, ease: "linear" }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 9, repeat: Infinity, ease: "linear" }}
         >
-          <span className="absolute start-1/2 top-0 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-300 shadow-[0_0_14px_rgba(56,189,248,0.95)]" />
-          <span className="absolute bottom-0 start-1/2 h-1 w-1 -translate-x-1/2 translate-y-1/2 rounded-full bg-white/80" />
+          <svg viewBox="0 0 100 100" className="h-full w-full overflow-visible">
+            <polygon
+              points="50,4 93,27 93,73 50,96 7,73 7,27"
+              fill="none"
+              stroke="rgba(125,211,252,0.4)"
+              strokeWidth="1"
+              strokeDasharray={expanded ? "0" : "4 6"}
+            />
+          </svg>
         </motion.div>
+
+        <motion.div
+          className="absolute inset-[-6px]"
+          animate={{ rotate: -360 }}
+          transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
+        >
+          <span className="absolute left-1/2 top-0 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-300 shadow-[0_0_14px_rgba(56,189,248,1)]" />
+          <span className="absolute bottom-[10%] left-[10%] h-1 w-1 rounded-full bg-white/90 shadow-[0_0_10px_rgba(255,255,255,0.8)]" />
+          <span className="absolute bottom-[10%] right-[10%] h-1 w-1 rounded-full bg-cyan-200/90 shadow-[0_0_10px_rgba(165,243,252,0.85)]" />
+        </motion.div>
+
+        {/* ضربان بیرونی روی لینک */}
+        {expanded ? (
+          <motion.div
+            className="absolute inset-[-10px] rounded-full border border-sky-400/30"
+            animate={{ scale: [0.92, 1.08, 0.92], opacity: [0.55, 0.15, 0.55] }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+          />
+        ) : null}
       </motion.div>
 
+      {/* حلقهٔ میانی + کراس‌هیر */}
       <motion.div
         className="absolute"
         style={{
@@ -188,39 +367,79 @@ export default function LuxuryCursor() {
         }}
       >
         <motion.div
-          className="h-full w-full rounded-full border border-sky-400/75 bg-sky-400/[0.07] backdrop-blur-[1px]"
-          animate={
+          className={cn(
+            "relative h-full w-full overflow-hidden rounded-full border backdrop-blur-[1px]",
             expanded
-              ? {
-                  boxShadow: [
-                    "0 0 0 0 rgba(0,163,255,0.4)",
-                    "0 0 0 16px rgba(0,163,255,0)",
-                  ],
-                }
-              : { boxShadow: "0 0 18px rgba(0,163,255,0.15)" }
+              ? "border-sky-300/80 bg-sky-400/[0.12]"
+              : "border-sky-400/70 bg-sky-400/[0.06]",
+          )}
+          animate={
+            mode === "press"
+              ? { scale: 0.82 }
+              : expanded
+                ? {
+                    boxShadow: [
+                      "0 0 0 0 rgba(0,163,255,0.45)",
+                      "0 0 0 18px rgba(0,163,255,0)",
+                    ],
+                    scale: 1,
+                  }
+                : { boxShadow: "0 0 22px rgba(0,163,255,0.18)", scale: 1 }
           }
-          transition={expanded ? { duration: 1.15, repeat: Infinity } : { duration: 0.25 }}
-        />
+          transition={
+            expanded && mode !== "press"
+              ? { duration: 1.05, repeat: Infinity }
+              : { type: "spring", stiffness: 420, damping: 28 }
+          }
+        >
+          {/* کراس‌هیر ظریف */}
+          <span className="absolute inset-x-[28%] top-1/2 h-px -translate-y-1/2 bg-sky-200/50" />
+          <span className="absolute inset-y-[28%] start-1/2 w-px -translate-x-1/2 bg-sky-200/50" />
+        </motion.div>
       </motion.div>
 
+      {/* هسته + لیبل */}
       <motion.div
         className="absolute"
         style={{ left: coreX, top: coreY, x: "-50%", y: "-50%" }}
       >
         <motion.div
-          className={cn(
-            "rounded-full bg-white shadow-[0_0_22px_rgba(125,211,252,0.7)]",
-            mode === "press" ? "h-1.5 w-1.5" : "h-2.5 w-2.5",
-          )}
-        />
+          className="relative"
+          animate={mode === "press" ? { scale: 0.55 } : { scale: 1 }}
+          transition={{ type: "spring", stiffness: 500, damping: 30 }}
+        >
+          <span className="absolute inset-[-6px] rounded-full bg-sky-400/35 blur-[6px]" />
+          <motion.span
+            className={cn(
+              "relative block rounded-full bg-white",
+              mode === "press" ? "h-1.5 w-1.5" : "h-2.5 w-2.5",
+            )}
+            style={{
+              boxShadow:
+                "0 0 0 2px rgba(14,165,233,0.35), 0 0 24px rgba(125,211,252,0.95)",
+            }}
+            animate={
+              mode === "default"
+                ? { scale: [1, 1.15, 1] }
+                : { scale: 1 }
+            }
+            transition={
+              mode === "default"
+                ? { duration: 2.2, repeat: Infinity, ease: "easeInOut" }
+                : { duration: 0.2 }
+            }
+          />
+        </motion.div>
+
         <AnimatePresence>
           {label ? (
             <motion.span
               key={label}
-              initial={{ opacity: 0, y: 6, scale: 0.92 }}
-              animate={{ opacity: 1, y: 16, scale: 1 }}
-              exit={{ opacity: 0, y: 8, scale: 0.95 }}
-              className="absolute start-1/2 top-full -translate-x-1/2 whitespace-nowrap rounded-full bg-[#0B3A5C] px-2.5 py-1 font-vazirmatn text-[10px] font-bold tracking-wide text-sky-100 shadow-lg ring-1 ring-sky-300/35"
+              initial={{ opacity: 0, y: 8, scale: 0.88, filter: "blur(4px)" }}
+              animate={{ opacity: 1, y: 20, scale: 1, filter: "blur(0px)" }}
+              exit={{ opacity: 0, y: 10, scale: 0.94, filter: "blur(2px)" }}
+              transition={{ type: "spring", stiffness: 380, damping: 26 }}
+              className="absolute start-1/2 top-full -translate-x-1/2 whitespace-nowrap rounded-full bg-[#071520]/92 px-3 py-1 font-vazirmatn text-[10px] font-bold tracking-[0.18em] text-sky-100 shadow-[0_10px_30px_-10px_rgba(0,163,255,0.75)] ring-1 ring-sky-300/40"
             >
               {label}
             </motion.span>

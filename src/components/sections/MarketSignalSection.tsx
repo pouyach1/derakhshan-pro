@@ -140,31 +140,67 @@ function PointerConstellation({
     { left: 88, top: 62 },
     { left: 22, top: 78 },
     { left: 50, top: 8 },
+    { left: 62, top: 88 },
+    { left: 8, top: 48 },
   ];
   return (
     <motion.div
-      className="absolute h-40 w-40 -translate-x-1/2 -translate-y-1/2"
+      className="absolute h-52 w-52 -translate-x-1/2 -translate-y-1/2"
       style={{ left: x, top: y }}
     >
       <motion.div
-        className="absolute inset-0 rounded-full border border-sky-300/25"
-        animate={{ scale: [0.75, 1.12, 0.75], opacity: [0.4, 0.1, 0.4] }}
-        transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute inset-0 rounded-full border border-sky-300/20"
+        animate={{ scale: [0.7, 1.18, 0.7], opacity: [0.45, 0.08, 0.45] }}
+        transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
       />
+      <motion.div
+        className="absolute inset-[18%] rounded-full border border-dashed border-cyan-200/25"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+      />
+      <motion.div
+        className="absolute inset-[34%] rounded-full bg-[radial-gradient(circle,rgba(56,189,248,0.35),transparent_70%)] blur-sm"
+        animate={{ scale: [0.85, 1.2, 0.85], opacity: [0.35, 0.7, 0.35] }}
+        transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <svg className="absolute inset-0 h-full w-full overflow-visible" viewBox="0 0 100 100">
+        {nodes.map((node, index) => {
+          const next = nodes[(index + 1) % nodes.length];
+          return (
+            <motion.line
+              key={`line-${index}`}
+              x1={node.left}
+              y1={node.top}
+              x2={next.left}
+              y2={next.top}
+              stroke="rgba(125,211,252,0.22)"
+              strokeWidth="0.4"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: [0.15, 0.45, 0.15] }}
+              transition={{
+                duration: 2.8,
+                repeat: Infinity,
+                delay: index * 0.12,
+                ease: "easeInOut",
+              }}
+            />
+          );
+        })}
+      </svg>
       {nodes.map((node, index) => (
         <motion.span
           key={index}
-          className="absolute h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-200/85 shadow-[0_0_12px_rgba(125,211,252,0.85)]"
+          className="absolute h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-200/90 shadow-[0_0_14px_rgba(125,211,252,0.95)]"
           style={{ left: `${node.left}%`, top: `${node.top}%` }}
           animate={{
-            opacity: [0.25, 0.95, 0.3],
-            scale: [0.8, 1.4, 0.85],
+            opacity: [0.25, 1, 0.3],
+            scale: [0.75, 1.55, 0.85],
           }}
           transition={{
-            duration: 2.2 + index * 0.2,
+            duration: 2 + index * 0.18,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: index * 0.16,
+            delay: index * 0.14,
           }}
         />
       ))}
