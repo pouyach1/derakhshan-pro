@@ -13,6 +13,8 @@ export default function ClientSupportChatPage() {
           subtitle="مستقیم با تیم دفتر صحبت کنید — سوال ملک، بازدید و هماهنگی قرارداد."
           emptyHint="گفتگوی پشتیبانی شما در حال آماده‌سازی است…"
           composerPlaceholder="سوال یا درخواست خود را بنویسید…"
+          backHref="/client/dashboard"
+          backLabel="بازگشت به پنل"
         />
       </div>
     </div>

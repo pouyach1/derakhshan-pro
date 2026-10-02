@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { MessageCircle, SendHorizonal, Sparkles } from "lucide-react";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import BackButton from "@/components/navigation/BackButton";
 import type { ChatMessageRecord, ChatThreadKind, ChatThreadRecord } from "@/server/db/store";
 
 type ChatDeskProps = {
@@ -15,6 +16,8 @@ type ChatDeskProps = {
   subtitle: string;
   emptyHint: string;
   composerPlaceholder?: string;
+  backHref?: string;
+  backLabel?: string;
 };
 
 export default function ChatDesk({
@@ -24,6 +27,8 @@ export default function ChatDesk({
   subtitle,
   emptyHint,
   composerPlaceholder = "پیام خود را بنویسید…",
+  backHref,
+  backLabel = "بازگشت",
 }: ChatDeskProps) {
   const reduceMotion = useReducedMotion();
   const [threads, setThreads] = useState<ChatThreadRecord[]>([]);
@@ -144,6 +149,9 @@ export default function ChatDesk({
 
   return (
     <div className="space-y-4">
+      {backHref ? (
+        <BackButton fallbackHref={backHref} label={backLabel} tone="soft" />
+      ) : null}
       <motion.section
         initial={reduceMotion ? false : { opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}

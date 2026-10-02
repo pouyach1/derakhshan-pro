@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import AdminHeader from "@/components/admin/AdminHeader";
 import ContactsSidebar from "@/components/admin/ContactsSidebar";
+import BackButton from "@/components/navigation/BackButton";
 import { useWorkspaceTheme } from "@/hooks/useWorkspaceTheme";
 import { cn } from "@/lib/utils";
 
@@ -15,6 +16,9 @@ import { cn } from "@/lib/utils";
 export default function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { isDark, toggleTheme } = useWorkspaceTheme();
+  const isAdminHome = pathname === "/admin/dashboard";
+  const backFallback = isAdminHome ? "/" : "/admin/dashboard";
+  const backLabel = isAdminHome ? "بازگشت به سایت" : "بازگشت";
 
   return (
     <div
@@ -47,6 +51,13 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             className="min-w-0"
             data-admin-main
           >
+            <div className="mb-4">
+              <BackButton
+                fallbackHref={backFallback}
+                label={backLabel}
+                tone={isDark ? "dark" : "soft"}
+              />
+            </div>
             {children}
           </motion.div>
         </AnimatePresence>
