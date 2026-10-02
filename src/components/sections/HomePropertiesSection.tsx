@@ -8,7 +8,8 @@ import AgentProfileLink from "@/components/agents/AgentProfileLink";
 import CompactPropertyCard from "@/components/mobile/CompactPropertyCard";
 import { PropertyCardSkeletonList } from "@/components/mobile/PropertySkeletons";
 import { api } from "@/lib/api";
-import { formatToman, listingTypeLabel } from "@/lib/money";
+import { listingTypeLabel } from "@/lib/money";
+import PropertyPrice from "@/components/listings/PropertyPrice";
 import { cn } from "@/lib/utils";
 import type { PropertyWithAgent } from "@/server/services/agents-public";
 
@@ -127,9 +128,12 @@ function LeadCard({ item }: { item: PropertyWithAgent }) {
             <h3 className="font-vazirmatn text-2xl font-bold leading-relaxed text-[#0B3A5C] md:text-3xl">
               {item.title}
             </h3>
-            <p className="mt-3 text-xl font-bold text-sky-700">
-              {formatToman(item.price, item.listingType)}
-            </p>
+            <PropertyPrice
+              price={item.price}
+              listingType={item.listingType}
+              priceVisible={item.priceVisible}
+              className="mt-3 block text-xl font-bold text-sky-700"
+            />
           </Link>
           {item.agent ? <AgentProfileLink agent={item.agent} /> : null}
           <Specs item={item} />
@@ -163,9 +167,13 @@ function QuietCard({ item }: { item: PropertyWithAgent }) {
           <h3 className="line-clamp-2 min-h-[3.25rem] font-vazirmatn text-base font-bold leading-7 text-[#0B3A5C]">
             {item.title}
           </h3>
-          <p className="text-base font-bold text-sky-700">
-            {formatToman(item.price, item.listingType)}
-          </p>
+          <PropertyPrice
+            price={item.price}
+            listingType={item.listingType}
+            priceVisible={item.priceVisible}
+            compact
+            className="block text-base font-bold text-sky-700"
+          />
         </Link>
         {item.agent ? <AgentProfileLink agent={item.agent} showTitle={false} /> : null}
         <Specs item={item} compact />

@@ -17,7 +17,8 @@ import { listPropertyImages } from "@/lib/property-images";
 import { siteConfig } from "@/config/siteConfig";
 import { useHaptic } from "@/hooks/useHaptic";
 import { api } from "@/lib/api";
-import { formatToman, listingTypeLabel, propertyStatusLabel } from "@/lib/money";
+import { listingTypeLabel, propertyStatusLabel } from "@/lib/money";
+import PropertyPrice from "@/components/listings/PropertyPrice";
 import { IOS_PAGE_SPRING, IOS_TAP_SPRING } from "@/lib/motion/ios";
 import type { PropertyWithAgent } from "@/server/services/agents-public";
 
@@ -156,9 +157,12 @@ export default function MobilePropertyDetail({ item, failed, onRetry }: MobilePr
           <MapPin className="h-4 w-4 text-sky-600" />
           {item.location}
         </p>
-        <p className="font-vazirmatn text-xl font-bold text-sky-700">
-          {formatToman(item.price, item.listingType)}
-        </p>
+        <PropertyPrice
+          price={item.price}
+          listingType={item.listingType}
+          priceVisible={item.priceVisible}
+          className="font-vazirmatn text-xl font-bold text-sky-700"
+        />
         {item.agent ? <AgentProfileLink agent={item.agent} /> : null}
         <p className="text-sm font-medium leading-8 text-[#0B3A5C]">{item.description}</p>
 

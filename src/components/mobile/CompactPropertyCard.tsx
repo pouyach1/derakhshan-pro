@@ -7,15 +7,32 @@ import { Bath, BedDouble, MapPin, Ruler } from "lucide-react";
 import PropertyGalleryTrigger from "@/components/listings/PropertyGalleryTrigger";
 import AgentProfileLink from "@/components/agents/AgentProfileLink";
 import { frameLabel, listPropertyImages } from "@/lib/property-images";
-import { formatToman, listingTypeLabel } from "@/lib/money";
+import { listingTypeLabel } from "@/lib/money";
+import PropertyPrice from "@/components/listings/PropertyPrice";
 import { IOS_TAP_SPRING } from "@/lib/motion/ios";
 import { cn } from "@/lib/utils";
-import type { PropertyRecord } from "@/server/db/store";
+import type { ListingType } from "@/server/db/store";
 import type { PropertyAgentSummary } from "@/server/services/agents-public";
 
 export type CompactPropertyCardVariant = "grid" | "featured" | "paging";
 
-type CardItem = PropertyRecord & { agent?: PropertyAgentSummary | null };
+type CardItem = {
+  id: string;
+  title: string;
+  location: string;
+  neighborhood: string;
+  price: number | null;
+  priceVisible?: boolean;
+  listingType: ListingType | string;
+  bedrooms: number;
+  bathrooms: number;
+  areaSqm: number;
+  imageUrl: string;
+  gallery?: string[];
+  isFeatured?: boolean;
+  code?: string;
+  agent?: PropertyAgentSummary | null;
+};
 
 type CompactPropertyCardProps = {
   item: CardItem;
@@ -119,9 +136,11 @@ export default function CompactPropertyCard({
                   ویژه
                 </span>
               ) : null}
-              <span className="rounded-full bg-white/95 px-2.5 py-1 font-mono text-[10px] font-semibold tracking-wider text-[#0B3A5C]">
-                {item.code}
-              </span>
+              {item.code ? (
+                <span className="rounded-full bg-white/95 px-2.5 py-1 font-mono text-[10px] font-semibold tracking-wider text-[#0B3A5C]">
+                  {item.code}
+                </span>
+              ) : null}
               {photoCount > 1 ? (
                 <span className="rounded-full bg-black/55 px-2.5 py-1 font-mono text-[10px] tracking-[0.16em] text-white">
                   {frameLabel(1, photoCount)}
@@ -150,9 +169,13 @@ export default function CompactPropertyCard({
           >
             {item.title}
           </h3>
-          <p className={cn("mt-2 font-bold tracking-tight text-sky-700", styles.price)}>
-            {formatToman(item.price, item.listingType)}
-          </p>
+          <PropertyPrice
+            price={item.price}
+            listingType={item.listingType}
+            priceVisible={item.priceVisible}
+            compact
+            className={cn("mt-2 block font-bold tracking-tight", styles.price)}
+          />
         </Link>
 
         {item.agent ? (

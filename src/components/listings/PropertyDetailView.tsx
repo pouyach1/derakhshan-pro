@@ -6,12 +6,13 @@ import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Bath, BedDouble, MapPin, Ruler, ShieldCheck, Sparkles } from "lucide-react";
 import { api } from "@/lib/api";
-import { fallbackImage, formatToman, listingTypeLabel, propertyStatusLabel } from "@/lib/money";
+import { fallbackImage, listingTypeLabel, propertyStatusLabel } from "@/lib/money";
 import { listPropertyImages } from "@/lib/property-images";
 import { siteConfig } from "@/config/siteConfig";
 import AgentProfileLink from "@/components/agents/AgentProfileLink";
 import PropertyLightbox from "@/components/listings/PropertyLightbox";
 import PropertyAparatVideos from "@/components/listings/PropertyAparatVideos";
+import PropertyPrice from "@/components/listings/PropertyPrice";
 import PublicLoadError from "@/components/listings/PublicLoadError";
 import MobilePropertyDetail from "@/components/mobile/MobilePropertyDetail";
 import { IOS_PAGE_SPRING, IOS_TAP_SPRING } from "@/lib/motion/ios";
@@ -200,9 +201,14 @@ export default function PropertyDetailView({ id }: { id: string }) {
                 {item.location}
                 {item.neighborhood ? ` · ${item.neighborhood}` : ""}
               </p>
-              <p className="mt-5 inline-flex rounded-2xl bg-white px-4 py-2 font-vazirmatn text-2xl font-bold text-sky-700 shadow-lg sm:text-3xl">
-                {formatToman(item.price, item.listingType)}
-              </p>
+              <div className="mt-5 inline-flex rounded-2xl bg-white px-4 py-2 font-vazirmatn text-2xl font-bold text-sky-700 shadow-lg sm:text-3xl">
+                <PropertyPrice
+                  price={item.price}
+                  listingType={item.listingType}
+                  priceVisible={item.priceVisible}
+                  className="text-2xl font-bold text-sky-700 sm:text-3xl"
+                />
+              </div>
               {item.agent ? (
                 <div className="pointer-events-auto mt-5">
                   <AgentProfileLink agent={item.agent} tone="onMedia" />

@@ -2,24 +2,25 @@ import { NextRequest } from "next/server";
 import { nanoid } from "@/lib/id";
 import { propertyCreateSchema, propertyQuerySchema } from "@/server/validation/schemas";
 import { createProperty, listProperties } from "@/server/services/properties";
-import { attachAgent } from "@/server/services/agents-public";
-import { agentScopeId, requireSession } from "@/server/http/guard";
+import { presentProperties } from "@/server/services/agents-public";
+import { agentScopeId, getSessionFromRequest, requireSession } from "@/server/http/guard";
 import { jsonError, jsonOk } from "@/server/http/response";
 
 export async function GET(request: NextRequest) {
   const requestId = nanoid(10);
   try {
-    // Site gate: phone/email login required before browsing files & prices.
-    const session = await requireSession(request, ["admin", "agent", "client"]);
+    const session = await getSessionFromRequest(request);
     const query = propertyQuerySchema.parse(
       Object.fromEntries(request.nextUrl.searchParams.entries()),
     );
+    const canSeePrice = Boolean(session);
 
-    if (session.role === "client") {
+    // Guests and clients: published (and sold) public catalog only.
+    if (!session || session.role === "client") {
       const status = query.status === "sold" ? "sold" : "published";
       const data = await listProperties({ ...query, agentId: undefined, status });
       return jsonOk(
-        { ...data, items: data.items.map((item) => attachAgent(item)) },
+        { ...data, items: presentProperties(data.items, canSeePrice) },
         { requestId },
       );
     }
@@ -31,7 +32,7 @@ export async function GET(request: NextRequest) {
         { agentId: mine, roles: ["agent"] },
       );
       return jsonOk(
-        { ...data, items: data.items.map((item) => attachAgent(item)) },
+        { ...data, items: presentProperties(data.items, true) },
         { requestId },
       );
     }
@@ -40,7 +41,7 @@ export async function GET(request: NextRequest) {
       roles: ["admin"],
     });
     return jsonOk(
-      { ...data, items: data.items.map((item) => attachAgent(item)) },
+      { ...data, items: presentProperties(data.items, true) },
       { requestId },
     );
   } catch (error) {

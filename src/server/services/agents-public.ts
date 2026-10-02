@@ -11,7 +11,11 @@ export type PropertyAgentSummary = {
   title: string;
 };
 
-export type PropertyWithAgent = PropertyRecord & {
+export type PropertyWithAgent = Omit<PropertyRecord, "price"> & {
+  /** Null when the viewer has no role and prices are gated. */
+  price: number | null;
+  /** True only for authenticated users with admin/agent/client roles. */
+  priceVisible: boolean;
   agent: PropertyAgentSummary | null;
 };
 
@@ -43,6 +47,22 @@ export function summarizeAgent(agentId: string | null | undefined): PropertyAgen
 
 export function attachAgent<T extends PropertyRecord>(row: T): T & { agent: PropertyAgentSummary | null } {
   return { ...row, agent: summarizeAgent(row.agentId) };
+}
+
+/** Attach agent summary and optionally redact price for guests. */
+export function presentProperty(row: PropertyRecord, canSeePrice: boolean): PropertyWithAgent {
+  const withAgent = attachAgent(row);
+  if (canSeePrice) {
+    return { ...withAgent, priceVisible: true };
+  }
+  return { ...withAgent, price: null, priceVisible: false };
+}
+
+export function presentProperties(
+  rows: PropertyRecord[],
+  canSeePrice: boolean,
+): PropertyWithAgent[] {
+  return rows.map((row) => presentProperty(row, canSeePrice));
 }
 
 export async function getPublicAgent(id: string): Promise<PublicAgentProfile> {

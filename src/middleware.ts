@@ -7,18 +7,6 @@ import {
 } from "@/lib/auth";
 import { verifySessionToken } from "@/server/auth/session";
 
-function isPublicPath(pathname: string) {
-  if (pathname.startsWith("/login")) return true;
-  if (pathname.startsWith("/api/auth")) return true;
-  if (pathname.startsWith("/api/health")) return true;
-  if (pathname.startsWith("/_next")) return true;
-  if (pathname.startsWith("/images")) return true;
-  if (pathname.startsWith("/uploads")) return true;
-  if (pathname === "/favicon.ico") return true;
-  if (pathname === "/robots.txt" || pathname === "/sitemap.xml") return true;
-  return false;
-}
-
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const raw = request.cookies.get(AUTH_COOKIE)?.value;
@@ -32,14 +20,7 @@ export async function middleware(request: NextRequest) {
   const isClientSupport = pathname.startsWith("/client/support");
   const isLogin = pathname.startsWith("/login");
 
-  // Whole-site gate: phone/email login required to enter and see prices.
-  if (!session && !isPublicPath(pathname)) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    url.searchParams.set("next", pathname === "/" ? "/" : pathname);
-    return NextResponse.redirect(url);
-  }
-
+  // Public site is open to guests. Only role panels require a session.
   if ((isAdminRoute || isAgentRoute || isClientRoute) && !session) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
@@ -79,8 +60,7 @@ export async function middleware(request: NextRequest) {
   if (isLogin && session) {
     const next = request.nextUrl.searchParams.get("next");
     const home = postAuthPath(session);
-    // Allow returning to public site after phone login (prices/listings).
-    if (next && (next.startsWith("/") && !next.startsWith("//"))) {
+    if (next && next.startsWith("/") && !next.startsWith("//")) {
       if (
         next.startsWith(homeForRole(session.role)) ||
         next === "/" ||
@@ -95,7 +75,6 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL(next, request.url));
       }
     }
-    // Clients who only need to browse prices go home first.
     if (session.role === "client" && !needsClientOnboarding(session)) {
       return NextResponse.redirect(new URL("/", request.url));
     }
