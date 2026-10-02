@@ -86,7 +86,19 @@ export default function LoginForm() {
         }
         void remember;
         const session = payload.data.session;
+        const nextParam =
+          typeof window !== "undefined"
+            ? new URLSearchParams(window.location.search).get("next")
+            : null;
+        const safeNext =
+          nextParam &&
+          nextParam.startsWith("/") &&
+          !nextParam.startsWith("//") &&
+          !nextParam.startsWith("/login")
+            ? nextParam
+            : null;
         const redirectTo =
+          safeNext ||
           payload.data.redirectTo ||
           (session ? postAuthPath(session) : ROLE_HOME.client);
         if (session) mirrorAuthSession(session);
@@ -126,8 +138,8 @@ export default function LoginForm() {
         <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
           خوش آمدید
         </h1>
-        <p className="mt-2 text-sm text-slate-500 sm:text-base">
-          برای دسترسی به پیشنهادهای ویژه وارد شوید
+        <p className="mt-2 text-sm text-slate-600 sm:text-base">
+          برای ورود به سایت و مشاهده قیمت فایل‌ها، شماره موبایل یا ایمیل خود را وارد کنید
         </p>
       </motion.div>
 

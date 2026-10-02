@@ -9,7 +9,7 @@ import PublicLoadError from "@/components/listings/PublicLoadError";
 import CompactPropertyCard from "@/components/mobile/CompactPropertyCard";
 import MobileListingsView from "@/components/mobile/MobileListingsView";
 import { IOS_PAGE_SPRING } from "@/lib/motion/ios";
-import type { PropertyRecord } from "@/server/db/store";
+import type { PropertyWithAgent } from "@/server/services/agents-public";
 
 type Filter = "all" | "sale" | "rent";
 
@@ -33,7 +33,7 @@ const FILTERS = [
 ] as const;
 
 export default function ListingsView() {
-  const [items, setItems] = useState<PropertyRecord[]>([]);
+  const [items, setItems] = useState<PropertyWithAgent[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
@@ -44,7 +44,7 @@ export default function ListingsView() {
     setLoading(true);
     setFailed(false);
     try {
-      const res = await api<{ items: PropertyRecord[] }>("/api/properties?pageSize=50");
+      const res = await api<{ items: PropertyWithAgent[] }>("/api/properties?pageSize=50");
       if (!res.ok) {
         logListingsError(res.error);
         setItems([]);
