@@ -7,11 +7,11 @@ import { ChevronDown, LogOut, UserRound } from "lucide-react";
 import AuthToast from "@/components/auth/AuthToast";
 import {
   ROLE_LABELS,
-  clearClientSession,
   displayNameForSession,
   readClientSession,
   type AuthSession,
 } from "@/lib/auth";
+import { logoutSafely } from "@/lib/logout";
 import { cn } from "@/lib/utils";
 
 type UserAccountMenuProps = {
@@ -68,16 +68,10 @@ export default function UserAccountMenu({
   const roleLabel = ROLE_LABELS[session.role];
 
   function logout() {
-    clearClientSession();
     setOpen(false);
     setToast(true);
     onNavigated?.();
-    void fetch("/api/auth/logout", { method: "POST" }).finally(() => {
-      window.setTimeout(() => {
-        router.replace("/login");
-        router.refresh();
-      }, 500);
-    });
+    logoutSafely(router, { delayMs: 450 });
   }
 
   return (

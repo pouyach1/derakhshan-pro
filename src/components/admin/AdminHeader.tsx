@@ -16,7 +16,8 @@ import {
   Settings,
   X,
 } from "lucide-react";
-import { clearClientSession, readClientSession } from "@/lib/client-session";
+import { readClientSession } from "@/lib/client-session";
+import { logoutSafely } from "@/lib/logout";
 import { cn } from "@/lib/utils";
 import { api } from "@/lib/api";
 import AuthToast from "@/components/auth/AuthToast";
@@ -28,6 +29,8 @@ const NAV_ITEMS = [
   { href: "/admin/properties", label: "آگهی‌ها" },
   { href: "/admin/leads", label: "پیگیری‌ها" },
   { href: "/admin/clients", label: "مشتریان" },
+  { href: "/admin/support", label: "پشتیبانی" },
+  { href: "/admin/team-chat", label: "چت ادمین" },
   { href: "/admin/tours", label: "بازدیدها" },
   { href: "/admin/agents", label: "مشاوران" },
   { href: "/admin/blog", label: "وبلاگ" },
@@ -217,15 +220,9 @@ function AdminAccountMenu({ isDark = true }: { isDark?: boolean }) {
   }, [open]);
 
   function logout() {
-    clearClientSession();
     setOpen(false);
     setToast(true);
-    void fetch("/api/auth/logout", { method: "POST" }).finally(() => {
-      window.setTimeout(() => {
-        router.replace("/login");
-        router.refresh();
-      }, 500);
-    });
+    logoutSafely(router, { delayMs: 450 });
   }
 
   return (

@@ -8,6 +8,12 @@ export type { TourRecord, TourStatus } from "./tours";
 export type { DealRecord, DealStatus, DealType } from "./deals";
 export type { BlogPostRecord, BlogPostStatus } from "./blog_posts";
 export type {
+  ChatThreadRecord,
+  ChatMessageRecord,
+  ChatThreadKind,
+  ChatParticipantRole,
+} from "./chat";
+export type {
   NotificationRecord,
   NotificationChannel,
   NotificationStatus,

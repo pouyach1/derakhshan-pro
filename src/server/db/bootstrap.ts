@@ -157,6 +157,8 @@ export async function buildSeedStore(): Promise<AgencyStore> {
     propertyImages: [],
     deals: [],
     blogPosts: [],
+    chatThreads: [],
+    chatMessages: [],
   };
 
   const samples: SeedProperty[] = [

@@ -144,11 +144,26 @@ export const inquirySchema = z.object({
 });
 
 export const clientUpdateSchema = z.object({
+  name: z.string().min(2).optional(),
+  phone: z.string().min(8).optional(),
+  email: z.string().email().optional().or(z.literal("")).or(z.null()),
+  preferredNeighborhood: z.string().optional(),
+  budgetMin: z.number().nonnegative().optional(),
+  budgetMax: z.number().nonnegative().optional(),
   urgency: z.enum(["low", "medium", "high"]).optional(),
+  intent: z.enum(["buy", "rent", "invest"]).optional(),
+  agentId: z.string().min(1).optional(),
   notes: z
     .array(z.object({ id: z.string().optional(), text: z.string().min(1), at: z.string().optional() }))
     .optional(),
-  preferredNeighborhood: z.string().optional(),
+});
+
+export const chatThreadCreateSchema = z.object({
+  kind: z.enum(["support", "admin"]),
+});
+
+export const chatMessageCreateSchema = z.object({
+  body: z.string().trim().min(1).max(4000),
 });
 
 export const settingsUpdateSchema = z.object({

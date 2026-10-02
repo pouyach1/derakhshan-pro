@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   LogOut,
   Home,
+  MessageCircle,
   Newspaper,
   Users,
 } from "lucide-react";
@@ -17,19 +18,21 @@ import AuthToast from "@/components/auth/AuthToast";
 import UserAccountMenu from "@/components/auth/UserAccountMenu";
 import WorkspaceThemeToggle from "@/components/workspace/WorkspaceThemeToggle";
 import {
-  clearClientSession,
   displayNameForSession,
   readClientSession,
   type AuthSession,
 } from "@/lib/auth";
+import { logoutSafely } from "@/lib/logout";
 import { useWorkspaceTheme } from "@/hooks/useWorkspaceTheme";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/siteConfig";
+import BackButton from "@/components/navigation/BackButton";
 
 const nav = [
   { href: "/agent/dashboard", label: "داشبورد", icon: LayoutDashboard },
   { href: "/agent/properties", label: "املاک من", icon: Home },
   { href: "/agent/clients", label: "مشتریان", icon: Users },
+  { href: "/agent/chat", label: "چت ادمین", icon: MessageCircle },
   { href: "/agent/schedule", label: "بازدیدها", icon: CalendarDays },
   { href: "/agent/blog", label: "وبلاگ", icon: Newspaper },
 ];
@@ -56,15 +59,13 @@ export default function AgentShell({ children }: { children: React.ReactNode }) 
   }, []);
 
   function logout() {
-    clearClientSession();
     setToast(true);
-    void fetch("/api/auth/logout", { method: "POST" }).finally(() => {
-      window.setTimeout(() => {
-        router.replace("/login");
-        router.refresh();
-      }, 500);
-    });
+    logoutSafely(router, { delayMs: 450 });
   }
+
+  const isAgentHome = pathname === "/agent/dashboard";
+  const backFallback = isAgentHome ? "/" : "/agent/dashboard";
+  const backLabel = isAgentHome ? "بازگشت به سایت" : "بازگشت";
 
   return (
     <div
@@ -159,6 +160,13 @@ export default function AgentShell({ children }: { children: React.ReactNode }) 
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
           className="mx-auto max-w-[1200px] px-4 py-6 sm:px-6"
         >
+          <div className="mb-4">
+            <BackButton
+              fallbackHref={backFallback}
+              label={backLabel}
+              tone={isDark ? "dark" : "soft"}
+            />
+          </div>
           {children}
         </motion.main>
       </AnimatePresence>

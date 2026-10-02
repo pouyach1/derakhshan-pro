@@ -18,6 +18,7 @@ import {
 } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/siteConfig";
+import BackButton from "@/components/navigation/BackButton";
 
 const item = {
   hidden: { opacity: 0, y: 14 },
@@ -111,6 +112,9 @@ export default function LoginForm() {
       dir="rtl"
     >
       <motion.div variants={item} className="mb-8">
+        <div className="mb-5">
+          <BackButton fallbackHref="/" label="بازگشت به سایت" tone="light" preferHistory={false} />
+        </div>
         <div className="mb-6 flex items-center gap-2.5">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#1E3A8A] text-white shadow-lg shadow-blue-900/20">
             <BrandMark />

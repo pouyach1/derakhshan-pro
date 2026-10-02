@@ -16,10 +16,11 @@ import {
 import CompactPropertyCard from "@/components/mobile/CompactPropertyCard";
 import FreeScrollCarousel from "@/components/mobile/carousel/FreeScrollCarousel";
 import PagingCarousel from "@/components/mobile/carousel/PagingCarousel";
-import { clearClientSession } from "@/lib/auth";
+import { logoutSafely } from "@/lib/logout";
 import { IOS_PAGE_SPRING, IOS_TAP_SPRING } from "@/lib/motion/ios";
 import { siteConfig } from "@/config/siteConfig";
 import { cn } from "@/lib/utils";
+import BackButton from "@/components/navigation/BackButton";
 import type { PropertyRecord } from "@/server/db/store";
 
 type ClientDashboardViewProps = {
@@ -49,15 +50,8 @@ export default function ClientDashboardView({ name, items }: ClientDashboardView
       .slice(0, 8);
   }, [items]);
 
-  async function logout() {
-    clearClientSession();
-    try {
-      await fetch("/api/auth/logout", { method: "POST" });
-    } catch {
-      /* ignore */
-    }
-    router.replace("/login");
-    router.refresh();
+  function logout() {
+    logoutSafely(router);
   }
 
   return (
@@ -77,18 +71,21 @@ export default function ClientDashboardView({ name, items }: ClientDashboardView
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-l from-transparent via-sky-400/60 to-transparent"
         />
         <div className="rio-container flex items-center justify-between gap-3 py-4 md:py-5">
-          <Link href="/" className="group relative min-w-0">
-            <span
-              aria-hidden
-              className="pointer-events-none absolute -inset-2 -z-10 rounded-full bg-sky-400/10 opacity-0 blur-xl transition group-hover:opacity-100"
-            />
-            <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.28em] text-sky-600 md:text-[11px]">
-              {siteConfig.brand.brandEn}
-            </p>
-            <p className="truncate font-vazirmatn text-base font-bold text-[#0B3A5C] transition group-hover:text-sky-700 md:text-lg">
-              {siteConfig.brand.shortNameFa}
-            </p>
-          </Link>
+          <div className="flex min-w-0 items-center gap-3">
+            <BackButton fallbackHref="/" label="بازگشت به سایت" tone="light" />
+            <Link href="/" className="group relative min-w-0">
+              <span
+                aria-hidden
+                className="pointer-events-none absolute -inset-2 -z-10 rounded-full bg-sky-400/10 opacity-0 blur-xl transition group-hover:opacity-100"
+              />
+              <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.28em] text-sky-600 md:text-[11px]">
+                {siteConfig.brand.brandEn}
+              </p>
+              <p className="truncate font-vazirmatn text-base font-bold text-[#0B3A5C] transition group-hover:text-sky-700 md:text-lg">
+                {siteConfig.brand.shortNameFa}
+              </p>
+            </Link>
+          </div>
           <div className="flex items-center gap-2">
             <Link
               href="/listings"
@@ -98,10 +95,10 @@ export default function ClientDashboardView({ name, items }: ClientDashboardView
               آرشیو
             </Link>
             <Link
-              href="/contact"
+              href="/client/support"
               className="hidden rounded-full bg-gradient-to-l from-sky-500 to-cyan-400 px-4 py-2 text-sm font-bold text-white shadow-[0_10px_28px_-14px_rgba(0,163,255,0.9)] transition hover:brightness-105 md:inline-flex"
             >
-              مشاوره
+              پشتیبانی
             </Link>
             <motion.button
               type="button"
@@ -153,8 +150,8 @@ export default function ClientDashboardView({ name, items }: ClientDashboardView
                   <DashButton href="/listings" tone="primary" icon={<Building2 className="h-4 w-4" />}>
                     مشاهده آرشیو املاک
                   </DashButton>
-                  <DashButton href="/contact" tone="glass" icon={<Headphones className="h-4 w-4" />}>
-                    درخواست مشاوره
+                  <DashButton href="/client/support" tone="glass" icon={<Headphones className="h-4 w-4" />}>
+                    چت پشتیبانی
                   </DashButton>
                   <DashButton href="/client/onboarding" tone="ghost" icon={<UserRound className="h-4 w-4" />}>
                     تکمیل پروفایل
@@ -199,9 +196,9 @@ export default function ClientDashboardView({ name, items }: ClientDashboardView
             icon={<Building2 className="h-5 w-5" />}
           />
           <QuickAction
-            href="/contact"
-            title="مشاوره VIP"
-            desc="هماهنگی بازدید خصوصی"
+            href="/client/support"
+            title="چت پشتیبانی"
+            desc="گفتگوی مستقیم با دفتر"
             icon={<Headphones className="h-5 w-5" />}
           />
           <QuickAction

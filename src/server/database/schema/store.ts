@@ -5,6 +5,7 @@
 
 import type { ActivityRecord } from "./activity";
 import type { BlogPostRecord } from "./blog_posts";
+import type { ChatMessageRecord, ChatThreadRecord } from "./chat";
 import type { ClientRecord } from "./clients";
 import type { ContactRecord } from "./contacts";
 import type { DealRecord } from "./deals";
@@ -29,6 +30,10 @@ export type AgencyStore = {
   deals?: DealRecord[];
   /** Editorial CMS posts (additive — older stores normalize to []). */
   blogPosts?: BlogPostRecord[];
+  /** Support + admin desk chat threads (additive). */
+  chatThreads?: ChatThreadRecord[];
+  /** Messages belonging to chatThreads (additive). */
+  chatMessages?: ChatMessageRecord[];
   settings?: AgencySettings;
 };
 
@@ -44,6 +49,8 @@ export function emptyAgencyStore(): AgencyStore {
     propertyImages: [],
     deals: [],
     blogPosts: [],
+    chatThreads: [],
+    chatMessages: [],
     settings: undefined,
   };
 }
@@ -53,6 +60,8 @@ export function normalizeAgencyStore(store: AgencyStore): AgencyStore {
   if (!Array.isArray(store.propertyImages)) store.propertyImages = [];
   if (!Array.isArray(store.deals)) store.deals = [];
   if (!Array.isArray(store.blogPosts)) store.blogPosts = [];
+  if (!Array.isArray(store.chatThreads)) store.chatThreads = [];
+  if (!Array.isArray(store.chatMessages)) store.chatMessages = [];
   if (!Array.isArray(store.users)) store.users = [];
   if (!Array.isArray(store.properties)) store.properties = [];
   if (!Array.isArray(store.leads)) store.leads = [];
