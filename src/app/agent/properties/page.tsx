@@ -128,7 +128,7 @@ export default function AgentPropertiesPage() {
           </div>
           <Link
             href="/agent/properties/new"
-            className="inline-flex items-center gap-2 rounded-full bg-[#0B3A5C] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_14px_36px_-18px_rgba(11,58,92,0.7)] transition hover:bg-sky-600"
+            className="ios-tap-target inline-flex min-h-11 items-center gap-2 rounded-full bg-[#0B3A5C] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_14px_36px_-18px_rgba(11,58,92,0.7)] transition hover:bg-sky-600"
           >
             <Plus className="h-4 w-4" />
             ثبت فایل جدید
@@ -149,7 +149,7 @@ export default function AgentPropertiesPage() {
               type="button"
               onClick={() => setFilter(stat.id)}
               className={cn(
-                "rounded-2xl px-3 py-3 text-start transition ring-1",
+                "ios-tap-target rounded-2xl px-3 py-3 text-start transition ring-1",
                 filter === stat.id
                   ? "bg-sky-50 ring-sky-200"
                   : "bg-[#F3F7FB] ring-transparent hover:bg-sky-50/70",
@@ -164,58 +164,59 @@ export default function AgentPropertiesPage() {
         </div>
       </section>
 
-      <div className="flex flex-wrap items-center gap-3">
-        <label className="relative min-w-[220px] flex-1">
-          <Search className="pointer-events-none absolute start-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="جستجو عنوان، محله یا آدرس..."
-            className="h-11 w-full rounded-full border border-slate-200/80 bg-white pe-4 ps-10 text-sm text-[#0B3A5C] outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20"
-          />
-        </label>
+      <div className="space-y-3">
+        <div className="flex items-center gap-2">
+          <label className="relative min-w-0 flex-1">
+            <Search className="pointer-events-none absolute start-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="جستجو عنوان، محله یا آدرس..."
+              className="h-11 w-full rounded-full border border-slate-200/80 bg-white pe-4 ps-10 text-sm text-[#0B3A5C] outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20"
+            />
+          </label>
+          <div className="hidden rounded-full border border-slate-200/70 bg-white p-1 sm:inline-flex">
+            <button
+              type="button"
+              onClick={() => setView("grid")}
+              className={cn(
+                "ios-tap-target inline-flex h-9 w-9 items-center justify-center rounded-full transition",
+                view === "grid" ? "bg-sky-500 text-white" : "text-slate-500",
+              )}
+              aria-label="نمای شبکه‌ای"
+            >
+              <LayoutGrid className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setView("list")}
+              className={cn(
+                "ios-tap-target inline-flex h-9 w-9 items-center justify-center rounded-full transition",
+                view === "list" ? "bg-sky-500 text-white" : "text-slate-500",
+              )}
+              aria-label="نمای لیستی"
+            >
+              <List className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
 
-        <div className="flex flex-wrap gap-1.5 rounded-full border border-slate-200/70 bg-white p-1">
+        <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {FILTERS.map((tab) => (
             <button
               key={tab.id}
               type="button"
               onClick={() => setFilter(tab.id)}
               className={cn(
-                "rounded-full px-3.5 py-1.5 text-sm transition",
+                "ios-tap-target shrink-0 rounded-full px-3.5 py-2 text-xs font-medium transition sm:text-sm",
                 filter === tab.id
                   ? "bg-[#0B3A5C] text-white"
-                  : "text-slate-600 hover:bg-slate-50",
+                  : "bg-white text-slate-600 ring-1 ring-slate-200/80",
               )}
             >
               {tab.label}
             </button>
           ))}
-        </div>
-
-        <div className="ms-auto inline-flex rounded-full border border-slate-200/70 bg-white p-1">
-          <button
-            type="button"
-            onClick={() => setView("grid")}
-            className={cn(
-              "rounded-full p-2 transition",
-              view === "grid" ? "bg-sky-500 text-white" : "text-slate-500",
-            )}
-            aria-label="نمای شبکه‌ای"
-          >
-            <LayoutGrid className="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => setView("list")}
-            className={cn(
-              "rounded-full p-2 transition",
-              view === "list" ? "bg-sky-500 text-white" : "text-slate-500",
-            )}
-            aria-label="نمای لیستی"
-          >
-            <List className="h-4 w-4" />
-          </button>
         </div>
       </div>
 
@@ -321,7 +322,7 @@ export default function AgentPropertiesPage() {
                     <div className="flex items-center gap-1.5">
                       <Link
                         href={`/listings/${property.id}`}
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-sky-600 transition hover:bg-sky-50"
+                        className="ios-tap-target inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 text-sky-600 transition hover:bg-sky-50"
                         aria-label="مشاهده عمومی"
                         title="مشاهده"
                       >
@@ -329,7 +330,7 @@ export default function AgentPropertiesPage() {
                       </Link>
                       <Link
                         href={`/agent/properties/new?id=${property.id}`}
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-[#0B3A5C] transition hover:bg-slate-50"
+                        className="ios-tap-target inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 text-[#0B3A5C] transition hover:bg-slate-50"
                         aria-label="ویرایش"
                         title="ویرایش"
                       >

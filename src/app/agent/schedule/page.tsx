@@ -79,7 +79,7 @@ export default function AgentSchedulePage() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-xl font-semibold text-slate-900 sm:text-2xl">تقویم بازدید</h1>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm leading-6 text-slate-500">
             تایم‌لاین روزانه بازدیدهای اختصاصی شما
           </p>
         </div>
@@ -89,13 +89,13 @@ export default function AgentSchedulePage() {
         </span>
       </div>
 
-      <div className="flex flex-wrap gap-1.5 rounded-full border border-slate-200/60 bg-white/80 p-1 backdrop-blur-md">
+      <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {(
           [
             ["all", "همه", counts.all],
-            ["upcoming", "Upcoming", counts.upcoming],
-            ["completed", "Completed", counts.completed],
-            ["canceled", "Canceled", counts.canceled],
+            ["upcoming", "پیش‌رو", counts.upcoming],
+            ["completed", "انجام‌شده", counts.completed],
+            ["canceled", "لغو شده", counts.canceled],
           ] as const
         ).map(([id, label, count]) => (
           <button
@@ -103,8 +103,10 @@ export default function AgentSchedulePage() {
             type="button"
             onClick={() => setFilter(id)}
             className={cn(
-              "rounded-full px-3.5 py-1.5 text-sm transition",
-              filter === id ? "bg-slate-900 text-white" : "text-slate-600 hover:bg-slate-50",
+              "ios-tap-target shrink-0 rounded-full px-3.5 py-2 text-xs font-medium transition sm:text-sm",
+              filter === id
+                ? "bg-slate-900 text-white"
+                : "bg-white/90 text-slate-600 ring-1 ring-slate-200/80",
             )}
           >
             {label}
@@ -115,7 +117,7 @@ export default function AgentSchedulePage() {
         ))}
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <AnimatePresence mode="popLayout">
           {grouped.map(([day, dayTours]) => (
             <motion.section
@@ -125,7 +127,7 @@ export default function AgentSchedulePage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3, ease }}
-              className="rounded-[1.75rem] border border-slate-200/60 bg-white/80 p-5 shadow-sm backdrop-blur-md sm:p-6"
+              className="rounded-[1.5rem] border border-slate-200/60 bg-white/80 p-4 shadow-sm backdrop-blur-md sm:rounded-[1.75rem] sm:p-6"
             >
               <h2 className="mb-4 text-sm font-semibold text-slate-900">{day}</h2>
               <ol className="relative space-y-4 border-s-2 border-slate-200/80 ps-5">

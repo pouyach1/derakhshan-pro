@@ -64,7 +64,7 @@ export default function MetricCards({ metrics }: { metrics: Metrics }) {
   ] as const;
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-2.5 sm:gap-3 xl:grid-cols-4">
       {cards.map((card, index) => (
         <motion.article
           key={card.key}
@@ -72,17 +72,17 @@ export default function MetricCards({ metrics }: { metrics: Metrics }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.08 + index * 0.06, duration: 0.45, ease: EASE }}
           whileHover={{ scale: 1.015, y: -2 }}
-          className={`${glass} p-4 sm:p-5`}
+          className={`${glass} p-3.5 sm:p-5`}
         >
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className="text-xs text-slate-500">{card.label}</p>
-              <p className="mt-2 text-2xl font-semibold text-slate-900">
+          <div className="flex items-start justify-between gap-2 sm:gap-3">
+            <div className="min-w-0">
+              <p className="truncate text-[11px] text-slate-500 sm:text-xs">{card.label}</p>
+              <p className="mt-1.5 text-xl font-semibold tabular-nums text-slate-900 sm:mt-2 sm:text-2xl">
                 <AnimatedCounter value={card.value} />
               </p>
               <span
                 className={cn(
-                  "mt-2 inline-flex rounded-full px-2.5 py-1 text-[11px] font-medium ring-1",
+                  "mt-2 inline-flex max-w-full truncate rounded-full px-2 py-1 text-[10px] font-medium ring-1 sm:px-2.5 sm:text-[11px]",
                   card.badgeTone,
                 )}
               >
@@ -91,11 +91,11 @@ export default function MetricCards({ metrics }: { metrics: Metrics }) {
             </div>
             <span
               className={cn(
-                "flex h-11 w-11 items-center justify-center rounded-2xl",
+                "flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl sm:h-11 sm:w-11",
                 card.iconTone,
               )}
             >
-              <card.icon className="h-5 w-5" strokeWidth={1.7} />
+              <card.icon className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={1.7} />
             </span>
           </div>
         </motion.article>
@@ -106,16 +106,16 @@ export default function MetricCards({ metrics }: { metrics: Metrics }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.26, duration: 0.45, ease: EASE }}
         whileHover={{ scale: 1.015, y: -2 }}
-        className={`${glass} p-4 sm:p-5`}
+        className={`${glass} col-span-2 p-3.5 sm:col-span-1 sm:p-5 xl:col-span-1`}
       >
         <button
           type="button"
           onClick={() => setCommissionOpen((v) => !v)}
-          className="flex w-full items-start justify-between gap-3 text-start"
+          className="ios-tap-target flex w-full items-start justify-between gap-2 text-start sm:gap-3"
         >
-          <div>
-            <p className="text-xs text-slate-500">کمیسیون تخمینی ماه جاری</p>
-            <p className="mt-2 text-xl font-semibold text-slate-900 sm:text-2xl">
+          <div className="min-w-0">
+            <p className="text-[11px] text-slate-500 sm:text-xs">کمیسیون تخمینی ماه جاری</p>
+            <p className="mt-1.5 text-lg font-semibold text-slate-900 sm:mt-2 sm:text-2xl">
               {metrics.estimatedCommissionLabel}
             </p>
             <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-medium text-amber-800 ring-1 ring-amber-200">
@@ -125,8 +125,8 @@ export default function MetricCards({ metrics }: { metrics: Metrics }) {
               />
             </span>
           </div>
-          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-50 text-amber-700">
-            <Wallet className="h-5 w-5" strokeWidth={1.7} />
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-amber-700 sm:h-11 sm:w-11">
+            <Wallet className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={1.7} />
           </span>
         </button>
 
