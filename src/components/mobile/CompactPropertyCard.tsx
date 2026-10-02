@@ -169,14 +169,14 @@ export default function CompactPropertyCard({
           >
             {item.title}
           </h3>
-          <PropertyPrice
-            price={item.price}
-            listingType={item.listingType}
-            priceVisible={item.priceVisible}
-            compact
-            className={cn("mt-2 block font-bold tracking-tight", styles.price)}
-          />
         </Link>
+        <PropertyPrice
+          price={item.price}
+          listingType={item.listingType}
+          priceVisible={item.priceVisible}
+          compact
+          className={cn("mt-2 block font-bold tracking-tight", styles.price)}
+        />
 
         {item.agent ? (
           <div className="mt-3">
