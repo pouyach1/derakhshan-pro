@@ -1,7 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import {
   motion,
   useInView,
@@ -10,7 +15,6 @@ import {
   useReducedMotion,
   useSpring,
   useTransform,
-  type MotionValue,
 } from "framer-motion";
 import { ArrowUpLeft } from "lucide-react";
 import { INTRO_CTA, SIGNAL_NEIGHBORHOODS, TRUST_STATS } from "@/config/home";
@@ -19,34 +23,58 @@ import { cn } from "@/lib/utils";
 
 /**
  * سیگنال بازار خصوصی — جایگزین بنر «نسخه نمایشی» و نوار آمار تخت.
- * یک صحنهٔ سینمایی با امواج رادار، محله‌های شناور، خط جوهر و نشان‌های اعتماد.
+ * افکت موس فقط داخل همین بخش: رادار سونار (متفاوت از glare فوتر).
  */
 export default function MarketSignalSection() {
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const inView = useInView(sectionRef, { once: true, amount: 0.28 });
+  const [hovering, setHovering] = useState(false);
+  const [finePointer, setFinePointer] = useState(false);
+
   const pointerX = useMotionValue(0.5);
   const pointerY = useMotionValue(0.35);
-  const smoothX = useSpring(pointerX, { stiffness: 90, damping: 22, mass: 0.55 });
-  const smoothY = useSpring(pointerY, { stiffness: 90, damping: 22, mass: 0.55 });
+  const smoothX = useSpring(pointerX, { stiffness: 140, damping: 24, mass: 0.45 });
+  const smoothY = useSpring(pointerY, { stiffness: 140, damping: 24, mass: 0.45 });
+
+  // موقعیت پیکسلی برای رتیکل — فقط وقتی موس داخل بخش است
+  const reticuleX = useSpring(0, { stiffness: 220, damping: 28, mass: 0.4 });
+  const reticuleY = useSpring(0, { stiffness: 220, damping: 28, mass: 0.4 });
+
   const glowX = useTransform(smoothX, (v) => `${v * 100}%`);
   const glowY = useTransform(smoothY, (v) => `${v * 100}%`);
-  const glow = useMotionTemplate`radial-gradient(34rem 24rem at ${glowX} ${glowY}, rgba(0,163,255,0.28), transparent 58%)`;
-  const hotGlow = useMotionTemplate`radial-gradient(12rem 10rem at ${glowX} ${glowY}, rgba(186,230,253,0.35), transparent 70%)`;
-  const px = useTransform(smoothX, (v) => `${v * 100}%`);
-  const py = useTransform(smoothY, (v) => `${v * 100}%`);
+  // لکهٔ سیگنال باریک و تیز — نه glare پهن فوتر
+  const sonarGlow = useMotionTemplate`radial-gradient(18rem 18rem at ${glowX} ${glowY}, rgba(56,189,248,0.22), rgba(0,163,255,0.08) 42%, transparent 68%)`;
+  const scanBeam = useMotionTemplate`conic-gradient(from 0deg at ${glowX} ${glowY}, transparent 0deg, rgba(125,211,252,0.18) 28deg, transparent 55deg, transparent 360deg)`;
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const sync = () => setFinePointer(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, [reduceMotion]);
 
   function onPointerMove(event: ReactPointerEvent<HTMLElement>) {
-    if (reduceMotion) return;
+    if (reduceMotion || !finePointer) return;
     const rect = event.currentTarget.getBoundingClientRect();
     pointerX.set((event.clientX - rect.left) / rect.width);
     pointerY.set((event.clientY - rect.top) / rect.height);
+    reticuleX.set(event.clientX - rect.left);
+    reticuleY.set(event.clientY - rect.top);
   }
 
   return (
     <section
       ref={sectionRef}
       onPointerMove={onPointerMove}
+      onPointerEnter={() => setHovering(true)}
+      onPointerLeave={() => {
+        setHovering(false);
+        pointerX.set(0.5);
+        pointerY.set(0.35);
+      }}
       aria-label="سیگنال اعتماد دفتر"
       className="relative overflow-hidden bg-[#071520] text-white"
     >
@@ -54,9 +82,32 @@ export default function MarketSignalSection() {
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(0,163,255,0.18),transparent_55%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_80%,rgba(11,58,92,0.55),transparent_45%)]" />
-        <motion.div className="absolute inset-0" style={{ backgroundImage: glow }} />
-        <motion.div className="absolute inset-0 mix-blend-screen" style={{ backgroundImage: hotGlow }} />
-        <PointerConstellation x={px} y={py} active={inView && !reduceMotion} />
+
+        {/* افکت موس اختصاصی سیگنال — فقط دسکتاپ و وقتی موس داخل بخش است */}
+        {finePointer && !reduceMotion ? (
+          <>
+            <motion.div
+              className="absolute inset-0 transition-opacity duration-300"
+              style={{
+                backgroundImage: sonarGlow,
+                opacity: hovering ? 1 : 0.35,
+              }}
+            />
+            <motion.div
+              className="absolute inset-0 mix-blend-screen transition-opacity duration-300"
+              style={{
+                backgroundImage: scanBeam,
+                opacity: hovering ? 0.85 : 0,
+              }}
+            />
+            <SonarReticule
+              x={reticuleX}
+              y={reticuleY}
+              active={hovering && inView}
+            />
+          </>
+        ) : null}
+
         <div
           className="absolute inset-0 opacity-[0.07] mix-blend-soft-light"
           style={{
@@ -65,7 +116,12 @@ export default function MarketSignalSection() {
           }}
         />
         <RadarRings active={inView && !reduceMotion} />
-        <FloatingNeighborhoods active={inView && !reduceMotion} />
+        <FloatingNeighborhoods
+          active={inView && !reduceMotion}
+          pointerX={smoothX}
+          pointerY={smoothY}
+          reactToPointer={finePointer && hovering && !reduceMotion}
+        />
       </div>
 
       <div className="rio-container relative z-10 py-16 md:py-24 lg:py-28">
@@ -108,7 +164,6 @@ export default function MarketSignalSection() {
             >
               <Link
                 href={INTRO_CTA.cta.href}
-                data-cursor="ورود"
                 className="ios-tap-target group inline-flex min-h-12 items-center gap-2.5 rounded-full bg-sky-500 px-6 py-3 font-vazirmatn text-sm font-semibold text-white shadow-[0_18px_50px_-18px_rgba(0,163,255,0.85)] transition hover:bg-sky-400"
               >
                 {INTRO_CTA.cta.label}
@@ -124,86 +179,41 @@ export default function MarketSignalSection() {
   );
 }
 
-function PointerConstellation({
+/** رتیکل رادار سبک — فقط داخل بخش سیگنال، بدون مخفی کردن کرسر سیستم */
+function SonarReticule({
   x,
   y,
   active,
 }: {
-  x: MotionValue<string>;
-  y: MotionValue<string>;
+  x: ReturnType<typeof useSpring>;
+  y: ReturnType<typeof useSpring>;
   active: boolean;
 }) {
-  if (!active) return null;
-  const nodes = [
-    { left: 18, top: 12 },
-    { left: 82, top: 20 },
-    { left: 88, top: 62 },
-    { left: 22, top: 78 },
-    { left: 50, top: 8 },
-    { left: 62, top: 88 },
-    { left: 8, top: 48 },
-  ];
   return (
     <motion.div
-      className="absolute h-52 w-52 -translate-x-1/2 -translate-y-1/2"
-      style={{ left: x, top: y }}
+      className="absolute z-[1] h-24 w-24 -translate-x-1/2 -translate-y-1/2"
+      style={{ left: x, top: y, opacity: active ? 1 : 0 }}
+      transition={{ opacity: { duration: 0.25 } }}
     >
-      <motion.div
-        className="absolute inset-0 rounded-full border border-sky-300/20"
-        animate={{ scale: [0.7, 1.18, 0.7], opacity: [0.45, 0.08, 0.45] }}
-        transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+      {/* حلقهٔ پینگ */}
+      <motion.span
+        className="absolute inset-0 rounded-full border border-sky-300/50"
+        animate={
+          active
+            ? { scale: [0.55, 1.35], opacity: [0.55, 0] }
+            : { scale: 0.55, opacity: 0 }
+        }
+        transition={{ duration: 1.4, repeat: Infinity, ease: "easeOut" }}
       />
-      <motion.div
-        className="absolute inset-[18%] rounded-full border border-dashed border-cyan-200/25"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+      <motion.span
+        className="absolute inset-[18%] rounded-full border border-dashed border-cyan-200/40"
+        animate={active ? { rotate: 360 } : undefined}
+        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
       />
-      <motion.div
-        className="absolute inset-[34%] rounded-full bg-[radial-gradient(circle,rgba(56,189,248,0.35),transparent_70%)] blur-sm"
-        animate={{ scale: [0.85, 1.2, 0.85], opacity: [0.35, 0.7, 0.35] }}
-        transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <svg className="absolute inset-0 h-full w-full overflow-visible" viewBox="0 0 100 100">
-        {nodes.map((node, index) => {
-          const next = nodes[(index + 1) % nodes.length];
-          return (
-            <motion.line
-              key={`line-${index}`}
-              x1={node.left}
-              y1={node.top}
-              x2={next.left}
-              y2={next.top}
-              stroke="rgba(125,211,252,0.22)"
-              strokeWidth="0.4"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: [0.15, 0.45, 0.15] }}
-              transition={{
-                duration: 2.8,
-                repeat: Infinity,
-                delay: index * 0.12,
-                ease: "easeInOut",
-              }}
-            />
-          );
-        })}
-      </svg>
-      {nodes.map((node, index) => (
-        <motion.span
-          key={index}
-          className="absolute h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-200/90 shadow-[0_0_14px_rgba(125,211,252,0.95)]"
-          style={{ left: `${node.left}%`, top: `${node.top}%` }}
-          animate={{
-            opacity: [0.25, 1, 0.3],
-            scale: [0.75, 1.55, 0.85],
-          }}
-          transition={{
-            duration: 2 + index * 0.18,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: index * 0.14,
-          }}
-        />
-      ))}
+      {/* کراس‌هیر */}
+      <span className="absolute inset-x-[22%] top-1/2 h-px -translate-y-1/2 bg-gradient-to-l from-transparent via-sky-200/70 to-transparent" />
+      <span className="absolute inset-y-[22%] start-1/2 w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-sky-200/70 to-transparent" />
+      <span className="absolute start-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-200 shadow-[0_0_12px_rgba(125,211,252,0.9)]" />
     </motion.div>
   );
 }
@@ -271,42 +281,114 @@ function RadarRings({ active }: { active: boolean }) {
   );
 }
 
-function FloatingNeighborhoods({ active }: { active: boolean }) {
+function FloatingNeighborhoods({
+  active,
+  pointerX,
+  pointerY,
+  reactToPointer,
+}: {
+  active: boolean;
+  pointerX: ReturnType<typeof useSpring>;
+  pointerY: ReturnType<typeof useSpring>;
+  reactToPointer: boolean;
+}) {
   return (
     <div className="absolute inset-0 overflow-hidden" aria-hidden>
       {SIGNAL_NEIGHBORHOODS.map((name, index) => {
         const top = 12 + ((index * 11) % 70);
         const side = index % 2 === 0 ? "start" : "end";
         const inset = 4 + ((index * 7) % 28);
+        // موقعیت تقریبی نرمال‌شده برای روشن‌شدن نزدیک موس
+        const nx = side === "start" ? 1 - inset / 100 : inset / 100;
+        const ny = top / 100;
+
         return (
-          <motion.span
+          <NeighborhoodChip
             key={name}
-            className="absolute font-vazirmatn text-[11px] font-medium tracking-[0.18em] text-sky-100/25 md:text-xs"
-            style={{
-              top: `${top}%`,
-              ...(side === "start" ? { right: `${inset}%` } : { left: `${inset}%` }),
-            }}
-            initial={{ opacity: 0, y: 10 }}
-            animate={
-              active
-                ? {
-                    opacity: [0.12, 0.38, 0.16],
-                    y: [0, -10, 0],
-                  }
-                : undefined
-            }
-            transition={{
-              duration: 7 + (index % 4),
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: index * 0.45,
-            }}
-          >
-            {name}
-          </motion.span>
+            name={name}
+            top={top}
+            side={side}
+            inset={inset}
+            nx={nx}
+            ny={ny}
+            active={active}
+            index={index}
+            pointerX={pointerX}
+            pointerY={pointerY}
+            reactToPointer={reactToPointer}
+          />
         );
       })}
     </div>
+  );
+}
+
+function NeighborhoodChip({
+  name,
+  top,
+  side,
+  inset,
+  nx,
+  ny,
+  active,
+  index,
+  pointerX,
+  pointerY,
+  reactToPointer,
+}: {
+  name: string;
+  top: number;
+  side: string;
+  inset: number;
+  nx: number;
+  ny: number;
+  active: boolean;
+  index: number;
+  pointerX: ReturnType<typeof useSpring>;
+  pointerY: ReturnType<typeof useSpring>;
+  reactToPointer: boolean;
+}) {
+  const proximity = useTransform([pointerX, pointerY], ([px, py]) => {
+    if (!reactToPointer) return 0;
+    const dx = (px as number) - nx;
+    const dy = (py as number) - ny;
+    const dist = Math.hypot(dx, dy);
+    return Math.max(0, 1 - dist / 0.32);
+  });
+  const opacity = useTransform(proximity, (p) => 0.18 + p * 0.72);
+  const color = useTransform(proximity, (p) =>
+    p > 0.45 ? "rgba(186,230,253,0.95)" : "rgba(224,242,254,0.28)",
+  );
+
+  return (
+    <motion.span
+      className="absolute font-vazirmatn text-[11px] font-medium tracking-[0.18em] md:text-xs"
+      style={{
+        top: `${top}%`,
+        ...(side === "start" ? { right: `${inset}%` } : { left: `${inset}%` }),
+        opacity: reactToPointer ? opacity : undefined,
+        color: reactToPointer ? color : undefined,
+      }}
+      initial={{ opacity: 0, y: 10 }}
+      animate={
+        active && !reactToPointer
+          ? {
+              opacity: [0.12, 0.38, 0.16],
+              y: [0, -10, 0],
+            }
+          : active
+            ? { y: [0, -8, 0] }
+            : undefined
+      }
+      transition={{
+        duration: 7 + (index % 4),
+        repeat: Infinity,
+        ease: "easeInOut",
+        delay: index * 0.45,
+      }}
+    >
+      {name}
+    </motion.span>
   );
 }
 
