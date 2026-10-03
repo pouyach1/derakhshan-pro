@@ -12,6 +12,7 @@ const vazirmatn = Vazirmatn({
 export const metadata: Metadata = {
   title: `پنل مشتری | ${siteConfig.brand.productNameFa}`,
   description: "داشبورد اختصاصی موکل برای پیشنهاد فایل، مشاوره و پیگیری بازدید",
+  robots: { index: false, follow: false },
 };
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {

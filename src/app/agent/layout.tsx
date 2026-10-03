@@ -12,6 +12,7 @@ const vazirmatn = Vazirmatn({
 export const metadata: Metadata = {
   title: `${siteConfig.panels.agentTitle} | ${siteConfig.brand.productNameFa}`,
   description: "CRM اختصاصی مشاور — املاک، مشتریان و بازدیدهای شخصی",
+  robots: { index: false, follow: false },
 };
 
 export default function AgentLayout({ children }: { children: React.ReactNode }) {

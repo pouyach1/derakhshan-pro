@@ -5,6 +5,15 @@ import { siteConfig } from "@/config/siteConfig";
 export const metadata: Metadata = {
   title: `${siteConfig.contactPage.seoTitle} | ${siteConfig.brand.nameFa}`,
   description: siteConfig.contactPage.seoDescription,
+  alternates: { canonical: "/contact" },
+  openGraph: {
+    title: `${siteConfig.contactPage.seoTitle} | ${siteConfig.brand.nameFa}`,
+    description: siteConfig.contactPage.seoDescription,
+    type: "website",
+    url: "/contact",
+    locale: "fa_IR",
+    siteName: siteConfig.brand.nameFa,
+  },
 };
 
 export default function ContactPage() {

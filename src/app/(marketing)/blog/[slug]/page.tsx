@@ -46,7 +46,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug: raw } = await params;
   const { post } = await loadPostForRequest(raw);
   if (!post || post.status !== "published") {
-    return { title: `مقاله یافت نشد | ${siteConfig.brand.nameFa}` };
+    return {
+      title: `مقاله یافت نشد | ${siteConfig.brand.nameFa}`,
+      robots: { index: false, follow: false },
+    };
   }
   const canonical = `/blog/${post.slug}`;
   return {
@@ -58,6 +61,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: post.excerpt,
       type: "article",
       url: canonical,
+      locale: "fa_IR",
+      siteName: siteConfig.brand.nameFa,
       publishedTime: post.publishedAt,
       authors: [post.author.name],
       images: post.coverImage ? [{ url: post.coverImage }] : undefined,
@@ -97,6 +102,12 @@ export default async function BlogPostPage({ params }: PageProps) {
       "@type": "Organization",
       name: siteConfig.brand.nameFa,
       url: siteConfig.seo.url,
+      logo: siteConfig.seo.ogImage
+        ? {
+            "@type": "ImageObject",
+            url: new URL(siteConfig.seo.ogImage, siteConfig.seo.url).toString(),
+          }
+        : undefined,
     },
     mainEntityOfPage: {
       "@type": "WebPage",

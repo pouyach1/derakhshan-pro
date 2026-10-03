@@ -4,6 +4,16 @@ import { siteConfig } from "@/config/siteConfig";
 
 export const metadata: Metadata = {
   title: `حریم خصوصی | ${siteConfig.brand.nameFa}`,
+  description: `سیاست حریم خصوصی ${siteConfig.brand.nameFa} — نحوهٔ استفاده از اطلاعات تماس، بودجه و جزئیات ملک در پرونده‌های دفتر.`,
+  alternates: { canonical: "/privacy" },
+  openGraph: {
+    title: `حریم خصوصی | ${siteConfig.brand.nameFa}`,
+    description: `سیاست حریم خصوصی ${siteConfig.brand.nameFa} — نحوهٔ استفاده از اطلاعات تماس، بودجه و جزئیات ملک در پرونده‌های دفتر.`,
+    type: "website",
+    url: "/privacy",
+    locale: "fa_IR",
+    siteName: siteConfig.brand.nameFa,
+  },
 };
 
 export default function PrivacyPage() {

@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import IntroShell from "@/components/providers/IntroShell";
 import MobileMotionRoot from "@/components/mobile/MobileMotionRoot";
 import MobilePageTransition from "@/components/mobile/MobilePageTransition";
+import { siteConfig } from "@/config/siteConfig";
 
 const vazirmatn = Vazirmatn({
   subsets: ["arabic", "latin"],
@@ -13,12 +14,40 @@ const vazirmatn = Vazirmatn({
 });
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateAgent",
+    name: siteConfig.brand.nameFa,
+    alternateName: siteConfig.brand.name,
+    description: siteConfig.brand.description,
+    url: siteConfig.seo.url,
+    email: siteConfig.contact.email,
+    telephone: siteConfig.contact.phone,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: `${siteConfig.contact.address.line1}, ${siteConfig.contact.address.line2}`,
+      addressLocality: siteConfig.contact.address.city,
+      addressRegion: siteConfig.contact.address.region,
+      postalCode: siteConfig.contact.address.postal,
+      addressCountry: "IR",
+    },
+    sameAs: [
+      siteConfig.social.linkedin,
+      siteConfig.social.instagram,
+      siteConfig.social.telegram,
+    ].filter(Boolean),
+  };
+
   return (
     <div
       dir="rtl"
       lang="fa"
       className={`${vazirmatn.variable} ${vazirmatn.className} font-vazirmatn antialiased`}
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <IntroShell>
         <MobileMotionRoot>
           <Navbar />
