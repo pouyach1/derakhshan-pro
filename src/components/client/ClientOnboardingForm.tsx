@@ -9,8 +9,8 @@ import {
   DEAL_INTENT_LABELS,
   NEIGHBORHOOD_OPTIONS,
   completeClientOnboarding,
+  mirrorAuthSession,
   readClientSession,
-  setClientSession,
   type ClientProfile,
   type DealIntent,
 } from "@/lib/auth";
@@ -114,9 +114,9 @@ export default function ClientOnboardingForm() {
         setSaving(false);
         return;
       }
-      // Keep local mirror for client-side helpers during transition
+      // Server already set the HttpOnly JWT via Set-Cookie. Mirror UI state only.
       const session = readClientSession();
-      if (session) setClientSession(completeClientOnboarding(session, profile));
+      if (session) mirrorAuthSession(completeClientOnboarding(session, profile));
       router.replace("/client/dashboard");
       router.refresh();
     } catch {
