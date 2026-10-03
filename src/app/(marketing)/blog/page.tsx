@@ -20,6 +20,8 @@ export const metadata: Metadata = {
       "مجله تخصصی املاک درخشان: تحلیل بازار، راهنمای خرید و فروش، سرمایه‌گذاری و معرفی محله‌های کرج.",
     type: "website",
     url: "/blog",
+    locale: "fa_IR",
+    siteName: siteConfig.brand.nameFa,
   },
 };
 

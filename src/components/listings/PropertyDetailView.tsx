@@ -164,7 +164,7 @@ export default function PropertyDetailView({ id }: { id: string }) {
             >
               <Image
                 src={fallbackImage(item.imageUrl)}
-                alt=""
+                alt={item.title}
                 fill
                 className="object-cover"
                 priority

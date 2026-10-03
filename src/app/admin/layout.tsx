@@ -12,6 +12,7 @@ const vazirmatn = Vazirmatn({
 export const metadata: Metadata = {
   title: `${siteConfig.panels.adminTitle} | ${siteConfig.brand.productNameFa}`,
   description: "مدیریت آگهی‌ها، پیگیری مشتریان، مشاوران و تنظیمات دفتر املاک",
+  robots: { index: false, follow: false },
 };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

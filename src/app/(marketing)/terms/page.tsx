@@ -4,6 +4,16 @@ import { siteConfig } from "@/config/siteConfig";
 
 export const metadata: Metadata = {
   title: `شرایط استفاده | ${siteConfig.brand.nameFa}`,
+  description: `شرایط استفاده از خدمات ${siteConfig.brand.nameFa} — چارچوب همکاری، آگهی‌ها و معامله در دفتر.`,
+  alternates: { canonical: "/terms" },
+  openGraph: {
+    title: `شرایط استفاده | ${siteConfig.brand.nameFa}`,
+    description: `شرایط استفاده از خدمات ${siteConfig.brand.nameFa} — چارچوب همکاری، آگهی‌ها و معامله در دفتر.`,
+    type: "website",
+    url: "/terms",
+    locale: "fa_IR",
+    siteName: siteConfig.brand.nameFa,
+  },
 };
 
 export default function TermsPage() {

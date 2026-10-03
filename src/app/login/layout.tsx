@@ -11,6 +11,7 @@ const vazirmatn = Vazirmatn({
 export const metadata: Metadata = {
   title: `${siteConfig.panels.loginTitle} | ${siteConfig.brand.productNameFa}`,
   description: siteConfig.panels.loginDescription,
+  robots: { index: false, follow: false },
 };
 
 export default function LoginLayout({ children }: { children: React.ReactNode }) {
