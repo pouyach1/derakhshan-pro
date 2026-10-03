@@ -1,8 +1,8 @@
 "use client";
 
 /**
- * Friendly empty/error state for public listing surfaces.
- * Keeps the existing dark marketing look without exposing technical details.
+ * Friendly error state for public listing surfaces (light crystal marketing UI).
+ * Does not expose technical details.
  */
 export default function PublicLoadError({
   onRetry,
@@ -14,13 +14,13 @@ export default function PublicLoadError({
   message?: string;
 }) {
   return (
-    <div className="rounded-[1.75rem] border border-white/10 bg-white/[0.04] px-5 py-8 text-center sm:col-span-2 xl:col-span-3">
-      <p className="font-vazirmatn text-base font-semibold text-white">{title}</p>
-      <p className="mt-2 text-sm leading-7 text-slate-400">{message}</p>
+    <div className="rounded-[1.75rem] border border-sky-200/70 bg-white/90 px-5 py-8 text-center shadow-[0_20px_50px_-36px_rgba(11,58,92,0.35)] sm:col-span-2 xl:col-span-3">
+      <p className="font-vazirmatn text-base font-semibold text-[#0B3A5C]">{title}</p>
+      <p className="mt-2 text-sm leading-7 text-[#0B3A5C]/65">{message}</p>
       <button
         type="button"
         onClick={onRetry}
-        className="mt-5 inline-flex rounded-full bg-cyan-400 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
+        className="mt-5 inline-flex rounded-full bg-[#0B3A5C] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/50"
       >
         تلاش مجدد
       </button>

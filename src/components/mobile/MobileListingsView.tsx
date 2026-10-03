@@ -117,7 +117,9 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
         ) : failed && items.length === 0 ? (
           <PublicLoadError onRetry={onRetry} />
         ) : filtered.length === 0 ? (
-          <p className="py-10 text-sm text-[#0B3A5C]/50">فایل منطبقی پیدا نشد.</p>
+          <p className="py-10 text-sm text-[#0B3A5C]/50">
+            {items.length === 0 ? "فعلاً فایل منتشرشده‌ای نیست." : "فایل منطبقی پیدا نشد."}
+          </p>
         ) : (
           <div className="grid grid-cols-2 gap-2.5">
             {filtered.map((item, index) => (
