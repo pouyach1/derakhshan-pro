@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   BedDouble,
@@ -21,13 +21,14 @@ import {
   calcCommission,
   formatBillion,
   type AgentClient,
-  type AgentClientNote,
   type AgentProperty,
   type AgentPropertyStatus,
   type AgentTask,
   type AgentTaskKind,
 } from "@/config/agent-crm";
 import { EASE, glass } from "@/components/agent/dashboard/shared";
+import { formatNoteAt } from "@/lib/client-notes";
+import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/siteConfig";
 
@@ -107,7 +108,7 @@ export default function WorkspaceTabs({
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.32, ease: EASE }}
           >
-            {tab === "today" ? <TodayPanel tasks={tasks} /> : null}
+            {tab === "today" ? <TodayPanel tasks={tasks} clients={clients} /> : null}
             {tab === "properties" ? <PropertiesPanel properties={properties} /> : null}
             {tab === "crm" ? <ClientsPanel agentId={agentId} clients={clients} /> : null}
             {tab === "toolkit" ? <ToolsPanel commissionRate={commissionRate} /> : null}
@@ -118,30 +119,86 @@ export default function WorkspaceTabs({
   );
 }
 
-function TodayPanel({ tasks }: { tasks: AgentTask[] }) {
-  const [notes, setNotes] = useState<AgentClientNote[]>([
-    {
-      id: "seed-note",
-      at: "امروز · ۰۹:۱۵",
-      text: `تماس صبحگاهی با مالک ${siteConfig.brand.nameFa} — آمادگی بازدید ساعت ۱۰:۳۰ تأیید شد.`,
-    },
-  ]);
+function TodayPanel({
+  tasks,
+  clients: initialClients,
+}: {
+  tasks: AgentTask[];
+  clients: AgentClient[];
+}) {
+  const [clients, setClients] = useState(initialClients);
+  const [selectedClientId, setSelectedClientId] = useState(initialClients[0]?.id || "");
   const [draft, setDraft] = useState("");
+  const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    setClients(initialClients);
+    setSelectedClientId((current) =>
+      initialClients.some((c) => c.id === current) ? current : initialClients[0]?.id || "",
+    );
+  }, [initialClients]);
 
   const today = tasks.filter((t) => t.dayLabel === "امروز");
   const later = tasks.filter((t) => t.dayLabel !== "امروز");
 
-  function addNote() {
-    if (!draft.trim()) return;
-    const now = new Intl.DateTimeFormat("fa-IR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(new Date());
-    setNotes((prev) => [
-      { id: `note-${Date.now()}`, at: `امروز · ${now}`, text: draft.trim() },
-      ...prev,
-    ]);
+  const callLog = useMemo(() => {
+    const rows = clients.flatMap((client) =>
+      (client.notes || []).map((note) => ({
+        id: note.id,
+        at: note.at,
+        text: note.text,
+        clientId: client.id,
+        clientName: client.name,
+      })),
+    );
+    return [...rows]
+      .sort((a, b) => {
+        const ta = a.at ? Date.parse(a.at) : NaN;
+        const tb = b.at ? Date.parse(b.at) : NaN;
+        if (!Number.isNaN(ta) && !Number.isNaN(tb)) return tb - ta;
+        if (!Number.isNaN(ta)) return -1;
+        if (!Number.isNaN(tb)) return 1;
+        return 0;
+      })
+      .slice(0, 24);
+  }, [clients]);
+
+  async function addNote() {
+    setError("");
+    if (!selectedClientId) {
+      setError("ابتدا یک مشتری انتخاب کنید.");
+      return;
+    }
+    if (!draft.trim()) {
+      setError("متن تماس را وارد کنید.");
+      return;
+    }
+    const client = clients.find((c) => c.id === selectedClientId);
+    if (!client) {
+      setError("مشتری معتبر نیست.");
+      return;
+    }
+    setSaving(true);
+    const entry = {
+      id: `n-${Date.now()}`,
+      at: new Date().toISOString(),
+      text: draft.trim(),
+    };
+    const notes = [entry, ...(client.notes || [])];
+    setClients((prev) => prev.map((c) => (c.id === client.id ? { ...c, notes } : c)));
     setDraft("");
+    const res = await api(`/api/clients/${client.id}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        notes: notes.map((item) => ({ id: item.id, text: item.text, at: item.at })),
+      }),
+    });
+    setSaving(false);
+    if (!res.ok) {
+      setError(res.error?.message || "ثبت تماس انجام نشد.");
+      setClients(initialClients);
+    }
   }
 
   return (
@@ -189,6 +246,11 @@ function TodayPanel({ tasks }: { tasks: AgentTask[] }) {
               </div>
             </motion.li>
           ))}
+          {today.length === 0 ? (
+            <li className="rounded-2xl bg-slate-50 px-4 py-8 text-center text-sm text-slate-400">
+              برای امروز مورد پیگیری ثبت نشده است.
+            </li>
+          ) : null}
         </ol>
 
         {later.length > 0 ? (
@@ -221,34 +283,71 @@ function TodayPanel({ tasks }: { tasks: AgentTask[] }) {
           </span>
           <div>
             <h3 className="text-sm font-semibold text-slate-900">یادداشت تماس سریع</h3>
-            <p className="text-[11px] text-slate-500">لاگ تماس و پیگیری مشتریان</p>
+            <p className="text-[11px] text-slate-500">لاگ واقعی مشتریان تخصیص‌یافته</p>
           </div>
         </div>
-        <textarea
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          rows={4}
-          placeholder={`مثلاً: تماس با خریدار ${siteConfig.brand.nameFa} — درخواست تخفیف ۳٪ و بازدید مجدد...`}
-          className="w-full resize-none rounded-2xl border border-slate-200 bg-[#F1EFEA]/60 px-3.5 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
-        />
-        <button
-          type="button"
-          onClick={addNote}
-          className="mt-3 w-full rounded-full bg-slate-900 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
-        >
-          افزودن به لاگ تماس
-        </button>
-        <ul className="mt-4 max-h-64 space-y-2 overflow-y-auto">
-          {notes.map((note) => (
-            <li
-              key={note.id}
-              className="rounded-2xl bg-[#F1EFEA]/80 px-3.5 py-3 ring-1 ring-slate-200/50"
+
+        {clients.length === 0 ? (
+          <p className="rounded-2xl bg-slate-50 px-4 py-8 text-center text-sm text-slate-400">
+            هنوز مشتری تخصیص‌یافته‌ای برای ثبت تماس وجود ندارد.
+          </p>
+        ) : (
+          <>
+            <label className="mb-2 block text-xs font-medium text-slate-600">
+              مشتری
+              <select
+                value={selectedClientId}
+                onChange={(e) => setSelectedClientId(e.target.value)}
+                className="mt-1.5 w-full rounded-2xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-emerald-500"
+              >
+                {clients.map((client) => (
+                  <option key={client.id} value={client.id}>
+                    {client.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <textarea
+              value={draft}
+              onChange={(e) => {
+                setDraft(e.target.value);
+                if (error) setError("");
+              }}
+              rows={4}
+              placeholder={`مثلاً: تماس با خریدار ${siteConfig.brand.nameFa} — درخواست تخفیف ۳٪ و بازدید مجدد...`}
+              className="w-full resize-none rounded-2xl border border-slate-200 bg-[#F1EFEA]/60 px-3.5 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+            />
+            {error ? <p className="mt-2 text-xs text-rose-500">{error}</p> : null}
+            <button
+              type="button"
+              disabled={saving}
+              onClick={() => void addNote()}
+              className="mt-3 w-full rounded-full bg-slate-900 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800 disabled:opacity-60"
             >
-              <p className="text-[11px] text-slate-400">{note.at}</p>
-              <p className="mt-1 text-sm leading-relaxed text-slate-700">{note.text}</p>
-            </li>
-          ))}
-        </ul>
+              {saving ? "در حال ذخیره…" : "افزودن به لاگ تماس"}
+            </button>
+            <ul className="mt-4 max-h-64 space-y-2 overflow-y-auto">
+              {callLog.length === 0 ? (
+                <li className="rounded-2xl bg-slate-50 px-3.5 py-6 text-center text-xs text-slate-400">
+                  هنوز تماسی در تایم‌لاین مشتریان ثبت نشده است.
+                </li>
+              ) : (
+                callLog.map((note) => (
+                  <li
+                    key={`${note.clientId}-${note.id}`}
+                    className="rounded-2xl bg-[#F1EFEA]/80 px-3.5 py-3 ring-1 ring-slate-200/50"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <p className="text-[11px] font-semibold text-slate-600">{note.clientName}</p>
+                      <p className="text-[11px] text-slate-400">{formatNoteAt(note.at)}</p>
+                    </div>
+                    <p className="mt-1 break-words text-sm leading-relaxed text-slate-700">{note.text}</p>
+                  </li>
+                ))
+              )}
+            </ul>
+          </>
+        )}
       </div>
     </div>
   );

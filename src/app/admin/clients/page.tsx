@@ -13,6 +13,7 @@ import {
   GripVertical,
   Mail,
   MapPin,
+  MessageSquarePlus,
   Pencil,
   Phone,
   Sparkles,
@@ -22,6 +23,7 @@ import {
   X,
 } from "lucide-react";
 import { api } from "@/lib/api";
+import { formatNoteAt, normalizeClientNotes, sortNotesNewestFirst } from "@/lib/client-notes";
 import { formatToman } from "@/lib/money";
 import { siteConfig } from "@/config/siteConfig";
 import { cn } from "@/lib/utils";
@@ -246,7 +248,7 @@ export default function AdminClientsPage() {
   ) {
     setSaving(true);
     const existing = clients.find((c) => c.id === id);
-    const notes = [...(existing?.notes ?? [])];
+    const notes = [...normalizeClientNotes(existing?.notes)];
     if (payload.noteText.trim()) {
       notes.unshift({
         id: `n-${Date.now()}`,
@@ -268,6 +270,34 @@ export default function AdminClientsPage() {
         agentId: payload.agentId || undefined,
         notes,
       }),
+    });
+    setSaving(false);
+    if (!res.ok) {
+      setError(res.error.message);
+      return false;
+    }
+    setClients((prev) => prev.map((c) => (c.id === id ? res.data : c)));
+    setSelected(res.data);
+    setError("");
+    return true;
+  }
+
+  async function addClientNote(id: string, text: string) {
+    const trimmed = text.trim();
+    if (!trimmed) return false;
+    setSaving(true);
+    const existing = clients.find((c) => c.id === id);
+    const notes = [
+      {
+        id: `n-${Date.now()}`,
+        text: trimmed,
+        at: new Date().toISOString(),
+      },
+      ...normalizeClientNotes(existing?.notes),
+    ];
+    const res = await api<ClientRecord>(`/api/clients/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ notes }),
     });
     setSaving(false);
     if (!res.ok) {
@@ -383,13 +413,19 @@ export default function AdminClientsPage() {
               <option key={agent.id} value={agent.id}>{agent.name}</option>
             ))}
           </select>
+          <input
+            className={cn(inputClass, "sm:col-span-2 lg:col-span-2 xl:col-span-3")}
+            placeholder="یادداشت اول / خلاصه تماس (اختیاری)"
+            value={draft.note}
+            onChange={(e) => setDraft((d) => ({ ...d, note: e.target.value }))}
+          />
           <motion.button
             type="button"
             disabled={saving}
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => void createClient()}
-            className="ios-tap-target inline-flex h-11 items-center justify-center gap-2 rounded-full bg-admin-sky text-sm font-semibold text-white shadow-[0_14px_36px_-18px_rgba(14,165,233,0.9)] disabled:opacity-60"
+            className="ios-tap-target inline-flex h-11 items-center justify-center gap-2 rounded-full bg-admin-sky text-sm font-semibold text-white shadow-[0_14px_36px_-18px_rgba(14,165,233,0.9)] disabled:opacity-60 xl:col-span-3"
           >
             <UserRoundPlus className="h-4 w-4" />
             {saving ? "..." : "ثبت مشتری"}
@@ -470,6 +506,7 @@ export default function AdminClientsPage() {
               void setUrgency(selected.id, urgency);
             }}
             onSave={(payload) => saveClient(selected.id, payload)}
+            onAddNote={(text) => addClientNote(selected.id, text)}
             onDelete={() => removeClient(selected.id)}
           />
         ) : null}
@@ -551,13 +588,14 @@ function ClientCard({
           </p>
           <p className="mt-2 inline-flex items-center gap-1 text-[11px] font-medium text-admin-sky">
             <Eye className="h-3.5 w-3.5" />
-            مشاهده جزئیات · یادداشت‌ها: {client.notes.length.toLocaleString("fa-IR")}
+            مشاهده · تایم‌لاین: {normalizeClientNotes(client.notes).length.toLocaleString("fa-IR")}
           </p>
         </button>
       </div>
     </motion.article>
   );
 }
+
 
 function ClientDetailDrawer({
   client,
@@ -568,6 +606,7 @@ function ClientDetailDrawer({
   onClose,
   onUrgency,
   onSave,
+  onAddNote,
   onDelete,
 }: {
   client: ClientRecord;
@@ -589,10 +628,13 @@ function ClientDetailDrawer({
     agentId: string;
     noteText: string;
   }) => Promise<boolean>;
+  onAddNote: (text: string) => Promise<boolean>;
   onDelete: () => Promise<boolean>;
 }) {
   const [editing, setEditing] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [quickNote, setQuickNote] = useState("");
+  const [noteError, setNoteError] = useState("");
   const [form, setForm] = useState({
     name: client.name,
     phone: client.phone,
@@ -605,6 +647,11 @@ function ClientDetailDrawer({
     agentId: client.agentId,
     noteText: "",
   });
+
+  const timeline = useMemo(
+    () => sortNotesNewestFirst(normalizeClientNotes(client.notes)),
+    [client.notes],
+  );
 
   useEffect(() => {
     setForm({
@@ -621,6 +668,8 @@ function ClientDetailDrawer({
     });
     setEditing(false);
     setConfirmDelete(false);
+    setQuickNote("");
+    setNoteError("");
   }, [client.id]);
 
   async function handleSave() {
@@ -643,6 +692,20 @@ function ClientDetailDrawer({
     }
   }
 
+  async function handleQuickNote() {
+    setNoteError("");
+    if (!quickNote.trim()) {
+      setNoteError("متن تماس یا یادداشت را وارد کنید.");
+      return;
+    }
+    const ok = await onAddNote(quickNote);
+    if (!ok) {
+      setNoteError("ثبت یادداشت انجام نشد. دوباره تلاش کنید.");
+      return;
+    }
+    setQuickNote("");
+  }
+
   return (
     <motion.div
       className="fixed inset-0 z-[60] flex items-end justify-center bg-slate-900/40 p-3 backdrop-blur-sm sm:items-center sm:p-6"
@@ -660,16 +723,23 @@ function ClientDetailDrawer({
         exit={{ opacity: 0, y: 16, scale: 0.98 }}
         transition={{ type: "spring", stiffness: 320, damping: 28 }}
         onClick={(e) => e.stopPropagation()}
-        className="max-h-[88vh] w-full max-w-lg overflow-y-auto rounded-[1.75rem] bg-white p-5 shadow-2xl ring-1 ring-slate-200 sm:p-6"
+        className="flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-[1.75rem] bg-white shadow-2xl ring-1 ring-slate-200"
       >
-        <div className="flex items-start justify-between gap-3">
-          <div>
+        <div className="flex shrink-0 items-start justify-between gap-3 border-b border-slate-100 px-5 py-4 sm:px-6">
+          <div className="min-w-0">
             <p className="text-[11px] font-semibold tracking-[0.16em] text-admin-sky">پرونده مشتری</p>
-            <h2 id="client-detail-title" className="mt-1 font-vazirmatn text-xl font-bold text-admin-navy">
+            <h2 id="client-detail-title" className="mt-1 truncate font-vazirmatn text-xl font-bold text-admin-navy">
               {client.name}
             </h2>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
+            <a
+              href={`tel:${client.phone}`}
+              className="ios-tap-target inline-flex h-9 items-center gap-1.5 rounded-full bg-emerald-50 px-3 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-100"
+            >
+              <Phone className="h-3.5 w-3.5" />
+              تماس
+            </a>
             <button
               type="button"
               onClick={() => {
@@ -697,231 +767,270 @@ function ClientDetailDrawer({
           </div>
         </div>
 
-        {editing ? (
-          <div className="mt-5 grid gap-3">
-            <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
-              نام
-              <input
-                className={inputClass}
-                value={form.name}
-                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-              />
-            </label>
-            <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
-              موبایل
-              <input
-                className={inputClass}
-                dir="ltr"
-                value={form.phone}
-                onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
-              />
-            </label>
-            <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
-              ایمیل
-              <input
-                className={inputClass}
-                dir="ltr"
-                value={form.email}
-                onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-              />
-            </label>
-            <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
-              محله ترجیحی
-              <input
-                className={inputClass}
-                value={form.preferredNeighborhood}
-                onChange={(e) => setForm((f) => ({ ...f, preferredNeighborhood: e.target.value }))}
-              />
-            </label>
-            <div className="grid grid-cols-2 gap-3">
+        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4 sm:px-6">
+          {editing ? (
+            <div className="grid gap-3">
               <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
-                بودجه از (تومان)
+                نام
                 <input
                   className={inputClass}
-                  dir="ltr"
-                  inputMode="numeric"
-                  value={form.budgetMin}
-                  onChange={(e) => setForm((f) => ({ ...f, budgetMin: e.target.value }))}
+                  value={form.name}
+                  onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                 />
               </label>
               <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
-                بودجه تا (تومان)
+                موبایل
                 <input
                   className={inputClass}
                   dir="ltr"
-                  inputMode="numeric"
-                  value={form.budgetMax}
-                  onChange={(e) => setForm((f) => ({ ...f, budgetMax: e.target.value }))}
+                  value={form.phone}
+                  onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
                 />
               </label>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
               <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
-                اولویت
-                <select
+                ایمیل
+                <input
                   className={inputClass}
-                  value={form.urgency}
-                  onChange={(e) => setForm((f) => ({ ...f, urgency: e.target.value as Urgency }))}
-                >
-                  <option value="low">عادی</option>
-                  <option value="medium">متوسط</option>
-                  <option value="high">فوری</option>
-                </select>
+                  dir="ltr"
+                  value={form.email}
+                  onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                />
               </label>
               <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
-                قصد
-                <select
+                محله ترجیحی
+                <input
                   className={inputClass}
-                  value={form.intent}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, intent: e.target.value as ClientRecord["intent"] }))
-                  }
-                >
-                  <option value="buy">خرید</option>
-                  <option value="rent">اجاره</option>
-                  <option value="invest">سرمایه‌گذاری</option>
-                </select>
+                  value={form.preferredNeighborhood}
+                  onChange={(e) => setForm((f) => ({ ...f, preferredNeighborhood: e.target.value }))}
+                />
               </label>
-            </div>
-            <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
-              مشاور
-              <select
-                className={inputClass}
-                value={form.agentId}
-                onChange={(e) => setForm((f) => ({ ...f, agentId: e.target.value }))}
-              >
-                {agents.map((agent) => (
-                  <option key={agent.id} value={agent.id}>
-                    {agent.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
-              یادداشت جدید (اختیاری)
-              <textarea
-                className={cn(inputClass, "h-24 resize-none py-3")}
-                value={form.noteText}
-                onChange={(e) => setForm((f) => ({ ...f, noteText: e.target.value }))}
-                placeholder="یادداشت پیگیری…"
-              />
-            </label>
-            <motion.button
-              type="button"
-              disabled={saving}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => void handleSave()}
-              className="mt-1 inline-flex h-11 items-center justify-center rounded-full bg-admin-sky text-sm font-semibold text-white disabled:opacity-60"
-            >
-              {saving ? "در حال ذخیره…" : "ذخیره تغییرات"}
-            </motion.button>
-          </div>
-        ) : (
-          <>
-            <div className="mt-5 grid gap-3 text-sm text-slate-600">
-              <DetailRow icon={<Phone className="h-4 w-4" />} label="موبایل" value={client.phone} ltr />
-              <DetailRow icon={<Mail className="h-4 w-4" />} label="ایمیل" value={client.email || "—"} ltr />
-              <DetailRow icon={<MapPin className="h-4 w-4" />} label="محله ترجیحی" value={client.preferredNeighborhood || "—"} />
-              <DetailRow
-                icon={<Wallet className="h-4 w-4" />}
-                label="بودجه"
-                value={`${formatToman(client.budgetMin)} تا ${formatToman(client.budgetMax)}`}
-              />
-              <DetailRow icon={<Sparkles className="h-4 w-4" />} label="قصد" value={INTENT_LABEL[client.intent]} />
-              <DetailRow icon={<UserRoundPlus className="h-4 w-4" />} label="مشاور" value={agentLabel} />
-              <DetailRow icon={<Eye className="h-4 w-4" />} label="اولویت فعلی" value={urgencyLabel} />
-            </div>
-
-            <div className="mt-5">
-              <p className="mb-2 text-xs font-semibold text-admin-navy">تغییر اولویت</p>
-              <div className="flex flex-wrap gap-2">
-                {COLUMNS.map((col) => (
-                  <button
-                    key={col.id}
-                    type="button"
-                    onClick={() => onUrgency(col.id)}
-                    className={cn(
-                      "rounded-full px-3 py-1.5 text-xs font-semibold ring-1 transition",
-                      client.urgency === col.id
-                        ? cn(col.soft, col.accent, col.ring)
-                        : "bg-white text-slate-600 ring-slate-200 hover:bg-slate-50",
-                    )}
-                  >
-                    {col.label}
-                  </button>
-                ))}
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
+                  بودجه از (تومان)
+                  <input
+                    className={inputClass}
+                    dir="ltr"
+                    inputMode="numeric"
+                    value={form.budgetMin}
+                    onChange={(e) => setForm((f) => ({ ...f, budgetMin: e.target.value }))}
+                  />
+                </label>
+                <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
+                  بودجه تا (تومان)
+                  <input
+                    className={inputClass}
+                    dir="ltr"
+                    inputMode="numeric"
+                    value={form.budgetMax}
+                    onChange={(e) => setForm((f) => ({ ...f, budgetMax: e.target.value }))}
+                  />
+                </label>
               </div>
-            </div>
-
-            <div className="mt-6">
-              <p className="mb-2 text-xs font-semibold text-admin-navy">
-                یادداشت‌ها ({client.notes.length.toLocaleString("fa-IR")})
-              </p>
-              {client.notes.length === 0 ? (
-                <p className="rounded-2xl bg-slate-50 px-4 py-6 text-center text-xs text-slate-400">
-                  هنوز یادداشتی ثبت نشده است
-                </p>
-              ) : (
-                <ul className="space-y-2">
-                  {client.notes.map((note, index) => (
-                    <li
-                      key={note.id || `${index}-${note.at || ""}`}
-                      className="rounded-2xl bg-admin-soft/60 px-4 py-3 text-sm leading-7 text-slate-700"
-                    >
-                      <p>{note.text}</p>
-                      {note.at ? (
-                        <p className="mt-1 text-[11px] text-slate-400" dir="ltr">
-                          {note.at}
-                        </p>
-                      ) : null}
-                    </li>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
+                  اولویت
+                  <select
+                    className={inputClass}
+                    value={form.urgency}
+                    onChange={(e) => setForm((f) => ({ ...f, urgency: e.target.value as Urgency }))}
+                  >
+                    <option value="low">عادی</option>
+                    <option value="medium">متوسط</option>
+                    <option value="high">فوری</option>
+                  </select>
+                </label>
+                <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
+                  قصد
+                  <select
+                    className={inputClass}
+                    value={form.intent}
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, intent: e.target.value as ClientRecord["intent"] }))
+                    }
+                  >
+                    <option value="buy">خرید</option>
+                    <option value="rent">اجاره</option>
+                    <option value="invest">سرمایه‌گذاری</option>
+                  </select>
+                </label>
+              </div>
+              <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
+                مشاور
+                <select
+                  className={inputClass}
+                  value={form.agentId}
+                  onChange={(e) => setForm((f) => ({ ...f, agentId: e.target.value }))}
+                >
+                  {agents.map((agent) => (
+                    <option key={agent.id} value={agent.id}>
+                      {agent.name}
+                    </option>
                   ))}
-                </ul>
-              )}
+                </select>
+              </label>
+              <motion.button
+                type="button"
+                disabled={saving}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => void handleSave()}
+                className="mt-1 inline-flex h-11 items-center justify-center rounded-full bg-admin-sky text-sm font-semibold text-white disabled:opacity-60"
+              >
+                {saving ? "در حال ذخیره…" : "ذخیره تغییرات"}
+              </motion.button>
             </div>
-          </>
-        )}
+          ) : (
+            <>
+              <div className="grid gap-3 text-sm text-slate-600">
+                <DetailRow icon={<Phone className="h-4 w-4" />} label="موبایل" value={client.phone} ltr />
+                <DetailRow icon={<Mail className="h-4 w-4" />} label="ایمیل" value={client.email || "—"} ltr />
+                <DetailRow icon={<MapPin className="h-4 w-4" />} label="محله ترجیحی" value={client.preferredNeighborhood || "—"} />
+                <DetailRow
+                  icon={<Wallet className="h-4 w-4" />}
+                  label="بودجه"
+                  value={`${formatToman(client.budgetMin)} تا ${formatToman(client.budgetMax)}`}
+                />
+                <DetailRow icon={<Sparkles className="h-4 w-4" />} label="قصد" value={INTENT_LABEL[client.intent]} />
+                <DetailRow icon={<UserRoundPlus className="h-4 w-4" />} label="مشاور" value={agentLabel} />
+                <DetailRow icon={<Eye className="h-4 w-4" />} label="اولویت فعلی" value={urgencyLabel} />
+              </div>
 
-        <div className="mt-6 border-t border-slate-100 pt-4">
-          {confirmDelete ? (
-            <div className="rounded-2xl bg-rose-50 px-4 py-3">
-              <p className="text-sm font-medium text-rose-700">
-                حذف «{client.name}» قطعی است. ادامه می‌دهید؟
+              <div className="mt-5">
+                <p className="mb-2 text-xs font-semibold text-admin-navy">تغییر اولویت</p>
+                <div className="flex flex-wrap gap-2">
+                  {COLUMNS.map((col) => (
+                    <button
+                      key={col.id}
+                      type="button"
+                      onClick={() => onUrgency(col.id)}
+                      className={cn(
+                        "rounded-full px-3 py-1.5 text-xs font-semibold ring-1 transition",
+                        client.urgency === col.id
+                          ? cn(col.soft, col.accent, col.ring)
+                          : "bg-white text-slate-600 ring-slate-200 hover:bg-slate-50",
+                      )}
+                    >
+                      {col.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
+          <section className="mt-6 border-t border-slate-100 pt-5" aria-label="تایم‌لاین و تماس مشتری">
+            <div className="mb-3">
+              <p className="text-xs font-semibold text-admin-navy">تایم‌لاین و تماس</p>
+              <p className="mt-0.5 text-[11px] text-slate-400">
+                {timeline.length.toLocaleString("fa-IR")} رویداد ثبت‌شده
               </p>
-              <div className="mt-3 flex flex-wrap gap-2">
+            </div>
+
+            <div className="rounded-2xl bg-admin-soft/50 p-3 ring-1 ring-slate-200/70">
+              <label className="grid gap-1.5 text-xs font-semibold text-admin-navy">
+                ثبت تماس / یادداشت
+                <textarea
+                  className={cn(inputClass, "h-20 resize-none py-3")}
+                  value={quickNote}
+                  onChange={(e) => {
+                    setQuickNote(e.target.value);
+                    if (noteError) setNoteError("");
+                  }}
+                  placeholder="مثلاً: تماس برقرار شد — مشتری بازدید پنجشنبه را تأیید کرد"
+                />
+              </label>
+              {noteError ? <p className="mt-2 text-xs text-rose-500">{noteError}</p> : null}
+              <div className="mt-2 flex flex-wrap gap-2">
                 <button
                   type="button"
                   disabled={saving}
-                  onClick={() => void onDelete()}
-                  className="inline-flex h-10 items-center gap-1.5 rounded-full bg-rose-600 px-4 text-xs font-semibold text-white disabled:opacity-60"
+                  onClick={() => void handleQuickNote()}
+                  className="ios-tap-target inline-flex h-10 flex-1 items-center justify-center gap-1.5 rounded-full bg-admin-navy px-4 text-xs font-semibold text-white disabled:opacity-60 sm:flex-none"
                 >
-                  <Trash2 className="h-3.5 w-3.5" />
-                  {saving ? "…" : "بله، حذف شود"}
+                  <MessageSquarePlus className="h-3.5 w-3.5" />
+                  {saving ? "…" : "افزودن به تایم‌لاین"}
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setConfirmDelete(false)}
-                  className="inline-flex h-10 items-center rounded-full bg-white px-4 text-xs font-semibold text-slate-600 ring-1 ring-slate-200"
+                <a
+                  href={`tel:${client.phone}`}
+                  className="ios-tap-target inline-flex h-10 items-center justify-center gap-1.5 rounded-full bg-white px-4 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-100"
                 >
-                  انصراف
-                </button>
+                  <Phone className="h-3.5 w-3.5" />
+                  تماس سریع
+                </a>
               </div>
             </div>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setConfirmDelete(true)}
-              className="inline-flex h-10 items-center gap-1.5 rounded-full bg-rose-50 px-4 text-xs font-semibold text-rose-700 ring-1 ring-rose-100 transition hover:bg-rose-100"
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-              حذف مشتری
-            </button>
-          )}
-        </div>
 
-        <p className="mt-5 text-[11px] text-slate-400">
-          ثبت: {formatFaDate(client.createdAt)} · به‌روزرسانی: {formatFaDate(client.updatedAt)}
-        </p>
+            {timeline.length === 0 ? (
+              <p className="mt-4 rounded-2xl bg-slate-50 px-4 py-8 text-center text-xs leading-6 text-slate-400">
+                هنوز تماس یا یادداشتی برای این مشتری ثبت نشده است.
+              </p>
+            ) : (
+              <ol className="relative mt-4 space-y-3 border-s-2 border-slate-200/90 ps-4 sm:ps-5">
+                {timeline.map((note, index) => {
+                  const when = formatNoteAt(note.at);
+                  return (
+                    <li key={note.id || `${index}-${note.at || note.text.slice(0, 12)}`} className="relative">
+                      <span className="absolute -start-[1.35rem] top-3 h-2.5 w-2.5 rounded-full bg-admin-sky ring-4 ring-white sm:-start-[1.45rem]" />
+                      <div className="rounded-2xl bg-white px-3.5 py-3 ring-1 ring-slate-200/80 sm:px-4">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <span className="rounded-full bg-sky-50 px-2 py-0.5 text-[10px] font-bold text-admin-sky">
+                            پیگیری
+                          </span>
+                          {when ? (
+                            <time className="text-[11px] text-slate-400" dateTime={note.at}>
+                              {when}
+                            </time>
+                          ) : null}
+                        </div>
+                        <p className="mt-2 break-words text-sm leading-7 text-slate-700">{note.text}</p>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ol>
+            )}
+          </section>
+
+          <div className="mt-6 border-t border-slate-100 pt-4">
+            {confirmDelete ? (
+              <div className="rounded-2xl bg-rose-50 px-4 py-3">
+                <p className="text-sm font-medium text-rose-700">
+                  حذف «{client.name}» قطعی است. ادامه می‌دهید؟
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    disabled={saving}
+                    onClick={() => void onDelete()}
+                    className="inline-flex h-10 items-center gap-1.5 rounded-full bg-rose-600 px-4 text-xs font-semibold text-white disabled:opacity-60"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    {saving ? "…" : "بله، حذف شود"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setConfirmDelete(false)}
+                    className="inline-flex h-10 items-center rounded-full bg-white px-4 text-xs font-semibold text-slate-600 ring-1 ring-slate-200"
+                  >
+                    انصراف
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setConfirmDelete(true)}
+                className="inline-flex h-10 items-center gap-1.5 rounded-full bg-rose-50 px-4 text-xs font-semibold text-rose-700 ring-1 ring-rose-100 transition hover:bg-rose-100"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                حذف مشتری
+              </button>
+            )}
+          </div>
+
+          <p className="mt-5 text-[11px] text-slate-400">
+            ثبت: {formatFaDate(client.createdAt)} · به‌روزرسانی: {formatFaDate(client.updatedAt)}
+          </p>
+        </div>
       </motion.div>
     </motion.div>
   );
@@ -943,7 +1052,7 @@ function DetailRow({
       <span className="mt-0.5 text-admin-sky">{icon}</span>
       <div className="min-w-0 flex-1">
         <p className="text-[11px] text-slate-400">{label}</p>
-        <p className="mt-0.5 font-medium text-admin-navy" dir={ltr ? "ltr" : undefined}>
+        <p className="mt-0.5 break-words font-medium text-admin-navy" dir={ltr ? "ltr" : undefined}>
           {value}
         </p>
       </div>

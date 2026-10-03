@@ -69,5 +69,12 @@ export function normalizeAgencyStore(store: AgencyStore): AgencyStore {
   if (!Array.isArray(store.tours)) store.tours = [];
   if (!Array.isArray(store.contacts)) store.contacts = [];
   if (!Array.isArray(store.activity)) store.activity = [];
+
+  // Per-client notes must always be an array so timeline/calls UI never crashes.
+  store.clients = store.clients.map((client) => ({
+    ...client,
+    notes: Array.isArray(client.notes) ? client.notes : [],
+  }));
+
   return store;
 }
