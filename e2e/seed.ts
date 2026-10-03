@@ -45,6 +45,7 @@ async function main() {
     propertyA: { id: fixture.propertyA.id, title: fixture.propertyA.title },
     propertyB: { id: fixture.propertyB.id, title: fixture.propertyB.title },
     clientRecordA: { id: fixture.clientRecordA.id, name: fixture.clientRecordA.name },
+    dealA: { id: fixture.dealA.id, title: fixture.dealA.title },
     blogA: { id: fixture.blogA.id, slug: fixture.blogA.slug },
     draftBlog: { id: fixture.draftBlog.id, slug: fixture.draftBlog.slug },
     password: "test-staff-password",

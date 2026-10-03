@@ -13,6 +13,7 @@ export type E2EMeta = {
   propertyA: { id: string; title: string };
   propertyB: { id: string; title: string };
   clientRecordA: { id: string; name: string };
+  dealA?: { id: string; title: string };
   blogA: { id: string; slug: string };
   draftBlog: { id: string; slug: string };
   password: string;

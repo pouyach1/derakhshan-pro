@@ -82,6 +82,12 @@ export async function buildIsolationFixture(): Promise<IsolationFixture> {
     title: "ملک الف",
     code: "PA-001",
     status: "published",
+    imageUrl: "/images/landing/hero/banner.jpg",
+    gallery: [
+      "/images/landing/hero/banner.jpg",
+      "/images/landing/hero/side.jpg",
+      "/images/admin/properties/saadatabad.jpg",
+    ],
   });
   const propertyB = createProperty({
     id: "prop-b",
@@ -89,6 +95,22 @@ export async function buildIsolationFixture(): Promise<IsolationFixture> {
     title: "ملک ب",
     code: "PB-001",
     status: "published",
+  });
+
+  // Ensure deal A is visible on admin dashboard marketing/list.
+  const dealA = createDeal({
+    id: "deal-a",
+    propertyId: propertyA.id,
+    agentId: agentA.agentId!,
+    title: "معامله الف",
+    status: "closed",
+  });
+  const dealB = createDeal({
+    id: "deal-b",
+    propertyId: propertyB.id,
+    agentId: agentB.agentId!,
+    title: "معامله ب",
+    status: "closed",
   });
 
   const clientRecordA = createClientRecord({
@@ -113,19 +135,6 @@ export async function buildIsolationFixture(): Promise<IsolationFixture> {
     id: "lead-b",
     assignedAgentId: agentB.agentId!,
     clientName: "لید ب",
-  });
-
-  const dealA = createDeal({
-    id: "deal-a",
-    propertyId: propertyA.id,
-    agentId: agentA.agentId!,
-    title: "معامله الف",
-  });
-  const dealB = createDeal({
-    id: "deal-b",
-    propertyId: propertyB.id,
-    agentId: agentB.agentId!,
-    title: "معامله ب",
   });
 
   const tourA = createTour({

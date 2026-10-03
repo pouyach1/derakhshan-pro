@@ -121,12 +121,17 @@ function resolveUniqueSlug(base: string, excludeId?: string): string {
   return attempt;
 }
 
-function revalidateBlogPaths(slug?: string) {
+function revalidateBlogPaths(slug?: string, id?: string) {
   try {
     revalidatePath("/blog");
     if (slug) revalidatePath(`/blog/${slug}`);
     revalidatePath("/admin/blog");
     revalidatePath("/agent/blog");
+    // Editor pages are dynamic by id — invalidate so publish/unpublish UI reflects store.
+    if (id) {
+      revalidatePath(`/admin/blog/${id}`);
+      revalidatePath(`/agent/blog/${id}`);
+    }
   } catch {
     /* outside request context (seed) — ignore */
   }
@@ -353,7 +358,10 @@ export async function createBlogPost(
     entityId: record.id,
     detail: { status: record.status, slug: record.slug },
   });
-  revalidateBlogPaths(record.status === "published" ? record.slug : undefined);
+  revalidateBlogPaths(
+    record.status === "published" ? record.slug : undefined,
+    record.id,
+  );
   return mapBlogPost(record);
 }
 
@@ -427,8 +435,8 @@ export async function updateBlogPost(
     entityId: row.id,
     detail: { status: row.status, slug: row.slug },
   });
-  revalidateBlogPaths(row.slug);
-  if (previousSlug !== row.slug) revalidateBlogPaths(previousSlug);
+  revalidateBlogPaths(row.slug, row.id);
+  if (previousSlug !== row.slug) revalidateBlogPaths(previousSlug, row.id);
   return mapBlogPost(row);
 }
 
@@ -447,7 +455,7 @@ export async function deleteBlogPost(id: string, actor: Actor) {
     entityId: row.id,
     detail: { slug: row.slug },
   });
-  revalidateBlogPaths(row.slug);
+  revalidateBlogPaths(row.slug, row.id);
   return { id: row.id, deleted: true as const };
 }
 
