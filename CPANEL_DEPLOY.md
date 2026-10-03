@@ -44,7 +44,7 @@
 | `NEXT_PUBLIC_DEMO_STAFF_PASSWORD` | نمایش رمز روی فرم لاگین |
 | `DEMO_STAFF_PASSWORD` | alias خصوصی برای seed |
 
-بدون `AUTH_SECRET` و `SEED_ADMIN_PASSWORD` معتبر، `server.cjs` و instrumentation **استارت را قطع** می‌کنند.
+بدون `AUTH_SECRET` و `SEED_ADMIN_PASSWORD` معتبر، استارت قطع می‌شود — مگر اینکه یک‌بار `npm run env:bootstrap` زده باشید یا فیکس auto-bootstrap (`data/production.env`) روی هاست باشد.
 
 تولید نمونهٔ secret:
 

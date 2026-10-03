@@ -43,6 +43,37 @@ node server.cjs
 Startup file باید **`server.cjs`** باشد.
 فیلد `main` و اسکریپت‌های `start` / `start:node` در `package.json` هم به همین فایل اشاره می‌کنند.
 
+### اگر لاگ گفت `Refusing production start` / `AUTH_SECRET` / `SEED_ADMIN_PASSWORD`
+
+اپ عمداً بدون این دو متغیر بالا نمی‌آید. در لاگ شما دقیقاً همین است.
+
+**راه ۱ — پنل (سریع‌ترین):** در Environment Variables بگذارید:
+
+```text
+NODE_ENV=production
+AUTH_SECRET=...حداقل ۳۲ کاراکتر تصادفی...
+SEED_ADMIN_PASSWORD=...حداقل ۸ کاراکتر...
+```
+
+تولید `AUTH_SECRET`:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
+```
+
+بعد **Stop → Start**. Startup File = `server.cjs` (نه دستور دستی `next start`).
+
+**راه ۲ — یک‌بار روی سرور:**
+
+```bash
+node scripts/bootstrap-production-env.cjs
+# یا: npm run env:bootstrap
+```
+
+فایل `data/production.env` ساخته می‌شود؛ Restart کنید.
+
+**راه ۳ — بعد از این فیکس:** اگر secretها خالی باشند، خود `server.cjs` / instrumentation یک‌بار `data/production.env` می‌سازد و استارت را ادامه می‌دهد. رمز ادمین در لاگ چاپ می‌شود — ذخیره کنید.
+
 ### اگر بعد از ۱۰۰٪ ساخت این خطا آمد
 
 ```text
@@ -54,7 +85,8 @@ Error: Unexpected server response: 400
 | علت | کار |
 |-----|-----|
 | Startup اشتباه (اسکریپت قدیمی ریشه یا scraper) | Startup File = **`server.cjs`** |
-| `AUTH_SECRET` خالی/ضعیف یا `SEED_ADMIN_PASSWORD` کوتاه | envهای الزامی را پر کنید؛ لاگ `Refusing to start` را ببینید |
+| `AUTH_SECRET` خالی/ضعیف یا `SEED_ADMIN_PASSWORD` کوتاه | envهای الزامی را پر کنید یا `npm run env:bootstrap` |
+| پنل هنوز `next start` قدیمی می‌زند | کد جدید را pull کنید؛ `package.json` → `"start": "node server.cjs"` |
 | bind روی `HOSTNAME` لینوکس | `HOSTNAME` را برای listen ست نکنید؛ پیش‌فرض `0.0.0.0` درست است |
 | `node_modules` ناقص بعد از build | در Application root: `npm ci` سپس Restart |
 | پورت اشغال | Stop کامل → Start؛ فقط یک instance |

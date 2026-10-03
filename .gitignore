@@ -19,6 +19,9 @@ data/*.db
 data/*.db-*
 .env
 .env.local
+.env.production
+.env.production.local
+data/production.env
 data/*.json
 public/uploads/properties/**
 !public/uploads/properties/.gitkeep
