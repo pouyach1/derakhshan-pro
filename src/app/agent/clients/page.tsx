@@ -60,6 +60,15 @@ export default function AgentClientsPage() {
     }
   }, []);
 
+  useEffect(() => {
+    if (!addOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [addOpen]);
+
   const matchCounts = useMemo(() => {
     const map = new Map<string, number>();
     for (const client of clients) {
@@ -309,70 +318,107 @@ export default function AgentClientsPage() {
         )}
       </AnimatePresence>
 
-      {/* Quick add client */}
+      {/* Quick add client — mobile sheet above bottom nav; desktop centered dialog */}
       <AnimatePresence>
-        {addOpen && (
+        {addOpen ? (
           <motion.div
-            className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/40 p-4 backdrop-blur-sm sm:items-center"
+            className="fixed inset-0 z-[70] flex items-end justify-center bg-slate-900/45 backdrop-blur-sm sm:items-center sm:p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setAddOpen(false)}
           >
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="add-client-title"
+              initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 12 }}
+              exit={{ opacity: 0, y: 16 }}
+              transition={{ duration: 0.28, ease }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md space-y-3 rounded-[1.75rem] border border-slate-200/60 bg-white/95 p-5 shadow-xl backdrop-blur-md"
+              className={cn(
+                "flex w-full max-w-md flex-col overflow-hidden border border-slate-200/70 bg-white shadow-2xl",
+                "max-h-[min(92dvh,40rem)] rounded-t-[1.75rem]",
+                "sm:max-h-[min(88dvh,40rem)] sm:rounded-[1.75rem]",
+              )}
             >
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-slate-900">افزودن مشتری</h3>
-                <button type="button" onClick={() => setAddOpen(false)} className="rounded-full p-1.5 hover:bg-slate-100">
-                  <X className="h-4 w-4" />
-                </button>
+              <div className="shrink-0 border-b border-slate-100 px-5 pb-3 pt-3 sm:pt-4">
+                <div className="mx-auto mb-3 h-1.5 w-10 rounded-full bg-slate-200 sm:hidden" aria-hidden />
+                <div className="flex items-center justify-between gap-3">
+                  <h3 id="add-client-title" className="font-semibold text-slate-900">
+                    افزودن مشتری
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => setAddOpen(false)}
+                    className="ios-tap-target inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-slate-100"
+                    aria-label="بستن"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
-              {(
-                [
-                  ["name", "نام"],
-                  ["phone", "تلفن"],
-                  ["budgetLabel", "بازه بودجه"],
-                  ["preferredNeighborhood", "محله ترجیحی"],
-                ] as const
-              ).map(([key, label]) => (
-                <label key={key} className="block text-sm text-slate-600">
-                  {label}
-                  <input
-                    value={draft[key]}
-                    onChange={(e) => setDraft((d) => ({ ...d, [key]: e.target.value }))}
-                    className="mt-1.5 w-full rounded-2xl border border-slate-200 px-4 py-2.5 text-sm outline-none focus:border-emerald-500"
-                  />
-                </label>
-              ))}
-              <label className="block text-sm text-slate-600">
-                فوریت
-                <select
-                  value={draft.urgency}
-                  onChange={(e) =>
-                    setDraft((d) => ({ ...d, urgency: e.target.value as ClientUrgency }))
-                  }
-                  className="mt-1.5 w-full rounded-2xl border border-slate-200 px-4 py-2.5 text-sm"
-                >
-                  <option value="low">عادی</option>
-                  <option value="medium">متوسط</option>
-                  <option value="high">فوری</option>
-                </select>
-              </label>
-              <button
-                type="button"
-                onClick={addClient}
-                className="ios-tap-target w-full rounded-full bg-emerald-600 py-3 text-sm font-medium text-white"
-              >
-                ذخیره مشتری
-              </button>
+
+              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-4">
+                <div className="space-y-3">
+                  {(
+                    [
+                      ["name", "نام"],
+                      ["phone", "تلفن"],
+                      ["budgetLabel", "بازه بودجه"],
+                      ["preferredNeighborhood", "محله ترجیحی"],
+                    ] as const
+                  ).map(([key, label]) => (
+                    <label key={key} className="block text-sm text-slate-600">
+                      {label}
+                      <input
+                        value={draft[key]}
+                        onChange={(e) => setDraft((d) => ({ ...d, [key]: e.target.value }))}
+                        className="mt-1.5 w-full rounded-2xl border border-slate-200 px-4 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15"
+                        autoComplete={key === "phone" ? "tel" : key === "name" ? "name" : "off"}
+                        inputMode={key === "phone" ? "tel" : undefined}
+                      />
+                    </label>
+                  ))}
+                  <label className="block text-sm text-slate-600">
+                    فوریت
+                    <select
+                      value={draft.urgency}
+                      onChange={(e) =>
+                        setDraft((d) => ({ ...d, urgency: e.target.value as ClientUrgency }))
+                      }
+                      className="mt-1.5 w-full rounded-2xl border border-slate-200 px-4 py-2.5 text-sm outline-none focus:border-emerald-500"
+                    >
+                      <option value="low">عادی</option>
+                      <option value="medium">متوسط</option>
+                      <option value="high">فوری</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+
+              <div className="shrink-0 border-t border-slate-100 bg-white px-5 pt-3 pb-[max(0.85rem,env(safe-area-inset-bottom))]">
+                <div className="flex flex-col gap-2 sm:flex-row-reverse">
+                  <button
+                    type="button"
+                    onClick={() => void addClient()}
+                    className="ios-tap-target w-full rounded-full bg-emerald-600 py-3 text-sm font-medium text-white sm:flex-1"
+                  >
+                    ذخیره مشتری
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAddOpen(false)}
+                    className="ios-tap-target w-full rounded-full bg-slate-100 py-3 text-sm font-medium text-slate-700 sm:w-auto sm:px-5"
+                  >
+                    انصراف
+                  </button>
+                </div>
+              </div>
             </motion.div>
           </motion.div>
-        )}
+        ) : null}
       </AnimatePresence>
     </div>
   );
