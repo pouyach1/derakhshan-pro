@@ -41,18 +41,23 @@ export function decodeSession(value: string | undefined | null): ClientSessionMi
   }
 }
 
+/**
+ * UI-only session mirror. Never write `agency_auth` from JavaScript —
+ * that cookie is an HttpOnly JWT set exclusively by auth API routes.
+ * Writing a non-JWT value here previously risked clobbering the auth contract.
+ */
 export function setClientSession(session: ClientSessionMirror) {
-  const maxAge = 60 * 60 * 24 * 7;
-  document.cookie = `${AUTH_COOKIE}=${encodeURIComponent(encodeSession(session))}; path=/; max-age=${maxAge}; SameSite=Lax`;
-  try {
-    sessionStorage.setItem(SESSION_MIRROR_KEY, JSON.stringify(session));
-  } catch {
-    /* ignore */
-  }
+  mirrorAuthSession(session);
 }
 
 export function clearClientSession() {
-  document.cookie = `${AUTH_COOKIE}=; path=/; max-age=0; SameSite=Lax`;
+  // HttpOnly JWT is cleared by POST /api/auth/logout (Set-Cookie).
+  // This only clears the JS-visible UI mirror (and a non-HttpOnly leftover if any).
+  try {
+    document.cookie = `${AUTH_COOKIE}=; path=/; max-age=0; SameSite=Lax`;
+  } catch {
+    /* ignore */
+  }
   try {
     sessionStorage.removeItem(SESSION_MIRROR_KEY);
   } catch {
