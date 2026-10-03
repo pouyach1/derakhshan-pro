@@ -20,7 +20,7 @@ tar -czf "$OUT" \
   --exclude='./.wrangler' \
   --exclude='./website-forensics' \
   --exclude='./extract-*.js' \
-  --exclude='./index.js' \
+  --exclude='./scripts/forensics' \
   --exclude='./hero-video.mp4' \
   --exclude='./.env' \
   --exclude='./.env.local' \
@@ -43,6 +43,7 @@ tar -czf "$OUT" \
   ./.env.example \
   ./CPANEL_DEPLOY.md \
   ./CPANEL_DEPLOY_CHECKLIST.md \
+  ./PARSPACK_DEPLOY.md \
   ./README.md \
   ./public \
   ./src \

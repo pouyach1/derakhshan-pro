@@ -40,6 +40,7 @@ npm run dev
 | Cloudflare / OpenNext | `npm run build:cf` / `npm run deploy` | OpenNext و Wrangler با `npx` اجرا می‌شوند؛ داخل `package.json` نیستند تا اعتبارسنجی هاست Node نشکند |
 
 > روی PaaS ایرانی اگر پیام «اعتبارسنجی وابستگی‌های جاوا اسکریپت…» دیدید، این مخزن دیگر `wrangler` را در وابستگی‌ها ندارد — بعد از pull/merge یک‌بار Rebuild بزنید.
+> اگر بعد از ۱۰۰٪ ساخت `Unexpected server response: 400` دیدید: Startup File = `server.cjs`، `AUTH_SECRET` و `SEED_ADMIN_PASSWORD` را پر کنید، `HOSTNAME` را برای listen ست نکنید — راهنما: [`PARSPACK_DEPLOY.md`](./PARSPACK_DEPLOY.md).
 در production مقدارهای `AUTH_SECRET` و `SEED_ADMIN_PASSWORD` الزامی‌اند؛ fallbackهای دمو (`123456` / `1234`) فقط در development فعال‌اند.
 ## مسیرهای محصول
 

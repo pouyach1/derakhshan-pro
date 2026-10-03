@@ -8,7 +8,7 @@
 |------|--------|
 | Node.js | **22** (حداقل `>=20.9.0`) |
 | دامنه | `https://vorqen.ir` |
-| Startup file | **`server.cjs`** (هرگز `index.js` ریشه را انتخاب نکنید) |
+| Startup file | **`server.cjs`** (هرگز اسکریپت scraper یا فایل دیگر را انتخاب نکنید) |
 | Persistence | `data/agency.json` (تک‌فرآیندی) |
 | Process count | **۱** instance |
 
@@ -32,6 +32,8 @@
 | `PORT` | معمولاً توسط cPanel خودکار ست می‌شود — دستی عوض نکنید |
 | `AUTH_SECRET` | رشته تصادفی **حداقل ۳۲ کاراکتر** (نه `change-me` / `replace-with`) |
 | `SEED_ADMIN_PASSWORD` | رمز اولیه ادمین/مشاور — **حداقل ۸ کاراکتر** |
+
+هرگز `HOSTNAME` را برای listen ست نکنید — روی لینوکس نام ماشین است و پروکسی بعد از build موفق خطای `400` می‌دهد. در صورت نیاز از `HOST` / `LISTEN_HOST` / `BIND_HOST` استفاده کنید (پیش‌فرض `0.0.0.0`).
 
 اختیاری (برای دامنه واقعی خالی بگذارید):
 
@@ -99,15 +101,13 @@ npm ci --omit=dev
 ### Start / Restart
 
 - Startup File: `server.cjs`
-- دستور معادل دستی: `npm run start:node` یا `node server.cjs`
+- دستور معادل دستی: `npm run start` / `npm run start:node` یا `node server.cjs`
 - بعد از تغییر env یا کد: **Stop → Start** یا دکمه Restart در Node.js App
-
-`npm run build` را برای cPanel استفاده نکنید — آن مسیر Cloudflare/OpenNext است.
 
 | مسیر | دستور |
 |------|--------|
-| Node / cPanel | `npm run build:node` سپس `node server.cjs` |
-| Cloudflare | `npm run build` / `npm run deploy` |
+| Node / cPanel / Parspack | `npm run build` (= `build:node`) سپس `node server.cjs` |
+| Cloudflare | `npm run build:cf` / `npm run deploy` (از طریق `npx`) |
 
 ## Permissions برای `data/`
 
@@ -162,7 +162,7 @@ curl -fsS https://vorqen.ir/api/health
 
 - `website-forensics/`
 - `extract-*.js`
-- `index.js` (اسکرپر Playwright)
+- `scripts/forensics/` (اسکرپر Playwright — فقط ابزار داخلی)
 - `hero-video.mp4` ریشه
 - `.open-next/`
 - `.wrangler/`
@@ -173,8 +173,21 @@ curl -fsS https://vorqen.ir/api/health
 
 ## Troubleshooting
 
+### `Error: Unexpected server response: 400` بعد از ۱۰۰٪ ساخت
+
+بیلد ممکن است کامل شود ولی **Start** شکست بخورد. پنل Node اغلب از WebSocket برای ترمینال/لاگ استفاده می‌کند و وقتی پروسه بالا نمی‌آید یا روی آدرس اشتباه listen می‌کند، همان `400` را چند بار نشان می‌دهد.
+
+1. Startup File را روی **`server.cjs`** بگذارید (نه scraper و نه فایل دیگر)
+2. `AUTH_SECRET` (≥۳۲) و `SEED_ADMIN_PASSWORD` (≥۸) را در Environment Variables پر کنید
+3. `HOSTNAME` را برای bind ست نکنید — پیش‌فرض `0.0.0.0` درست است
+4. Stop → Start کامل؛ لاگ باید `[server.cjs] Ready on http://0.0.0.0:…` نشان دهد
+5. `https://vorqen.ir/api/health` را چک کنید
+
+جزئیات کوتاه‌تر: [`PARSPACK_DEPLOY.md`](./PARSPACK_DEPLOY.md)
+
 | مشکل | علت محتمل | کار |
 |------|-----------|-----|
+| `Unexpected server response: 400` بعد از build | Start شکست / bind اشتباه / secret | بخش بالا |
 | App استارت نمی‌شود؛ لاگ درباره AUTH_SECRET | secret ضعیف/خالی | secret قوی ≥۳۲ کاراکتر بگذارید |
 | Refusing SEED_ADMIN_PASSWORD | env خالی | حداقل ۸ کاراکتر ست کنید |
 | `Cannot find module 'next'` | deps نصب نشده | `npm ci` یا `npm ci --omit=dev` |
@@ -182,8 +195,8 @@ curl -fsS https://vorqen.ir/api/health
 | لاگین کار نمی‌کند بدون HTTPS | کوکی Secure | SSL را درست کنید |
 | داده بعد از restart پاک می‌شود | `data/` قابل نوشتن نیست یا seed دوباره | permission و بکاپ `agency.json` |
 | OOM هنگام build | RAM کم هاست | گزینه B (build لوکال) |
-| Startup روی `index.js` | اشتباه | حتماً `server.cjs` |
-| اشتباهی `npm run build` زده‌اید | خروجی Cloudflare | برای cPanel دوباره `npm run build:node` |
+| Startup اشتباه | فایل غیر از `server.cjs` | حتماً `server.cjs` |
+| خروجی Cloudflare روی هاست Node | اشتباهی `build:cf` زده‌اید | دوباره `npm run build` / `build:node` |
 
 ## بکاپ
 

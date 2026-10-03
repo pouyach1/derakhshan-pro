@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
 
 /**
- * Standalone is enabled only for the Node/cPanel/Parspack path (`npm run build:node`).
- * Cloudflare/OpenNext (`npm run build`) keeps the default Next output so its
+ * Standalone is enabled only for the Node/cPanel/Parspack path
+ * (`npm run build` / `npm run build:node`).
+ * Cloudflare/OpenNext (`npm run build:cf`) keeps the default Next output so its
  * Worker packaging is unchanged.
  */
 const useStandalone = process.env.NEXT_OUTPUT_STANDALONE === "1";
