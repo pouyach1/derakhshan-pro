@@ -22,7 +22,7 @@ type BlogFormProps = {
 };
 
 const fieldClass =
-  "h-11 w-full rounded-2xl border border-white/10 bg-ws-elevated px-4 text-sm text-ws-text outline-none transition duration-200 focus:border-sky-400/50 focus:ring-4 focus:ring-sky-500/15";
+  "h-11 w-full rounded-2xl border border-white/10 bg-ws-elevated px-4 text-sm text-ws-text outline-none transition duration-base focus:border-sky-400/50 focus:ring-4 focus:ring-sky-500/15 disabled:pointer-events-none disabled:opacity-60";
 
 type SaveState = "idle" | "saving" | "success" | "error";
 

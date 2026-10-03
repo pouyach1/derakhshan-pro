@@ -30,12 +30,40 @@
   --swatch--light-100-o20: rgba(224, 224, 224, 0.2);
   --radius--main: 1rem;
   --radius--small: 0.5rem;
+  --radius--control: 0.5rem;
+  --radius--card: 1rem;
+  --radius--panel: 1.5rem;
+  --radius--sheet: 2rem;
   --site--margin: clamp(1rem, 5vw, 3.75rem);
   --site--gutter: 1rem;
   --max-width--main: 120rem;
   --nav--height: 4rem;
   --font-primary: Rubik, Arial, sans-serif;
   --font-display: "Blauer Nue", Rubik, Verdana, sans-serif;
+
+  /*
+   * Public semantic roles — same hex values as today’s marketing surfaces.
+   * Prefer these over one-off arbitrary colors when the intent matches.
+   */
+  --public-bg: #f3f7fb;
+  --public-surface: #ffffff;
+  --public-surface-elevated: #f8fbfe;
+  --public-border: rgba(11, 58, 92, 0.1);
+  --public-text: #0b3a5c;
+  --public-muted: rgba(11, 58, 92, 0.65);
+  --public-accent: #00a3ff;
+  --public-accent-fg: #fffefc;
+
+  /* Shared semantic states (public + workspace) */
+  --state-success: #10b981;
+  --state-warning: #f59e0b;
+  --state-danger: #f43f5e;
+  --state-info: #0ea5e9;
+
+  /* Interaction timing — keep micro-feedback in the 120–300ms band */
+  --motion-fast: 150ms;
+  --motion-base: 200ms;
+  --motion-soft: 300ms;
 
   /* Admin/Agent workspace surfaces (light defaults) */
   --admin-canvas: #f4f6f8;
@@ -48,6 +76,7 @@
   --ws-text: #0b3a5c;
   --ws-muted: #64748b;
   --ws-accent: #00a3ff;
+  --ws-accent-fg: #fffefc;
 }
 
 @layer base {
@@ -62,8 +91,8 @@
   body {
     margin: 0;
     min-height: 100dvh;
-    background: #f3f7fb;
-    color: var(--swatch--brand-800);
+    background: var(--public-bg);
+    color: var(--public-text);
     font-family: var(--font-primary);
     font-size: 1rem;
     line-height: 1.5;
@@ -119,6 +148,30 @@
 
   .rio-link-underline:hover {
     background-size: 0% 1px;
+  }
+
+  /*
+   * Shared interaction primitives — adopt only where intent already matches.
+   * Durations stay in the existing 150–300ms micro-feedback band.
+   */
+  .ds-focus-ring {
+    outline: none;
+  }
+
+  .ds-focus-ring:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--public-surface), 0 0 0 4px rgba(0, 163, 255, 0.4);
+  }
+
+  .ds-disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .ds-control-transition {
+    transition-property: color, background-color, border-color, opacity, transform, box-shadow;
+    transition-duration: var(--motion-base);
+    transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
   }
 }
 
@@ -344,6 +397,7 @@ html.show-intro header {
   --ws-text: #e6edf5;
   --ws-muted: #9aa8b8;
   --ws-accent: #38bdf8;
+  --ws-accent-fg: #0b1220;
   background: var(--ws-bg);
   color: var(--ws-text);
 }
@@ -366,7 +420,12 @@ html.show-intro header {
 .workspace-dark .bg-\[\#F3F7FB\],
 .workspace-dark .bg-\[\#F3F7FB\]\/80,
 .workspace-dark .bg-\[\#F8FBFE\],
-.workspace-dark .bg-\[\#E8F1F8\] {
+.workspace-dark .bg-\[\#E8F1F8\],
+.workspace-dark .bg-\[\#F1EFEA\],
+.workspace-dark .bg-\[\#F1EFEA\]\/80,
+.workspace-dark .bg-\[\#F1EFEA\]\/70,
+.workspace-dark .bg-\[\#F1EFEA\]\/60,
+.workspace-dark .bg-\[\#F1EFEA\]\/50 {
   background-color: var(--ws-elevated) !important;
 }
 
@@ -385,8 +444,31 @@ html.show-intro header {
 .workspace-dark .text-slate-900,
 .workspace-dark .text-slate-800,
 .workspace-dark .text-admin-navy,
+.workspace-dark .text-ink,
+.workspace-dark .text-brand-800,
 .workspace-dark .text-\[\#0B3A5C\] {
   color: var(--ws-text) !important;
+}
+
+/* Soft navy opacities → muted/text hierarchy on dark */
+.workspace-dark .text-\[\#0B3A5C\]\/80,
+.workspace-dark .text-\[\#0B3A5C\]\/75,
+.workspace-dark .text-\[\#0B3A5C\]\/70 {
+  color: color-mix(in srgb, var(--ws-text) 82%, transparent) !important;
+}
+
+.workspace-dark .text-\[\#0B3A5C\]\/65,
+.workspace-dark .text-\[\#0B3A5C\]\/55,
+.workspace-dark .text-\[\#0B3A5C\]\/50,
+.workspace-dark .text-\[\#0B3A5C\]\/45,
+.workspace-dark .text-\[\#0B3A5C\]\/40,
+.workspace-dark .text-\[\#0B3A5C\]\/35 {
+  color: var(--ws-muted) !important;
+}
+
+.workspace-dark .placeholder\:text-\[\#0B3A5C\]\/40::placeholder,
+.workspace-dark .placeholder\:text-\[\#0B3A5C\]\/35::placeholder {
+  color: rgba(154, 168, 184, 0.7) !important;
 }
 
 .workspace-dark .text-slate-700,
@@ -404,7 +486,9 @@ html.show-intro header {
 .workspace-dark .border-sky-100,
 .workspace-dark .border-sky-100\/80,
 .workspace-dark .border-sky-100\/90,
-.workspace-dark .border-\[\#0B3A5C\]\/8 {
+.workspace-dark .border-\[\#0B3A5C\]\/8,
+.workspace-dark .border-\[\#0B3A5C\]\/10,
+.workspace-dark .border-\[\#0B3A5C\]\/12 {
   border-color: var(--ws-border) !important;
 }
 

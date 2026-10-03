@@ -40,9 +40,10 @@ export function AuthField({
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
         className={cn(
-          "h-12 w-full rounded-xl border-0 bg-sky-50/70 px-4 text-sm text-slate-900 outline-none transition",
+          "h-12 w-full rounded-xl border-0 bg-sky-50/70 px-4 text-sm text-slate-900 outline-none transition duration-base",
           "placeholder:text-slate-400",
-          "focus:bg-white focus:ring-2 focus:ring-blue-500/35",
+          "focus:bg-white focus:ring-2 focus:ring-sky-500/35",
+          "disabled:pointer-events-none disabled:opacity-60",
           error && "ring-2 ring-rose-400/70 focus:ring-rose-400/70",
         )}
       />
@@ -76,9 +77,10 @@ export function PasswordField({
           placeholder={placeholder}
           onChange={(e) => onChange(e.target.value)}
           className={cn(
-            "h-12 w-full rounded-xl border-0 bg-sky-50/70 pe-12 ps-4 text-sm tracking-widest text-slate-900 outline-none transition",
+            "h-12 w-full rounded-xl border-0 bg-sky-50/70 pe-12 ps-4 text-sm tracking-widest text-slate-900 outline-none transition duration-base",
             "placeholder:text-slate-400 placeholder:tracking-normal",
-            "focus:bg-white focus:ring-2 focus:ring-blue-500/35",
+            "focus:bg-white focus:ring-2 focus:ring-sky-500/35",
+            "disabled:pointer-events-none disabled:opacity-60",
             error && "ring-2 ring-rose-400/70 focus:ring-rose-400/70",
           )}
         />
@@ -86,7 +88,7 @@ export function PasswordField({
           type="button"
           aria-label={visible ? "مخفی کردن رمز عبور" : "نمایش رمز عبور"}
           onClick={() => setVisible((v) => !v)}
-          className="absolute end-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-slate-400 transition hover:bg-white hover:text-slate-700"
+          className="absolute end-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-slate-400 transition duration-base hover:bg-white hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/35"
         >
           <AnimatePresence mode="wait" initial={false}>
             <motion.span

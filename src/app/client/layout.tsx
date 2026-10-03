@@ -19,7 +19,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     <div
       dir="rtl"
       lang="fa"
-      className={`${vazirmatn.variable} ${vazirmatn.className} min-h-dvh bg-[#F3F7FB] font-vazirmatn text-[#0B3A5C] antialiased`}
+      className={`${vazirmatn.variable} ${vazirmatn.className} min-h-dvh bg-public-bg font-vazirmatn text-public-text antialiased`}
     >
       {children}
     </div>
