@@ -9,17 +9,10 @@ const useStandalone = process.env.NEXT_OUTPUT_STANDALONE === "1";
 
 const nextConfig: NextConfig = {
   ...(useStandalone ? { output: "standalone" as const } : {}),
+  // Static marketing/CRM imagery is local under /public.
+  // Runtime uploads and third-party embeds do not go through next/image remote hosts.
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "cdn.prod.website-files.com",
-      },
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-      },
-    ],
+    remotePatterns: [],
   },
   // Faster local compiles for large icon/motion barrels (Next 15.5+).
   experimental: {

@@ -223,7 +223,7 @@ export function LuxuryContactView() {
       <section className="relative isolate min-h-[88vh] overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=80"
+            src="/images/admin/hero/niavaran-penthouse.jpg"
             alt="نما معماری لوکس"
             fill
             priority
@@ -681,7 +681,7 @@ export function LuxuryContactView() {
           <div className={`${glass} overflow-hidden`}>
             <div className="relative h-64 md:h-80">
               <Image
-                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80"
+                src="/images/admin/properties/saadatabad.jpg"
                 alt={`دفتر مرکزی ${siteConfig.brand.nameFa}`}
                 fill
                 className="object-cover transition duration-700 hover:scale-105"

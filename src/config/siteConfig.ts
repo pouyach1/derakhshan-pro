@@ -222,7 +222,7 @@ export const siteConfig = {
       summary:
         "معاملات فاخر در بالاشهر کرج با دسترسی خصوصی به فایل‌های محدود و مذاکره سطح مدیریتی.",
       image:
-        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1400&q=80",
+        "/images/admin/hero/niavaran-penthouse.jpg",
       icon: "building" as SiteIconKey,
       features: [
         "بانک فایل اختصاصی پنت‌هاوس و اسکای‌ویو",
@@ -236,7 +236,7 @@ export const siteConfig = {
       summary:
         "اجاره و رهن برای سفارت‌ها، مدیران ارشد و خانواده‌های خاص با بررسی اعتبار و قرارداد امن.",
       image:
-        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
+        "/images/admin/hero/lavasan-villa.jpg",
       icon: "key" as SiteIconKey,
       features: [
         "غربالگری مستأجر و تضمین اعتبار",
@@ -250,7 +250,7 @@ export const siteConfig = {
       summary:
         "طراحی پرتفوی ملکی، تهاتر دارایی‌های بزرگ و سناریوهای خروج با نگاه سرمایه‌گذاری نهادی.",
       image:
-        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+        "/images/admin/properties/saadatabad.jpg",
       icon: "briefcase" as SiteIconKey,
       features: [
         "مدل‌سازی بازده و ریسک نقدینگی",
@@ -264,7 +264,7 @@ export const siteConfig = {
       summary:
         "بررسی سند، بازداشت، رهن و تعارضات ثبتی پیش از هر تعهد مالی برای حذف ریسک حقوقی پنهان.",
       image:
-        "https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=1200&q=80",
+        "/images/admin/hero/vanak-office.jpg",
       icon: "scale" as SiteIconKey,
       features: [
         "استعلام ثبت و وضعیت مالکیت",
@@ -278,7 +278,7 @@ export const siteConfig = {
       summary:
         "قیمت‌گذاری مبتنی بر معاملات اخیر، کیفیت ساخت، موقعیت و ظرفیت سرمایه‌ای ملک.",
       image:
-        "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80",
+        "/images/landing/features/archive.jpg",
       icon: "file-search" as SiteIconKey,
       features: [
         "گزارش کارشناسی ۴۸ ساعته",
@@ -292,7 +292,7 @@ export const siteConfig = {
       summary:
         "ارتقای ارزش ملک با طراحی داخلی سطح بالا، مدیریت پیمان و نظارت زیبایی‌شناختی.",
       image:
-        "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80",
+        "/images/admin/properties/jordan-renovated.jpg",
       icon: "paintbrush" as SiteIconKey,
       features: [
         "کانسپت معماری داخلی اختصاصی",
@@ -311,7 +311,7 @@ export const siteConfig = {
       category: "penthouse" as const,
       title: NAME_FA,
       image:
-        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1600&q=80",
+        "/images/admin/hero/niavaran-penthouse.jpg",
       details: ["۶ خواب", "استخر اختصاصی", "معامله‌شده در ۱۴۰۲"],
       location: ADDRESS_LINE1,
       valueLabel: "Luxury Penthouse",
@@ -321,7 +321,7 @@ export const siteConfig = {
       category: "penthouse" as const,
       title: NAME_FA,
       image:
-        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
+        "/images/admin/properties/saadatabad.jpg",
       details: ["۳۵۰ متر", "تراس گاردن", "معامله‌شده در ۱۴۰۲"],
       location: ADDRESS_LINE1,
       valueLabel: "Modern Glass Tower",
@@ -331,7 +331,7 @@ export const siteConfig = {
       category: "villa" as const,
       title: NAME_FA,
       image:
-        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=80",
+        "/images/admin/hero/lavasan-villa.jpg",
       details: ["فرنیش کامل", "دید ۳۶۰ درجه", "معامله‌شده در ۱۴۰۳"],
       location: ADDRESS_LINE1,
       valueLabel: "Forest Villa Architecture",
@@ -341,7 +341,7 @@ export const siteConfig = {
       category: "commercial" as const,
       title: NAME_FA,
       image:
-        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80",
+        "/images/landing/categories/commercial.jpg",
       details: ["۲۰ واحد تجاری", "معامله یکجا", "معامله‌شده در ۱۴۰۳"],
       location: ADDRESS_LINE1,
       valueLabel: "Executive Commercial Complex",
@@ -351,7 +351,7 @@ export const siteConfig = {
       category: "penthouse" as const,
       title: NAME_FA,
       image:
-        "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1600&q=80",
+        "/images/admin/properties/fereshteh-apt.jpg",
       details: ["پاگرد اختصاصی", "۴ پارکینگ", "معامله‌شده در ۱۴۰۳"],
       location: ADDRESS_LINE1,
       valueLabel: "Minimalist Interior Lounge",
@@ -361,7 +361,7 @@ export const siteConfig = {
       category: "diplomatic" as const,
       title: NAME_FA,
       image:
-        "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1600&q=80",
+        "/images/admin/hero/drake-chenaran.jpg",
       details: ["معماری اصیل", "حیاط مشجر", "معامله‌شده در ۱۴۰۳"],
       location: ADDRESS_LINE1,
       valueLabel: "Classical Estate",
@@ -374,11 +374,10 @@ export const siteConfig = {
   agents: [
     {
       id: "arsham",
-      name: SITE_INFO.managerNameFa,
+      name: "مهندس آرش شایگان",
       role: "مدیریت ارشد و استراتژیست کلان املاک",
       department: "leadership" as const,
-      image:
-        "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=1200&q=80",
+      image: "/images/admin/avatars/arash-shayegan.jpg",
       badge: "۲ میلیارد دلار حجم مدیریت سرمایه • ۱۵ سال سابقه",
       bio: "معمار استراتژی معاملات فوق‌سنگین در بالاشهر کرج؛ با تمرکز بر ساختاردهی پورتفوی‌های خصوصی و مذاکرات سطح مدیریتی.",
       philosophy:
@@ -393,11 +392,10 @@ export const siteConfig = {
     },
     {
       id: "sara",
-      name: "مهندس سارا رادمن",
+      name: "سارا نوری",
       role: "سرپرست مشاوران آپارتمان و برج‌های گوهردشت",
       department: "penthouse" as const,
-      image:
-        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80",
+      image: "/images/admin/avatars/sara-nouri.jpg",
       badge: "مشاور برتر سال ۱۴۰۲ • متخصص منطقه گوهردشت",
       bio: "متخصص آپارتمان‌های لوکس گوهردشت و عظیمیه؛ از کشف فایل‌های آف‌مارکت تا بستن واحدهای دوبلکس با استاندارد بازدید خصوصی.",
       philosophy:
@@ -411,12 +409,11 @@ export const siteConfig = {
       whatsapp: "989121000001",
     },
     {
-      id: "kamran",
-      name: "کامران شریفی",
+      id: "pouya",
+      name: "پویا شریفی",
       role: "متخصص ویلاهای فاخر ماهدشت و کمال‌شهر",
       department: "villa" as const,
-      image:
-        "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=1200&q=80",
+      image: "/images/admin/avatars/pouya-sharifi.jpg",
       badge: "رکورددار فروش ۵ ویلای سوپرلوکس",
       bio: "کارشناس ویلا و باغ‌ویلا در ماهدشت، کمال‌شهر و فردیس؛ با شبکه مالکین خصوصی و مسیر فروش محرمانه.",
       philosophy:
@@ -430,12 +427,11 @@ export const siteConfig = {
       whatsapp: "989121000002",
     },
     {
-      id: "niloufar",
-      name: "دکتر نیلوفر سپهری",
+      id: "hanieh",
+      name: "هانیه موسوی",
       role: "رئیس دپارتمان حقوقی و استعلامات ثبتی",
       department: "legal" as const,
-      image:
-        "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=1200&q=80",
+      image: "/images/admin/avatars/hanieh-mousavi.jpg",
       badge: "وکیل پایه یک دادگستری • ۰٪ ریسک حقوقی",
       bio: "مسئول پالایش حقوقی پرونده‌ها پیش از هر تعهد مالی؛ از استعلام ثبت تا بازبینی بندهای قرارداد و همراهی تا سند رسمی.",
       philosophy:
@@ -449,12 +445,11 @@ export const siteConfig = {
       whatsapp: "989121000003",
     },
     {
-      id: "reza",
-      name: "رضا محمدی",
+      id: "hamid",
+      name: "حمید رستمی",
       role: "مشاور ارشد آپارتمان‌های VIP عظیمیه",
       department: "penthouse" as const,
-      image:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=80",
+      image: "/images/admin/avatars/hamid-rostami.jpg",
       badge: "نرخ رضایت ۹۹٪ مشتریان",
       bio: "تمرکز روی واحدهای VIP عظیمیه و مهرشهر با رویکرد خدمات پس از معامله و هماهنگی کامل تحویل.",
       philosophy:
@@ -469,11 +464,10 @@ export const siteConfig = {
     },
     {
       id: "maryam",
-      name: "مریم کاظمی",
+      name: "مریم فرهادی",
       role: "استراتژیست تهاتر و معاملات دیپلماتیک",
       department: "leadership" as const,
-      image:
-        "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1200&q=80",
+      image: "/images/admin/avatars/maryam-farhadi.jpg",
       badge: "متخصص مذاکرات بین‌المللی",
       bio: "طراح ساختار تهاتر و معاملات چندطرفه برای موکلان دیپلماتیک و سرمایه‌گذاران بین‌المللی با پروتکل محرمانگی سخت.",
       philosophy:
@@ -865,19 +859,19 @@ export const siteConfig = {
     },
     gallery: [
       {
-        src: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1600&q=80",
+        src: "/images/admin/hero/niavaran-penthouse.jpg",
         alt: "معماری پنت‌هاوس مدرن",
         tag: `دفتر مرکزی ${CITY}`,
         className: "md:col-span-2 md:row-span-2 min-h-[280px] md:min-h-[520px]",
       },
       {
-        src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
+        src: "/images/admin/hero/lavasan-villa.jpg",
         alt: "طراحی داخلی مینیمال",
         tag: "سالن کنفرانس VIP",
         className: "min-h-[220px] md:min-h-[250px]",
       },
       {
-        src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+        src: "/images/admin/properties/saadatabad.jpg",
         alt: "فضای مشاوره اجرایی",
         tag: "لانژ مشاوره اختصاصی",
         className: "min-h-[220px] md:min-h-[250px]",
@@ -990,7 +984,7 @@ export const siteConfig = {
       primaryCta: "مشاهده خدمات",
       secondaryCta: "درخواست مشاوره VIP",
       image:
-        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=80",
+        "/images/admin/hero/niavaran-penthouse.jpg",
     },
     gridSection: {
       eyebrow: "شش ستون خدمات",
@@ -1127,7 +1121,7 @@ export const siteConfig = {
       primaryCta: "مشاهده پرونده‌ها",
       secondaryCta: "مشاوره فروش محرمانه",
       image:
-        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2200&q=80",
+        "/images/admin/hero/niavaran-penthouse.jpg",
     },
     filters: [
       { id: "all" as const, label: "همه معاملات" },
@@ -1192,7 +1186,7 @@ export const siteConfig = {
       subtitle:
         "تیمی از استراتژیست‌ها، مشاوران پنت‌هاوس و حقوقدانان ثبتی که مذاکره سخت، حریم خصوصی و تسلط معماری را در یک استاندارد واحد جمع کرده‌اند.",
       image:
-        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2200&q=80",
+        "/images/admin/hero/niavaran-penthouse.jpg",
     },
     filtersSection: {
       eyebrow: "دپارتمان‌ها",
