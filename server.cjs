@@ -25,44 +25,12 @@ const HOST =
   process.env.BIND_HOST ||
   "0.0.0.0";
 
-function isWeakSecret(secret) {
-  const normalized = String(secret || "")
-    .trim()
-    .toLowerCase();
-  return (
-    !secret ||
-    secret.trim().length < 32 ||
-    normalized.startsWith("change-me") ||
-    normalized.includes("replace-with")
-  );
-}
-
-function assertProductionEnv() {
-  if (process.env.NODE_ENV !== "production") return;
-
-  const errors = [];
-  const authSecret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "";
-  if (isWeakSecret(authSecret)) {
-    errors.push(
-      "AUTH_SECRET must be set to a strong random value (min 32 characters). Do not use change-me / replace-with placeholders.",
-    );
-  }
-
-  const seed = (process.env.SEED_ADMIN_PASSWORD || "").trim();
-  if (seed.length < 8) {
-    errors.push(
-      "SEED_ADMIN_PASSWORD must be set (min 8 characters) for production bootstrap and staff recovery.",
-    );
-  }
-
-  if (errors.length > 0) {
-    console.error("[server.cjs] Refusing to start — missing/invalid production environment:");
-    for (const message of errors) {
-      console.error(`  - ${message}`);
-    }
-    console.error(
-      "[server.cjs] Hint: after a 100% build, panel 'Unexpected server response: 400' usually means the process exited here or never bound 0.0.0.0:PORT.",
-    );
+function ensureProductionEnvOrExit() {
+  try {
+    const { ensureProductionEnv } = require("./scripts/production-env.cjs");
+    ensureProductionEnv({ autoBootstrap: true });
+  } catch (error) {
+    console.error(error && error.message ? error.message : error);
     process.exit(1);
   }
 }
@@ -83,8 +51,8 @@ function installProcessGuards() {
   });
 }
 
-assertProductionEnv();
 ensureDataDir();
+ensureProductionEnvOrExit();
 installProcessGuards();
 
 let next;

@@ -59,13 +59,14 @@
 - [ ] رمز ادمین را از پنل عوض کنید
 - [ ] مطمئن شوید فقط **یک** process برای اپ فعال است
 
-## اگر استارت نشد / `Unexpected server response: 400`
+## اگر استارت نشد / `Refusing production start` / `Unexpected server response: 400`
 
-بیلد تا ۱۰۰٪ ممکن است برود ولی Start بشکند؛ پنل همان `400` را تکرار می‌کند.
+لاگ اگر گفت `AUTH_SECRET` یا `SEED_ADMIN_PASSWORD` — همین دو تا در پنل خالی‌اند.
 
-1. Startup file را دوباره روی `server.cjs` چک کنید  
-2. لاگ را برای خطای `AUTH_SECRET` / `SEED_ADMIN_PASSWORD` / `Refusing to start` بخوانید  
+1. در Environment Variables بگذارید:  
+   `AUTH_SECRET` (≥۳۲) و `SEED_ADMIN_PASSWORD` (≥۸) و `NODE_ENV=production`  
+   یا در Application root: `npm run env:bootstrap`
+2. Startup file را روی `server.cjs` بگذارید (نه `next start` دستی)  
 3. مطمئن شوید `HOSTNAME` برای bind ست نشده  
-4. `node -v` داخل اپ را با نسخه Selector مقایسه کنید  
-5. حق نوشتن `data/` را چک کنید  
-6. جزئیات بیشتر: [`PARSPACK_DEPLOY.md`](./PARSPACK_DEPLOY.md) · [`CPANEL_DEPLOY.md`](./CPANEL_DEPLOY.md)
+4. Stop → Start؛ لاگ باید `Ready on http://0.0.0.0:…` یا پیام auto-bootstrap را نشان دهد  
+5. جزئیات: [`PARSPACK_DEPLOY.md`](./PARSPACK_DEPLOY.md) · [`CPANEL_DEPLOY.md`](./CPANEL_DEPLOY.md)
