@@ -1,53 +1,55 @@
 # Parspack / Node PaaS — بدون Wrangler
 
-## چرا `npm install` به Wrangler می‌خورد؟
+## چرا اعتبارسنجی وابستگی خطا می‌داد؟
 
-`wrangler` و `@opennextjs/cloudflare` برای مسیر **Cloudflare/OpenNext** لازم‌اند، نه برای اجرای استاندارد Next.js روی Node.
+پنل‌های Node ایرانی (مثل Parspack) معمولاً قبل از build، `package.json` / `package-lock.json` را **اعتبارسنجی** می‌کنند و بعد `npm install` می‌زنند.
 
-قبلاً این پکیج‌ها در `devDependencies` بودند. بیشتر PaaSها (از جمله Parspack) هنگام build با `npm install` / `npm ci` **بدون** `--omit=dev` همهٔ devDependencyها را هم نصب می‌کنند؛ در نتیجه دانلود `wrangler-*.tgz` اجباری می‌شد و خطای رجیستری `500` کل نصب را می‌خواباند.
+اگر در وابستگی‌ها پکیج‌های سنگین Cloudflare (`wrangler`, `@opennextjs/cloudflare`) باشد — حتی به‌صورت `optionalDependencies` — آینهٔ npm هاست اغلب روی دانلود `wrangler-*.tgz` خطای `500` می‌دهد و پیام زیر را نشان می‌دهد:
+
+> اعتبارسنجی وابستگی‌های جاوا اسکریپت با خطا مواجه شد…
 
 ## راه‌حل در این مخزن
 
-| پکیج | محل در `package.json` |
-|------|------------------------|
-| `next`, `react`, … | `dependencies` (runtime) |
-| `typescript`, `tailwindcss`, … | `devDependencies` (build Node) |
-| `@opennextjs/cloudflare`, `wrangler` | **`optionalDependencies`** (فقط Cloudflare) |
+| پکیج | وضعیت |
+|------|--------|
+| `next`, `react`, … | در `dependencies` |
+| `typescript`, `tailwindcss`, … | در `devDependencies` |
+| `@opennextjs/cloudflare`, `wrangler` | **دیگر در package.json نیستند** — فقط با `npx` در اسکریپت‌های Cloudflare |
 
-- با `npm ci --omit=optional` (یا `npm run ci:node`) این دو پکیج **اصلاً دانلود نمی‌شوند**.
-- اگر رجیستری روی optional شکست بخورد، npm نصب را متوقف نمی‌کند (برخلاف dependency اجباری).
-- مسیر Cloudflare با `npm run ci:cf` / `npm ci` کامل و سپس `npm run build` / `deploy` مثل قبل کار می‌کند.
-- `wrangler.jsonc`، اسکریپت‌های `build`/`deploy`/`preview` و OpenNext حذف نشده‌اند.
+- مسیر Node دیگر اصلاً نام Wrangler را در فایل‌های پکیج‌منیجر نمی‌بیند.
+- `npm run build` = `build:node` (standalone Next برای `server.cjs`).
+- Cloudflare در صورت نیاز: `npm run build:cf` / `npm run deploy` (از طریق `npx`).
 
-## دستورات Parspack
+همچنین فیلدهای `packageManager` و `overrides` که بعضی پنل‌ها را گیج می‌کنند حذف شده‌اند.
+
+## دستورات Parspack / cPanel
+
+در تنظیمات اپ:
 
 ```bash
-# Install command (در تنظیمات PaaS این را بگذارید)
-npm ci --omit=optional
-# معادل: npm run ci:node
+# Install
+npm ci
+# یا: npm run ci:node
 
-# Build command
-npm run build:node
+# Build
+npm run build
+# معادل: npm run build:node
 
-# Start command
+# Start
 node server.cjs
 # یا: npm run start:node
 ```
 
+Startup file باید **`server.cjs`** باشد — نه `index.js`.
+
 ### اگر رجیستری پارس‌هاب روی یک پکیج `500` داد
 
-مثال واقعی: `nanoid-6.0.1.tgz` → `npm error E500`.
+مثال قدیمی: `nanoid-*.tgz` → در مخزن با `src/lib/id.ts` جایگزین شده است.
 
-این خطا از کد پروژه نیست؛ آینهٔ npm هاست (`-/repository/npm/`) occasionally پکیج‌ها را با 500 برمی‌گرداند.
-
-کارهایی که در مخزن انجام شده:
-- Cloudflare tooling اختیاری است (`--omit=optional`)
-- وابستگی `nanoid` حذف و با `src/lib/id.ts` جایگزین شده تا آن tarball لازم نباشد
-
-اگر پکیج دیگری `500` داد:
+کارها:
 1. یک‌بار **Rebuild** بزنید (گاهی موقتی است)
-2. Install command را روی `npm ci --omit=optional` نگه دارید
-3. اگر همان پکیج تکرار شد، بگویید تا جایگزین/پین شود
+2. Install را روی `npm ci` نگه دارید
+3. اگر همان پکیج تکرار شد، نام پکیج را بفرستید تا پین/جایگزین شود
 
 Environment (الزامی):
 
