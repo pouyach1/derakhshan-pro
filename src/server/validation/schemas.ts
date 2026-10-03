@@ -108,20 +108,34 @@ export const clientCreateSchema = z.object({
   notes: z.array(z.object({ text: z.string(), at: z.string().optional() })).optional(),
 });
 
-export const tourCreateSchema = z.object({
-  propertyId: z.string().min(1),
-  clientName: z.string().min(2),
-  clientPhone: z.string().optional(),
-  scheduledAt: z.string().min(4),
-  dayLabel: z.string().optional(),
-  timeLabel: z.string().optional(),
-  notes: z.string().optional(),
-});
+export const tourCreateSchema = z
+  .object({
+    propertyId: z.string().min(1),
+    /** Prefer selecting an owned client; name/phone filled server-side when set. */
+    clientId: z.string().min(1).optional(),
+    clientName: z.string().min(2).optional(),
+    clientPhone: z.string().optional(),
+    scheduledAt: z.string().datetime({ offset: true }).or(z.string().min(4)),
+    dayLabel: z.string().optional(),
+    timeLabel: z.string().optional(),
+    notes: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (!data.clientId && !(data.clientName && data.clientName.trim().length >= 2)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "انتخاب مشتری یا نام مشتری الزامی است",
+        path: ["clientName"],
+      });
+    }
+  });
 
 export const tourUpdateSchema = z.object({
   status: z.enum(["upcoming", "completed", "canceled"]).optional(),
   notes: z.string().optional(),
   scheduledAt: z.string().optional(),
+  dayLabel: z.string().optional(),
+  timeLabel: z.string().optional(),
 });
 
 export const contactSchema = z.object({

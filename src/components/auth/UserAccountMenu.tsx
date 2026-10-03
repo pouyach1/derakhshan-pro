@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, LogOut, UserRound } from "lucide-react";
+import { CalendarDays, ChevronDown, LogOut, UserRound } from "lucide-react";
 import AuthToast from "@/components/auth/AuthToast";
 import {
   ROLE_LABELS,
@@ -66,12 +67,18 @@ export default function UserAccountMenu({
 
   const name = displayNameForSession(session);
   const roleLabel = ROLE_LABELS[session.role];
+  const isAgent = session.role === "agent";
 
   function logout() {
     setOpen(false);
     setToast(true);
     onNavigated?.();
     logoutSafely(router, { delayMs: 450 });
+  }
+
+  function goProfile() {
+    setOpen(false);
+    onNavigated?.();
   }
 
   return (
@@ -127,21 +134,65 @@ export default function UserAccountMenu({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 6, scale: 0.98 }}
               transition={{ duration: 0.18 }}
-              className="absolute end-0 top-[calc(100%+0.5rem)] z-50 w-56 overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xl shadow-slate-900/10"
+              className={cn(
+                "absolute end-0 top-[calc(100%+0.5rem)] z-50 w-56 overflow-hidden rounded-2xl border shadow-xl",
+                tone === "dark"
+                  ? "border-white/10 bg-[#121821] shadow-black/40"
+                  : "border-slate-200/80 bg-white shadow-slate-900/10",
+              )}
             >
-              <div className="border-b border-slate-100 px-3.5 py-3">
-                <p className="truncate font-vazirmatn text-sm font-semibold text-slate-900">
+              <div
+                className={cn(
+                  "border-b px-3.5 py-3",
+                  tone === "dark" ? "border-white/10" : "border-slate-100",
+                )}
+              >
+                <p
+                  className={cn(
+                    "truncate font-vazirmatn text-sm font-semibold",
+                    tone === "dark" ? "text-ws-text" : "text-slate-900",
+                  )}
+                >
                   {name} - {roleLabel}
                 </p>
-                <p className="mt-0.5 truncate font-vazirmatn text-[11px] text-slate-400" dir="ltr">
+                <p
+                  className={cn(
+                    "mt-0.5 truncate font-vazirmatn text-[11px]",
+                    tone === "dark" ? "text-ws-muted" : "text-slate-400",
+                  )}
+                  dir="ltr"
+                >
                   {session.phone}
                 </p>
               </div>
+
+              {isAgent ? (
+                <Link
+                  href="/agent/profile"
+                  role="menuitem"
+                  onClick={goProfile}
+                  className={cn(
+                    "flex w-full items-center gap-2 px-3.5 py-3 font-vazirmatn text-sm transition",
+                    tone === "dark"
+                      ? "text-ws-text hover:bg-white/5"
+                      : "text-slate-700 hover:bg-slate-50",
+                  )}
+                >
+                  <CalendarDays className="h-4 w-4" />
+                  پروفایل و بازدیدها
+                </Link>
+              ) : null}
+
               <button
                 type="button"
                 role="menuitem"
                 onClick={logout}
-                className="flex w-full items-center gap-2 px-3.5 py-3 font-vazirmatn text-sm text-rose-700 transition hover:bg-rose-50"
+                className={cn(
+                  "flex w-full items-center gap-2 px-3.5 py-3 font-vazirmatn text-sm transition",
+                  tone === "dark"
+                    ? "text-rose-300 hover:bg-rose-500/10"
+                    : "text-rose-700 hover:bg-rose-50",
+                )}
               >
                 <LogOut className="h-4 w-4" />
                 خروج از حساب
