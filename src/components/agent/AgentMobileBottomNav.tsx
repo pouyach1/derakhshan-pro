@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
-import { Menu } from "lucide-react";
+import { ExternalLink, Menu } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AGENT_MORE_NAV, AGENT_PRIMARY_NAV } from "@/config/agent-nav";
 import { IOS_PAGE_SPRING, IOS_TAP_SPRING } from "@/lib/motion/ios";
@@ -150,6 +150,31 @@ export default function AgentMobileBottomNav({ isDark = true }: AgentMobileBotto
               );
             })}
           </div>
+
+          {/* Utility: public site — full-width so it stays clear of bottom-tab chrome */}
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="مشاهده سایت عمومی"
+            onClick={() => {
+              vibrate(8);
+              setMoreOpen(false);
+            }}
+            className={cn(
+              "group ios-tap-target mt-1 flex min-h-12 items-center gap-3 rounded-2xl px-3.5 py-3 text-sm font-semibold transition duration-150",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/50",
+              isDark
+                ? "bg-white/5 text-ws-text ring-1 ring-white/10 hover:bg-white/10"
+                : "bg-[#F3F7FB] text-[#0B3A5C] ring-1 ring-slate-200/70 hover:bg-white",
+            )}
+          >
+            <ExternalLink
+              className="h-5 w-5 opacity-80 transition duration-150 group-hover:translate-x-[-2px] group-hover:opacity-100"
+              strokeWidth={1.9}
+            />
+            <span>مشاهده سایت</span>
+          </a>
 
           <motion.div
             whileTap={{ scale: 0.99 }}
