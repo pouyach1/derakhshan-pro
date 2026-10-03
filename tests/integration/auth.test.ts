@@ -75,7 +75,7 @@ describe("Authentication API", () => {
   });
 
   it("logout clears the auth cookie", async () => {
-    const response = await logout(makeRequest("/api/auth/logout", { method: "POST" }));
+    const response = await logout();
     expect(response.status).toBe(200);
     const setCookie = response.headers.getSetCookie?.() ?? [];
     expect(setCookie.some((c) => c.includes(`${authCookieName()}=`) && /Max-Age=0|max-age=0/i.test(c))).toBe(

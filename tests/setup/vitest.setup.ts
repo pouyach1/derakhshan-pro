@@ -4,7 +4,6 @@ import path from "node:path";
 import { beforeEach, afterAll } from "vitest";
 import "@testing-library/jest-dom/vitest";
 
-process.env.NODE_ENV = process.env.NODE_ENV || "test";
 process.env.AUTH_SECRET =
   process.env.AUTH_SECRET || "vitest-auth-secret-derakhshan-pro-32chars";
 process.env.SEED_ADMIN_PASSWORD =

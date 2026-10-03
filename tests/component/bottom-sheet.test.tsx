@@ -5,7 +5,7 @@ import BottomSheet from "@/components/mobile/BottomSheet";
 
 vi.mock("framer-motion", async () => {
   const React = await import("react");
-  const stripMotion = <T extends Record<string, unknown>>(props: T) => {
+  const stripMotion = (props: Record<string, unknown>) => {
     const {
       animate: _a,
       exit: _e,
@@ -17,7 +17,10 @@ vi.mock("framer-motion", async () => {
       style,
       ...rest
     } = props;
-    return { ...rest, style };
+    return {
+      ...rest,
+      ...(style && typeof style === "object" ? { style: style as React.CSSProperties } : {}),
+    };
   };
   return {
     AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
@@ -26,7 +29,7 @@ vi.mock("framer-motion", async () => {
         children,
         ...props
       }: React.ButtonHTMLAttributes<HTMLButtonElement> & Record<string, unknown>) => (
-        <button type="button" {...stripMotion(props)}>
+        <button type="button" {...stripMotion(props as Record<string, unknown>)}>
           {children}
         </button>
       ),
@@ -36,7 +39,7 @@ vi.mock("framer-motion", async () => {
       }: React.HTMLAttributes<HTMLElement> & { children?: React.ReactNode } & Record<
         string,
         unknown
-      >) => <div {...stripMotion(props)}>{children}</div>,
+      >) => <div {...stripMotion(props as Record<string, unknown>)}>{children}</div>,
     },
     useMotionValue: () => ({ set: vi.fn(), get: () => 0 }),
     useTransform: () => 1,
