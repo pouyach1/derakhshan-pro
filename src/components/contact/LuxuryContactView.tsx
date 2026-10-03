@@ -310,7 +310,7 @@ export function LuxuryContactView() {
         <motion.section
           initial="hidden"
           whileInView="show"
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.2 }}
           variants={{
             hidden: {},
             show: {
@@ -365,7 +365,7 @@ export function LuxuryContactView() {
           id="split-contact"
           initial={{ opacity: 0, y: 48 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.15 }}
+          viewport={{ once: true, amount: 0.15 }}
           transition={spring}
           className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]"
         >
@@ -589,7 +589,7 @@ export function LuxuryContactView() {
                   }
                   initial={{ opacity: 0, y: 36 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: false, amount: 0.2 }}
+                  viewport={{ once: true, amount: 0.2 }}
                   transition={spring}
                   whileHover={
                     reduceMotion ? undefined : { scale: 1.03, rotate: 0.5 }
@@ -625,7 +625,7 @@ export function LuxuryContactView() {
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.3 }}
             transition={spring}
             className="mb-12 max-w-2xl"
           >
@@ -643,7 +643,7 @@ export function LuxuryContactView() {
                 key={stat.label}
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.3 }}
+                viewport={{ once: true, amount: 0.3 }}
                 transition={spring}
                 whileHover={
                   reduceMotion ? undefined : { scale: 1.03, rotate: 0.5 }
@@ -674,7 +674,7 @@ export function LuxuryContactView() {
           id="branch"
           initial={{ opacity: 0, y: 48 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={spring}
           className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]"
         >
@@ -789,7 +789,7 @@ export function LuxuryContactView() {
         <motion.section
           initial={{ opacity: 0, y: 48 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={spring}
           className="mx-auto max-w-3xl"
         >

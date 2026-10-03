@@ -2,6 +2,7 @@
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Bath, BedDouble, MapPin, Ruler, ShieldCheck, Sparkles } from "lucide-react";
@@ -10,13 +11,17 @@ import { fallbackImage, listingTypeLabel, propertyStatusLabel } from "@/lib/mone
 import { listPropertyImages } from "@/lib/property-images";
 import { siteConfig } from "@/config/siteConfig";
 import AgentProfileLink from "@/components/agents/AgentProfileLink";
-import PropertyLightbox from "@/components/listings/PropertyLightbox";
 import PropertyAparatVideos from "@/components/listings/PropertyAparatVideos";
 import PropertyPrice from "@/components/listings/PropertyPrice";
 import PublicLoadError from "@/components/listings/PublicLoadError";
 import MobilePropertyDetail from "@/components/mobile/MobilePropertyDetail";
 import { IOS_PAGE_SPRING, IOS_TAP_SPRING } from "@/lib/motion/ios";
 import type { PropertyWithAgent } from "@/server/services/agents-public";
+
+const PropertyLightbox = dynamic(
+  () => import("@/components/listings/PropertyLightbox"),
+  { ssr: false },
+);
 
 function logDetailError(error: unknown) {
   if (process.env.NODE_ENV === "development") {
@@ -130,14 +135,16 @@ export default function PropertyDetailView({ id }: { id: string }) {
   return (
     <>
       <MobilePropertyDetail item={item} failed={false} onRetry={() => void load()} />
-      <PropertyLightbox
-        open={galleryOpen}
-        images={gallery}
-        title={item.title}
-        code={item.code}
-        startIndex={galleryIndex}
-        onClose={() => setGalleryOpen(false)}
-      />
+      {galleryOpen ? (
+        <PropertyLightbox
+          open={galleryOpen}
+          images={gallery}
+          title={item.title}
+          code={item.code}
+          startIndex={galleryIndex}
+          onClose={() => setGalleryOpen(false)}
+        />
+      ) : null}
       <div className="hidden bg-[#F3F7FB] text-[#0B3A5C] lg:block">
         <div className="relative h-[68vh] min-h-[400px] max-h-[780px] overflow-hidden">
           <button

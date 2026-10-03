@@ -179,7 +179,7 @@ export default function ContactFormSection() {
         <motion.div
           initial={reduceMotion ? false : { opacity: 0, x: 48, filter: "blur(8px)" }}
           whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-          viewport={{ once: false, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={softSpring}
           className="lg:col-span-5"
         >
@@ -207,7 +207,7 @@ export default function ContactFormSection() {
                     reduceMotion ? false : { opacity: 0, y: 24, filter: "blur(8px)" }
                   }
                   whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  viewport={{ once: false, amount: 0.5 }}
+                  viewport={{ once: true, amount: 0.5 }}
                   transition={{ ...spring, delay: reduceMotion ? 0 : index * 0.05 }}
                   className="ml-1 inline-block"
                 >
@@ -219,7 +219,7 @@ export default function ContactFormSection() {
           <motion.p
             initial={reduceMotion ? false : { opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.5 }}
+            viewport={{ once: true, amount: 0.5 }}
             transition={{ ...softSpring, delay: 0.25 }}
             className="mt-4 max-w-md font-vazirmatn text-base leading-8 text-slate-600"
           >
@@ -263,7 +263,7 @@ export default function ContactFormSection() {
         <motion.div
           initial={reduceMotion ? false : { opacity: 0, y: 48, scale: 0.97 }}
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: false, amount: 0.15 }}
+          viewport={{ once: true, amount: 0.15 }}
           transition={softSpring}
           className="lg:col-span-7"
           style={{ perspective: 1200 }}

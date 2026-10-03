@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Thin fixed reading-progress bar — light-blue Derakhshan accent.
  * Tracks scroll through the main article body when a target id is provided.
+ * Updates React state only when the rounded percent changes (avoids per-frame rerenders).
  */
 export default function ArticleReadingProgress({
   targetId = "article-body",
@@ -12,6 +13,7 @@ export default function ArticleReadingProgress({
   targetId?: string;
 }) {
   const [progress, setProgress] = useState(0);
+  const lastRounded = useRef(-1);
 
   useEffect(() => {
     let frame = 0;
@@ -19,22 +21,27 @@ export default function ArticleReadingProgress({
     const update = () => {
       frame = 0;
       const target = document.getElementById(targetId);
+      let next = 0;
       if (!target) {
         const scrollTop = window.scrollY;
         const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        setProgress(docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0);
-        return;
+        next = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
+      } else {
+        const rect = target.getBoundingClientRect();
+        const targetTop = window.scrollY + rect.top;
+        const targetHeight = target.offsetHeight;
+        const view = window.innerHeight;
+        const start = targetTop - view * 0.15;
+        const end = targetTop + targetHeight - view * 0.35;
+        const range = Math.max(1, end - start);
+        const value = ((window.scrollY - start) / range) * 100;
+        next = Math.min(100, Math.max(0, value));
       }
 
-      const rect = target.getBoundingClientRect();
-      const targetTop = window.scrollY + rect.top;
-      const targetHeight = target.offsetHeight;
-      const view = window.innerHeight;
-      const start = targetTop - view * 0.15;
-      const end = targetTop + targetHeight - view * 0.35;
-      const range = Math.max(1, end - start);
-      const value = ((window.scrollY - start) / range) * 100;
-      setProgress(Math.min(100, Math.max(0, value)));
+      const rounded = Math.round(next);
+      if (rounded === lastRounded.current) return;
+      lastRounded.current = rounded;
+      setProgress(next);
     };
 
     const onScroll = () => {
