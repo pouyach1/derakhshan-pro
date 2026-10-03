@@ -39,8 +39,18 @@ npm run dev
 | Node / cPanel / Parspack (`vorqen.ir`) | `npm ci` → `npm run build` → Startup `server.cjs` | [`PARSPACK_DEPLOY.md`](./PARSPACK_DEPLOY.md) · [`CPANEL_DEPLOY.md`](./CPANEL_DEPLOY.md) · [`CPANEL_DEPLOY_CHECKLIST.md`](./CPANEL_DEPLOY_CHECKLIST.md) |
 | Cloudflare / OpenNext | `npm run build:cf` / `npm run deploy` | OpenNext و Wrangler با `npx` اجرا می‌شوند؛ داخل `package.json` نیستند تا اعتبارسنجی هاست Node نشکند |
 
-> روی PaaS ایرانی اگر پیام «اعتبارسنجی وابستگی‌های جاوا اسکریپت…» دیدید، این مخزن دیگر `wrangler` را در وابستگی‌ها ندارد — بعد از pull/merge یک‌بار Rebuild بزنید.
-> اگر بعد از ۱۰۰٪ ساخت `Unexpected server response: 400` دیدید: Startup File = `server.cjs`، `AUTH_SECRET` و `SEED_ADMIN_PASSWORD` را پر کنید، `HOSTNAME` را برای listen ست نکنید — راهنما: [`PARSPACK_DEPLOY.md`](./PARSPACK_DEPLOY.md).
+> اگر لاگ هنوز این را نشان می‌دهد:
+> ```
+> > next start
+> [env] Refusing production start — missing/invalid environment
+> ```
+> یعنی **کد روی هاست قدیمی است** (قبل از 2.0.4). باید از `main` دوباره آپلود/pull کنید، بعد:
+> ```bash
+> npm ci
+> npm run build
+> ```
+> Startup File = `server.cjs` یا `npm start` (باید `start-production.cjs` را نشان دهد، نه `next start`).
+> یا فوری در پنل `AUTH_SECRET` + `SEED_ADMIN_PASSWORD` بگذارید — حتی روی کد قدیمی کار می‌کند.
 در production مقدارهای `AUTH_SECRET` و `SEED_ADMIN_PASSWORD` الزامی‌اند؛ fallbackهای دمو (`123456` / `1234`) فقط در development فعال‌اند.
 ## مسیرهای محصول
 

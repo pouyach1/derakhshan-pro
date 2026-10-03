@@ -126,15 +126,24 @@ function autoBootstrapProductionSecrets() {
     : crypto.randomBytes(48).toString("hex");
   const seedPassword = status.seedOk
     ? status.seed
-    : crypto.randomBytes(9).toString("base64url"); // ~12 chars, URL-safe
+    : crypto.randomBytes(9).toString("base64url");
 
-  const filePath = writeProductionEnvFile(authSecret, seedPassword);
+  let filePath = "";
+  try {
+    filePath = writeProductionEnvFile(authSecret, seedPassword);
+  } catch (error) {
+    console.warn(
+      "[production-env] Could not write data/production.env; continuing in-memory:",
+      error && error.message ? error.message : error,
+    );
+  }
+
   process.env.AUTH_SECRET = authSecret;
   process.env.SEED_ADMIN_PASSWORD = seedPassword;
 
   console.warn("[production-env] =====================================================");
   console.warn("[production-env] Missing production secrets — auto-created once:");
-  console.warn(`[production-env]   file: ${filePath}`);
+  if (filePath) console.warn(`[production-env]   file: ${filePath}`);
   console.warn(`[production-env]   AUTH_SECRET: (generated, ${authSecret.length} chars)`);
   console.warn(`[production-env]   SEED_ADMIN_PASSWORD: ${seedPassword}`);
   console.warn("[production-env] ورود ادمین: admin@vorqen.ir با همین SEED_ADMIN_PASSWORD");
