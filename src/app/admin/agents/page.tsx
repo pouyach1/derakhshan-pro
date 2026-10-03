@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { Mail, Phone } from "lucide-react";
+import AdvisorAvatar from "@/components/agents/AdvisorAvatar";
 import { api } from "@/lib/api";
-import { fallbackImage } from "@/lib/money";
 import { cn } from "@/lib/utils";
 
 type AgentRow = {
@@ -67,14 +66,8 @@ export default function AgentsPage() {
             className="rounded-[1.5rem] bg-admin-card p-4 shadow-sm ring-1 ring-slate-200/70 sm:p-5"
           >
             <div className="flex items-start gap-3">
-              <Link href={`/agents/${agent.id}`} className="shrink-0">
-                <Image
-                  src={fallbackImage(agent.avatarUrl)}
-                  alt={agent.name}
-                  width={64}
-                  height={64}
-                  className="h-14 w-14 rounded-full object-cover ring-2 ring-white sm:h-16 sm:w-16"
-                />
+              <Link href={`/agents/${agent.id}`} className="shrink-0" aria-label={`پروفایل ${agent.name}`}>
+                <AdvisorAvatar name={agent.name} avatarUrl={agent.avatarUrl} size="lg" />
               </Link>
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">

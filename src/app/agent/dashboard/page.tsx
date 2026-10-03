@@ -17,7 +17,6 @@ import {
 import { useAgentScope } from "@/hooks/useAgentScope";
 import { siteConfig } from "@/config/siteConfig";
 import { api } from "@/lib/api";
-import { fallbackImage } from "@/lib/money";
 import { mapClientToAgent, mapPropertyToAgent } from "@/lib/mappers";
 import type { ClientRecord, PropertyRecord, TourRecord } from "@/server/db/store";
 
@@ -47,7 +46,7 @@ export default function AgentDashboardPage() {
             ...fallbackProfile,
             id: me.id,
             name: me.name,
-            avatar: fallbackImage(me.avatarUrl),
+            avatar: me.avatarUrl?.trim() || "",
             monthlyClosed: me.dealsClosed * 1_000_000_000 || fallbackProfile.monthlyClosed,
           });
         }

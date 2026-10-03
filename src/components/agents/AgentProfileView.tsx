@@ -3,17 +3,19 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { BadgeCheck, Building2, Phone, Sparkles } from "lucide-react";
+import AdvisorAvatar from "@/components/agents/AdvisorAvatar";
 import { api } from "@/lib/api";
-import { fallbackImage } from "@/lib/money";
 import BackButton from "@/components/navigation/BackButton";
 import CompactPropertyCard from "@/components/mobile/CompactPropertyCard";
 import type { PublicAgentProfile } from "@/lib/agents-public";
 import type { PropertyWithAgent } from "@/server/services/agents-public";
 import { siteConfig } from "@/config/siteConfig";
+import { cn } from "@/lib/utils";
 
 export default function AgentProfileView({ id }: { id: string }) {
+  const reduceMotion = useReducedMotion();
   const [agent, setAgent] = useState<PublicAgentProfile | null>(null);
   const [files, setFiles] = useState<PropertyWithAgent[]>([]);
   const [error, setError] = useState("");
@@ -54,44 +56,92 @@ export default function AgentProfileView({ id }: { id: string }) {
     );
   }
 
+  const hasPhoto = Boolean(agent.avatarUrl?.trim());
+
   return (
     <div className="bg-[#F3F7FB] text-[#0B3A5C]" dir="rtl">
       <div className="rio-container py-6 md:py-10">
         <BackButton fallbackHref="/listings" label="بازگشت به آرشیو" tone="light" />
 
         <motion.section
-          initial={{ opacity: 0, y: 16 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.22 }}
           className="mt-5 overflow-hidden rounded-[2rem] bg-white shadow-[0_28px_80px_-48px_rgba(11,58,92,0.4)] ring-1 ring-[#0B3A5C]/8"
         >
+          {/* Mobile: centered identity; Desktop: side photo column */}
           <div className="grid gap-0 lg:grid-cols-[280px_minmax(0,1fr)]">
-            <div className="relative min-h-[18rem] bg-[#0B3A5C] lg:min-h-full">
-              <Image
-                src={fallbackImage(agent.avatarUrl)}
-                alt={agent.name}
-                fill
-                className="object-cover opacity-90"
-                sizes="320px"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0B3A5C] via-[#0B3A5C]/25 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-5">
-                <p className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold text-sky-100 backdrop-blur">
+            <div
+              className={cn(
+                "relative flex flex-col items-center justify-end bg-[#0B3A5C] px-5 pb-6 pt-8 lg:min-h-[22rem] lg:items-stretch lg:justify-end lg:p-0",
+              )}
+            >
+              {hasPhoto ? <DesktopAgentPhoto src={agent.avatarUrl} name={agent.name} /> : null}
+
+              {/* Mobile / fallback identity */}
+              <div className="relative z-10 flex flex-col items-center lg:hidden">
+                <AdvisorAvatar
+                  name={agent.name}
+                  avatarUrl={agent.avatarUrl}
+                  size="hero"
+                  className="ring-[3px] ring-white/30"
+                />
+                <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold text-sky-100 backdrop-blur">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  {agent.badge}
+                </p>
+              </div>
+
+              {!hasPhoto ? (
+                <div className="relative z-10 hidden flex-1 flex-col items-center justify-center gap-3 p-8 lg:flex">
+                  <AdvisorAvatar
+                    name={agent.name}
+                    avatarUrl={null}
+                    size="hero"
+                    className="bg-white/10 text-white ring-white/25"
+                  />
+                </div>
+              ) : null}
+
+              <div className="absolute inset-x-0 bottom-0 z-10 hidden p-5 lg:block">
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0B3A5C] via-[#0B3A5C]/40 to-transparent" />
+                <p className="relative inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold text-sky-100 backdrop-blur">
                   <Sparkles className="h-3.5 w-3.5" />
                   {agent.badge}
                 </p>
               </div>
             </div>
 
-            <div className="p-6 sm:p-8 md:p-10">
-              <p className="text-[11px] font-semibold tracking-[0.18em] text-sky-600">
+            <div className="p-5 sm:p-8 md:p-10">
+              <p className="text-center text-[11px] font-semibold tracking-[0.18em] text-sky-600 lg:text-start">
                 رزومه و پروفایل مشاور
               </p>
-              <h1 className="mt-2 font-vazirmatn text-3xl font-bold tracking-tight md:text-4xl">
+              <h1 className="mt-2 text-center font-vazirmatn text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl lg:text-start">
                 {agent.name}
               </h1>
-              <p className="mt-2 text-base font-semibold text-[#0B3A5C]/75">{agent.title}</p>
-              <p className="mt-1 text-sm text-[#0B3A5C]/55">{agent.department}</p>
+              <p className="mt-2 text-center text-base font-semibold text-[#0B3A5C]/75 lg:text-start">
+                {agent.title}
+              </p>
+              <p className="mt-1 text-center text-sm text-[#0B3A5C]/55 lg:text-start">
+                {agent.department}
+              </p>
+
+              <div className="mt-5 grid grid-cols-2 gap-2 lg:hidden">
+                <a
+                  href={`tel:${agent.phone}`}
+                  className="ios-tap-target inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-sky-500 px-3 text-sm font-bold text-white"
+                >
+                  <Phone className="h-4 w-4" />
+                  تماس
+                </a>
+                <Link
+                  href="/listings"
+                  className="ios-tap-target inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#0B3A5C] px-3 text-sm font-bold text-white"
+                >
+                  <Building2 className="h-4 w-4" />
+                  آرشیو
+                </Link>
+              </div>
 
               <p className="mt-6 text-base leading-9 text-[#0B3A5C]/85">{agent.bio}</p>
               <p className="mt-4 rounded-2xl bg-[#F3F7FB] px-4 py-3 text-sm leading-8 text-[#0B3A5C]/75">
@@ -122,7 +172,7 @@ export default function AgentProfileView({ id }: { id: string }) {
                 ))}
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-8 hidden flex-wrap gap-3 lg:flex">
                 <a
                   href={`tel:${agent.phone}`}
                   className="inline-flex items-center gap-2 rounded-full bg-sky-500 px-5 py-2.5 text-sm font-bold text-white shadow-[0_14px_36px_-18px_rgba(0,163,255,0.9)]"
@@ -160,14 +210,33 @@ export default function AgentProfileView({ id }: { id: string }) {
               فعلاً فایل منتشرشده‌ای برای این مشاور نیست.
             </p>
           ) : (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-3">
               {files.map((item) => (
-                <CompactPropertyCard key={item.id} item={item} variant="featured" />
+                <CompactPropertyCard key={item.id} item={item} variant="grid" />
               ))}
             </div>
           )}
         </section>
       </div>
+    </div>
+  );
+}
+
+function DesktopAgentPhoto({ src, name }: { src: string; name: string }) {
+  const [broken, setBroken] = useState(false);
+  if (broken || !src.trim()) return null;
+  return (
+    <div className="absolute inset-0 hidden lg:block">
+      {/* next/image fill for desktop column */}
+      <Image
+        src={src}
+        alt={name}
+        fill
+        className="object-cover opacity-90"
+        sizes="320px"
+        priority
+        onError={() => setBroken(true)}
+      />
     </div>
   );
 }

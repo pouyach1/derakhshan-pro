@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
@@ -13,6 +12,7 @@ import {
 } from "lucide-react";
 import FeaturedPropertyHero from "@/components/admin/FeaturedPropertyHero";
 import MostViewedProperties from "@/components/admin/MostViewedProperties";
+import AdvisorAvatar from "@/components/agents/AdvisorAvatar";
 import type { FeaturedProperty, ViewedProperty } from "@/config/admin";
 import { SITE_INFO } from "@/config/SITE_INFO";
 import { cn } from "@/lib/utils";
@@ -207,13 +207,7 @@ export default function AdminDashboardPage() {
               className="px-4 py-3.5"
             >
               <div className="flex items-center gap-3">
-                <Image
-                  src={fallbackImage(agent.avatarUrl)}
-                  alt={agent.name}
-                  width={44}
-                  height={44}
-                  className="h-11 w-11 rounded-full object-cover ring-2 ring-white"
-                />
+                <AdvisorAvatar name={agent.name} avatarUrl={agent.avatarUrl} size="md" />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
                     <p className="truncate text-sm font-semibold text-admin-navy">{agent.name}</p>
@@ -265,7 +259,7 @@ export default function AdminDashboardPage() {
                 <motion.tr key={agent.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 + index * 0.04 }} className="border-t border-slate-100">
                   <td className="px-4 py-3.5">
                     <div className="flex items-center gap-3">
-                      <Image src={fallbackImage(agent.avatarUrl)} alt={agent.name} width={40} height={40} className="h-10 w-10 rounded-full object-cover" />
+                      <AdvisorAvatar name={agent.name} avatarUrl={agent.avatarUrl} size="md" />
                       <span className="font-medium text-admin-navy">{agent.name}</span>
                     </div>
                   </td>

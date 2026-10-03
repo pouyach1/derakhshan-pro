@@ -1,9 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { UserRound } from "lucide-react";
-import { fallbackImage } from "@/lib/money";
+import AdvisorAvatar from "@/components/agents/AdvisorAvatar";
 import { cn } from "@/lib/utils";
 import type { PropertyAgentSummary } from "@/server/services/agents-public";
 
@@ -34,21 +32,15 @@ export default function AgentProfileLink({
         className,
       )}
     >
-      <span className="relative h-7 w-7 shrink-0 overflow-hidden rounded-full bg-sky-100">
-        {agent.avatarUrl ? (
-          <Image
-            src={fallbackImage(agent.avatarUrl)}
-            alt=""
-            fill
-            className="object-cover"
-            sizes="28px"
-          />
-        ) : (
-          <span className="flex h-full w-full items-center justify-center text-sky-700">
-            <UserRound className="h-3.5 w-3.5" />
-          </span>
+      <AdvisorAvatar
+        name={agent.name}
+        avatarUrl={agent.avatarUrl}
+        size="sm"
+        decorative
+        className={cn(
+          tone === "dark" || tone === "onMedia" ? "bg-white/15 text-white ring-white/25" : undefined,
         )}
-      </span>
+      />
       <span className="min-w-0 text-start">
         <span
           className={cn(
