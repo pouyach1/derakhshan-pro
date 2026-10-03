@@ -1,9 +1,11 @@
 import BlogBackLink from "@/components/blog/admin/BlogBackLink";
 import BlogForm from "@/components/blog/admin/BlogForm";
+import { requireSession } from "@/server/http/guard";
 
 const BASE_PATH = "/admin/blog";
 
-export default function AdminBlogNewPage() {
+export default async function AdminBlogNewPage() {
+  const session = await requireSession(undefined, ["admin"]);
   return (
     <div className="space-y-5 font-vazirmatn" dir="rtl">
       <div>
@@ -16,7 +18,7 @@ export default function AdminBlogNewPage() {
       <BlogForm
         mode="create"
         basePath={BASE_PATH}
-        author={{ id: "admin-1", name: "تحریریه درخشان" }}
+        author={{ id: session.id, name: session.name || "تحریریه درخشان" }}
       />
     </div>
   );
