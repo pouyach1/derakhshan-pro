@@ -36,10 +36,10 @@ npm run dev
 
 | مسیر | دستور | راهنما |
 |------|--------|--------|
-| Node / cPanel / Parspack (`vorqen.ir`) | `npm run ci:node` → `npm run build:node` → Startup `server.cjs` | [`PARSPACK_DEPLOY.md`](./PARSPACK_DEPLOY.md) · [`CPANEL_DEPLOY.md`](./CPANEL_DEPLOY.md) · [`CPANEL_DEPLOY_CHECKLIST.md`](./CPANEL_DEPLOY_CHECKLIST.md) |
-| Cloudflare / OpenNext | `npm run ci:cf` → `npm run build` / `npm run deploy` | `wrangler` و OpenNext در `optionalDependencies`؛ حذف نشده‌اند |
+| Node / cPanel / Parspack (`vorqen.ir`) | `npm ci` → `npm run build` → Startup `server.cjs` | [`PARSPACK_DEPLOY.md`](./PARSPACK_DEPLOY.md) · [`CPANEL_DEPLOY.md`](./CPANEL_DEPLOY.md) · [`CPANEL_DEPLOY_CHECKLIST.md`](./CPANEL_DEPLOY_CHECKLIST.md) |
+| Cloudflare / OpenNext | `npm run build:cf` / `npm run deploy` | OpenNext و Wrangler با `npx` اجرا می‌شوند؛ داخل `package.json` نیستند تا اعتبارسنجی هاست Node نشکند |
 
-> روی PaaS اگر `npm install` به‌خاطر `wrangler` با خطای 500 می‌خورد، از `npm ci --omit=optional` (یا `npm run ci:node`) استفاده کنید تا dependencyهای Cloudflare اصلاً دانلود نشوند.
+> روی PaaS ایرانی اگر پیام «اعتبارسنجی وابستگی‌های جاوا اسکریپت…» دیدید، این مخزن دیگر `wrangler` را در وابستگی‌ها ندارد — بعد از pull/merge یک‌بار Rebuild بزنید.
 در production مقدارهای `AUTH_SECRET` و `SEED_ADMIN_PASSWORD` الزامی‌اند؛ fallbackهای دمو (`123456` / `1234`) فقط در development فعال‌اند.
 ## مسیرهای محصول
 

@@ -25,7 +25,7 @@
 ## ۳) فایل‌ها روی هاست
 
 - [ ] کد پروژه را آپلود کنید (بدون `website-forensics` و بدون `.open-next`)
-- [ ] در Application root: `npm ci --omit=optional` (یا `npm run ci:node`) — Wrangler دانلود نمی‌شود
+- [ ] در Application root: `npm ci` (یا `npm run ci:node`)
 - [ ] اگر build لوکال کرده‌اید، پوشه `.next` را هم آپلود کنید
 - [ ] اگر روی هاست build می‌کنید: `npm run build:node`
 - [ ] یک‌بار seed (اگر `data/agency.json` ندارید):
