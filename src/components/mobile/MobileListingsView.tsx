@@ -77,11 +77,15 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
         </motion.div>
 
         <div className="relative mt-4 flex gap-2">
+          <label htmlFor="mobile-listings-search" className="sr-only">
+            جستجوی فایل‌ها
+          </label>
           <input
+            id="mobile-listings-search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="جستجوی محله یا کد…"
-            className="h-11 flex-1 rounded-full border border-[#0B3A5C]/10 bg-white px-4 text-sm text-[#0B3A5C] outline-none placeholder:text-[#0B3A5C]/40 shadow-sm focus:border-sky-400"
+            className="h-11 flex-1 rounded-full border border-[#0B3A5C]/10 bg-white px-4 text-sm text-[#0B3A5C] outline-none placeholder:text-[#0B3A5C]/40 shadow-sm focus:border-sky-400 focus-visible:ring-2 focus-visible:ring-sky-400/40"
           />
           <IosTap
             haptic

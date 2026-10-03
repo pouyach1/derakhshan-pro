@@ -46,6 +46,7 @@ export function AuthField({
           "disabled:pointer-events-none disabled:opacity-60",
           error && "ring-2 ring-rose-400/70 focus:ring-rose-400/70",
         )}
+        aria-invalid={error || undefined}
       />
     </label>
   );
@@ -76,6 +77,7 @@ export function PasswordField({
           autoComplete={autoComplete}
           placeholder={placeholder}
           onChange={(e) => onChange(e.target.value)}
+          aria-invalid={error || undefined}
           className={cn(
             "h-12 w-full rounded-xl border-0 bg-sky-50/70 pe-12 ps-4 text-sm tracking-widest text-slate-900 outline-none transition duration-base",
             "placeholder:text-slate-400 placeholder:tracking-normal",

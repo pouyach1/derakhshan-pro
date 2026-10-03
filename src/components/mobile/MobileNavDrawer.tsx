@@ -46,6 +46,9 @@ export default function MobileNavDrawer({
 
           <motion.div
             id="mobile-nav"
+            role="dialog"
+            aria-modal="true"
+            aria-label="منوی موبایل"
             className="fixed inset-0 z-40 overflow-hidden bg-[#F3F7FB] text-[#0B3A5C] lg:hidden"
             initial={reduceMotion ? { opacity: 0 } : { y: "-10%", opacity: 0.7, scale: 1.03 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}

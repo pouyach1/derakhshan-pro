@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion, useMotionValue, useTransform, type PanInfo } from "framer-motion";
+import { AnimatePresence, motion, useMotionValue, useReducedMotion, useTransform, type PanInfo } from "framer-motion";
 import { useCallback, useEffect, type ReactNode } from "react";
 import { IOS_DISMISS_DISTANCE_RATIO, IOS_DISMISS_VELOCITY, IOS_SHEET_SPRING } from "@/lib/motion/ios";
 import { useHaptic } from "@/hooks/useHaptic";
@@ -21,6 +21,7 @@ export default function BottomSheet({ open, onClose, title, children, className 
   const y = useMotionValue(0);
   const backdropOpacity = useTransform(y, [0, 320], [1, 0.35]);
   const vibrate = useHaptic();
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     if (!open) return;
@@ -30,6 +31,18 @@ export default function BottomSheet({ open, onClose, title, children, className 
       document.body.style.overflow = prev;
     };
   }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
 
   const handleDragEnd = useCallback(
     (_: unknown, info: PanInfo) => {
@@ -59,7 +72,7 @@ export default function BottomSheet({ open, onClose, title, children, className 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.22 }}
+            transition={{ duration: reduceMotion ? 0.01 : 0.22 }}
             onClick={onClose}
           />
 
@@ -70,21 +83,18 @@ export default function BottomSheet({ open, onClose, title, children, className 
               "ios-contain",
               className,
             )}
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={IOS_SHEET_SPRING}
-            drag="y"
+            initial={reduceMotion ? { opacity: 0 } : { y: "100%" }}
+            animate={reduceMotion ? { opacity: 1 } : { y: 0 }}
+            exit={reduceMotion ? { opacity: 0 } : { y: "100%" }}
+            transition={reduceMotion ? { duration: 0.01 } : IOS_SHEET_SPRING}
+            drag={reduceMotion ? false : "y"}
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={{ top: 0.06, bottom: 0.55 }}
             style={{ y, willChange: "transform" }}
             onDragEnd={handleDragEnd}
-            onAnimationComplete={() => {
-              /* پاک‌سازی will-change پس از settle */
-            }}
           >
             <div className="flex justify-center pb-2 pt-3">
-              <div className="h-1.5 w-12 rounded-full bg-white/25" />
+              <div className="h-1.5 w-12 rounded-full bg-white/25" aria-hidden />
             </div>
             <div className="border-b border-white/10 px-5 pb-3">
               <h2 className="font-vazirmatn text-base font-semibold">{title}</h2>
