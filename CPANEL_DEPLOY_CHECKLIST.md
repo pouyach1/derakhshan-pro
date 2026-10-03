@@ -9,7 +9,7 @@
 - [ ] Application root را روی پوشه پروژه تنظیم کنید
 - [ ] Application URL را روی `vorqen.ir` بگذارید
 - [ ] **Application startup file = `server.cjs`**
-- [ ] هرگز `index.js` را به‌عنوان startup انتخاب نکنید
+- [ ] هرگز scraper یا فایل دیگر را به‌عنوان startup انتخاب نکنید
 - [ ] Application mode = `production`
 
 ## ۲) Environment Variables
@@ -21,13 +21,14 @@
 - [ ] `NEXT_PUBLIC_DEMO_OTP` را خالی بگذارید
 - [ ] `DEMO_OTP` را خالی بگذارید (مگر عمداً OTP دمو بخواهید)
 - [ ] `PORT` را دستکاری نکنید (خود cPanel می‌گذارد)
+- [ ] `HOSTNAME` را برای listen ست نکنید (در صورت نیاز فقط `HOST=0.0.0.0`)
 
 ## ۳) فایل‌ها روی هاست
 
 - [ ] کد پروژه را آپلود کنید (بدون `website-forensics` و بدون `.open-next`)
 - [ ] در Application root: `npm ci` (یا `npm run ci:node`)
 - [ ] اگر build لوکال کرده‌اید، پوشه `.next` را هم آپلود کنید
-- [ ] اگر روی هاست build می‌کنید: `npm run build:node`
+- [ ] اگر روی هاست build می‌کنید: `npm run build` (یا `npm run build:node`)
 - [ ] یک‌بار seed (اگر `data/agency.json` ندارید):
   - با envهای پرشده: `SEED_ADMIN_PASSWORD='...' npm run db:seed`
   - یا فایل `data/agency.json` آماده را آپلود کنید
@@ -58,10 +59,13 @@
 - [ ] رمز ادمین را از پنل عوض کنید
 - [ ] مطمئن شوید فقط **یک** process برای اپ فعال است
 
-## اگر استارت نشد
+## اگر استارت نشد / `Unexpected server response: 400`
+
+بیلد تا ۱۰۰٪ ممکن است برود ولی Start بشکند؛ پنل همان `400` را تکرار می‌کند.
 
 1. Startup file را دوباره روی `server.cjs` چک کنید  
-2. لاگ را برای خطای `AUTH_SECRET` / `SEED_ADMIN_PASSWORD` بخوانید  
-3. `node -v` داخل اپ را با نسخه Selector مقایسه کنید  
-4. حق نوشتن `data/` را چک کنید  
-5. جزئیات بیشتر: [`CPANEL_DEPLOY.md`](./CPANEL_DEPLOY.md)
+2. لاگ را برای خطای `AUTH_SECRET` / `SEED_ADMIN_PASSWORD` / `Refusing to start` بخوانید  
+3. مطمئن شوید `HOSTNAME` برای bind ست نشده  
+4. `node -v` داخل اپ را با نسخه Selector مقایسه کنید  
+5. حق نوشتن `data/` را چک کنید  
+6. جزئیات بیشتر: [`PARSPACK_DEPLOY.md`](./PARSPACK_DEPLOY.md) · [`CPANEL_DEPLOY.md`](./CPANEL_DEPLOY.md)

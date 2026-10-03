@@ -40,7 +40,32 @@ node server.cjs
 # یا: npm run start:node
 ```
 
-Startup file باید **`server.cjs`** باشد — نه `index.js`.
+Startup file باید **`server.cjs`** باشد.
+فیلد `main` و اسکریپت‌های `start` / `start:node` در `package.json` هم به همین فایل اشاره می‌کنند.
+
+### اگر بعد از ۱۰۰٪ ساخت این خطا آمد
+
+```text
+Error: Unexpected server response: 400
+```
+
+این معمولاً خطای خود Next نیست — پنل (WebSocket ترمینال/لاگ) وقتی پروسه بعد از build بالا نمی‌آید یا روی آدرس اشتباه listen می‌کند، همان پیام را سه بار تکرار می‌کند.
+
+| علت | کار |
+|-----|-----|
+| Startup اشتباه (اسکریپت قدیمی ریشه یا scraper) | Startup File = **`server.cjs`** |
+| `AUTH_SECRET` خالی/ضعیف یا `SEED_ADMIN_PASSWORD` کوتاه | envهای الزامی را پر کنید؛ لاگ `Refusing to start` را ببینید |
+| bind روی `HOSTNAME` لینوکس | `HOSTNAME` را برای listen ست نکنید؛ پیش‌فرض `0.0.0.0` درست است |
+| `node_modules` ناقص بعد از build | در Application root: `npm ci` سپس Restart |
+| پورت اشغال | Stop کامل → Start؛ فقط یک instance |
+
+بعد از Restart لاگ باید شامل این باشد:
+
+```text
+[server.cjs] Ready on http://0.0.0.0:PORT
+```
+
+سپس `https://YOUR_DOMAIN/api/health` را چک کنید.
 
 ### اگر رجیستری پارس‌هاب روی یک پکیج `500` داد
 
@@ -54,9 +79,9 @@ Startup file باید **`server.cjs`** باشد — نه `index.js`.
 Environment (الزامی):
 
 - `NODE_ENV=production`
-- `AUTH_SECRET` (≥ ۳۲ کاراکتر)
+- `AUTH_SECRET` (≥ ۳۲ کاراکتر، نه `change-me` / `replace-with`)
 - `SEED_ADMIN_PASSWORD` (≥ ۸ کاراکتر)
-- `PORT` (معمولاً توسط PaaS)
+- `PORT` (معمولاً توسط PaaS — دستی عوض نکنید)
 
 Health:
 
