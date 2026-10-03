@@ -3,8 +3,8 @@
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { UserRound } from "lucide-react";
 import { api } from "@/lib/api";
-import { fallbackImage } from "@/lib/money";
 import { SITE_INFO } from "@/config/SITE_INFO";
 import { cn } from "@/lib/utils";
 
@@ -15,7 +15,8 @@ type Contact = {
   name: string;
   role: ContactRole;
   city: string;
-  avatar: string;
+  /** Real avatar URL when available; null → initials/icon fallback. */
+  avatar: string | null;
 };
 
 const CATEGORIES = [
@@ -29,6 +30,66 @@ function roleLabel(role: ContactRole) {
   if (role === "Realtor") return "مشاور ارشد";
   if (role === "Builder") return "سازنده";
   return "خریدار VIP";
+}
+
+function contactInitial(name: string) {
+  const trimmed = name.trim();
+  return trimmed ? trimmed.charAt(0) : "?";
+}
+
+/**
+ * Contact book face — reuses the AgentProfileLink pattern:
+ * real photo when present, otherwise a stable initials/icon fallback.
+ * CRM clients have no avatar field; never fake another person's photo.
+ */
+function ContactFace({
+  name,
+  avatar,
+  active,
+}: {
+  name: string;
+  avatar: string | null;
+  active: boolean;
+}) {
+  const [broken, setBroken] = useState(false);
+  useEffect(() => {
+    setBroken(false);
+  }, [avatar]);
+  const showImage = Boolean(avatar && !broken);
+
+  return (
+    <span
+      className={cn(
+        "relative inline-flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full ring-2",
+        active ? "bg-white/20 ring-white/50" : "bg-sky-100 ring-white/70",
+      )}
+    >
+      {showImage ? (
+        <Image
+          src={avatar!}
+          alt={name}
+          width={44}
+          height={44}
+          className="h-11 w-11 object-cover"
+          onError={() => setBroken(true)}
+        />
+      ) : (
+        <span
+          className={cn(
+            "flex h-full w-full items-center justify-center font-vazirmatn text-sm font-bold",
+            active ? "text-white" : "text-sky-800",
+          )}
+          aria-hidden
+        >
+          {contactInitial(name) !== "?" ? (
+            contactInitial(name)
+          ) : (
+            <UserRound className="h-4 w-4" strokeWidth={1.9} />
+          )}
+        </span>
+      )}
+    </span>
+  );
 }
 
 export default function ContactsSidebar() {
@@ -45,12 +106,13 @@ export default function ContactsSidebar() {
       const next: Contact[] = [];
       if (agentsRes.ok) {
         for (const agent of agentsRes.data.items) {
+          const avatar = agent.avatarUrl?.trim() || null;
           next.push({
             id: `agent-${agent.id}`,
             name: agent.name,
             role: "Realtor",
             city: SITE_INFO.city,
-            avatar: fallbackImage(agent.avatarUrl),
+            avatar,
           });
         }
       }
@@ -61,7 +123,8 @@ export default function ContactsSidebar() {
             name: client.name,
             role: "Client",
             city: client.preferredNeighborhood || SITE_INFO.city,
-            avatar: "/images/admin/avatars/sara-nouri.jpg",
+            // ClientRecord has no avatar field — use initials fallback, not a shared stock photo.
+            avatar: null,
           });
         }
       }
@@ -143,7 +206,7 @@ export default function ContactsSidebar() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.98 }}
-                transition={{ duration: 0.25 }}
+                transition={{ duration: 0.2 }}
                 className={cn(
                   "rounded-2xl p-3 transition",
                   active
@@ -152,14 +215,13 @@ export default function ContactsSidebar() {
                 )}
               >
                 <div className="flex items-start gap-3">
-                  <button type="button" className="shrink-0" onClick={() => setActiveId(contact.id)}>
-                    <Image
-                      src={contact.avatar}
-                      alt={contact.name}
-                      width={44}
-                      height={44}
-                      className="h-11 w-11 rounded-full object-cover ring-2 ring-white/70"
-                    />
+                  <button
+                    type="button"
+                    className="shrink-0"
+                    onClick={() => setActiveId(contact.id)}
+                    aria-label={`انتخاب ${contact.name}`}
+                  >
+                    <ContactFace name={contact.name} avatar={contact.avatar} active={active} />
                   </button>
                   <div className="min-w-0 flex-1">
                     <button type="button" className="w-full text-start" onClick={() => setActiveId(contact.id)}>
@@ -168,7 +230,7 @@ export default function ContactsSidebar() {
                         {roleLabel(contact.role)}
                       </p>
                     </button>
-                    <div className="mt-3 flex items-center gap-2">
+                    <div className="mt-3 flex flex-wrap items-center gap-2">
                       <IconButton active={active} label={`تماس سریع با ${contact.name}`}>
                         <PhoneIcon />
                       </IconButton>
