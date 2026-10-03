@@ -33,6 +33,7 @@ export default defineConfig({
         "src/components/mobile/BottomSheet.tsx",
         "src/components/blog/admin/BlogDeleteButton.tsx",
         "src/components/navigation/Navbar.tsx",
+        "src/components/listings/PropertyLightbox.tsx",
       ],
       exclude: ["**/*.d.ts", "**/node_modules/**", "**/.next/**"],
     },
