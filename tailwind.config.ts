@@ -3,6 +3,9 @@ import type { Config } from "tailwindcss";
 /**
  * Design tokens mapped from
  * website-forensics/rioproperty/priority-1/design-tokens/design_tokens.json
+ *
+ * Phase 5: public/workspace semantic roles map to existing CSS variables —
+ * same visual values, clearer intent. Do not treat this as a second system.
  */
 const config: Config = {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
@@ -50,6 +53,24 @@ const config: Config = {
           text: "var(--ws-text)",
           muted: "var(--ws-muted)",
           accent: "var(--ws-accent)",
+          "accent-fg": "var(--ws-accent-fg)",
+        },
+        public: {
+          DEFAULT: "var(--public-bg)",
+          bg: "var(--public-bg)",
+          surface: "var(--public-surface)",
+          elevated: "var(--public-surface-elevated)",
+          border: "var(--public-border)",
+          text: "var(--public-text)",
+          muted: "var(--public-muted)",
+          accent: "var(--public-accent)",
+          "accent-fg": "var(--public-accent-fg)",
+        },
+        state: {
+          success: "var(--state-success)",
+          warning: "var(--state-warning)",
+          danger: "var(--state-danger)",
+          info: "var(--state-info)",
         },
         sky: {
           400: "#38BDF8",
@@ -68,6 +89,11 @@ const config: Config = {
         rio: "1rem",
         "rio-sm": "0.5rem",
         pill: "100vw",
+        /** Semantic aliases — same values as rio / common panels */
+        control: "var(--radius--control)",
+        card: "var(--radius--card)",
+        panel: "var(--radius--panel)",
+        sheet: "var(--radius--sheet)",
       },
       maxWidth: {
         rio: "120rem",
@@ -97,6 +123,11 @@ const config: Config = {
         h3: ["2.25rem", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "600" }],
         body: ["1rem", { lineHeight: "1.5", fontWeight: "400" }],
         "body-lg": ["clamp(1.0625rem, 1.2vw, 1.125rem)", { lineHeight: "1.45" }],
+      },
+      transitionDuration: {
+        fast: "150ms",
+        base: "200ms",
+        soft: "300ms",
       },
       transitionTimingFunction: {
         rio: "cubic-bezier(0.7, 0, 0.3, 1)",

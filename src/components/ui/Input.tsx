@@ -12,7 +12,7 @@ export function UnderlineInput({ label, className, id, ...props }: InputProps) {
       <input
         id={inputId}
         className={cn(
-          "w-full border-0 border-b border-beige/20 bg-transparent py-3 font-vazirmatn text-base text-mist-200 outline-none transition-colors duration-300 placeholder:text-mist-300 focus:border-yellow-500",
+          "w-full border-0 border-b border-beige/20 bg-transparent py-3 font-vazirmatn text-base text-mist-200 outline-none transition-colors duration-soft placeholder:text-mist-300 focus:border-yellow-500 disabled:pointer-events-none disabled:opacity-60",
           className,
         )}
         {...props}
@@ -33,7 +33,7 @@ export function UnderlineTextarea({ label, className, id, ...props }: TextAreaPr
       <textarea
         id={inputId}
         className={cn(
-          "min-h-28 w-full resize-y border-0 border-b border-beige/20 bg-transparent py-3 font-vazirmatn text-base text-mist-200 outline-none transition-colors duration-300 placeholder:text-mist-300 focus:border-yellow-500",
+          "min-h-28 w-full resize-y border-0 border-b border-beige/20 bg-transparent py-3 font-vazirmatn text-base text-mist-200 outline-none transition-colors duration-soft placeholder:text-mist-300 focus:border-yellow-500 disabled:pointer-events-none disabled:opacity-60",
           className,
         )}
         {...props}
@@ -55,7 +55,7 @@ export function UnderlineSelect({ label, options, className, id, ...props }: Sel
       <select
         id={inputId}
         className={cn(
-          "w-full appearance-none border-0 border-b border-beige/20 bg-transparent py-3 font-vazirmatn text-base text-mist-200 outline-none transition-colors duration-300 focus:border-yellow-500",
+          "w-full appearance-none border-0 border-b border-beige/20 bg-transparent py-3 font-vazirmatn text-base text-mist-200 outline-none transition-colors duration-soft focus:border-yellow-500 disabled:pointer-events-none disabled:opacity-60",
           className,
         )}
         {...props}
