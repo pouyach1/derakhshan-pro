@@ -51,7 +51,13 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
       <IntroShell>
         <MobileMotionRoot>
           <Navbar />
-          <main>
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-[120] focus:rounded-full focus:bg-sky-500 focus:px-4 focus:py-2.5 focus:font-vazirmatn focus:text-sm focus:font-semibold focus:text-white focus:shadow-lg"
+          >
+            پرش به محتوای اصلی
+          </a>
+          <main id="main-content">
             <MobilePageTransition>{children}</MobilePageTransition>
           </main>
           <Footer />

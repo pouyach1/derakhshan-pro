@@ -442,12 +442,15 @@ function NewsletterBlock({ reduce }: { reduce: boolean | null }) {
         </div>
 
         <form onSubmit={onNewsletter} className="space-y-3">
-          <label className="block text-xs font-semibold text-slate-400">{footer.newsletterLabel}</label>
+          <label htmlFor="footer-newsletter" className="block text-xs font-semibold text-slate-400">
+            {footer.newsletterLabel}
+          </label>
           <motion.div
             className="flex gap-2 rounded-2xl border border-white/12 bg-[#071A2C]/55 p-1.5"
             style={{ boxShadow: ring }}
           >
             <input
+              id="footer-newsletter"
               required
               value={contact}
               onChange={(e) => setContact(e.target.value)}
@@ -455,6 +458,7 @@ function NewsletterBlock({ reduce }: { reduce: boolean | null }) {
               onBlur={() => focused.set(0)}
               placeholder={footer.newsletterPlaceholder}
               className="w-full bg-transparent px-3 py-2.5 text-sm text-white outline-none placeholder:text-slate-500"
+              autoComplete="email"
             />
             <motion.button
               type="submit"

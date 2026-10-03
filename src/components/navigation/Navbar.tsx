@@ -113,7 +113,10 @@ function MenuToggle({
       type="button"
       className={cn(
         "ios-tap-target relative z-50 flex h-11 w-11 items-center justify-center rounded-full border backdrop-blur-md",
-        onDark ? "border-white/20 bg-white/10" : "border-[#0B3A5C]/10 bg-white",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/60 focus-visible:ring-offset-2",
+        onDark
+          ? "border-white/20 bg-white/10 focus-visible:ring-offset-transparent"
+          : "border-[#0B3A5C]/10 bg-white focus-visible:ring-offset-[#F7FBFF]",
       )}
       aria-expanded={open}
       aria-controls="mobile-nav"
@@ -186,6 +189,18 @@ export default function Navbar() {
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
 
   return (
     <>

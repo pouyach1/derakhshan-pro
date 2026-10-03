@@ -59,6 +59,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             "hidden h-fit lg:sticky lg:top-6 lg:block lg:h-[calc(100vh-120px)] lg:self-start lg:overflow-y-auto lg:overscroll-contain",
             "[scrollbar-width:thin] [scrollbar-color:rgba(14,165,233,0.2)_transparent]",
           )}
+          aria-label="مخاطبین"
         >
           <ContactsSidebar />
         </aside>
@@ -73,14 +74,16 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             className="min-w-0"
             data-admin-main
           >
-            <div className="mb-3 sm:mb-4">
-              <BackButton
-                fallbackHref={backFallback}
-                label={backLabel}
-                tone={isDark ? "dark" : "soft"}
-              />
-            </div>
-            {children}
+            <main className="min-w-0">
+              <div className="mb-3 sm:mb-4">
+                <BackButton
+                  fallbackHref={backFallback}
+                  label={backLabel}
+                  tone={isDark ? "dark" : "soft"}
+                />
+              </div>
+              {children}
+            </main>
           </motion.div>
         </AnimatePresence>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Trash2 } from "lucide-react";
 import { api } from "@/lib/api";
@@ -24,6 +24,26 @@ export default function BlogDeleteButton({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const cancelRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.activeElement as HTMLElement | null;
+    const frame = window.requestAnimationFrame(() => cancelRef.current?.focus());
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && !loading) {
+        event.preventDefault();
+        setOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("keydown", onKey);
+      previous?.focus?.();
+    };
+  }, [open, loading]);
 
   async function confirmDelete() {
     setLoading(true);
@@ -43,6 +63,7 @@ export default function BlogDeleteButton({
   return (
     <>
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen(true)}
         className={cn(
@@ -50,6 +71,8 @@ export default function BlogDeleteButton({
           className,
         )}
         aria-label={`حذف مقاله ${title}`}
+        aria-haspopup="dialog"
+        aria-expanded={open}
       >
         <Trash2 className="h-3.5 w-3.5" aria-hidden />
         حذف
@@ -61,8 +84,15 @@ export default function BlogDeleteButton({
           role="dialog"
           aria-modal="true"
           aria-labelledby="blog-delete-title"
+          onClick={() => {
+            if (!loading) setOpen(false);
+          }}
         >
-          <div className="w-full max-w-md rounded-[1.5rem] border border-sky-100/80 bg-white p-5 shadow-xl" dir="rtl">
+          <div
+            className="w-full max-w-md rounded-[1.5rem] border border-sky-100/80 bg-white p-5 shadow-xl"
+            dir="rtl"
+            onClick={(event) => event.stopPropagation()}
+          >
             <h2 id="blog-delete-title" className="font-vazirmatn text-lg font-bold text-[#0B3A5C]">
               حذف مقاله؟
             </h2>
@@ -77,6 +107,7 @@ export default function BlogDeleteButton({
             ) : null}
             <div className="mt-5 flex flex-wrap justify-end gap-2">
               <button
+                ref={cancelRef}
                 type="button"
                 disabled={loading}
                 onClick={() => setOpen(false)}
@@ -90,8 +121,8 @@ export default function BlogDeleteButton({
                 onClick={() => void confirmDelete()}
                 className="inline-flex items-center gap-2 rounded-full bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 disabled:opacity-60"
               >
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                حذف قطعی
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
+                {loading ? "در حال حذف…" : "حذف قطعی"}
               </button>
             </div>
           </div>

@@ -188,10 +188,18 @@ function AgentModal({
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
     };
-  }, []);
+  }, [onClose]);
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -252,10 +260,10 @@ function AgentModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#0B132B] text-white"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#0B132B] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/50"
                 aria-label="بستن"
               >
-                <X className="h-4 w-4" />
+                <X className="h-4 w-4" aria-hidden />
               </button>
             </div>
 
@@ -278,65 +286,85 @@ function AgentModal({
                 درخواست جلسه خصوصی با این مشاور
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
-                <input
-                  required
-                  value={form.name}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, name: e.target.value }))
-                  }
-                  placeholder="نام و نام خانوادگی"
-                  className="rounded-2xl border border-sky-100 bg-white/90 px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/20"
-                />
-                <input
-                  required
-                  value={form.phone}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, phone: e.target.value }))
-                  }
-                  placeholder="شماره تماس"
-                  dir="ltr"
-                  className="rounded-2xl border border-sky-100 bg-white/90 px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/20"
-                />
+                <label className="block space-y-1.5">
+                  <span className="text-xs font-semibold text-slate-600">نام و نام خانوادگی</span>
+                  <input
+                    required
+                    value={form.name}
+                    onChange={(e) =>
+                      setForm((prev) => ({ ...prev, name: e.target.value }))
+                    }
+                    placeholder="نام و نام خانوادگی"
+                    className="w-full rounded-2xl border border-sky-100 bg-white/90 px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/20"
+                  />
+                </label>
+                <label className="block space-y-1.5">
+                  <span className="text-xs font-semibold text-slate-600">شماره تماس</span>
+                  <input
+                    required
+                    value={form.phone}
+                    onChange={(e) =>
+                      setForm((prev) => ({ ...prev, phone: e.target.value }))
+                    }
+                    placeholder="شماره تماس"
+                    dir="ltr"
+                    className="w-full rounded-2xl border border-sky-100 bg-white/90 px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/20"
+                  />
+                </label>
               </div>
-              <input
-                required
-                type="datetime-local"
-                value={form.datetime}
-                onChange={(e) =>
-                  setForm((prev) => ({ ...prev, datetime: e.target.value }))
-                }
-                dir="ltr"
-                className="w-full rounded-2xl border border-sky-100 bg-white/90 px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/20"
-              />
-              <textarea
-                required
-                rows={3}
-                value={form.note}
-                onChange={(e) =>
-                  setForm((prev) => ({ ...prev, note: e.target.value }))
-                }
-                placeholder="موضوع جلسه یا محدوده ملک موردنظر..."
-                className="w-full resize-none rounded-2xl border border-sky-100 bg-white/90 px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/20"
-              />
+              <label className="block space-y-1.5">
+                <span className="text-xs font-semibold text-slate-600">زمان جلسه</span>
+                <input
+                  required
+                  type="datetime-local"
+                  value={form.datetime}
+                  onChange={(e) =>
+                    setForm((prev) => ({ ...prev, datetime: e.target.value }))
+                  }
+                  dir="ltr"
+                  className="w-full rounded-2xl border border-sky-100 bg-white/90 px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/20"
+                />
+              </label>
+              <label className="block space-y-1.5">
+                <span className="text-xs font-semibold text-slate-600">موضوع جلسه</span>
+                <textarea
+                  required
+                  rows={3}
+                  value={form.note}
+                  onChange={(e) =>
+                    setForm((prev) => ({ ...prev, note: e.target.value }))
+                  }
+                  placeholder="موضوع جلسه یا محدوده ملک موردنظر..."
+                  className="w-full resize-none rounded-2xl border border-sky-100 bg-white/90 px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/20"
+                />
+              </label>
               <button
                 type="submit"
                 disabled={status === "loading"}
-                className="inline-flex items-center gap-2 rounded-full bg-[#0B132B] px-6 py-3 text-sm font-bold text-white transition hover:bg-sky-600 disabled:opacity-70"
+                aria-busy={status === "loading"}
+                className="inline-flex items-center gap-2 rounded-full bg-[#0B132B] px-6 py-3 text-sm font-bold text-white transition hover:bg-sky-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/50 disabled:opacity-70"
               >
                 {status === "loading" ? (
                   "در حال ثبت..."
                 ) : status === "success" ? (
                   <>
-                    <CheckCircle2 className="h-4 w-4 text-[#00F0FF]" />
+                    <CheckCircle2 className="h-4 w-4 text-[#00F0FF]" aria-hidden />
                     درخواست ثبت شد
                   </>
                 ) : (
                   <>
-                    <CalendarCheck2 className="h-4 w-4" />
+                    <CalendarCheck2 className="h-4 w-4" aria-hidden />
                     رزرو جلسه خصوصی
                   </>
                 )}
               </button>
+              <p className="sr-only" aria-live="polite">
+                {status === "loading"
+                  ? "در حال ثبت درخواست"
+                  : status === "success"
+                    ? "درخواست جلسه با موفقیت ثبت شد"
+                    : ""}
+              </p>
             </form>
           </div>
         </div>

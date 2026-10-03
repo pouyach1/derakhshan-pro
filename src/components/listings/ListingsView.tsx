@@ -125,15 +125,23 @@ export default function ListingsView() {
               transition={{ ...IOS_PAGE_SPRING, delay: 0.12 }}
             >
               <div className="relative flex-1">
-                <Search className="pointer-events-none absolute start-5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#0B3A5C]/35" />
+                <label htmlFor="listings-search" className="sr-only">
+                  جستجوی فایل‌ها
+                </label>
+                <Search className="pointer-events-none absolute start-5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#0B3A5C]/35" aria-hidden />
                 <input
+                  id="listings-search"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="جستجوی عنوان، محله یا کد فایل..."
-                  className="h-14 w-full rounded-full border border-[#0B3A5C]/10 bg-white pe-5 ps-12 text-sm text-[#0B3A5C] outline-none placeholder:text-[#0B3A5C]/40 shadow-[0_12px_40px_-28px_rgba(11,58,92,0.35)] transition focus:border-sky-400"
+                  className="h-14 w-full rounded-full border border-[#0B3A5C]/10 bg-white pe-5 ps-12 text-sm text-[#0B3A5C] outline-none placeholder:text-[#0B3A5C]/40 shadow-[0_12px_40px_-28px_rgba(11,58,92,0.35)] transition focus:border-sky-400 focus-visible:ring-2 focus-visible:ring-sky-400/40"
                 />
               </div>
-              <div className="flex gap-2 rounded-full border border-[#0B3A5C]/8 bg-white p-1.5 shadow-sm">
+              <div
+                className="flex gap-2 rounded-full border border-[#0B3A5C]/8 bg-white p-1.5 shadow-sm"
+                role="group"
+                aria-label="فیلتر نوع معامله"
+              >
                 {FILTERS.map(([id, label]) => {
                   const active = filter === id;
                   return (
@@ -141,7 +149,8 @@ export default function ListingsView() {
                       key={id}
                       type="button"
                       onClick={() => setFilter(id)}
-                      className="relative rounded-full px-5 py-2.5 text-sm font-semibold"
+                      aria-pressed={active}
+                      className="relative rounded-full px-5 py-2.5 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/50"
                     >
                       {active ? (
                         <motion.span
