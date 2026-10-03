@@ -43,11 +43,28 @@ node server.cjs
 Startup file باید **`server.cjs`** باشد.
 فیلد `main` و اسکریپت‌های `start` / `start:node` در `package.json` هم به همین فایل اشاره می‌کنند.
 
-### اگر لاگ گفت `Refusing production start` / `AUTH_SECRET` / `SEED_ADMIN_PASSWORD`
+### اگر لاگ هنوز `> next start` و `Refusing production start` است
 
-اپ عمداً بدون این دو متغیر بالا نمی‌آید. در لاگ شما دقیقاً همین است.
+یعنی **فایل‌های روی هاست قدیمی‌اند** (نسخهٔ لاگ `2.0.3` + دستور `next start`). فیکس‌های GitHub تا وقتی pull/آپلود + **rebuild** نکنید اعمال نمی‌شوند.
 
-**راه ۱ — پنل (سریع‌ترین):** در Environment Variables بگذارید:
+```bash
+# در Application root روی هاست:
+git pull   # یا آپلود zip از main
+npm ci
+npm run build
+# Startup File = server.cjs
+# Stop → Start
+```
+
+لاگ درست بعد از آپدیت باید شبیه این باشد (نه `next start`):
+
+```text
+> derakhshan-pro@2.0.4 start
+> node scripts/start-production.cjs
+[start] derakhshan-pro@2.0.4 entry=server.cjs
+```
+
+**بدون آپدیت کد** فقط env پنل را پر کنید — همان هم استارت را درست می‌کند.
 
 ```text
 NODE_ENV=production

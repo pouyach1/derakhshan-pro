@@ -1,7 +1,7 @@
 {
   "name": "derakhshan-pro",
   "private": true,
-  "version": "2.0.3",
+  "version": "2.0.4",
   "main": "server.cjs",
   "engines": {
     "node": ">=20.9.0"
@@ -12,8 +12,8 @@
     "build": "npm run build:node",
     "build:node": "NEXT_OUTPUT_STANDALONE=1 next build",
     "build:cf": "npx --yes @opennextjs/cloudflare@1.20.6 build",
-    "start": "node server.cjs",
-    "start:node": "node server.cjs",
+    "start": "node scripts/start-production.cjs",
+    "start:node": "node scripts/start-production.cjs",
     "env:bootstrap": "node scripts/bootstrap-production-env.cjs",
     "lint": "next lint",
     "preview": "npx --yes @opennextjs/cloudflare@1.20.6 build && npx --yes @opennextjs/cloudflare@1.20.6 preview",
