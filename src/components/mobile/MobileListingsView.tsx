@@ -1,6 +1,5 @@
 "use client";
 
-import { useVirtualizer } from "@tanstack/react-virtual";
 import { motion } from "framer-motion";
 import { SlidersHorizontal, Sparkles } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
@@ -32,7 +31,7 @@ type MobileListingsViewProps = {
 };
 
 /**
- * آرشیو موبایل — تم سفید / آبی کم‌رنگ برند.
+ * آرشیو موبایل — گرید ۲ ستونه + تم سفید / آبی کم‌رنگ برند.
  */
 export default function MobileListingsView({ items, loading, failed, onRetry }: MobileListingsViewProps) {
   const [query, setQuery] = useState("");
@@ -54,13 +53,6 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
       return matchesType && matchesQuery;
     });
   }, [items, filter, query]);
-
-  const virtualizer = useVirtualizer({
-    count: filtered.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => 380,
-    overscan: 4,
-  });
 
   return (
     <div className="bg-[#F3F7FB] text-[#0B3A5C] lg:hidden">
@@ -121,32 +113,21 @@ export default function MobileListingsView({ items, loading, failed, onRetry }: 
         onRefresh={onRetry}
       >
         {loading && items.length === 0 ? (
-          <PropertyCardSkeletonList count={3} />
+          <PropertyCardSkeletonList count={4} />
         ) : failed && items.length === 0 ? (
           <PublicLoadError onRetry={onRetry} />
         ) : filtered.length === 0 ? (
           <p className="py-10 text-sm text-[#0B3A5C]/50">فایل منطبقی پیدا نشد.</p>
         ) : (
-          <div className="relative w-full" style={{ height: `${virtualizer.getTotalSize()}px` }}>
-            {virtualizer.getVirtualItems().map((row) => {
-              const item = filtered[row.index];
-              return (
-                <div
-                  key={item.id}
-                  className="absolute start-0 top-0 w-full pb-4"
-                  style={{
-                    transform: `translateY(${row.start}px)`,
-                    height: `${row.size}px`,
-                  }}
-                >
-                  <CompactPropertyCard
-                    item={item}
-                    variant="featured"
-                    priority={row.index < 2}
-                  />
-                </div>
-              );
-            })}
+          <div className="grid grid-cols-2 gap-2.5">
+            {filtered.map((item, index) => (
+              <CompactPropertyCard
+                key={item.id}
+                item={item}
+                variant="grid"
+                priority={index < 4}
+              />
+            ))}
           </div>
         )}
       </PullToRefresh>

@@ -130,131 +130,144 @@ export default function PropertyLightbox({
           role="dialog"
           aria-modal="true"
           aria-label={`گالری ${title}`}
-          className="fixed inset-0 z-[120] flex flex-col bg-[#07080c] text-white"
-          style={{
-            paddingTop: "max(0.75rem, env(safe-area-inset-top))",
-            paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))",
-          }}
+          className="fixed inset-0 z-[120] text-white"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.28, ease: EASE.expoOut }}
+          transition={{ duration: 0.22, ease: EASE.expoOut }}
         >
-          <div className="flex items-start justify-between gap-4 px-4 pt-2 sm:px-6">
-            <div className="min-w-0">
-              {code ? (
-                <p className="font-mono text-[11px] tracking-[0.22em] text-white/45">{code}</p>
-              ) : null}
-              <p className="mt-1 truncate font-vazirmatn text-sm text-white/88 sm:text-base">{title}</p>
-            </div>
-            <button
-              ref={closeRef}
-              type="button"
-              onClick={onClose}
-              aria-label="بستن گالری"
-              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white/75 transition hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
+          <button
+            type="button"
+            aria-label="بستن گالری"
+            className="absolute inset-0 z-0 bg-[#0B3A5C]/78 backdrop-blur-[2px]"
+            onClick={onClose}
+          />
 
           <div
-            className="relative mx-auto min-h-0 w-full flex-1 touch-pan-y"
-            onPointerDown={(event) => {
-              if ((event.target as HTMLElement).closest("button")) return;
-              dragX.current = event.clientX;
-              event.currentTarget.setPointerCapture(event.pointerId);
-            }}
-            onPointerUp={(event) => {
-              if (dragX.current == null || !multi) return;
-              const delta = event.clientX - dragX.current;
-              dragX.current = null;
-              if (delta <= -48) go(index + 1);
-              else if (delta >= 48) go(index - 1);
-            }}
-            onPointerCancel={() => {
-              dragX.current = null;
+            className="relative z-10 flex h-full flex-col"
+            style={{
+              paddingTop: "max(0.75rem, env(safe-area-inset-top))",
+              paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))",
             }}
           >
-            <div className="absolute inset-0 sm:inset-x-16">
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={`${index}-${src}`}
-                  className="absolute inset-0"
-                  initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 1.02 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: reduceMotion ? 0.15 : 0.38, ease: EASE.expoOut }}
-                >
-                  <Image
-                    src={src}
-                    alt={`${title} — ${frameLabel(index + 1, total)}`}
-                    fill
-                    priority
-                    sizes="100vw"
-                    draggable={false}
-                    className="pointer-events-none object-contain select-none"
-                    onError={() => {
-                      if (src === fallbackImage(null)) return;
-                      setBroken((prev) => ({ ...prev, [index]: true }));
-                    }}
-                  />
-                </motion.div>
-              </AnimatePresence>
+            <div className="flex items-start justify-between gap-4 px-4 pt-2 sm:px-6">
+              <div className="min-w-0">
+                {code ? (
+                  <p className="font-mono text-[11px] tracking-[0.22em] text-white/55">{code}</p>
+                ) : null}
+                <p className="mt-1 truncate font-vazirmatn text-sm text-white/92 sm:text-base">{title}</p>
+              </div>
+              <button
+                ref={closeRef}
+                type="button"
+                onClick={onClose}
+                aria-label="بستن گالری"
+                className="ios-tap-target inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/35 bg-white/15 text-white shadow-[0_10px_30px_-18px_rgba(0,0,0,0.65)] transition duration-150 hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              >
+                <X className="h-5 w-5" strokeWidth={2} />
+              </button>
             </div>
 
-            {multi ? (
-              <>
-                <NavButton
-                  label="تصویر قبلی"
-                  className="left-2 sm:left-5"
-                  onClick={() => go(index - 1)}
-                >
-                  <ChevronLeft className="h-5 w-5" />
-                </NavButton>
-                <NavButton
-                  label="تصویر بعدی"
-                  className="right-2 sm:right-5"
-                  onClick={() => go(index + 1)}
-                >
-                  <ChevronRight className="h-5 w-5" />
-                </NavButton>
-              </>
-            ) : null}
-          </div>
-
-          <div className="flex flex-col items-center gap-3 px-4 pb-2 pt-3">
-            <p className="font-mono text-[11px] tracking-[0.28em] text-white/70" aria-live="polite">
-              {frameLabel(index + 1, total)}
-            </p>
-            {multi ? (
-              <div className="flex max-w-full gap-2 overflow-x-auto pb-1">
-                {safeImages.map((image, imageIndex) => {
-                  const active = imageIndex === index;
-                  return (
-                    <button
-                      key={`${image}-${imageIndex}`}
-                      type="button"
-                      aria-label={`تصویر ${frameLabel(imageIndex + 1, total)}`}
-                      aria-current={active ? "true" : undefined}
-                      onClick={() => go(imageIndex)}
-                      className={cn(
-                        "relative h-12 w-[4.25rem] shrink-0 overflow-hidden transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:h-14 sm:w-20",
-                        active ? "opacity-100" : "opacity-40 hover:opacity-80",
-                      )}
-                    >
-                      <Image
-                        src={broken[imageIndex] ? fallbackImage(null) : image}
-                        alt=""
-                        fill
-                        sizes="80px"
-                        className="object-cover"
-                      />
-                    </button>
-                  );
-                })}
+            <div
+              className="relative mx-auto min-h-0 w-full max-w-6xl flex-1 touch-pan-y px-2 sm:px-6"
+              onPointerDown={(event) => {
+                if ((event.target as HTMLElement).closest("button")) return;
+                dragX.current = event.clientX;
+                event.currentTarget.setPointerCapture(event.pointerId);
+              }}
+              onPointerUp={(event) => {
+                if (dragX.current == null || !multi) return;
+                const delta = event.clientX - dragX.current;
+                dragX.current = null;
+                if (delta <= -48) go(index + 1);
+                else if (delta >= 48) go(index - 1);
+              }}
+              onPointerCancel={() => {
+                dragX.current = null;
+              }}
+            >
+              <div className="absolute inset-x-2 inset-y-0 sm:inset-x-6">
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.div
+                    key={`${index}-${src}`}
+                    className="absolute inset-0"
+                    initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 1.015 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: reduceMotion ? 0.12 : 0.22, ease: EASE.expoOut }}
+                  >
+                    <Image
+                      src={src}
+                      alt={`${title} — ${frameLabel(index + 1, total)}`}
+                      fill
+                      priority
+                      sizes="100vw"
+                      draggable={false}
+                      className="pointer-events-none object-contain select-none"
+                      onError={() => {
+                        if (src === fallbackImage(null)) return;
+                        setBroken((prev) => ({ ...prev, [index]: true }));
+                      }}
+                    />
+                  </motion.div>
+                </AnimatePresence>
               </div>
-            ) : null}
+
+              {multi ? (
+                <>
+                  <NavButton
+                    label="تصویر قبلی"
+                    className="left-1 sm:left-3"
+                    onClick={() => go(index - 1)}
+                  >
+                    <ChevronLeft className="h-5 w-5" />
+                  </NavButton>
+                  <NavButton
+                    label="تصویر بعدی"
+                    className="right-1 sm:right-3"
+                    onClick={() => go(index + 1)}
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </NavButton>
+                </>
+              ) : null}
+            </div>
+
+            <div className="flex flex-col items-center gap-3 px-4 pb-2 pt-3">
+              <p className="font-mono text-[11px] tracking-[0.28em] text-white/75" aria-live="polite">
+                {frameLabel(index + 1, total)}
+              </p>
+              {multi ? (
+                <div className="flex max-w-full gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                  {safeImages.map((image, imageIndex) => {
+                    const active = imageIndex === index;
+                    return (
+                      <button
+                        key={`${image}-${imageIndex}`}
+                        type="button"
+                        aria-label={`تصویر ${frameLabel(imageIndex + 1, total)}`}
+                        aria-current={active ? "true" : undefined}
+                        onClick={() => go(imageIndex)}
+                        className={cn(
+                          "relative h-12 w-[4.25rem] shrink-0 overflow-hidden rounded-lg ring-1 transition duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:h-14 sm:w-20",
+                          active
+                            ? "opacity-100 ring-white/70"
+                            : "opacity-45 ring-white/20 hover:opacity-85",
+                        )}
+                      >
+                        <Image
+                          src={broken[imageIndex] ? fallbackImage(null) : image}
+                          alt=""
+                          fill
+                          sizes="80px"
+                          className="object-cover"
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : null}
+            </div>
           </div>
         </motion.div>
       ) : null}
@@ -280,7 +293,7 @@ function NavButton({
       aria-label={label}
       onClick={onClick}
       className={cn(
-        "absolute top-1/2 z-10 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-white/80 transition hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
+        "absolute top-1/2 z-10 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-white/12 text-white/90 transition duration-150 hover:bg-white/22 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
         className,
       )}
     >
