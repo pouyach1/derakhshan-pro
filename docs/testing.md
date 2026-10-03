@@ -8,6 +8,7 @@
 | Integration / API | Vitest | `tests/integration` | Route handlers + store isolation |
 | Component | Vitest + Testing Library | `tests/component` | Keyboard/a11y behavior of shared UI |
 | E2E | Playwright | `e2e` | Public journeys, role matrix, authenticated CRM/blog/chat, gallery lightbox, SEO |
+| Coverage | Vitest V8 | `coverage/` | Critical server/API/UI measurement |
 
 Security and CRM ownership are tested **server-side** via App Router handlers — not by mocking authorization away.
 
