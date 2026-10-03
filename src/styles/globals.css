@@ -206,86 +206,86 @@
   }
 
   /*
-   * Architectural Pulse — فقط بخش Signal (CTA).
-   * idle کاملاً ساکت؛ روی hover دسکتاپ یک‌بار خط → نقطه → پالس.
+   * Private Dossier — فقط بخش Signal (CTA).
+   * با hover، برگهٔ پرونده از زیر دکمه بیرون می‌آید (transform/opacity).
    * فوتر از این کلاس‌ها استفاده نمی‌کند.
    */
-  .arch-pulse-line {
-    stroke-dasharray: 120;
-    stroke-dashoffset: 120;
-    opacity: 0.35;
-    transition:
-      stroke-dashoffset 420ms cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 220ms ease;
-  }
-
-  .arch-pulse-point {
-    transform-box: fill-box;
-    transform-origin: center;
-    transform: scale(1);
-    opacity: 0.45;
-    transition:
-      transform 240ms cubic-bezier(0.22, 1, 0.36, 1) 360ms,
-      opacity 220ms ease 360ms;
-  }
-
-  .arch-pulse-ring {
-    transform-box: fill-box;
-    transform-origin: center;
-    transform: scale(1);
+  .signal-dossier-sheet {
     opacity: 0;
+    transform: translate3d(0, -12px, 0);
+    transition:
+      opacity 280ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .signal-dossier-tab,
+  .signal-dossier-meta,
+  .signal-dossier-ref,
+  .signal-dossier-house {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0);
+    transition:
+      opacity 260ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .arch-pulse:hover + .arch-pulse-mark .arch-pulse-line,
-    .arch-pulse:focus-visible + .arch-pulse-mark .arch-pulse-line {
-      stroke-dashoffset: 0;
-      opacity: 0.85;
-    }
-
-    .arch-pulse:hover + .arch-pulse-mark .arch-pulse-point,
-    .arch-pulse:focus-visible + .arch-pulse-mark .arch-pulse-point {
-      transform: scale(1.35);
+    .signal-dossier:hover .signal-dossier-sheet,
+    .signal-dossier:focus-within .signal-dossier-sheet {
       opacity: 1;
+      transform: translate3d(0, 0, 0);
     }
 
-    .arch-pulse:hover + .arch-pulse-mark .arch-pulse-ring,
-    .arch-pulse:focus-visible + .arch-pulse-mark .arch-pulse-ring {
-      animation: arch-pulse-ring 280ms cubic-bezier(0.22, 1, 0.36, 1) 420ms 1 both;
+    .signal-dossier:hover .signal-dossier-tab,
+    .signal-dossier:focus-within .signal-dossier-tab {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+      transition-delay: 90ms;
     }
-  }
 
-  @keyframes arch-pulse-ring {
-    0% {
-      transform: scale(1);
-      opacity: 0.55;
+    .signal-dossier:hover .signal-dossier-meta,
+    .signal-dossier:focus-within .signal-dossier-meta {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+      transition-delay: 140ms;
     }
-    100% {
-      transform: scale(3.4);
-      opacity: 0;
+
+    .signal-dossier:hover .signal-dossier-ref,
+    .signal-dossier:focus-within .signal-dossier-ref {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+      transition-delay: 180ms;
+    }
+
+    .signal-dossier:hover .signal-dossier-house,
+    .signal-dossier:focus-within .signal-dossier-house {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+      transition-delay: 200ms;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .arch-pulse-line,
-    .arch-pulse-point,
-    .arch-pulse-ring {
+    .signal-dossier-sheet,
+    .signal-dossier-tab,
+    .signal-dossier-meta,
+    .signal-dossier-ref,
+    .signal-dossier-house {
       transition: none !important;
-      animation: none !important;
     }
 
-    .arch-pulse-line {
-      stroke-dashoffset: 0;
-      opacity: 0.4;
-    }
-
-    .arch-pulse-point {
-      opacity: 0.55;
+    .signal-dossier:hover .signal-dossier-sheet,
+    .signal-dossier:focus-within .signal-dossier-sheet,
+    .signal-dossier:hover .signal-dossier-tab,
+    .signal-dossier:focus-within .signal-dossier-tab,
+    .signal-dossier:hover .signal-dossier-meta,
+    .signal-dossier:focus-within .signal-dossier-meta,
+    .signal-dossier:hover .signal-dossier-ref,
+    .signal-dossier:focus-within .signal-dossier-ref,
+    .signal-dossier:hover .signal-dossier-house,
+    .signal-dossier:focus-within .signal-dossier-house {
+      opacity: 1;
       transform: none;
-    }
-
-    .arch-pulse-ring {
-      opacity: 0;
     }
   }
 

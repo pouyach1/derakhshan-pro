@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { ArrowUpLeft } from "lucide-react";
 import { INTRO_CTA, SIGNAL_NEIGHBORHOODS, TRUST_STATS } from "@/config/home";
@@ -9,9 +9,9 @@ import { EASE } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 /**
- * سیگنال بازار خصوصی — جایگزین بنر «نسخه نمایشی» و نوار آمار تخت.
- * تعامل موس: Architectural Pulse (خط معماری → نقطه اتصال → پالس آرام).
- * بدون رادار/سونار/دنبال‌کردن موس؛ فوتر تعامل جداگانه دارد.
+ * سیگنال بازار خصوصی.
+ * تعامل: «برگ پرونده» — با hover روی CTA، یک برگهٔ محرمانه از زیر دکمه بیرون می‌آید.
+ * استعارهٔ املاک واقعی (پرونده)، نه خط/نقطه/پالس تمپلیت AI.
  */
 export default function MarketSignalSection() {
   const reduceMotion = useReducedMotion();
@@ -22,56 +22,66 @@ export default function MarketSignalSection() {
     <section
       ref={sectionRef}
       aria-label="سیگنال اعتماد دفتر"
-      className="relative overflow-hidden bg-[#071520] text-white"
+      className="relative overflow-hidden bg-[#0A1622] text-white"
     >
-      {/* Atmosphere — کاملاً ایستا در حالت idle */}
+      {/* فضای آرام تحریری — بدون رادار، بدون برچسب‌های شناور */}
       <div className="pointer-events-none absolute inset-0" aria-hidden>
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(0,163,255,0.14),transparent_55%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_80%,rgba(11,58,92,0.45),transparent_45%)]" />
-        <StaticNeighborhoods />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_70%_0%,rgba(148,180,204,0.12),transparent_58%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),transparent_40%,rgba(0,0,0,0.18))]" />
+        <div
+          className="absolute inset-x-0 top-0 h-px bg-gradient-to-l from-transparent via-white/20 to-transparent"
+        />
       </div>
 
       <div className="rio-container relative z-10 py-16 md:py-24 lg:py-28">
         <div className="grid items-end gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
           <div>
             <motion.p
-              initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 14 }}
               animate={inView ? { opacity: 1, y: 0 } : undefined}
-              transition={{ duration: 0.7, ease: EASE.expoOut }}
-              className="font-vazirmatn text-[11px] font-semibold tracking-[0.28em] text-sky-300/90"
+              transition={{ duration: 0.65, ease: EASE.expoOut }}
+              className="font-vazirmatn text-[11px] font-semibold tracking-[0.28em] text-sky-200/80"
             >
               {INTRO_CTA.eyebrow}
             </motion.p>
 
             <motion.h2
-              initial={reduceMotion ? false : { opacity: 0, y: 28 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 24 }}
               animate={inView ? { opacity: 1, y: 0 } : undefined}
-              transition={{ duration: 0.85, delay: 0.08, ease: EASE.expoOut }}
+              transition={{ duration: 0.8, delay: 0.06, ease: EASE.expoOut }}
               className="mt-4 max-w-3xl font-vazirmatn text-[clamp(1.85rem,4.6vw,3.35rem)] font-bold leading-[1.35] tracking-tight text-white"
             >
               {INTRO_CTA.title}
             </motion.h2>
 
-            <InkLine active={inView && !reduceMotion} />
+            {/* خط تحریری ساده — نه موج نئونی */}
+            <motion.span
+              aria-hidden
+              className="mt-6 block h-px max-w-[12rem] origin-right bg-white/35"
+              initial={reduceMotion ? false : { scaleX: 0, opacity: 0 }}
+              animate={inView ? { scaleX: 1, opacity: 1 } : undefined}
+              transition={{ duration: 0.7, delay: 0.16, ease: EASE.expoOut }}
+            />
 
             <motion.p
-              initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 16 }}
               animate={inView ? { opacity: 1, y: 0 } : undefined}
-              transition={{ duration: 0.75, delay: 0.22, ease: EASE.expoOut }}
-              className="mt-6 max-w-xl font-vazirmatn text-sm leading-8 text-white/70 md:text-base md:leading-8"
+              transition={{ duration: 0.7, delay: 0.2, ease: EASE.expoOut }}
+              className="mt-6 max-w-xl font-vazirmatn text-sm leading-8 text-white/68 md:text-base md:leading-8"
             >
               {INTRO_CTA.body}
             </motion.p>
 
             <motion.div
-              initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 14 }}
               animate={inView ? { opacity: 1, y: 0 } : undefined}
-              transition={{ duration: 0.7, delay: 0.34, ease: EASE.expoOut }}
+              transition={{ duration: 0.65, delay: 0.3, ease: EASE.expoOut }}
               className="mt-8"
             >
-              <ArchitecturalPulseCta
+              <PrivateDossierCta
                 href={INTRO_CTA.cta.href}
                 label={INTRO_CTA.cta.label}
+                neighborhood={SIGNAL_NEIGHBORHOODS[0] ?? "گوهردشت"}
               />
             </motion.div>
           </div>
@@ -84,197 +94,112 @@ export default function MarketSignalSection() {
 }
 
 /**
- * خط معماری → گوشه → نقطه اتصال → پالس یک‌باره روی hover دسکتاپ.
- * پیاده‌سازی با CSS (transform/opacity/stroke)؛ بدون حلقهٔ دائمی.
+ * برگ پروندهٔ خصوصی:
+ * با hover دسکتاپ، یک برگه از زیر دکمه بیرون می‌آید — تب محرمانه، محله، شبح نمای خانه.
+ * فقط transform/opacity؛ بدون حلقهٔ دائمی؛ روی لمس فقط خود دکمه می‌ماند.
  */
-function ArchitecturalPulseCta({ href, label }: { href: string; label: string }) {
+function PrivateDossierCta({
+  href,
+  label,
+  neighborhood,
+}: {
+  href: string;
+  label: string;
+  neighborhood: string;
+}) {
   return (
-    <div className="relative inline-block">
-      {/*
-        ترتیب DOM مهم است: .arch-pulse + .arch-pulse-mark
-        تا hover/focus فقط با CSS sibling فعال شود — بدون state ری‌اکت.
-      */}
+    <div className="signal-dossier group relative inline-block">
       <Link
         href={href}
-        className="arch-pulse ios-tap-target group inline-flex min-h-12 items-center gap-2.5 rounded-full bg-sky-500 px-6 py-3 font-vazirmatn text-sm font-semibold text-white shadow-[0_18px_50px_-18px_rgba(0,163,255,0.85)] transition-colors duration-300 hover:bg-sky-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-200/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#071520]"
+        className="signal-dossier-trigger ios-tap-target relative z-10 inline-flex min-h-12 items-center gap-2.5 rounded-full bg-[#E8F1F7] px-6 py-3 font-vazirmatn text-sm font-semibold text-[#0A1622] transition-colors duration-300 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A1622]"
       >
         {label}
         <ArrowUpLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
       </Link>
 
-      <span
-        className="arch-pulse-mark pointer-events-none absolute start-3 top-[calc(100%+0.65rem)] hidden h-[52px] w-[92px] lg:block"
+      {/* برگه زیر دکمه — فقط opacity/transform؛ فضا از قبل روی lg رزرو شده */}
+      <div
+        className="signal-dossier-sheet pointer-events-none absolute start-0 top-[3.15rem] z-0 hidden w-[min(100%,17.5rem)] rounded-b-xl rounded-t-sm border border-white/12 bg-[#132333] lg:block"
         aria-hidden
       >
-        <svg viewBox="0 0 92 52" fill="none" className="h-full w-full overflow-visible">
-          <path
-            className="arch-pulse-line"
-            d="M4 2 H74 V38"
-            stroke="rgba(186,230,253,0.55)"
-            strokeWidth="1"
-            strokeLinecap="square"
-            strokeLinejoin="miter"
-          />
-          <circle
-            className="arch-pulse-point"
-            cx="74"
-            cy="38"
-            r="2.25"
-            fill="rgba(224,242,254,0.55)"
-          />
-          <circle
-            className="arch-pulse-ring"
-            cx="74"
-            cy="38"
-            r="2.25"
-            fill="none"
-            stroke="rgba(186,230,253,0.45)"
-            strokeWidth="1"
-          />
-        </svg>
-      </span>
+        <div className="flex items-start justify-between gap-3 px-4 pb-3.5 pt-5">
+          <div className="min-w-0">
+            <span className="signal-dossier-tab inline-block rounded-sm bg-white/10 px-2 py-0.5 font-vazirmatn text-[10px] font-bold tracking-[0.18em] text-sky-100/90">
+              محرمانه
+            </span>
+            <p className="signal-dossier-meta mt-2.5 truncate font-vazirmatn text-xs font-medium text-white/75">
+              {neighborhood}
+              <span className="mx-1.5 text-white/25">·</span>
+              ویلای خصوصی
+            </p>
+            <p className="signal-dossier-ref mt-1 font-vazirmatn text-[10px] tracking-[0.2em] text-white/35">
+              DR—۰۴۱
+            </p>
+          </div>
+          <HouseElevation className="signal-dossier-house mt-0.5 h-9 w-11 shrink-0 text-sky-100/70" />
+        </div>
+        <div className="h-px w-full bg-gradient-to-l from-transparent via-white/15 to-transparent" />
+      </div>
     </div>
   );
 }
 
-function InkLine({ active }: { active: boolean }) {
+/** نمای سادهٔ خانه — پر، نه خط‌کشی انیمیشنی تمپلیت */
+function HouseElevation({ className }: { className?: string }) {
   return (
-    <svg
-      className="mt-6 h-3 w-full max-w-md overflow-visible"
-      viewBox="0 0 420 12"
-      fill="none"
-      aria-hidden
-    >
-      <motion.path
-        d="M2 8 C 70 2, 140 14, 210 7 S 350 2, 418 8"
-        stroke="url(#signal-ink)"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0.2 }}
-        animate={active ? { pathLength: 1, opacity: 1 } : undefined}
-        transition={{ duration: 1.35, ease: EASE.expoOut, delay: 0.18 }}
+    <svg viewBox="0 0 44 36" fill="currentColor" className={className}>
+      <path
+        d="M22 3.5 4.5 16.2h4.2V31h10.2v-8.2h6.2V31h10.2V16.2h4.2L22 3.5Z"
+        fillOpacity="0.18"
       />
-      <defs>
-        <linearGradient id="signal-ink" x1="0" y1="0" x2="420" y2="0" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#38BDF8" />
-          <stop offset="0.55" stopColor="#00A3FF" />
-          <stop offset="1" stopColor="#0B3A5C" stopOpacity="0.2" />
-        </linearGradient>
-      </defs>
+      <path
+        d="M22 5.2 7.2 16.1h3.4V29.2h8.4v-7.4h6V29.2h8.4V16.1h3.4L22 5.2Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.1"
+        strokeLinejoin="round"
+      />
+      <rect x="19.4" y="19.2" width="5.2" height="5.2" rx="0.6" fillOpacity="0.55" />
     </svg>
-  );
-}
-
-/** نام محله‌ها — ایستا، بدون حلقهٔ شناور یا واکنش به موس */
-function StaticNeighborhoods() {
-  return (
-    <div className="absolute inset-0 overflow-hidden" aria-hidden>
-      {SIGNAL_NEIGHBORHOODS.map((name, index) => {
-        const top = 12 + ((index * 11) % 70);
-        const side = index % 2 === 0 ? "start" : "end";
-        const inset = 4 + ((index * 7) % 28);
-        return (
-          <span
-            key={name}
-            className="absolute font-vazirmatn text-[11px] font-medium tracking-[0.18em] text-sky-100/20 md:text-xs"
-            style={{
-              top: `${top}%`,
-              ...(side === "start" ? { right: `${inset}%` } : { left: `${inset}%` }),
-            }}
-          >
-            {name}
-          </span>
-        );
-      })}
-    </div>
   );
 }
 
 function ProofMarks({ active, reduceMotion }: { active: boolean; reduceMotion: boolean }) {
   return (
     <motion.div
-      initial={reduceMotion ? false : { opacity: 0, y: 24 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 20 }}
       animate={active ? { opacity: 1, y: 0 } : undefined}
-      transition={{ duration: 0.8, delay: 0.2, ease: EASE.expoOut }}
+      transition={{ duration: 0.75, delay: 0.16, ease: EASE.expoOut }}
       className="relative"
     >
-      <div className="absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-white/[0.07] via-transparent to-sky-400/10 blur-xl" />
-      <ol className="relative grid gap-0 overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.04] backdrop-blur-xl">
+      <ol className="relative grid gap-0 overflow-hidden rounded-2xl border border-white/12 bg-white/[0.035]">
         {TRUST_STATS.map((stat, index) => (
           <motion.li
             key={stat.label}
-            initial={reduceMotion ? false : { opacity: 0, x: 18 }}
-            animate={active ? { opacity: 1, x: 0 } : undefined}
-            transition={{ duration: 0.65, delay: 0.28 + index * 0.1, ease: EASE.expoOut }}
+            initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+            animate={active ? { opacity: 1, y: 0 } : undefined}
+            transition={{ duration: 0.55, delay: 0.22 + index * 0.08, ease: EASE.expoOut }}
             className={cn(
               "group relative grid grid-cols-[auto_1fr] gap-4 px-5 py-5 sm:px-6 sm:py-6",
               index < TRUST_STATS.length - 1 ? "border-b border-white/10" : "",
             )}
           >
-            <span className="relative mt-1 flex h-10 w-10 items-center justify-center">
-              <span className="absolute inset-0 rounded-full bg-sky-400/10 ring-1 ring-sky-300/25 transition group-hover:bg-sky-400/20" />
-              <span className="absolute inset-1 rounded-full border border-sky-300/35" />
-              <span className="relative font-vazirmatn text-[11px] font-bold tabular-nums text-sky-300">
-                {(index + 1).toLocaleString("fa-IR")}
-              </span>
+            <span className="relative mt-1 flex h-9 w-9 items-center justify-center border border-white/15 font-vazirmatn text-[11px] font-bold tabular-nums text-sky-100/85">
+              {(index + 1).toLocaleString("fa-IR")}
             </span>
             <div className="min-w-0">
               <p className="font-vazirmatn text-2xl font-bold tracking-tight text-white sm:text-[1.65rem]">
-                <RevealValue value={stat.value} active={active} reduceMotion={reduceMotion} />
+                {stat.value}
               </p>
-              <p className="mt-1 font-vazirmatn text-sm font-semibold text-sky-200/90">{stat.label}</p>
+              <p className="mt-1 font-vazirmatn text-sm font-semibold text-white/80">{stat.label}</p>
               {"hint" in stat && stat.hint ? (
-                <p className="mt-1 font-vazirmatn text-xs leading-6 text-white/45">{stat.hint}</p>
+                <p className="mt-1 font-vazirmatn text-xs leading-6 text-white/40">{stat.hint}</p>
               ) : null}
             </div>
-            <span className="pointer-events-none absolute inset-y-0 start-0 w-0.5 origin-top scale-y-0 bg-gradient-to-b from-sky-300 to-sky-500 transition duration-500 group-hover:scale-y-100" />
+            <span className="pointer-events-none absolute inset-y-0 start-0 w-px origin-top scale-y-0 bg-white/50 transition duration-500 group-hover:scale-y-100" />
           </motion.li>
         ))}
       </ol>
     </motion.div>
   );
-}
-
-function RevealValue({
-  value,
-  active,
-  reduceMotion,
-}: {
-  value: string;
-  active: boolean;
-  reduceMotion: boolean;
-}) {
-  const [shown, setShown] = useState(reduceMotion ? value : "");
-
-  useEffect(() => {
-    if (!active) return;
-    if (reduceMotion) {
-      setShown(value);
-      return;
-    }
-    let frame = 0;
-    const glyphs = "۰۱۲۳۴۵۶۷۸۹+٪میلیارد ";
-    const ticks = 14;
-    const id = window.setInterval(() => {
-      frame += 1;
-      if (frame >= ticks) {
-        setShown(value);
-        window.clearInterval(id);
-        return;
-      }
-      setShown(
-        value
-          .split("")
-          .map((ch, i) => {
-            if (ch === " " || ch === "+" || ch === "٪" || /[آ-ی]/.test(ch)) return ch;
-            if (frame / ticks > i / Math.max(value.length, 1)) return ch;
-            return glyphs[Math.floor(Math.random() * 10)] ?? ch;
-          })
-          .join(""),
-      );
-    }, 38);
-    return () => window.clearInterval(id);
-  }, [active, reduceMotion, value]);
-
-  return <span className="tabular-nums">{shown || "···"}</span>;
 }
