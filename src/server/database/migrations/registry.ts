@@ -36,6 +36,15 @@ export const MIGRATIONS: Migration[] = [
       "Supports support (client↔office) and admin (agent↔admins) desks.",
     applied: true,
   },
+  {
+    id: "2026-10-03-schema-version",
+    title: "Stamp AgencyStore.schemaVersion",
+    description:
+      "Additive optional schemaVersion number on the agency document. " +
+      "normalizeAgencyStore / saveStore stamp AGENCY_SCHEMA_VERSION=1. " +
+      "Older files without the field load safely and gain the version on next save.",
+    applied: true,
+  },
 ];
 
 export function listPendingMigrations() {

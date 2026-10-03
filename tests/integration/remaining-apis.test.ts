@@ -14,11 +14,26 @@ import { GET as listThreads, POST as createThread } from "@/app/api/chat/threads
 import { POST as blogUpload } from "@/app/api/uploads/blog/route";
 
 describe("Public utility APIs", () => {
-  it("GET /api/health is public and healthy", async () => {
+  it("GET /api/health is public and healthy with persistence diagnostics", async () => {
     const response = await health();
-    const result = await readJson<{ ok: boolean; data?: { status: string } }>(response);
+    const result = await readJson<{
+      ok: boolean;
+      data?: {
+        status: string;
+        persistence?: {
+          mode: string;
+          readable: boolean;
+          corrupt: boolean;
+          schemaVersion: number | null;
+        };
+      };
+    }>(response);
     expect(result.status).toBe(200);
     expect(result.body.data?.status).toBe("healthy");
+    expect(result.body.data?.persistence?.readable).toBe(true);
+    expect(result.body.data?.persistence?.corrupt).toBe(false);
+    expect(result.body.data?.persistence?.mode).toMatch(/json-file|memory/);
+    expect(JSON.stringify(result.body)).not.toMatch(/agency\.json|AUTH_SECRET|\/workspace/);
   });
 
   it("OTP accepts valid Iranian mobile and never returns the raw code", async () => {

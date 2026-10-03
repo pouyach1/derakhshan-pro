@@ -3,6 +3,7 @@ import { siteConfig } from "@/config/siteConfig";
 import { BLOG_SEED_AUTHORS, BLOG_SEED_POSTS } from "@/server/db/blog-seed";
 import {
   getStore,
+  isAgencyStoreEmpty,
   newId,
   nowIso,
   resetStore,
@@ -862,34 +863,47 @@ let booting: Promise<void> | null = null;
 export async function ensureBootstrapped() {
   const current = getStore();
 
-  const hasData = current.users.length > 0 && current.properties.length > 0;
   const hasUsableStaff = current.users.some(
     (u) =>
       (u.role === "admin" || u.role === "agent") &&
       Boolean(u.passwordHash) &&
       u.isActive !== false,
   );
+  const storeEmpty = isAgencyStoreEmpty(current);
 
   // Fast path for warm isolates — avoid any hashing work.
-  if (hasData && hasUsableStaff) {
+  if (!storeEmpty && hasUsableStaff) {
     hydrateDerivedCollections();
     return;
   }
 
   hydrateDerivedCollections();
 
-  const needsData = !hasData;
   const seedPassword = resolveSeedPassword();
 
-  // Repair: properties may exist while staff rows were wiped or never seeded.
-  if (!hasUsableStaff && seedPassword) {
+  // Repair: data may exist while staff rows were wiped or never seeded.
+  // Never wipe existing CRM/blog/chat rows to recreate a demo store.
+  if (!hasUsableStaff && seedPassword && !storeEmpty) {
     await ensureStaffUsers(seedPassword);
   }
 
-  if (needsData) {
+  // First-boot only: refuse to replace any partial/real document with demo seed.
+  if (storeEmpty) {
     if (!seedPassword) {
       // Empty Workers isolate without seed env: do NOT block client self-login.
       // Staff demo data simply won't exist until a seed password is configured.
+      return;
+    }
+
+    // Production first-boot seed requires an explicit opt-in so deploys cannot
+    // accidentally materialize demo data without operator intent.
+    if (
+      process.env.NODE_ENV === "production" &&
+      process.env.ALLOW_PRODUCTION_SEED !== "1"
+    ) {
+      console.warn(
+        "[bootstrap] empty store in production; set ALLOW_PRODUCTION_SEED=1 to seed demo data",
+      );
       return;
     }
 
@@ -897,7 +911,8 @@ export async function ensureBootstrapped() {
       booting = (async () => {
         const seeded = await buildSeedStore();
         const live = getStore();
-        if (live.users.length > 0 && live.properties.length > 0) return;
+        // Re-check emptiness after await — another request may have written data.
+        if (!isAgencyStoreEmpty(live)) return;
         resetStore(seeded);
       })().finally(() => {
         booting = null;

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { nanoid } from "@/lib/id";
+import { PersistenceError } from "@/server/db/store";
 
 export class ApiError extends Error {
   status: number;
@@ -44,6 +45,25 @@ export function jsonError(error: unknown, requestId = nanoid(10)) {
         status: error.status,
         headers: { "x-request-id": requestId },
       },
+    );
+  }
+
+  if (error instanceof PersistenceError) {
+    console.error("[persistence]", requestId, error.code, error.message);
+    const status = error.code === "STORE_CORRUPT" ? 503 : 500;
+    return NextResponse.json(
+      {
+        ok: false,
+        error: {
+          code: error.code,
+          message:
+            error.code === "STORE_CORRUPT"
+              ? "ذخیره‌سازی داده در دسترس نیست"
+              : "ذخیره اطلاعات ناموفق بود",
+        },
+        meta: { requestId, ts: new Date().toISOString() },
+      },
+      { status, headers: { "x-request-id": requestId } },
     );
   }
 

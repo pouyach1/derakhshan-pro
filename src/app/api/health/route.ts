@@ -1,14 +1,32 @@
 import { nanoid } from "@/lib/id";
 import { jsonError, jsonOk } from "@/server/http/response";
+import { getPersistenceDiagnostics } from "@/server/db/store";
 
 /**
- * Public liveness only — never call ensureBootstrapped here.
- * Seeding/bcrypt on health checks burns Workers CPU and can trip Error 1102.
+ * Public liveness + non-sensitive persistence diagnostics.
+ * Never call ensureBootstrapped / bcrypt here (Workers CPU / Error 1102).
+ * Does not expose paths, secrets, env values, or record payloads.
  */
 export async function GET() {
   const requestId = nanoid(10);
   try {
-    return jsonOk({ status: "healthy" }, { requestId });
+    const persistence = getPersistenceDiagnostics();
+    const status = persistence.corrupt ? "degraded" : "healthy";
+    return jsonOk(
+      {
+        status,
+        persistence: {
+          mode: persistence.mode,
+          readable: persistence.readable,
+          writable: persistence.writable,
+          initialized: persistence.initialized,
+          corrupt: persistence.corrupt,
+          schemaVersion: persistence.schemaVersion,
+          empty: persistence.empty,
+        },
+      },
+      { requestId, status: persistence.corrupt ? 503 : 200 },
+    );
   } catch (error) {
     return jsonError(error, requestId);
   }

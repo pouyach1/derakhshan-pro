@@ -4,10 +4,10 @@
 
 Derakhshan Pro stores operational CRM data in an **edge-safe JSON document**:
 
-- Node / local: `data/agency.json`
-- Cloudflare Workers: in-memory isolate (seeded on demand)
+- Node / local: `data/agency.json` (atomic temp+rename writes)
+- Cloudflare Workers: in-memory isolate (seeded on demand) — **not durable**
 
-There is **no SQL engine** installed in Phase A.
+There is **no SQL engine** installed. See `docs/production-data.md` for guarantees and limits.
 
 ## Architecture layout
 

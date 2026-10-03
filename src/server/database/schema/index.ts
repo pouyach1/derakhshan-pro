@@ -22,4 +22,8 @@ export type { AgencySettings } from "./settings";
 export type { ActivityRecord } from "./activity";
 export type { ContactRecord } from "./contacts";
 export type { AgencyStore } from "./store";
-export { emptyAgencyStore, normalizeAgencyStore } from "./store";
+export {
+  AGENCY_SCHEMA_VERSION,
+  emptyAgencyStore,
+  normalizeAgencyStore,
+} from "./store";
