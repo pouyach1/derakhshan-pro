@@ -65,13 +65,19 @@ function isNodeRuntime() {
   return typeof process !== "undefined" && Boolean(process.versions?.node);
 }
 
+function storeFilePath(pathMod: typeof import("node:path")) {
+  const override = process.env.AGENCY_STORE_PATH?.trim();
+  if (override) return override;
+  return pathMod.join(process.cwd(), "data", "agency.json");
+}
+
 function readFromDisk(): AgencyStore | null {
   if (!isNodeRuntime()) return null;
   try {
     // Dynamic access keeps Workers bundlers from hard-failing on missing fs.
     const fs = eval("require")("node:fs") as typeof import("node:fs");
     const path = eval("require")("node:path") as typeof import("node:path");
-    const file = path.join(process.cwd(), "data", "agency.json");
+    const file = storeFilePath(path);
     if (!fs.existsSync(file)) return null;
     return JSON.parse(fs.readFileSync(file, "utf8")) as AgencyStore;
   } catch {
@@ -84,7 +90,7 @@ function writeToDisk(store: AgencyStore) {
   try {
     const fs = eval("require")("node:fs") as typeof import("node:fs");
     const path = eval("require")("node:path") as typeof import("node:path");
-    const file = path.join(process.cwd(), "data", "agency.json");
+    const file = storeFilePath(path);
     fs.mkdirSync(path.dirname(file), { recursive: true });
     fs.writeFileSync(file, JSON.stringify(store, null, 2));
   } catch {

@@ -5,9 +5,13 @@ import { authCookieName, verifySessionToken } from "@/server/auth/session";
 import { ApiError } from "@/server/http/response";
 
 export async function getSessionFromRequest(request?: NextRequest): Promise<AuthSession | null> {
-  const token =
-    request?.cookies.get(authCookieName())?.value ??
-    (await cookies()).get(authCookieName())?.value;
+  // When a NextRequest is provided (API route handlers), read only that request's
+  // cookies. Falling through to cookies() after a missing cookie would throw outside
+  // request scope in tests and incorrectly treat "no cookie on request" as a signal
+  // to consult a different cookie store in production.
+  const token = request
+    ? request.cookies.get(authCookieName())?.value
+    : (await cookies()).get(authCookieName())?.value;
   return verifySessionToken(token);
 }
 
