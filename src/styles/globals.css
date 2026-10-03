@@ -205,6 +205,90 @@
     user-select: none;
   }
 
+  /*
+   * Private Dossier — فقط بخش Signal (CTA).
+   * با hover، برگهٔ پرونده از زیر دکمه بیرون می‌آید (transform/opacity).
+   * فوتر از این کلاس‌ها استفاده نمی‌کند.
+   */
+  .signal-dossier-sheet {
+    opacity: 0;
+    transform: translate3d(0, -12px, 0);
+    transition:
+      opacity 280ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .signal-dossier-tab,
+  .signal-dossier-meta,
+  .signal-dossier-ref,
+  .signal-dossier-house {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0);
+    transition:
+      opacity 260ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .signal-dossier:hover .signal-dossier-sheet,
+    .signal-dossier:focus-within .signal-dossier-sheet {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+
+    .signal-dossier:hover .signal-dossier-tab,
+    .signal-dossier:focus-within .signal-dossier-tab {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+      transition-delay: 90ms;
+    }
+
+    .signal-dossier:hover .signal-dossier-meta,
+    .signal-dossier:focus-within .signal-dossier-meta {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+      transition-delay: 140ms;
+    }
+
+    .signal-dossier:hover .signal-dossier-ref,
+    .signal-dossier:focus-within .signal-dossier-ref {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+      transition-delay: 180ms;
+    }
+
+    .signal-dossier:hover .signal-dossier-house,
+    .signal-dossier:focus-within .signal-dossier-house {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+      transition-delay: 200ms;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .signal-dossier-sheet,
+    .signal-dossier-tab,
+    .signal-dossier-meta,
+    .signal-dossier-ref,
+    .signal-dossier-house {
+      transition: none !important;
+    }
+
+    .signal-dossier:hover .signal-dossier-sheet,
+    .signal-dossier:focus-within .signal-dossier-sheet,
+    .signal-dossier:hover .signal-dossier-tab,
+    .signal-dossier:focus-within .signal-dossier-tab,
+    .signal-dossier:hover .signal-dossier-meta,
+    .signal-dossier:focus-within .signal-dossier-meta,
+    .signal-dossier:hover .signal-dossier-ref,
+    .signal-dossier:focus-within .signal-dossier-ref,
+    .signal-dossier:hover .signal-dossier-house,
+    .signal-dossier:focus-within .signal-dossier-house {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   /* سایه بدون انیمیت box-shadow — لایه‌ی جدا با opacity */
   .ios-glow-layer {
     pointer-events: none;
