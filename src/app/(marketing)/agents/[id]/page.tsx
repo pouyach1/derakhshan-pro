@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       openGraph: {
         title,
         description,
-        type: "profile",
+        type: "website",
         url: canonical,
         locale: "fa_IR",
         siteName: siteConfig.brand.nameFa,
