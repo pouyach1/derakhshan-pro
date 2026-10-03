@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Building2, LogOut } from "lucide-react";
+import { Building2, ExternalLink, LogOut } from "lucide-react";
 import AuthToast from "@/components/auth/AuthToast";
 import UserAccountMenu from "@/components/auth/UserAccountMenu";
 import WorkspaceThemeToggle from "@/components/workspace/WorkspaceThemeToggle";
@@ -126,6 +126,26 @@ export default function AgentShell({ children }: { children: React.ReactNode }) 
                 </Link>
               );
             })}
+            {/* Utility: open public website without leaving the agent workspace */}
+            <a
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="مشاهده سایت عمومی"
+              className={cn(
+                "group inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-sm transition duration-150",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/50 focus-visible:ring-offset-2",
+                isDark
+                  ? "bg-white/5 text-ws-muted ring-1 ring-white/10 hover:bg-white/10 hover:text-ws-text focus-visible:ring-offset-[#121821]"
+                  : "bg-white/80 text-slate-600 ring-1 ring-slate-200/60 hover:bg-white hover:text-[#0B3A5C] focus-visible:ring-offset-white",
+              )}
+            >
+              <ExternalLink
+                className="h-4 w-4 opacity-80 transition duration-150 group-hover:translate-x-[-2px] group-hover:opacity-100"
+                strokeWidth={1.9}
+              />
+              <span>مشاهده سایت</span>
+            </a>
             <WorkspaceThemeToggle isDark={isDark} onToggle={toggleTheme} />
             {session ? <UserAccountMenu tone={isDark ? "dark" : "light"} /> : null}
             {!session ? (
