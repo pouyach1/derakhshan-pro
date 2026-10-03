@@ -2,6 +2,12 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/siteConfig";
 import { listPublishedBlogPosts } from "@/server/services/blog";
 
+/**
+ * Must be request-time: AgencyStore (esp. on Cloudflare isolates) is not the
+ * build-time snapshot. A static sitemap would omit posts published after deploy.
+ */
+export const dynamic = "force-dynamic";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = siteConfig.seo.url.replace(/\/$/, "");
   const posts = await listPublishedBlogPosts();
