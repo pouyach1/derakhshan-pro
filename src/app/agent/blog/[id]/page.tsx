@@ -22,10 +22,10 @@ export default async function AgentBlogEditPage({ params }: PageProps) {
       return (
         <div className="space-y-4 font-vazirmatn" dir="rtl">
           <BlogBackLink href={BASE_PATH} />
-          <h1 className="mt-4 text-2xl font-bold text-[#0B3A5C]">
+          <h1 className="mt-4 text-2xl font-bold text-ws-text">
             {error.status === 403 ? "دسترسی مجاز نیست" : "مقاله یافت نشد"}
           </h1>
-          <p className="text-sm text-[#0B3A5C]/60">{error.message}</p>
+          <p className="text-sm text-ws-muted">{error.message}</p>
         </div>
       );
     }
@@ -36,8 +36,8 @@ export default async function AgentBlogEditPage({ params }: PageProps) {
     <div className="space-y-5 font-vazirmatn" dir="rtl">
       <div>
         <BlogBackLink href={BASE_PATH} />
-        <h1 className="mt-4 font-vazirmatn text-2xl font-bold text-[#0B3A5C]">{post.title}</h1>
-        <p className="mt-1 text-sm leading-7 text-[#0B3A5C]/60">ویرایش مقاله مشاور.</p>
+        <h1 className="mt-4 font-vazirmatn text-2xl font-bold text-ws-text">{post.title}</h1>
+        <p className="mt-1 text-sm leading-7 text-ws-muted">ویرایش مقاله مشاور.</p>
       </div>
       <AgentBlogAuthorBridge mode="edit" basePath={BASE_PATH} initial={post} />
     </div>

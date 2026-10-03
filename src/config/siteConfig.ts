@@ -118,6 +118,7 @@ export const siteConfig = {
     { href: "/done-deals", label: "معاملات انجام‌شده" },
     { href: "/meet-the-team", label: "تیم مشاوران" },
     { href: "/services", label: "خدمات" },
+    { href: "/blog", label: "مجله" },
     { href: "/contact", label: "تماس" },
   ],
 
@@ -769,6 +770,7 @@ export const siteConfig = {
           { href: "/meet-the-team", label: "تیم مشاوران" },
           { href: "/listings", label: "آرشیو املاک فعال" },
           { href: "/done-deals", label: "معاملات انجام‌شده" },
+          { href: "/blog", label: "مجله املاک" },
         ],
       },
       services: {

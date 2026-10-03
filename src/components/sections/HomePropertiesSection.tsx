@@ -7,6 +7,7 @@ import PropertyGalleryTrigger from "@/components/listings/PropertyGalleryTrigger
 import AgentProfileLink from "@/components/agents/AgentProfileLink";
 import CompactPropertyCard from "@/components/mobile/CompactPropertyCard";
 import { PropertyCardSkeletonList } from "@/components/mobile/PropertySkeletons";
+import PublicLoadError from "@/components/listings/PublicLoadError";
 import { api } from "@/lib/api";
 import { listingTypeLabel } from "@/lib/money";
 import PropertyPrice from "@/components/listings/PropertyPrice";
@@ -20,15 +21,22 @@ import type { PropertyWithAgent } from "@/server/services/agents-public";
 export default function HomePropertiesSection() {
   const [items, setItems] = useState<PropertyWithAgent[]>([]);
   const [loading, setLoading] = useState(true);
+  const [failed, setFailed] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
+    setFailed(false);
     try {
       const res = await api<{ items: PropertyWithAgent[] }>("/api/properties?pageSize=24");
-      if (res.ok) setItems(res.data.items);
-      else setItems([]);
+      if (res.ok) {
+        setItems(res.data.items);
+      } else {
+        setItems([]);
+        setFailed(true);
+      }
     } catch {
       setItems([]);
+      setFailed(true);
     } finally {
       setLoading(false);
     }
@@ -69,6 +77,8 @@ export default function HomePropertiesSection() {
 
         {loading ? (
           <PropertyCardSkeletonList count={4} />
+        ) : failed ? (
+          <PublicLoadError onRetry={() => void load()} />
         ) : !lead ? (
           <p className="rounded-[1.5rem] bg-white px-6 py-16 text-center text-sm text-[#0B3A5C]/55 ring-1 ring-[#0B3A5C]/8">
             فعلاً فایلی برای نمایش نیست.

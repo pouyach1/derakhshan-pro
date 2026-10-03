@@ -187,7 +187,9 @@ export default function ListingsView() {
               </div>
             ) : filtered.length === 0 ? (
               <p className="text-sm text-[#0B3A5C]/55 sm:col-span-2 xl:col-span-3">
-                فایل منتشرشده‌ای مطابق جستجو نیست.
+                {items.length === 0
+                  ? "فعلاً فایل منتشرشده‌ای در آرشیو نیست."
+                  : "فایل منتشرشده‌ای مطابق جستجو نیست."}
               </p>
             ) : (
               filtered.map((item, index) => (
