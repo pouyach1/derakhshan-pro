@@ -56,7 +56,20 @@ async function saveImageUploads(
     // Always store as .jpg path when jpeg; keep .png extension if png mime
     const ext = type.includes("png") && !type.includes("jpeg") ? "png" : "jpg";
     const filename = `${id}.${ext}`;
-    fs.writeFileSync(path.join(dir, filename), buf);
+    // Random hex name — no user-controlled path segments (path traversal safe).
+    const finalPath = path.join(dir, filename);
+    const tmpPath = path.join(dir, `.${filename}.${process.pid}.tmp`);
+    try {
+      fs.writeFileSync(tmpPath, buf, { mode: 0o644 });
+      fs.renameSync(tmpPath, finalPath);
+    } catch (error) {
+      try {
+        if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);
+      } catch {
+        /* ignore */
+      }
+      throw new ApiError(500, "UPLOAD_WRITE_FAILED", "ذخیره فایل ناموفق بود");
+    }
     urls.push(`/uploads/${kind}/${stamp}/${filename}`);
   }
   return urls;

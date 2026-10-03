@@ -16,7 +16,12 @@ import type { AgencySettings } from "./settings";
 import type { TourRecord } from "./tours";
 import type { UserRecord } from "./users";
 
+/** Current agency document schema version (additive migrations only). */
+export const AGENCY_SCHEMA_VERSION = 1;
+
 export type AgencyStore = {
+  /** Document schema version — stamped on save; older files normalize to current. */
+  schemaVersion?: number;
   users: UserRecord[];
   properties: PropertyRecord[];
   leads: LeadRecord[];
@@ -39,6 +44,7 @@ export type AgencyStore = {
 
 export function emptyAgencyStore(): AgencyStore {
   return {
+    schemaVersion: AGENCY_SCHEMA_VERSION,
     users: [],
     properties: [],
     leads: [],
@@ -57,6 +63,9 @@ export function emptyAgencyStore(): AgencyStore {
 
 /** Ensure newer collections exist without rewriting existing rows. */
 export function normalizeAgencyStore(store: AgencyStore): AgencyStore {
+  if (typeof store.schemaVersion !== "number" || !Number.isFinite(store.schemaVersion)) {
+    store.schemaVersion = AGENCY_SCHEMA_VERSION;
+  }
   if (!Array.isArray(store.propertyImages)) store.propertyImages = [];
   if (!Array.isArray(store.deals)) store.deals = [];
   if (!Array.isArray(store.blogPosts)) store.blogPosts = [];
