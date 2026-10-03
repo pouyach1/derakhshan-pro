@@ -1,5 +1,6 @@
 import type { AgentClient, AgentProperty, AgentPropertyStatus, AgentTour } from "@/config/agent-crm";
 import { formatToman, fallbackImage } from "@/lib/money";
+import { normalizeClientNotes } from "@/lib/client-notes";
 import type { ClientRecord, PropertyRecord, PropertyStatus, TourRecord } from "@/server/db/store";
 
 export function mapPropertyToAgent(item: PropertyRecord): AgentProperty {
@@ -44,7 +45,7 @@ export function mapClientToAgent(item: ClientRecord): AgentClient {
     budgetLabel: `${formatToman(item.budgetMin)} تا ${formatToman(item.budgetMax)}`,
     preferredNeighborhood: item.preferredNeighborhood,
     urgency: item.urgency,
-    notes: item.notes.map((note, index) => ({
+    notes: normalizeClientNotes(item.notes).map((note, index) => ({
       id: note.id || `${item.id}-n-${index}`,
       at: note.at || "",
       text: note.text,

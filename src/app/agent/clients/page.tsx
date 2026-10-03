@@ -16,6 +16,7 @@ import {
   type ClientUrgency,
 } from "@/config/agent-crm";
 import { useAgentScope } from "@/hooks/useAgentScope";
+import { formatNoteAt, sortNotesNewestFirst } from "@/lib/client-notes";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/siteConfig";
 import { api } from "@/lib/api";
@@ -30,21 +31,13 @@ const URGENCY_TONE: Record<ClientUrgency, string> = {
   high: "bg-rose-50 text-rose-700 ring-rose-200",
 };
 
-function nowLabel() {
-  return new Intl.DateTimeFormat("fa-IR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date());
-}
-
 export default function AgentClientsPage() {
   const agentId = useAgentScope();
   const [clients, setClients] = useState<AgentClient[]>([]);
   const [active, setActive] = useState<AgentClient | null>(null);
   const [note, setNote] = useState("");
+  const [noteError, setNoteError] = useState("");
+  const [savingNote, setSavingNote] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
   const [draft, setDraft] = useState({
     name: "",
@@ -75,17 +68,44 @@ export default function AgentClientsPage() {
     return map;
   }, [clients]);
 
+  const activeNotes = useMemo(
+    () => (active ? sortNotesNewestFirst(active.notes) : []),
+    [active],
+  );
+
   async function addNote() {
-    if (!active || !note.trim()) return;
-    const entry = { id: `n-${Date.now()}`, at: nowLabel(), text: note.trim() };
+    if (!active || !note.trim()) {
+      setNoteError("متن تماس یا یادداشت را وارد کنید.");
+      return;
+    }
+    setSavingNote(true);
+    setNoteError("");
+    const entry = {
+      id: `n-${Date.now()}`,
+      at: new Date().toISOString(),
+      text: note.trim(),
+    };
     const notes = [entry, ...active.notes];
     setClients((prev) => prev.map((c) => (c.id === active.id ? { ...c, notes } : c)));
     setActive((prev) => (prev ? { ...prev, notes } : prev));
     setNote("");
-    await api(`/api/clients/${active.id}`, {
+    const res = await api(`/api/clients/${active.id}`, {
       method: "PATCH",
-      body: JSON.stringify({ notes: notes.map((item) => ({ id: item.id, text: item.text, at: item.at })) }),
+      body: JSON.stringify({
+        notes: notes.map((item) => ({ id: item.id, text: item.text, at: item.at })),
+      }),
     });
+    setSavingNote(false);
+    if (!res.ok) {
+      setNoteError(res.error?.message || "ثبت یادداشت انجام نشد.");
+      // reload to avoid optimistic drift
+      const refresh = await api<{ items: ClientRecord[] }>("/api/clients");
+      if (refresh.ok) {
+        const mapped = refresh.data.items.map(mapClientToAgent);
+        setClients(mapped);
+        setActive(mapped.find((c) => c.id === active.id) || null);
+      }
+    }
   }
 
   async function addClient() {
@@ -220,44 +240,68 @@ export default function AgentClientsPage() {
               className="flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-[1.75rem] border border-slate-200/60 bg-white/95 shadow-xl backdrop-blur-md"
             >
               <div className="flex items-start justify-between gap-3 border-b border-slate-100 px-5 py-4">
-                <div>
-                  <h3 className="font-semibold text-slate-900">{active.name}</h3>
+                <div className="min-w-0">
+                  <h3 className="truncate font-semibold text-slate-900">{active.name}</h3>
                   <p className="text-xs text-slate-500">تایم‌لاین و لاگ تماس</p>
                 </div>
-                <button type="button" onClick={() => setActive(null)} className="rounded-full p-1.5 hover:bg-slate-100">
-                  <X className="h-4 w-4" />
-                </button>
+                <div className="flex shrink-0 items-center gap-2">
+                  <a
+                    href={`tel:${active.phone}`}
+                    className="ios-tap-target inline-flex h-9 items-center gap-1.5 rounded-full bg-emerald-50 px-3 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-100"
+                  >
+                    <Phone className="h-3.5 w-3.5" />
+                    تماس
+                  </a>
+                  <button type="button" onClick={() => setActive(null)} className="rounded-full p-1.5 hover:bg-slate-100">
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
 
-              <div className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
-                {active.notes.length === 0 && (
-                  <p className="text-sm text-slate-400">هنوز یادداشتی ثبت نشده است.</p>
+              <div className="flex-1 overflow-y-auto px-5 py-4">
+                {activeNotes.length === 0 ? (
+                  <p className="rounded-2xl bg-slate-50 px-4 py-8 text-center text-sm text-slate-400">
+                    هنوز تماس یا یادداشتی برای این مشتری ثبت نشده است.
+                  </p>
+                ) : (
+                  <ol className="relative space-y-3 border-s-2 border-slate-200/90 ps-4 sm:ps-5">
+                    {activeNotes.map((item) => {
+                      const when = formatNoteAt(item.at);
+                      return (
+                        <li key={item.id} className="relative">
+                          <span className="absolute -start-[1.35rem] top-3 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-4 ring-white sm:-start-[1.45rem]" />
+                          <div className="rounded-2xl bg-[#F1EFEA]/80 px-4 py-3 ring-1 ring-slate-200/50">
+                            {when ? (
+                              <p className="text-[11px] text-slate-400">{when}</p>
+                            ) : null}
+                            <p className="mt-1 break-words text-sm leading-relaxed text-slate-700">{item.text}</p>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ol>
                 )}
-                {active.notes.map((item) => (
-                  <div
-                    key={item.id}
-                    className="rounded-2xl bg-[#F1EFEA]/80 px-4 py-3 ring-1 ring-slate-200/50"
-                  >
-                    <p className="text-[11px] text-slate-400">{item.at}</p>
-                    <p className="mt-1 text-sm leading-relaxed text-slate-700">{item.text}</p>
-                  </div>
-                ))}
               </div>
 
               <div className="border-t border-slate-100 p-4">
                 <textarea
                   value={note}
-                  onChange={(e) => setNote(e.target.value)}
+                  onChange={(e) => {
+                    setNote(e.target.value);
+                    if (noteError) setNoteError("");
+                  }}
                   rows={3}
                   placeholder={`بازدید از ${siteConfig.brand.nameFa} انجام شد — خریدار از نقشه راضی بود ولی تخفیف می‌خواهد`}
                   className="w-full resize-none rounded-2xl border border-slate-200 bg-[#F1EFEA]/50 px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
                 />
+                {noteError ? <p className="mt-2 text-xs text-rose-500">{noteError}</p> : null}
                 <button
                   type="button"
-                  onClick={addNote}
-                  className="ios-tap-target mt-3 w-full rounded-full bg-emerald-600 py-3 text-sm font-medium text-white"
+                  disabled={savingNote}
+                  onClick={() => void addNote()}
+                  className="ios-tap-target mt-3 w-full rounded-full bg-emerald-600 py-3 text-sm font-medium text-white disabled:opacity-60"
                 >
-                  افزودن یادداشت
+                  {savingNote ? "در حال ذخیره…" : "افزودن یادداشت / تماس"}
                 </button>
               </div>
             </motion.div>
