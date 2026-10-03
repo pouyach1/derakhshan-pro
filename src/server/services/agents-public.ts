@@ -90,7 +90,7 @@ export async function getPublicAgent(id: string): Promise<PublicAgentProfile> {
     name: user.name,
     title: template?.title || "مشاور املاک",
     department: template?.department || "مشاوره املاک",
-    avatarUrl: user.avatarUrl || "/images/admin/avatars/arash-shayegan.jpg",
+    avatarUrl: user.avatarUrl || "",
     badge: template?.badge || "مشاور فعال دفتر",
     bio:
       template?.bio ||
