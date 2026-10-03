@@ -48,10 +48,10 @@ const VARIANT_STYLES: Record<
   grid: {
     wrap: "rounded-[1.15rem]",
     media: "aspect-[4/3]",
-    title: "text-sm leading-6 sm:text-[0.95rem] sm:leading-7",
+    title: "text-[0.8rem] leading-5 sm:text-sm sm:leading-6 lg:text-[0.95rem] lg:leading-7",
     sizes: "(max-width: 1023px) 45vw, 280px",
-    pad: "px-3 py-3 sm:px-3.5 sm:py-3.5",
-    price: "text-sm sm:text-base",
+    pad: "px-2.5 py-2.5 sm:px-3 sm:py-3",
+    price: "text-xs sm:text-sm lg:text-base",
   },
   featured: {
     wrap: "rounded-[1.55rem]",
@@ -179,7 +179,7 @@ export default function CompactPropertyCard({
         />
 
         {item.agent ? (
-          <div className="mt-3">
+          <div className={cn(variant === "grid" ? "mt-2" : "mt-3")}>
             <AgentProfileLink agent={item.agent} showTitle={variant !== "grid"} />
           </div>
         ) : null}
