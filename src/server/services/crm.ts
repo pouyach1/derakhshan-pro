@@ -473,21 +473,92 @@ export async function listTours(agentId?: string) {
 export async function createTour(agentId: string, input: z.infer<typeof tourCreateSchema>) {
   await ensureBootstrapped();
   const store = getStore();
+
+  const property = store.properties.find((p) => p.id === input.propertyId && !p.softDeleted);
+  if (!property) throw new ApiError(404, "NOT_FOUND", "ملک یافت نشد");
+  if (!property.agentId || property.agentId !== agentId) {
+    throw new ApiError(403, "FORBIDDEN", "این ملک در دسترس شما نیست");
+  }
+
+  let clientName = (input.clientName || "").trim();
+  let clientPhone = input.clientPhone?.trim() || null;
+  let clientId: string | null = null;
+
+  if (input.clientId) {
+    const client = store.clients.find((c) => c.id === input.clientId);
+    if (!client) throw new ApiError(404, "NOT_FOUND", "مشتری یافت نشد");
+    if (client.agentId !== agentId) {
+      throw new ApiError(403, "FORBIDDEN", "این مشتری متعلق به مشاور دیگری است");
+    }
+    clientId = client.id;
+    clientName = client.name;
+    clientPhone = client.phone;
+  }
+
+  if (!clientName || clientName.length < 2) {
+    throw new ApiError(400, "VALIDATION", "نام مشتری الزامی است");
+  }
+
+  const scheduled = new Date(input.scheduledAt);
+  if (Number.isNaN(scheduled.getTime())) {
+    throw new ApiError(400, "VALIDATION", "تاریخ و ساعت بازدید معتبر نیست");
+  }
+
   const row: TourRecord = {
     id: newId(),
     agentId,
-    propertyId: input.propertyId,
-    clientName: input.clientName,
-    clientPhone: input.clientPhone ?? null,
-    scheduledAt: input.scheduledAt,
-    dayLabel: input.dayLabel || "",
-    timeLabel: input.timeLabel || "",
+    propertyId: property.id,
+    clientName,
+    clientPhone,
+    scheduledAt: scheduled.toISOString(),
+    dayLabel:
+      input.dayLabel ||
+      scheduled.toLocaleDateString("fa-IR", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+      }),
+    timeLabel:
+      input.timeLabel ||
+      scheduled.toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" }),
     status: "upcoming",
     notes: input.notes || "",
     createdAt: nowIso(),
     updatedAt: nowIso(),
   };
   store.tours.unshift(row);
+
+  store.activity.unshift({
+    id: newId(),
+    actorId: agentId,
+    actorRole: "agent",
+    action: "tour.create",
+    entityType: "tour",
+    entityId: row.id,
+    detail: {
+      propertyId: property.id,
+      propertyTitle: property.title,
+      clientName,
+      clientId,
+      scheduledAt: row.scheduledAt,
+    },
+    ip: null,
+    requestId: null,
+    createdAt: nowIso(),
+  });
+
+  if (clientId) {
+    const client = store.clients.find((c) => c.id === clientId);
+    if (client) {
+      client.notes.unshift({
+        id: newId(),
+        text: `بازدید ملک برنامه‌ریزی شد — ${property.title} · ${row.dayLabel} ${row.timeLabel}`,
+        at: nowIso(),
+      });
+      client.updatedAt = nowIso();
+    }
+  }
+
   saveStore();
   return row;
 }
@@ -503,12 +574,71 @@ export async function updateTour(
     (t) => t.id === id && (agentId == null || t.agentId === agentId),
   );
   if (!existing) throw new ApiError(404, "NOT_FOUND", "بازدید یافت نشد");
-  Object.assign(existing, {
-    status: input.status ?? existing.status,
-    notes: input.notes ?? existing.notes,
-    scheduledAt: input.scheduledAt ?? existing.scheduledAt,
-    updatedAt: nowIso(),
-  });
+
+  const prevStatus = existing.status;
+  if (input.scheduledAt) {
+    const scheduled = new Date(input.scheduledAt);
+    if (Number.isNaN(scheduled.getTime())) {
+      throw new ApiError(400, "VALIDATION", "تاریخ و ساعت بازدید معتبر نیست");
+    }
+    existing.scheduledAt = scheduled.toISOString();
+    if (!input.dayLabel) {
+      existing.dayLabel = scheduled.toLocaleDateString("fa-IR", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+      });
+    }
+    if (!input.timeLabel) {
+      existing.timeLabel = scheduled.toLocaleTimeString("fa-IR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+  }
+  if (input.dayLabel != null) existing.dayLabel = input.dayLabel;
+  if (input.timeLabel != null) existing.timeLabel = input.timeLabel;
+  if (input.notes != null) existing.notes = input.notes;
+  if (input.status != null) existing.status = input.status;
+  existing.updatedAt = nowIso();
+
+  if (input.status && input.status !== prevStatus) {
+    const action =
+      input.status === "completed"
+        ? "tour.complete"
+        : input.status === "canceled"
+          ? "tour.cancel"
+          : "tour.update";
+    store.activity.unshift({
+      id: newId(),
+      actorId: agentId,
+      actorRole: agentId ? "agent" : "admin",
+      action,
+      entityType: "tour",
+      entityId: existing.id,
+      detail: { status: input.status, from: prevStatus },
+      ip: null,
+      requestId: null,
+      createdAt: nowIso(),
+    });
+
+    if (input.status === "completed" || input.status === "canceled") {
+      const property = store.properties.find((p) => p.id === existing.propertyId);
+      const label = input.status === "completed" ? "انجام شد" : "لغو شد";
+      const client = store.clients.find(
+        (c) => c.agentId === existing.agentId && c.name === existing.clientName,
+      );
+      if (client) {
+        client.notes.unshift({
+          id: newId(),
+          text: `بازدید ملک ${label} — ${property?.title || "فایل"}`,
+          at: nowIso(),
+        });
+        client.updatedAt = nowIso();
+      }
+    }
+  }
+
   saveStore();
   return existing;
 }
