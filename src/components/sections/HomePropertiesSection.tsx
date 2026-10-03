@@ -77,12 +77,11 @@ export default function HomePropertiesSection() {
           <>
             {/* موبایل / تبلت کوچک: دو ستون */}
             <div className="grid grid-cols-2 gap-2.5 sm:gap-3 lg:hidden">
-              {newest.map((item, index) => (
+              {newest.map((item) => (
                 <CompactPropertyCard
                   key={item.id}
                   item={item}
                   variant="grid"
-                  priority={index < 2}
                 />
               ))}
             </div>
@@ -112,7 +111,6 @@ function LeadCard({ item }: { item: PropertyWithAgent }) {
         <div className="relative min-h-[16rem] bg-[#E8F1F8] lg:col-span-7 lg:min-h-[26rem]">
           <PropertyGalleryTrigger
             item={item}
-            priority
             sizes="(max-width: 1024px) 100vw, 60vw"
           />
           <span className="pointer-events-none absolute start-4 top-4 z-[5] rounded-full bg-white px-3 py-1 text-[11px] font-bold text-[#0B3A5C] shadow-sm">

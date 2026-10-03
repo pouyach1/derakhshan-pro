@@ -1,13 +1,18 @@
 "use client";
 
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { motion, useReducedMotion } from "framer-motion";
 import { useMemo, useState } from "react";
-import PropertyLightbox from "@/components/listings/PropertyLightbox";
 import { frameLabel, listPropertyImages } from "@/lib/property-images";
 import { fallbackImage } from "@/lib/money";
 import { EASE } from "@/lib/motion";
 import { cn } from "@/lib/utils";
+
+const PropertyLightbox = dynamic(
+  () => import("@/components/listings/PropertyLightbox"),
+  { ssr: false },
+);
 
 type PropertyGalleryTriggerProps = {
   item: {
@@ -93,13 +98,15 @@ export default function PropertyGalleryTrigger({
           {frameLabel(1, total)}
         </span>
       ) : null}
-      <PropertyLightbox
-        open={open}
-        images={images}
-        title={item.title}
-        code={item.code}
-        onClose={() => setOpen(false)}
-      />
+      {open ? (
+        <PropertyLightbox
+          open={open}
+          images={images}
+          title={item.title}
+          code={item.code}
+          onClose={() => setOpen(false)}
+        />
+      ) : null}
     </>
   );
 }

@@ -461,7 +461,7 @@ export function LuxuryMeetTeamView() {
         <motion.section
           initial="hidden"
           whileInView="show"
-          viewport={{ once: false, amount: 0.12 }}
+          viewport={{ once: true, amount: 0.12 }}
           variants={{
             hidden: {},
             show: {
@@ -552,7 +552,7 @@ export function LuxuryMeetTeamView() {
           <motion.div
             initial={{ opacity: 0, y: 36 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.3 }}
             transition={spring}
             className="mb-12 max-w-2xl"
           >
@@ -572,7 +572,7 @@ export function LuxuryMeetTeamView() {
                   key={item.title}
                   initial={{ opacity: 0, y: 32 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: false, amount: 0.3 }}
+                  viewport={{ once: true, amount: 0.3 }}
                   transition={{
                     ...spring,
                     delay: reduceMotion ? 0 : index * 0.08,
@@ -601,7 +601,7 @@ export function LuxuryMeetTeamView() {
         <motion.section
           initial={{ opacity: 0, y: 48 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={spring}
           className="relative overflow-hidden rounded-[2.5rem] border border-sky-300/40 bg-[#0B132B] px-6 py-14 text-center shadow-[0_0_80px_-30px_rgba(0,240,255,0.55)] md:px-12 md:py-20"
         >

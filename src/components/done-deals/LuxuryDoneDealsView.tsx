@@ -279,7 +279,7 @@ function TiltDealCard({
       layout
       initial={reduceMotion ? false : { opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: false, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.2 }}
       exit={reduceMotion ? undefined : { opacity: 0, scale: 0.96 }}
       transition={{ ...spring, delay: reduceMotion ? 0 : index * 0.05 }}
       onMouseMove={onMove}
@@ -414,7 +414,7 @@ export function LuxuryDoneDealsView() {
         <motion.section
           initial="hidden"
           whileInView="show"
-          viewport={{ once: false, amount: 0.25 }}
+          viewport={{ once: true, amount: 0.25 }}
           variants={{
             hidden: {},
             show: {
@@ -505,7 +505,7 @@ export function LuxuryDoneDealsView() {
         <motion.section
           initial={{ opacity: 0, y: 48 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={spring}
         >
           <div className="mb-12 max-w-2xl">
@@ -524,7 +524,7 @@ export function LuxuryDoneDealsView() {
                 key={`${item.year}-${item.title}-${index}`}
                 initial={{ opacity: 0, x: 28 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: false, amount: 0.3 }}
+                viewport={{ once: true, amount: 0.3 }}
                 transition={{ ...spring, delay: reduceMotion ? 0 : index * 0.06 }}
                 className={`${glass} relative p-6`}
               >
@@ -554,7 +554,7 @@ export function LuxuryDoneDealsView() {
           <motion.div
             initial={{ opacity: 0, y: 36 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.3 }}
             transition={spring}
             className="mb-12 max-w-2xl"
           >
@@ -574,7 +574,7 @@ export function LuxuryDoneDealsView() {
                   key={metric.label}
                   initial={{ opacity: 0, y: 32 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: false, amount: 0.3 }}
+                  viewport={{ once: true, amount: 0.3 }}
                   transition={{
                     ...spring,
                     delay: reduceMotion ? 0 : index * 0.06,
@@ -603,7 +603,7 @@ export function LuxuryDoneDealsView() {
           <motion.div
             initial={{ opacity: 0, y: 36 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.25 }}
+            viewport={{ once: true, amount: 0.25 }}
             transition={spring}
             className="mb-10 max-w-2xl"
           >
@@ -621,7 +621,7 @@ export function LuxuryDoneDealsView() {
                 key={item.name}
                 initial={{ opacity: 0, y: 32 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.25 }}
+                viewport={{ once: true, amount: 0.25 }}
                 transition={{
                   ...spring,
                   delay: reduceMotion ? 0 : index * 0.06,
@@ -647,7 +647,7 @@ export function LuxuryDoneDealsView() {
         <motion.section
           initial={{ opacity: 0, y: 48 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={spring}
           className="relative overflow-hidden rounded-[2.5rem] border border-sky-300/40 bg-slate-950 px-6 py-14 text-center shadow-[0_0_80px_-30px_rgba(0,240,255,0.55)] md:px-12 md:py-20"
         >

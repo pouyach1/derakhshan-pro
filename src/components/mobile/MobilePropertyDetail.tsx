@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { FormEvent, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Bath, BedDouble, MapPin, Ruler, ShieldCheck, Sparkles } from "lucide-react";
@@ -10,7 +11,6 @@ import LikeButton from "@/components/mobile/LikeButton";
 import { PropertyDetailSkeleton } from "@/components/mobile/PropertySkeletons";
 import { SharedPropertyTitle } from "@/components/mobile/SharedPropertyHero";
 import AgentProfileLink from "@/components/agents/AgentProfileLink";
-import PropertyLightbox from "@/components/listings/PropertyLightbox";
 import PropertyAparatVideos from "@/components/listings/PropertyAparatVideos";
 import PublicLoadError from "@/components/listings/PublicLoadError";
 import { listPropertyImages } from "@/lib/property-images";
@@ -21,6 +21,11 @@ import { listingTypeLabel, propertyStatusLabel } from "@/lib/money";
 import PropertyPrice from "@/components/listings/PropertyPrice";
 import { IOS_PAGE_SPRING, IOS_TAP_SPRING } from "@/lib/motion/ios";
 import type { PropertyWithAgent } from "@/server/services/agents-public";
+
+const PropertyLightbox = dynamic(
+  () => import("@/components/listings/PropertyLightbox"),
+  { ssr: false },
+);
 
 type MobilePropertyDetailProps = {
   item: PropertyWithAgent | null;
@@ -112,14 +117,16 @@ export default function MobilePropertyDetail({ item, failed, onRetry }: MobilePr
             setGalleryOpen(true);
           }}
         />
-        <PropertyLightbox
-          open={galleryOpen}
-          images={gallery}
-          title={item.title}
-          code={item.code}
-          startIndex={galleryIndex}
-          onClose={() => setGalleryOpen(false)}
-        />
+        {galleryOpen ? (
+          <PropertyLightbox
+            open={galleryOpen}
+            images={gallery}
+            title={item.title}
+            code={item.code}
+            startIndex={galleryIndex}
+            onClose={() => setGalleryOpen(false)}
+          />
+        ) : null}
         <LikeButton propertyId={item.id} className="absolute end-7 top-28 z-10" />
       </div>
 

@@ -215,7 +215,7 @@ export function LuxuryServicesView() {
           id="service-grid"
           initial="hidden"
           whileInView="show"
-          viewport={{ once: false, amount: 0.15 }}
+          viewport={{ once: true, amount: 0.15 }}
           variants={{
             hidden: {},
             show: {
@@ -301,7 +301,7 @@ export function LuxuryServicesView() {
         <motion.section
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={spring}
         >
           <div className="mb-12 max-w-2xl">
@@ -323,7 +323,7 @@ export function LuxuryServicesView() {
                   key={step.title}
                   initial={{ opacity: 0, y: 28 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: false, amount: 0.3 }}
+                  viewport={{ once: true, amount: 0.3 }}
                   transition={{ ...spring, delay: reduceMotion ? 0 : index * 0.08 }}
                   whileHover={
                     reduceMotion ? undefined : { y: -8, scale: 1.02 }
@@ -361,7 +361,7 @@ export function LuxuryServicesView() {
           <motion.div
             initial={{ opacity: 0, y: 36 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.3 }}
             transition={spring}
             className="mb-12 max-w-2xl"
           >
@@ -376,7 +376,7 @@ export function LuxuryServicesView() {
           <motion.div
             initial={{ opacity: 0, y: 36 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={{ once: true, amount: 0.2 }}
             transition={spring}
             className="overflow-hidden rounded-[2rem] border border-sky-400/25 bg-white/5 backdrop-blur-2xl"
           >
@@ -420,7 +420,7 @@ export function LuxuryServicesView() {
         <motion.section
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={spring}
           className={`${glass} relative overflow-hidden p-6 md:p-10`}
         >
@@ -532,7 +532,7 @@ export function LuxuryServicesView() {
           <motion.section
             initial={{ opacity: 0, y: 36 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={{ once: true, amount: 0.2 }}
             transition={spring}
             className={`${glass} p-6 md:p-8`}
           >
@@ -613,7 +613,7 @@ export function LuxuryServicesView() {
           <motion.section
             initial={{ opacity: 0, y: 36 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={{ once: true, amount: 0.2 }}
             transition={spring}
           >
             <p className="text-sm font-semibold tracking-[0.18em] text-sky-500">
@@ -669,7 +669,7 @@ export function LuxuryServicesView() {
         <motion.section
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={spring}
           className="relative overflow-hidden rounded-[2.5rem] border border-sky-300/40 bg-[#0B132B] px-6 py-14 text-center shadow-[0_0_80px_-30px_rgba(0,240,255,0.55)] md:px-12 md:py-20"
         >
