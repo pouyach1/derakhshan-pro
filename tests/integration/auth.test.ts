@@ -42,6 +42,24 @@ describe("Authentication API", () => {
     expect(result.body.ok).toBe(false);
   });
 
+  it("demo client can open the client portal with seed password", async () => {
+    const response = await login(
+      makeRequest("/api/auth/login", {
+        body: { identifier: "09121234567", secret: TEST_PASSWORD },
+      }),
+    );
+    const result = await readJson<{
+      ok: boolean;
+      data?: { session: { role: string; onboardingComplete?: boolean }; redirectTo: string };
+    }>(response);
+
+    expect(result.status, "Demo client login must succeed").toBe(200);
+    expect(result.body.ok).toBe(true);
+    expect(result.body.data?.session.role).toBe("client");
+    expect(result.body.data?.session.onboardingComplete).toBe(true);
+    expect(result.body.data?.redirectTo).toContain("/client/dashboard");
+  });
+
   it("malformed JSON body returns 400", async () => {
     const request = new Request("http://localhost/api/auth/login", {
       method: "POST",

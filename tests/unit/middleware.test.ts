@@ -156,4 +156,17 @@ describe("middleware — route role gates", () => {
     const response = await middleware(request("/login", cookie));
     expect(location(response)).toContain("/agent");
   });
+
+  it("completed client hitting /login goes to client dashboard", async () => {
+    const jwt = await token({
+      id: "client-a",
+      phone: "09120000011",
+      name: "موکل",
+      role: "client",
+      onboardingComplete: true,
+    });
+    const cookie = `${AUTH_COOKIE}=${encodeURIComponent(jwt)}`;
+    const response = await middleware(request("/login", cookie));
+    expect(location(response)).toContain("/client/dashboard");
+  });
 });
