@@ -1,11 +1,11 @@
 /**
- * Shared production env loader / first-boot bootstrap for Node / Parspack / cPanel.
+ * Shared production env loader / first-boot bootstrap for Node / Parspack / cPanel / Render.
  *
  * - Loads .env, .env.production, .env.local, data/production.env (no override of existing process.env)
- * - If production secrets are still missing/weak, writes strong values to data/production.env
- *   so the next Start succeeds without panel gymnastics.
- *
- * Used by server.cjs and (via createRequire) src/server/env.ts.
+ * - On managed hosts (Render) or when persistence is unreliable: NEVER invent random secrets.
+ *   Require AUTH_SECRET + SEED_ADMIN_PASSWORD from the platform Environment Variables.
+ * - On writable local/PaaS disks: may create data/production.env once if secrets are missing,
+ *   but never logs secret values.
  */
 
 const fs = require("node:fs");
@@ -37,6 +37,22 @@ function isWeakAuthSecret(secret) {
     normalized.includes("replace-with") ||
     normalized === "dev-only-change-me-derakhshan-agency-secret-key-32b" ||
     normalized.includes("showcase-jwt-fallback")
+  );
+}
+
+/**
+ * Hosts where the filesystem is ephemeral / secrets must come from the panel.
+ * Random auto-bootstrap would rotate credentials on every restart.
+ */
+function mustUsePlatformSecrets() {
+  if (process.env.ALLOW_SECRET_AUTOBOOTSTRAP === "1") return false;
+  if (process.env.ALLOW_SECRET_AUTOBOOTSTRAP === "0") return true;
+  return (
+    process.env.RENDER === "true" ||
+    Boolean(process.env.RENDER_SERVICE_ID) ||
+    Boolean(process.env.RENDER_INSTANCE_ID) ||
+    process.env.FLY_APP_NAME != null ||
+    process.env.RAILWAY_ENVIRONMENT != null
   );
 }
 
@@ -114,12 +130,27 @@ function writeProductionEnvFile(authSecret, seedPassword) {
   } catch {
     // best-effort on hosts that ignore chmod
   }
+  // Verify we can read back — ephemeral / failed writes must not silently continue.
+  const verify = parseEnvFile(fs.readFileSync(filePath, "utf8"));
+  if (verify.AUTH_SECRET !== authSecret || verify.SEED_ADMIN_PASSWORD !== seedPassword) {
+    throw new Error("production.env write verification failed");
+  }
   return filePath;
 }
 
 function autoBootstrapProductionSecrets() {
   const status = productionSecretsStatus();
   if (status.authOk && status.seedOk) return { bootstrapped: false, ...status };
+
+  if (mustUsePlatformSecrets()) {
+    throw new Error(
+      [
+        "[production-env] Auto-bootstrap disabled on this host (stable platform env required).",
+        "Set AUTH_SECRET and SEED_ADMIN_PASSWORD in the host Environment Variables, then Restart.",
+        "Do not rely on data/production.env on ephemeral disks (Render).",
+      ].join("\n"),
+    );
+  }
 
   const authSecret = status.authOk
     ? status.authSecret
@@ -128,33 +159,18 @@ function autoBootstrapProductionSecrets() {
     ? status.seed
     : crypto.randomBytes(9).toString("base64url");
 
-  let filePath = "";
-  try {
-    filePath = writeProductionEnvFile(authSecret, seedPassword);
-  } catch (error) {
-    console.warn(
-      "[production-env] Could not write data/production.env; continuing in-memory:",
-      error && error.message ? error.message : error,
-    );
-  }
-
+  // Only accept newly generated secrets if they persist to disk.
+  // In-memory random secrets rotate on every restart and break auth/data.
+  const filePath = writeProductionEnvFile(authSecret, seedPassword);
   process.env.AUTH_SECRET = authSecret;
   process.env.SEED_ADMIN_PASSWORD = seedPassword;
 
-  console.warn("[production-env] =====================================================");
-  console.warn("[production-env] Missing production secrets — auto-created once:");
-  if (filePath) console.warn(`[production-env]   file: ${filePath}`);
-  console.warn(`[production-env]   AUTH_SECRET: (generated, ${authSecret.length} chars)`);
-  console.warn(`[production-env]   SEED_ADMIN_PASSWORD: ${seedPassword}`);
-  console.warn("[production-env] ورود ادمین: admin@vorqen.ir با همین SEED_ADMIN_PASSWORD");
-  console.warn("[production-env] این رمز را ذخیره کنید؛ بعداً از پنل عوضش کنید.");
-  console.warn("[production-env] =====================================================");
+  console.warn("[production-env] Missing production secrets — wrote data/production.env once.");
+  console.warn("[production-env] Values are not logged. Prefer setting them in the host panel.");
 
   return {
     bootstrapped: true,
     filePath,
-    authSecret,
-    seed: seedPassword,
     authOk: true,
     seedOk: true,
   };
@@ -165,12 +181,11 @@ function formatRefuseMessage(errors) {
     "[env] Refusing production start — missing/invalid environment:",
     ...errors.map((e) => `- ${e}`),
     "",
-    "رفع فوری در پنل Parspack / cPanel → Environment Variables:",
-    "  AUTH_SECRET=<رشته تصادفی حداقل ۳۲ کاراکتر>",
-    "  SEED_ADMIN_PASSWORD=<رمز ادمین حداقل ۸ کاراکتر>",
-    "سپس Stop → Start.",
-    "یا یک‌بار در Application root: node scripts/bootstrap-production-env.cjs",
-    "تولید نمونه: node -e \"console.log(require('crypto').randomBytes(48).toString('hex'))\"",
+    "Set in host Environment Variables (Render / Parspack / cPanel), then Restart:",
+    "  AUTH_SECRET=<random string, min 32 chars>",
+    "  SEED_ADMIN_PASSWORD=<admin password, min 8 chars>",
+    "Generate AUTH_SECRET: node -e \"console.log(require('crypto').randomBytes(48).toString('hex'))\"",
+    "Optional local/PaaS disk bootstrap: node scripts/bootstrap-production-env.cjs",
   ].join("\n");
 }
 
@@ -195,7 +210,7 @@ function ensureProductionEnv(opts = {}) {
       status = productionSecretsStatus();
     } catch (error) {
       console.error(
-        "[production-env] Auto-bootstrap failed:",
+        "[production-env] Auto-bootstrap unavailable:",
         error && error.message ? error.message : error,
       );
     }
@@ -220,21 +235,27 @@ function ensureProductionEnv(opts = {}) {
     throw err;
   }
 
-  return { ok: true, bootstrapped, status };
+  return { ok: true, bootstrapped, status: { authOk: status.authOk, seedOk: status.seedOk } };
 }
 
 function bootstrapOnly() {
   loadEnvFiles();
   process.env.NODE_ENV = process.env.NODE_ENV || "production";
-  const result = autoBootstrapProductionSecrets();
-  console.log("[bootstrap-production-env] Done.");
-  if (result.filePath) {
-    console.log(`[bootstrap-production-env] Wrote ${result.filePath}`);
+  // Explicit CLI opt-in: allow file bootstrap even on managed hosts.
+  const prev = process.env.ALLOW_SECRET_AUTOBOOTSTRAP;
+  process.env.ALLOW_SECRET_AUTOBOOTSTRAP = "1";
+  try {
+    const result = autoBootstrapProductionSecrets();
+    console.log("[bootstrap-production-env] Done.");
+    if (result.filePath) {
+      console.log(`[bootstrap-production-env] Wrote ${result.filePath}`);
+    }
+    console.log("[bootstrap-production-env] Secret values are not printed.");
+    return result;
+  } finally {
+    if (prev === undefined) delete process.env.ALLOW_SECRET_AUTOBOOTSTRAP;
+    else process.env.ALLOW_SECRET_AUTOBOOTSTRAP = prev;
   }
-  console.log(
-    `[bootstrap-production-env] SEED_ADMIN_PASSWORD=${process.env.SEED_ADMIN_PASSWORD}`,
-  );
-  return result;
 }
 
 module.exports = {
@@ -243,4 +264,5 @@ module.exports = {
   bootstrapOnly,
   isWeakAuthSecret,
   productionSecretsStatus,
+  mustUsePlatformSecrets,
 };
