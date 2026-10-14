@@ -1,10 +1,10 @@
 /**
  * Production environment guards shared by Node startup and runtime auth/bootstrap.
  *
- * On Node / Parspack / cPanel: if AUTH_SECRET or SEED_ADMIN_PASSWORD are missing,
- * generate strong values in-process and persist to data/production.env when possible.
- * This must work during `next start` instrumentation without depending on an extra
- * script file on the host (hosts often run stale package.json with `next start`).
+ * Prefer platform Environment Variables (Render / Parspack panel).
+ * Optional disk file: data/production.env — only when the host disk is durable.
+ * Never logs secret values. Never invents in-memory random secrets that rotate
+ * on every restart.
  */
 
 import { createHash, randomBytes } from "node:crypto";
@@ -71,12 +71,40 @@ function loadEnvFilesFromDisk() {
   }
 }
 
-function stableFallbackSecret(seed: string) {
-  // Last-resort in-memory secret when disk is not writable. Deterministic per host cwd
-  // so restarts do not invalidate all sessions immediately.
-  return createHash("sha256")
-    .update(`derakhshan-pro:${seed}:${process.cwd()}`)
-    .digest("hex");
+function mustUsePlatformSecrets() {
+  if (process.env.ALLOW_SECRET_AUTOBOOTSTRAP === "1") return false;
+  if (process.env.ALLOW_SECRET_AUTOBOOTSTRAP === "0") return true;
+  return (
+    process.env.RENDER === "true" ||
+    Boolean(process.env.RENDER_SERVICE_ID) ||
+    Boolean(process.env.RENDER_INSTANCE_ID) ||
+    process.env.FLY_APP_NAME != null ||
+    process.env.RAILWAY_ENVIRONMENT != null
+  );
+}
+
+function writeProductionEnvFile(authSecret: string, seed: string) {
+  const dataDir = path.join(process.cwd(), "data");
+  fs.mkdirSync(dataDir, { recursive: true });
+  const filePath = path.join(dataDir, "production.env");
+  const body = [
+    "# Auto-generated on first production boot (src/server/env.ts).",
+    "# Panel Environment Variables override these when set.",
+    `AUTH_SECRET=${authSecret}`,
+    `SEED_ADMIN_PASSWORD=${seed}`,
+    "",
+  ].join("\n");
+  fs.writeFileSync(filePath, body, { encoding: "utf8", mode: 0o600 });
+  try {
+    fs.chmodSync(filePath, 0o600);
+  } catch {
+    // ignore
+  }
+  const verify = parseEnvFile(fs.readFileSync(filePath, "utf8"));
+  if (verify.AUTH_SECRET !== authSecret || verify.SEED_ADMIN_PASSWORD !== seed) {
+    throw new Error("production.env write verification failed");
+  }
+  return filePath;
 }
 
 function bootstrapSecretsInline() {
@@ -89,55 +117,32 @@ function bootstrapSecretsInline() {
 
   if (authOk && seedOk) return { bootstrapped: false as const };
 
-  if (!authOk) authSecret = randomBytes(48).toString("hex");
-  if (!seedOk) seed = randomBytes(9).toString("base64url");
-
-  process.env.AUTH_SECRET = authSecret;
-  process.env.SEED_ADMIN_PASSWORD = seed;
-
-  let persistedTo = "";
-  try {
-    const dataDir = path.join(process.cwd(), "data");
-    fs.mkdirSync(dataDir, { recursive: true });
-    const filePath = path.join(dataDir, "production.env");
-    const body = [
-      "# Auto-generated on first production boot (src/server/env.ts).",
-      "# Panel Environment Variables override these when set.",
-      `AUTH_SECRET=${authSecret}`,
-      `SEED_ADMIN_PASSWORD=${seed}`,
-      "",
-    ].join("\n");
-    fs.writeFileSync(filePath, body, { encoding: "utf8", mode: 0o600 });
-    try {
-      fs.chmodSync(filePath, 0o600);
-    } catch {
-      // ignore
-    }
-    persistedTo = filePath;
-  } catch (error) {
-    // Disk not writable — keep in-memory values so Start still succeeds.
-    console.warn(
-      "[env] Could not persist data/production.env; using in-memory secrets for this process:",
-      error instanceof Error ? error.message : error,
+  if (mustUsePlatformSecrets()) {
+    throw new Error(
+      [
+        "[env] Auto-bootstrap disabled on this host — set AUTH_SECRET and SEED_ADMIN_PASSWORD",
+        "in the platform Environment Variables (required on Render).",
+      ].join("\n"),
     );
   }
 
-  console.warn("[env] =====================================================");
-  console.warn("[env] Production secrets were missing — auto-created:");
-  if (persistedTo) console.warn(`[env]   file: ${persistedTo}`);
-  console.warn(`[env]   AUTH_SECRET: (generated, ${authSecret.length} chars)`);
-  console.warn(`[env]   SEED_ADMIN_PASSWORD: ${seed}`);
-  console.warn("[env] ورود ادمین: admin@vorqen.ir با همین SEED_ADMIN_PASSWORD");
-  console.warn("[env] این رمز را ذخیره کنید.");
-  console.warn("[env] =====================================================");
+  if (!authOk) authSecret = randomBytes(48).toString("hex");
+  if (!seedOk) seed = randomBytes(9).toString("base64url");
 
-  return { bootstrapped: true as const, seed, persistedTo };
+  // Persist first — never keep random in-memory-only secrets (they rotate each restart).
+  const persistedTo = writeProductionEnvFile(authSecret, seed);
+  process.env.AUTH_SECRET = authSecret;
+  process.env.SEED_ADMIN_PASSWORD = seed;
+
+  console.warn("[env] Missing production secrets — wrote data/production.env once.");
+  console.warn("[env] Secret values are not logged. Prefer host Environment Variables.");
+
+  return { bootstrapped: true as const, persistedTo };
 }
 
 /**
- * Ensures production secrets exist. Never blocks Node/Parspack Start when we can
- * generate secrets (file or in-memory). Still throws on exotic runtimes with no crypto/fs
- * only if secrets remain unusable — should not happen on cPanel/Parspack.
+ * Ensures production secrets exist. Does not print secret values.
+ * On Render / ephemeral hosts: requires platform env vars (no random rotation).
  */
 export function assertProductionEnv() {
   if (!isProductionRuntime()) return;
@@ -145,17 +150,11 @@ export function assertProductionEnv() {
   try {
     bootstrapSecretsInline();
   } catch (error) {
-    // Extremely defensive: still try deterministic in-memory secrets.
+    // Do not invent rotating in-memory secrets here.
     console.warn(
-      "[env] Inline bootstrap failed, applying deterministic fallback:",
+      "[env] Secret bootstrap/load failed:",
       error instanceof Error ? error.message : error,
     );
-    if (!readAuthSecretRaw() || isWeakAuthSecret(readAuthSecretRaw())) {
-      process.env.AUTH_SECRET = stableFallbackSecret("auth");
-    }
-    if ((process.env.SEED_ADMIN_PASSWORD || "").trim().length < 8) {
-      process.env.SEED_ADMIN_PASSWORD = stableFallbackSecret("seed").slice(0, 16);
-    }
   }
 
   const authSecret = readAuthSecretRaw();
@@ -167,9 +166,15 @@ export function assertProductionEnv() {
         "- AUTH_SECRET must be a strong random value (min 32 characters).",
         "- SEED_ADMIN_PASSWORD must be set (min 8 characters).",
         "",
-        "روی هاست Parspack کد را از main به‌روز کنید، بعد npm run build و Restart.",
-        "یا در پنل Environment Variables همین دو کلید را ست کنید.",
+        "Set both in host Environment Variables, then Restart.",
       ].join("\n"),
     );
   }
+}
+
+/** Deterministic helper kept for tests / exotic tooling — not used for rotating prod auth. */
+export function stableFallbackSecret(seed: string) {
+  return createHash("sha256")
+    .update(`derakhshan-pro:${seed}:${process.cwd()}`)
+    .digest("hex");
 }
