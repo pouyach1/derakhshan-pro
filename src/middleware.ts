@@ -5,7 +5,7 @@ import {
   needsClientOnboarding,
   postAuthPath,
 } from "@/lib/auth";
-import { verifySessionToken } from "@/server/auth/session";
+import { verifySessionToken } from "@/server/auth/session-edge";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
