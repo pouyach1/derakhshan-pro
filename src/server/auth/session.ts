@@ -5,7 +5,7 @@ import {
   isProductionRuntime,
   isWeakAuthSecret,
   readAuthSecretRaw,
-} from "@/server/env";
+} from "@/server/auth/secrets";
 
 const COOKIE = "agency_auth";
 const DEFAULT_TTL = 60 * 60 * 24 * 7; // 7 days
