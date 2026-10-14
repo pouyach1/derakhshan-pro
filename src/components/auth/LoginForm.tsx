@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Loader2 } from "lucide-react";
+import { Briefcase, Building2, Loader2, UserRound } from "lucide-react";
 import { useState } from "react";
 import { AuthField, PasswordField } from "@/components/auth/AuthFields";
 import SocialButtons from "@/components/auth/SocialButtons";
@@ -15,6 +15,7 @@ import {
   mirrorAuthSession,
   normalizeSecret,
   postAuthPath,
+  type UserRole,
 } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/siteConfig";
@@ -31,6 +32,43 @@ const DEMO_OTP_HINT = process.env.NEXT_PUBLIC_DEMO_OTP?.trim() || "";
 const SHOW_DEMO_HINTS =
   process.env.NODE_ENV !== "production" || Boolean(DEMO_STAFF_PASSWORD || DEMO_OTP_HINT);
 
+/** یک‌کلیکی مدیر/مشاور/مشتری — در dev همیشه؛ در prod با NEXT_PUBLIC_DEMO_QUICK_LOGIN */
+const SHOW_QUICK_LOGIN =
+  process.env.NODE_ENV !== "production" ||
+  process.env.NEXT_PUBLIC_DEMO_QUICK_LOGIN === "1" ||
+  process.env.NEXT_PUBLIC_DEMO_QUICK_LOGIN === "true" ||
+  Boolean(DEMO_STAFF_PASSWORD || DEMO_OTP_HINT);
+
+const QUICK_ROLES: {
+  role: UserRole;
+  label: string;
+  hint: string;
+  icon: typeof Building2;
+  accent: string;
+}[] = [
+  {
+    role: "admin",
+    label: "مدیر",
+    hint: "پنل مدیریت",
+    icon: Building2,
+    accent: "from-slate-900 to-slate-700",
+  },
+  {
+    role: "agent",
+    label: "مشاور",
+    hint: "پنل مشاور",
+    icon: Briefcase,
+    accent: "from-blue-800 to-blue-600",
+  },
+  {
+    role: "client",
+    label: "مشتری",
+    hint: "پنل مشتری",
+    icon: UserRound,
+    accent: "from-sky-700 to-cyan-600",
+  },
+];
+
 export default function LoginForm() {
   const router = useRouter();
   const [identifier, setIdentifier] = useState("");
@@ -39,14 +77,63 @@ export default function LoginForm() {
   const [error, setError] = useState("");
   const [shake, setShake] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [quickRole, setQuickRole] = useState<UserRole | null>(null);
 
   const detectedRole = identifier.trim() ? lookupRole(identifier) : null;
+  const busy = loading || quickRole !== null;
 
   function fail(message: string) {
     setError(message);
     setShake(true);
     window.setTimeout(() => setShake(false), 450);
     setLoading(false);
+    setQuickRole(null);
+  }
+
+  function finishLogin(payload: {
+    data?: { session?: Parameters<typeof mirrorAuthSession>[0]; redirectTo?: string };
+  }) {
+    const session = payload.data?.session;
+    const nextParam =
+      typeof window !== "undefined"
+        ? new URLSearchParams(window.location.search).get("next")
+        : null;
+    const safeNext =
+      nextParam &&
+      nextParam.startsWith("/") &&
+      !nextParam.startsWith("//") &&
+      !nextParam.startsWith("/login")
+        ? nextParam
+        : null;
+    const redirectTo =
+      safeNext ||
+      payload.data?.redirectTo ||
+      (session ? postAuthPath(session) : ROLE_HOME.client);
+    if (session) mirrorAuthSession(session);
+    router.replace(redirectTo);
+    router.refresh();
+  }
+
+  async function quickLogin(role: UserRole) {
+    setError("");
+    setQuickRole(role);
+    try {
+      const res = await fetch("/api/auth/demo-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role }),
+      });
+      const payload = await res.json();
+      if (!res.ok || !payload.ok) {
+        fail(payload?.error?.message || `ورود ${ROLE_LABELS[role]} انجام نشد.`);
+        return;
+      }
+      finishLogin(payload);
+    } catch {
+      fail("ارتباط با سرور برقرار نشد. دوباره تلاش کنید.");
+    } finally {
+      setQuickRole(null);
+    }
   }
 
   function handleSubmit(event: React.FormEvent) {
@@ -85,25 +172,7 @@ export default function LoginForm() {
           return;
         }
         void remember;
-        const session = payload.data.session;
-        const nextParam =
-          typeof window !== "undefined"
-            ? new URLSearchParams(window.location.search).get("next")
-            : null;
-        const safeNext =
-          nextParam &&
-          nextParam.startsWith("/") &&
-          !nextParam.startsWith("//") &&
-          !nextParam.startsWith("/login")
-            ? nextParam
-            : null;
-        const redirectTo =
-          safeNext ||
-          payload.data.redirectTo ||
-          (session ? postAuthPath(session) : ROLE_HOME.client);
-        if (session) mirrorAuthSession(session);
-        router.replace(redirectTo);
-        router.refresh();
+        finishLogin(payload);
       } catch {
         fail("ارتباط با سرور برقرار نشد. دوباره تلاش کنید.");
       } finally {
@@ -139,9 +208,50 @@ export default function LoginForm() {
           خوش آمدید
         </h1>
         <p className="mt-2 text-sm text-slate-600 sm:text-base">
-          برای ورود به پنل یا مشاهده قیمت فایل‌ها، شماره موبایل یا ایمیل خود را وارد کنید
+          نقش خود را انتخاب کنید و با یک دکمه وارد شوید — یا ایمیل/موبایل را دستی وارد کنید
         </p>
       </motion.div>
+
+      {SHOW_QUICK_LOGIN ? (
+        <motion.div variants={item} className="mb-6 space-y-3">
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-sm font-semibold text-slate-800">ورود سریع نمایشی</p>
+            <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-medium text-emerald-700 ring-1 ring-emerald-100">
+              بدون تایپ رمز
+            </span>
+          </div>
+          <div className="grid grid-cols-3 gap-2.5">
+            {QUICK_ROLES.map(({ role, label, hint, icon: Icon, accent }) => {
+              const active = quickRole === role;
+              return (
+                <button
+                  key={role}
+                  type="button"
+                  disabled={busy}
+                  onClick={() => void quickLogin(role)}
+                  className={cn(
+                    "group relative flex flex-col items-center gap-1.5 rounded-2xl px-2 py-3.5 text-white shadow-md transition",
+                    "bg-gradient-to-br disabled:opacity-60",
+                    accent,
+                    "hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500",
+                  )}
+                >
+                  {active ? (
+                    <Loader2 className="h-5 w-5 animate-spin" aria-hidden />
+                  ) : (
+                    <Icon className="h-5 w-5 opacity-95" aria-hidden />
+                  )}
+                  <span className="text-sm font-bold">{label}</span>
+                  <span className="text-[10px] font-medium text-white/80">{hint}</span>
+                </button>
+              );
+            })}
+          </div>
+          <p className="text-center text-[11px] text-slate-400">
+            مناسب بازاریاب و دمو — مدیر · مشاور · مشتری
+          </p>
+        </motion.div>
+      ) : null}
 
       <motion.div variants={item}>
         <SocialButtons />
@@ -149,7 +259,7 @@ export default function LoginForm() {
 
       <motion.div variants={item} className="my-6 flex items-center gap-3">
         <div className="h-px flex-1 bg-slate-200" />
-        <span className="text-xs font-medium text-slate-400">یا</span>
+        <span className="text-xs font-medium text-slate-400">یا ورود دستی</span>
         <div className="h-px flex-1 bg-slate-200" />
       </motion.div>
 
@@ -227,7 +337,7 @@ export default function LoginForm() {
 
         <motion.button
           type="submit"
-          disabled={loading}
+          disabled={busy}
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.98 }}
           className={cn(

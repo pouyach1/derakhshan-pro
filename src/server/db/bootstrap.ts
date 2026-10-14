@@ -41,9 +41,31 @@ function requireSeedPassword() {
 }
 
 /**
+ * Demo / sales showcase: one-click role login + public password hints.
+ * Off in production unless DEMO_QUICK_LOGIN / NEXT_PUBLIC_DEMO_QUICK_LOGIN
+ * (or public demo password/OTP hints) are explicitly enabled.
+ */
+export function isDemoQuickLoginEnabled() {
+  const flag = (
+    process.env.DEMO_QUICK_LOGIN ||
+    process.env.NEXT_PUBLIC_DEMO_QUICK_LOGIN ||
+    ""
+  )
+    .trim()
+    .toLowerCase();
+  if (flag === "0" || flag === "false" || flag === "off") return false;
+  if (flag === "1" || flag === "true" || flag === "on") return true;
+  if (process.env.NODE_ENV !== "production") return true;
+  if (process.env.NEXT_PUBLIC_DEMO_STAFF_PASSWORD?.trim()) return true;
+  if (process.env.NEXT_PUBLIC_DEMO_OTP?.trim()) return true;
+  return false;
+}
+
+/**
  * Keep staff hashes aligned with the resolved seed/demo password so login
  * matches the env after reseed / password rotation without a manual wipe.
- * Only fills missing hashes — never overwrites a password the user already set.
+ * When demo quick-login is on, force-realign all staff hashes to the seed
+ * password so marketers are never blocked by a stale store hash.
  */
 async function syncStaffPasswordsFromEnv() {
   const password = resolveSeedPassword();
@@ -53,16 +75,25 @@ async function syncStaffPasswordsFromEnv() {
   const staff = store.users.filter((u) => u.role === "admin" || u.role === "agent");
   if (staff.length === 0) return;
 
-  const missing = staff.filter((u) => !u.passwordHash);
-  if (missing.length === 0) return;
+  const forceRealign = isDemoQuickLoginEnabled();
+  const targets = forceRealign ? staff : staff.filter((u) => !u.passwordHash);
+  if (targets.length === 0) return;
 
   const hash = await hashPassword(password);
   const stamp = nowIso();
-  for (const user of missing) {
+  for (const user of targets) {
     user.passwordHash = hash;
     user.updatedAt = stamp;
   }
   saveStore();
+}
+
+/** Force admin/agent password hashes to the current seed (used by demo-login). */
+export async function realignStaffPasswordsToSeed() {
+  const password = resolveSeedPassword();
+  if (!password) return null;
+  await ensureStaffUsers(password);
+  return password;
 }
 
 type SeedProperty = Partial<PropertyRecord> & {

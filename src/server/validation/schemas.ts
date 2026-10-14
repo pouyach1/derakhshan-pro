@@ -5,6 +5,10 @@ export const loginSchema = z.object({
   secret: z.string().min(1, "رمز یا کد تأیید الزامی است"),
 });
 
+export const demoLoginSchema = z.object({
+  role: z.enum(["admin", "agent", "client"]),
+});
+
 export const otpRequestSchema = z.object({
   phone: z.string().min(10, "شماره موبایل نامعتبر است"),
 });

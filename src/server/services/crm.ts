@@ -15,7 +15,12 @@ import type {
   tourCreateSchema,
   tourUpdateSchema,
 } from "@/server/validation/schemas";
-import { ensureBootstrapped, resolveSeedPassword } from "@/server/db/bootstrap";
+import {
+  ensureBootstrapped,
+  isDemoQuickLoginEnabled,
+  realignStaffPasswordsToSeed,
+  resolveSeedPassword,
+} from "@/server/db/bootstrap";
 import { siteConfig } from "@/config/siteConfig";
 import {
   getStore,
@@ -71,6 +76,51 @@ async function verifyClientSecret(user: UserRecord, secret: string) {
   }
   throw new ApiError(401, "INVALID_CREDENTIALS", "کد تأیید نادرست است");
 }
+
+const DEMO_CLIENT_PHONE = "09121234567";
+
+/**
+ * One-click demo login for marketers / sales showcases.
+ * Uses server-side seed password / DEMO_OTP — never requires typing credentials.
+ */
+export async function authenticateDemoRole(role: UserRole): Promise<AuthSession> {
+  if (!isDemoQuickLoginEnabled()) {
+    throw new ApiError(
+      403,
+      "DEMO_LOGIN_DISABLED",
+      "ورود سریع نمایشی غیرفعال است. DEMO_QUICK_LOGIN=1 را در محیط سرور تنظیم کنید.",
+    );
+  }
+
+  await ensureBootstrapped();
+
+  if (role === "client") {
+    const otp = configuredClientOtp();
+    if (!otp) {
+      throw new ApiError(
+        503,
+        "DEMO_OTP_MISSING",
+        "برای ورود سریع مشتری DEMO_OTP را در محیط سرور تنظیم کنید.",
+      );
+    }
+    return authenticate({ identifier: DEMO_CLIENT_PHONE, secret: otp });
+  }
+
+  const password = (await realignStaffPasswordsToSeed()) || resolveSeedPassword();
+  if (!password) {
+    throw new ApiError(
+      503,
+      "SEED_PASSWORD_MISSING",
+      "SEED_ADMIN_PASSWORD برای ورود سریع مدیر/مشاور تنظیم نشده است.",
+    );
+  }
+
+  const identifier =
+    role === "admin" ? siteConfig.panels.demoAdminEmail : siteConfig.panels.demoAgentEmail;
+  return authenticate({ identifier, secret: password });
+}
+
+export { isDemoQuickLoginEnabled };
 
 export async function authenticate(input: z.infer<typeof loginSchema>): Promise<AuthSession> {
   try {
