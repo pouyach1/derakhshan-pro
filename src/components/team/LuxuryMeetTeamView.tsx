@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { createPortal } from "react-dom";
 import {
   AnimatePresence,
   motion,
@@ -213,7 +214,7 @@ function AgentModal({
 
   return (
     <motion.div
-      className="fixed inset-0 z-[80] flex items-end justify-center bg-[#0B132B]/55 p-3 backdrop-blur-md sm:items-center sm:p-6"
+      className="fixed inset-0 z-[120] flex items-end justify-center bg-[#0B132B]/60 p-0 backdrop-blur-md sm:items-center sm:p-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -223,149 +224,179 @@ function AgentModal({
         role="dialog"
         aria-modal="true"
         aria-label={`پرونده ${agent.name}`}
-        initial={reduceMotion ? false : { opacity: 0, y: 40, scale: 0.96 }}
+        initial={reduceMotion ? false : { opacity: 0, y: 48, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={reduceMotion ? undefined : { opacity: 0, y: 24, scale: 0.97 }}
+        exit={reduceMotion ? undefined : { opacity: 0, y: 28, scale: 0.98 }}
         transition={spring}
         onClick={(e) => e.stopPropagation()}
-        className="max-h-[92vh] w-full max-w-4xl overflow-y-auto rounded-[2rem] border border-sky-100/60 bg-white/80 shadow-2xl shadow-sky-500/20 backdrop-blur-2xl"
+        className="flex max-h-[92dvh] w-full max-w-4xl flex-col overflow-hidden rounded-t-[1.75rem] border border-sky-100/60 bg-white shadow-2xl shadow-sky-500/20 sm:rounded-[2rem]"
       >
-        <div className="grid md:grid-cols-[0.9fr_1.1fr]">
-          <div className="relative min-h-[280px] md:min-h-full">
-            <Image
-              src={agent.image}
-              alt={agent.name}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 40vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0B132B] via-[#0B132B]/30 to-transparent" />
-            <div className="absolute bottom-5 right-5 left-5 text-white">
-              <p className="text-sm text-[#00F0FF]">{agent.role}</p>
-              <h3 className="mt-1 text-2xl font-black">{agent.name}</h3>
-            </div>
-          </div>
-
-          <div className="space-y-6 p-6 md:p-8">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-sm font-semibold tracking-[0.16em] text-sky-500">
-                  پرونده اختصاصی مشاور
-                </p>
-                <p className="mt-3 text-sm leading-7 text-slate-600">{agent.bio}</p>
-                <p className="mt-3 rounded-2xl border border-sky-100 bg-sky-50/70 px-4 py-3 text-sm leading-7 text-sky-900">
-                  {agent.philosophy}
-                </p>
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+          <div className="grid md:grid-cols-[0.9fr_1.1fr]">
+            <div className="relative min-h-[220px] sm:min-h-[280px] md:min-h-full">
+              <Image
+                src={agent.image}
+                alt={agent.name}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 40vw"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0B132B] via-[#0B132B]/30 to-transparent" />
+              <div className="absolute bottom-5 right-5 left-5 text-white">
+                <p className="text-sm text-[#00F0FF]">{agent.role}</p>
+                <h3 className="mt-1 text-2xl font-black">{agent.name}</h3>
               </div>
               <button
                 type="button"
                 onClick={onClose}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#0B132B] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/50"
+                className="absolute left-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-[#0B132B]/80 text-white backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/50 md:hidden"
                 aria-label="بستن"
               >
                 <X className="h-4 w-4" aria-hidden />
               </button>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-3">
-              {agent.stats.map((stat) => (
-                <div
-                  key={stat.label}
-                  className="rounded-2xl border border-sky-100 bg-white/80 px-4 py-3 text-center"
-                >
-                  <p className="text-lg font-black text-[#0B132B]">
-                    {stat.value}
+            <div className="space-y-6 p-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:p-6 md:p-8">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold tracking-[0.16em] text-sky-500">
+                    پرونده اختصاصی مشاور
                   </p>
-                  <p className="mt-1 text-[11px] text-slate-500">{stat.label}</p>
+                  <p className="mt-3 text-sm leading-7 text-slate-600">{agent.bio}</p>
+                  <p className="mt-3 rounded-2xl border border-sky-100 bg-sky-50/70 px-4 py-3 text-sm leading-7 text-sky-900">
+                    {agent.philosophy}
+                  </p>
                 </div>
-              ))}
-            </div>
-
-            <form onSubmit={onSubmit} className="space-y-3">
-              <p className="text-sm font-bold text-[#0B132B]">
-                درخواست جلسه خصوصی با این مشاور
-              </p>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <label className="block space-y-1.5">
-                  <span className="text-xs font-semibold text-slate-600">نام و نام خانوادگی</span>
-                  <input
-                    required
-                    value={form.name}
-                    onChange={(e) =>
-                      setForm((prev) => ({ ...prev, name: e.target.value }))
-                    }
-                    placeholder="نام و نام خانوادگی"
-                    className="w-full rounded-2xl border border-sky-100 bg-white/90 px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/20"
-                  />
-                </label>
-                <label className="block space-y-1.5">
-                  <span className="text-xs font-semibold text-slate-600">شماره تماس</span>
-                  <input
-                    required
-                    value={form.phone}
-                    onChange={(e) =>
-                      setForm((prev) => ({ ...prev, phone: e.target.value }))
-                    }
-                    placeholder="شماره تماس"
-                    dir="ltr"
-                    className="w-full rounded-2xl border border-sky-100 bg-white/90 px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/20"
-                  />
-                </label>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#0B132B] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/50 md:flex"
+                  aria-label="بستن"
+                >
+                  <X className="h-4 w-4" aria-hidden />
+                </button>
               </div>
-              <label className="block space-y-1.5">
-                <span className="text-xs font-semibold text-slate-600">زمان جلسه</span>
-                <input
-                  required
-                  type="datetime-local"
-                  value={form.datetime}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, datetime: e.target.value }))
-                  }
-                  dir="ltr"
-                  className="w-full rounded-2xl border border-sky-100 bg-white/90 px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/20"
-                />
-              </label>
-              <label className="block space-y-1.5">
-                <span className="text-xs font-semibold text-slate-600">موضوع جلسه</span>
-                <textarea
-                  required
-                  rows={3}
-                  value={form.note}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, note: e.target.value }))
-                  }
-                  placeholder="موضوع جلسه یا محدوده ملک موردنظر..."
-                  className="w-full resize-none rounded-2xl border border-sky-100 bg-white/90 px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/20"
-                />
-              </label>
-              <button
-                type="submit"
-                disabled={status === "loading"}
-                aria-busy={status === "loading"}
-                className="inline-flex items-center gap-2 rounded-full bg-[#0B132B] px-6 py-3 text-sm font-bold text-white transition hover:bg-sky-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/50 disabled:opacity-70"
-              >
-                {status === "loading" ? (
-                  "در حال ثبت..."
-                ) : status === "success" ? (
-                  <>
-                    <CheckCircle2 className="h-4 w-4 text-[#00F0FF]" aria-hidden />
-                    درخواست ثبت شد
-                  </>
-                ) : (
-                  <>
-                    <CalendarCheck2 className="h-4 w-4" aria-hidden />
-                    رزرو جلسه خصوصی
-                  </>
-                )}
-              </button>
-              <p className="sr-only" aria-live="polite">
-                {status === "loading"
-                  ? "در حال ثبت درخواست"
-                  : status === "success"
-                    ? "درخواست جلسه با موفقیت ثبت شد"
-                    : ""}
-              </p>
-            </form>
+
+              <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                {agent.stats.map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="rounded-2xl border border-sky-100 bg-white px-2 py-3 text-center sm:px-4"
+                  >
+                    <p className="text-base font-black text-[#0B132B] sm:text-lg">
+                      {stat.value}
+                    </p>
+                    <p className="mt-1 text-[10px] text-slate-500 sm:text-[11px]">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-wrap gap-2 md:hidden">
+                <a
+                  href={`tel:${agent.phone.replace(/\s/g, "")}`}
+                  className="ios-tap-target inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-full bg-sky-500 px-3 text-sm font-bold text-white"
+                >
+                  <Phone className="h-4 w-4" />
+                  تماس
+                </a>
+                <a
+                  href={`https://wa.me/${agent.whatsapp}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ios-tap-target inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-full bg-[#0B132B] px-3 text-sm font-bold text-white"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  واتس‌اپ
+                </a>
+              </div>
+
+              <form onSubmit={onSubmit} className="space-y-3">
+                <p className="text-sm font-bold text-[#0B132B]">
+                  درخواست جلسه خصوصی با این مشاور
+                </p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <label className="block space-y-1.5">
+                    <span className="text-xs font-semibold text-slate-600">نام و نام خانوادگی</span>
+                    <input
+                      required
+                      value={form.name}
+                      onChange={(e) =>
+                        setForm((prev) => ({ ...prev, name: e.target.value }))
+                      }
+                      placeholder="نام و نام خانوادگی"
+                      className="w-full rounded-2xl border border-sky-100 bg-white px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/20"
+                    />
+                  </label>
+                  <label className="block space-y-1.5">
+                    <span className="text-xs font-semibold text-slate-600">شماره تماس</span>
+                    <input
+                      required
+                      value={form.phone}
+                      onChange={(e) =>
+                        setForm((prev) => ({ ...prev, phone: e.target.value }))
+                      }
+                      placeholder="شماره تماس"
+                      dir="ltr"
+                      className="w-full rounded-2xl border border-sky-100 bg-white px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/20"
+                    />
+                  </label>
+                </div>
+                <label className="block space-y-1.5">
+                  <span className="text-xs font-semibold text-slate-600">زمان جلسه</span>
+                  <input
+                    required
+                    type="datetime-local"
+                    value={form.datetime}
+                    onChange={(e) =>
+                      setForm((prev) => ({ ...prev, datetime: e.target.value }))
+                    }
+                    dir="ltr"
+                    className="w-full rounded-2xl border border-sky-100 bg-white px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/20"
+                  />
+                </label>
+                <label className="block space-y-1.5">
+                  <span className="text-xs font-semibold text-slate-600">موضوع جلسه</span>
+                  <textarea
+                    required
+                    rows={3}
+                    value={form.note}
+                    onChange={(e) =>
+                      setForm((prev) => ({ ...prev, note: e.target.value }))
+                    }
+                    placeholder="موضوع جلسه یا محدوده ملک موردنظر..."
+                    className="w-full resize-none rounded-2xl border border-sky-100 bg-white px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-400/20"
+                  />
+                </label>
+                <button
+                  type="submit"
+                  disabled={status === "loading"}
+                  aria-busy={status === "loading"}
+                  className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#0B132B] px-6 py-3 text-sm font-bold text-white transition hover:bg-sky-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/50 disabled:opacity-70 sm:w-auto"
+                >
+                  {status === "loading" ? (
+                    "در حال ثبت..."
+                  ) : status === "success" ? (
+                    <>
+                      <CheckCircle2 className="h-4 w-4 text-[#00F0FF]" aria-hidden />
+                      درخواست ثبت شد
+                    </>
+                  ) : (
+                    <>
+                      <CalendarCheck2 className="h-4 w-4" aria-hidden />
+                      رزرو جلسه خصوصی
+                    </>
+                  )}
+                </button>
+                <p className="sr-only" aria-live="polite">
+                  {status === "loading"
+                    ? "در حال ثبت درخواست"
+                    : status === "success"
+                      ? "درخواست جلسه با موفقیت ثبت شد"
+                      : ""}
+                </p>
+              </form>
+            </div>
           </div>
         </div>
       </motion.div>
@@ -377,6 +408,11 @@ export function LuxuryMeetTeamView() {
   const reduceMotion = useReducedMotion();
   const [filter, setFilter] = useState<Dept>("all");
   const [selected, setSelected] = useState<Agent | null>(null);
+  const [portalReady, setPortalReady] = useState(false);
+
+  useEffect(() => {
+    setPortalReady(true);
+  }, []);
 
   const agents = useMemo(() => {
     if (filter === "all") return AGENTS;
@@ -386,7 +422,7 @@ export function LuxuryMeetTeamView() {
   return (
     <div
       dir="rtl"
-      className="relative min-h-screen overflow-hidden bg-[#F8FAFC] font-vazirmatn text-[#0B132B]"
+      className="relative min-h-screen overflow-x-hidden bg-[#F8FAFC] font-vazirmatn text-[#0B132B]"
     >
       <AmbientOrbs reduceMotion={reduceMotion} />
 
@@ -511,7 +547,12 @@ export function LuxuryMeetTeamView() {
                 transition={spring}
               >
                 <TiltCard reduceMotion={reduceMotion} className={`${glass} overflow-hidden`}>
-                  <div className="relative h-72 overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => setSelected(agent)}
+                    className="relative block h-72 w-full overflow-hidden text-start"
+                    aria-label={`مشاهده پرونده ${agent.name}`}
+                  >
                     <Image
                       src={agent.image}
                       alt={agent.name}
@@ -528,9 +569,9 @@ export function LuxuryMeetTeamView() {
                         {agent.name}
                       </h3>
                     </div>
-                  </div>
+                  </button>
 
-                  <div className="space-y-4 p-6">
+                  <div className="space-y-4 p-5 sm:p-6">
                     <p className="inline-flex items-start gap-2 rounded-2xl border border-sky-100 bg-sky-50/70 px-3 py-2 text-xs leading-6 text-sky-800">
                       <BadgeCheck className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                       {agent.badge}
@@ -541,14 +582,14 @@ export function LuxuryMeetTeamView() {
                         href={`https://wa.me/${agent.whatsapp}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-full bg-[#0B132B] px-3.5 py-2 text-[11px] font-bold text-white transition hover:bg-sky-600"
+                        className="ios-tap-target inline-flex min-h-10 items-center gap-1.5 rounded-full bg-[#0B132B] px-3.5 py-2 text-[11px] font-bold text-white transition hover:bg-sky-600"
                       >
                         <MessageCircle className="h-3.5 w-3.5" />
                         واتس‌اپ
                       </a>
                       <a
                         href={`tel:${agent.phone.replace(/\s/g, "")}`}
-                        className="inline-flex items-center gap-1.5 rounded-full border border-sky-200 bg-white/80 px-3.5 py-2 text-[11px] font-bold text-[#0B132B] transition hover:border-sky-400"
+                        className="ios-tap-target inline-flex min-h-10 items-center gap-1.5 rounded-full border border-sky-200 bg-white/80 px-3.5 py-2 text-[11px] font-bold text-[#0B132B] transition hover:border-sky-400"
                       >
                         <Phone className="h-3.5 w-3.5" />
                         تماس مستقیم
@@ -556,7 +597,7 @@ export function LuxuryMeetTeamView() {
                       <button
                         type="button"
                         onClick={() => setSelected(agent)}
-                        className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-l from-sky-400 to-[#00F0FF] px-3.5 py-2 text-[11px] font-bold text-[#0B132B] shadow-lg shadow-sky-300/40"
+                        className="ios-tap-target inline-flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-full bg-gradient-to-l from-sky-400 to-[#00F0FF] px-3.5 py-2 text-[11px] font-bold text-[#0B132B] shadow-lg shadow-sky-300/40 sm:flex-none"
                       >
                         <UserRound className="h-3.5 w-3.5" />
                         مشاهده پرونده کامل
@@ -669,15 +710,21 @@ export function LuxuryMeetTeamView() {
         </motion.section>
       </div>
 
-      <AnimatePresence>
-        {selected && (
-          <AgentModal
-            agent={selected}
-            onClose={() => setSelected(null)}
-            reduceMotion={reduceMotion}
-          />
-        )}
-      </AnimatePresence>
+      {portalReady
+        ? createPortal(
+            <AnimatePresence>
+              {selected ? (
+                <AgentModal
+                  key={selected.id}
+                  agent={selected}
+                  onClose={() => setSelected(null)}
+                  reduceMotion={reduceMotion}
+                />
+              ) : null}
+            </AnimatePresence>,
+            document.body,
+          )
+        : null}
     </div>
   );
 }
