@@ -75,9 +75,7 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL(next, request.url));
       }
     }
-    if (session.role === "client" && !needsClientOnboarding(session)) {
-      return NextResponse.redirect(new URL("/", request.url));
-    }
+    // Completed clients belong in their portal — not the public homepage.
     return NextResponse.redirect(new URL(home, request.url));
   }
 

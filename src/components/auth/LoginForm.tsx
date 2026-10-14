@@ -257,7 +257,13 @@ export default function LoginForm() {
         <motion.p variants={item} className="mt-4 text-center text-[11px] leading-relaxed text-slate-400">
           نسخه آزمایشی: {siteConfig.panels.demoAdminEmail} / {siteConfig.panels.demoAgentEmail}
           {DEMO_STAFF_PASSWORD ? ` · رمز پنل: ${DEMO_STAFF_PASSWORD}` : ""}
-          {DEMO_OTP_HINT ? ` · کد مشتری: ${DEMO_OTP_HINT}` : ""}
+          {" · مشتری: ۰۹۱۲۱۲۳۴۵۶۷"}
+          {DEMO_STAFF_PASSWORD
+            ? ` / ${DEMO_STAFF_PASSWORD}`
+            : process.env.NODE_ENV !== "production"
+              ? " / ۱۲۳۴۵۶"
+              : ""}
+          {DEMO_OTP_HINT ? ` · یا کد OTP: ${DEMO_OTP_HINT}` : ""}
         </motion.p>
       ) : null}
     </motion.div>

@@ -114,9 +114,14 @@ export default function ClientOnboardingForm() {
         setSaving(false);
         return;
       }
-      // Server already set the HttpOnly JWT via Set-Cookie. Mirror UI state only.
-      const session = readClientSession();
-      if (session) mirrorAuthSession(completeClientOnboarding(session, profile));
+      // Server already set the HttpOnly JWT via Set-Cookie. Mirror UI from API session.
+      const apiSession = payload?.data?.session;
+      if (apiSession) {
+        mirrorAuthSession(apiSession);
+      } else {
+        const local = readClientSession();
+        if (local) mirrorAuthSession(completeClientOnboarding(local, profile));
+      }
       router.replace("/client/dashboard");
       router.refresh();
     } catch {

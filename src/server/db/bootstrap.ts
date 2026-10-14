@@ -148,6 +148,32 @@ export async function buildSeedStore(): Promise<AgencyStore> {
         createdAt: stamp,
         updatedAt: stamp,
       },
+      {
+        id: "client-demo-1",
+        phone: "09121234567",
+        email: "client@vorqen.ir",
+        name: "سارا محمدی",
+        role: "client",
+        passwordHash: staffHash,
+        agentId: "a1",
+        onboardingComplete: true,
+        clientProfile: {
+          fullName: "سارا محمدی",
+          intent: "buy",
+          neighborhoods: siteConfig.panels.neighborhoods.slice(0, 1),
+          budgetMin: 10_000_000_000,
+          budgetMax: 40_000_000_000,
+          areaMin: 100,
+          areaMax: 220,
+          bedrooms: 3,
+          hasElevator: true,
+          hasParking: true,
+        },
+        avatarUrl: null,
+        isActive: true,
+        createdAt: stamp,
+        updatedAt: stamp,
+      },
     ],
     properties: [],
     leads: [],
@@ -871,15 +897,16 @@ export async function ensureBootstrapped() {
   );
   const storeEmpty = isAgencyStoreEmpty(current);
 
-  // Fast path for warm isolates — avoid any hashing work.
-  if (!storeEmpty && hasUsableStaff) {
-    hydrateDerivedCollections();
-    return;
-  }
-
   hydrateDerivedCollections();
 
   const seedPassword = resolveSeedPassword();
+
+  // Fast path for warm isolates — still ensure showcase client exists.
+  if (!storeEmpty && hasUsableStaff) {
+    await syncStaffPasswordsFromEnv();
+    if (seedPassword) await ensureDemoClientUser(seedPassword);
+    return;
+  }
 
   // Repair: data may exist while staff rows were wiped or never seeded.
   // Never wipe existing CRM/blog/chat rows to recreate a demo store.
@@ -922,6 +949,78 @@ export async function ensureBootstrapped() {
   }
 
   await syncStaffPasswordsFromEnv();
+  if (seedPassword) {
+    await ensureDemoClientUser(seedPassword);
+  }
+}
+
+/** Showcase client account so /client/dashboard works without DEMO_OTP. */
+async function ensureDemoClientUser(seedPassword: string) {
+  const store = getStore();
+  const phone = "09121234567";
+  const email = "client@vorqen.ir";
+  const existing = store.users.find(
+    (u) =>
+      u.id === "client-demo-1" ||
+      u.phone === phone ||
+      u.email?.toLowerCase() === email,
+  );
+  if (existing) {
+    if (existing.role !== "client") return;
+    if (existing.passwordHash && existing.onboardingComplete) return;
+    const hash = existing.passwordHash || (await hashPassword(seedPassword));
+    existing.role = "client";
+    existing.passwordHash = hash;
+    existing.isActive = true;
+    existing.onboardingComplete = true;
+    existing.agentId = existing.agentId || "a1";
+    existing.name = existing.name || "سارا محمدی";
+    existing.clientProfile = existing.clientProfile || {
+      fullName: existing.name,
+      intent: "buy" as const,
+      neighborhoods: siteConfig.panels.neighborhoods.slice(0, 1),
+      budgetMin: 10_000_000_000,
+      budgetMax: 40_000_000_000,
+      areaMin: 100,
+      areaMax: 220,
+      bedrooms: 3,
+      hasElevator: true,
+      hasParking: true,
+    };
+    existing.updatedAt = nowIso();
+    saveStore();
+    return;
+  }
+
+  const hash = await hashPassword(seedPassword);
+  const stamp = nowIso();
+  store.users.push({
+    id: "client-demo-1",
+    phone,
+    email,
+    name: "سارا محمدی",
+    role: "client",
+    passwordHash: hash,
+    agentId: "a1",
+    onboardingComplete: true,
+    clientProfile: {
+      fullName: "سارا محمدی",
+      intent: "buy",
+      neighborhoods: siteConfig.panels.neighborhoods.slice(0, 1),
+      budgetMin: 10_000_000_000,
+      budgetMax: 40_000_000_000,
+      areaMin: 100,
+      areaMax: 220,
+      bedrooms: 3,
+      hasElevator: true,
+      hasParking: true,
+    },
+    avatarUrl: null,
+    isActive: true,
+    createdAt: stamp,
+    updatedAt: stamp,
+  });
+  saveStore();
 }
 
 /** Ensure admin + primary agents exist even when the store already has other data. */
