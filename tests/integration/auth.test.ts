@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { SignJWT } from "jose";
 import { POST as login } from "@/app/api/auth/login/route";
+import { GET as demoLoginGet, POST as demoLogin } from "@/app/api/auth/demo-login/route";
 import { GET as me } from "@/app/api/auth/me/route";
 import { POST as logout } from "@/app/api/auth/logout/route";
 import { verifySessionToken, authCookieName } from "@/server/auth/session";
@@ -89,6 +90,65 @@ describe("Authentication API", () => {
       .setExpirationTime("1h")
       .sign(new TextEncoder().encode("completely-wrong-secret-value-xxxxx"));
     expect(await verifySessionToken(bad)).toBeNull();
+  });
+
+  it("demo quick-login signs in admin / agent / client with one role click", async () => {
+    process.env.DEMO_QUICK_LOGIN = "1";
+    process.env.DEMO_OTP = "1234";
+    process.env.SEED_ADMIN_PASSWORD = TEST_PASSWORD;
+
+    const status = await demoLoginGet();
+    const statusBody = await readJson<{ ok: boolean; data?: { enabled: boolean } }>(status);
+    expect(statusBody.body.data?.enabled).toBe(true);
+
+    for (const [role, pathPart] of [
+      ["admin", "/admin"],
+      ["agent", "/agent"],
+      ["client", "/client"],
+    ] as const) {
+      const response = await demoLogin(
+        makeRequest("/api/auth/demo-login", { body: { role } }),
+      );
+      const result = await readJson<{
+        ok: boolean;
+        data?: { session: { role: string }; redirectTo: string };
+      }>(response);
+      expect(result.status, `demo login ${role}`).toBe(200);
+      expect(result.body.data?.session.role).toBe(role);
+      expect(result.body.data?.redirectTo).toContain(pathPart);
+      expect(result.cookies.some((c) => c.includes(authCookieName()))).toBe(true);
+    }
+  });
+
+  it("demo quick-login is rejected when disabled", async () => {
+    const prevDemo = process.env.DEMO_QUICK_LOGIN;
+    const prevPublic = process.env.NEXT_PUBLIC_DEMO_QUICK_LOGIN;
+    const prevStaff = process.env.NEXT_PUBLIC_DEMO_STAFF_PASSWORD;
+    const prevOtp = process.env.NEXT_PUBLIC_DEMO_OTP;
+    const prevNode = process.env.NODE_ENV;
+    process.env.DEMO_QUICK_LOGIN = "0";
+    process.env.NEXT_PUBLIC_DEMO_QUICK_LOGIN = "0";
+    delete process.env.NEXT_PUBLIC_DEMO_STAFF_PASSWORD;
+    delete process.env.NEXT_PUBLIC_DEMO_OTP;
+    process.env.NODE_ENV = "production";
+    try {
+      const response = await demoLogin(
+        makeRequest("/api/auth/demo-login", { body: { role: "admin" } }),
+      );
+      const result = await readJson<{ ok: boolean; error?: { code: string } }>(response);
+      expect(result.status).toBe(403);
+      expect(result.body.error?.code).toBe("DEMO_LOGIN_DISABLED");
+    } finally {
+      if (prevDemo === undefined) delete process.env.DEMO_QUICK_LOGIN;
+      else process.env.DEMO_QUICK_LOGIN = prevDemo;
+      if (prevPublic === undefined) delete process.env.NEXT_PUBLIC_DEMO_QUICK_LOGIN;
+      else process.env.NEXT_PUBLIC_DEMO_QUICK_LOGIN = prevPublic;
+      if (prevStaff === undefined) delete process.env.NEXT_PUBLIC_DEMO_STAFF_PASSWORD;
+      else process.env.NEXT_PUBLIC_DEMO_STAFF_PASSWORD = prevStaff;
+      if (prevOtp === undefined) delete process.env.NEXT_PUBLIC_DEMO_OTP;
+      else process.env.NEXT_PUBLIC_DEMO_OTP = prevOtp;
+      process.env.NODE_ENV = prevNode;
+    }
   });
 
   it("expired JWT is rejected", async () => {
